@@ -47,7 +47,7 @@ const useLock = ({ lockAddress, walletAddress = '', redirectTo }: Props) => {
     url.searchParams.set('paywallConfig', JSON.stringify(paywallConfig))
     if (redirectTo) url.searchParams.set('redirectTo', redirectTo)
     setCheckoutHref(url.href)
-  }, [])
+  }, [lockAddress, redirectTo])
 
   return {
     status: isLoading ? 'pending' : data.keys[0] && !data.keys[0].cancelled ? 'unlocked' : 'locked',

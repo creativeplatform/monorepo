@@ -7,6 +7,17 @@ export const SITE_DESCRIPTION = 'The way your content should be.'
 export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 
+declare var process: {
+  env: {
+    NEXT_PUBLIC_STUDIO_API_KEY: string,
+    SESSION_PASSWORD: string,
+    NODE_ENV: string,
+  }
+}
+export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
+export const SESSION_PASSWORD = process.env.SESSION_PASSWORD
+export const NODE_ENV = process.env.NODE_ENV
+
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
   colors: {

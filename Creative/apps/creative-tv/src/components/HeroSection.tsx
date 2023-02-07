@@ -14,18 +14,12 @@ import {
   IconProps,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { LIVEPEER_HERO_PLAYBACK_ID } from 'utils/config'
+import { LIVEPEER_HERO_PLAYBACK_ID, NEXT_PUBLIC_STUDIO_API_KEY } from 'utils/config'
 import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS, HERO_IMAGE } from 'utils/context'
 import { createReactClient, studioProvider, LivepeerConfig, Player } from '@livepeer/react'
 
-declare var process: {
-  env: {
-    NEXT_PUBLIC_STUDIO_API_KEY: string
-  }
-}
-
 const client = createReactClient({
-  provider: studioProvider({ apiKey: process.env.NEXT_PUBLIC_STUDIO_API_KEY }),
+  provider: studioProvider({ apiKey: NEXT_PUBLIC_STUDIO_API_KEY }),
 })
 
 const PosterImage = () => {
