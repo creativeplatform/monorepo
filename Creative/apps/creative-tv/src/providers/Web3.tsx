@@ -4,6 +4,7 @@ import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import { ETH_CHAINS, SITE_NAME } from 'utils/config'
 import { useColorMode } from '@chakra-ui/react'
 import { ReactNode } from 'react'
+import { siwe } from '../pages/api/siwe/siwe'
 
 interface Props {
   children: ReactNode
@@ -25,7 +26,9 @@ export function Web3Provider(props: Props) {
 
   return (
     <WagmiConfig client={client}>
-      <ConnectKitProvider mode={colorMode}>{props.children}</ConnectKitProvider>
+      <siwe.Provider>
+        <ConnectKitProvider mode={colorMode}>{props.children}</ConnectKitProvider>
+      </siwe.Provider>
     </WagmiConfig>
   )
 }

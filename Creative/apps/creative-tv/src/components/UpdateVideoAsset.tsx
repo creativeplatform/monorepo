@@ -1,7 +1,7 @@
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { ReactNode } from 'react'
-import { LivepeerConfig, createReactClient, studioProvider } from '@livepeer/react'
+import { LivepeerConfig } from '@livepeer/react'
 import { useLivepeerClient } from '../hooks/useLivepeerClient'
 
 interface HeaderProps {

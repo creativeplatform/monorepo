@@ -10,13 +10,15 @@ export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All right
 declare var process: {
   env: {
     NEXT_PUBLIC_STUDIO_API_KEY: string,
-    SESSION_PASSWORD: string,
+    NEXT_SESSION_PASSWORD: string,
     NODE_ENV: string,
+    NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
   }
 }
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
-export const SESSION_PASSWORD = process.env.SESSION_PASSWORD
+export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
 export const NODE_ENV = process.env.NODE_ENV
+export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
@@ -58,7 +60,7 @@ export const LIVEPEER_FEATURED_PLAYBACK_ID = 'c3c7u34h2y47jqpd'
 
 export const SERVER_SESSION_SETTINGS = {
   cookieName: SITE_NAME,
-  password: process.env.SESSION_PASSWORD ?? 'UPDATE_TO_complex_password_at_least_32_characters_long',
+  password: process.env.NEXT_SESSION_PASSWORD ?? 'UPDATE_TO_complex_password_at_least_32_characters_long',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
   },

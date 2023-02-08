@@ -31,7 +31,7 @@ import { AiOutlineMenu } from 'react-icons/ai'
 import { SITE_NAME, TRANSACTION_TITLES } from 'utils/config'
 import { LinkComponent } from './LinkComponent'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import { ConnectKitButton } from 'connectkit'
+import { ConnectWallet } from './ConnectWallet'
 
 // Takes a long hash string and truncates it.
 function truncateHash(hash: string, length = 38): string {
@@ -249,7 +249,6 @@ export function Header(props: Props) {
       </>
     )
   }
-  
 
   const MobileNavContent = (
     <VStack
@@ -502,7 +501,7 @@ export function Header(props: Props) {
                   <Features />
                 </PopoverContent>
               </Popover>
-              <ConnectKitButton />
+              <ConnectWallet />
               {/* <NotificationDrawer /> */}
               <Box className="mobile-icon-box">
                 <FaUser className="user-icon" />
@@ -769,7 +768,7 @@ export function Header(props: Props) {
             </Flex>
             {/* {children} */}
             <HStack spacing="4" display={{ base: 'flex', md: 'flex' }}>
-              <ConnectKitButton />
+              <ConnectWallet />
               {/* <NotificationDrawer /> */}
               <ThemeSwitcher />
               <IconButton
