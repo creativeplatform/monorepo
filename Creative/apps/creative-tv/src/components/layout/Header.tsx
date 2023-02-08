@@ -552,7 +552,6 @@ export function Header(props: Props) {
                 <Popover>
                   <PopoverTrigger>
                     <Button
-                      bg={bg}
                       color="black.700"
                       display="inline-flex"
                       alignItems="center"
@@ -567,7 +566,6 @@ export function Header(props: Props) {
                   </PopoverTrigger>
                   <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -580,7 +578,6 @@ export function Header(props: Props) {
                       CREATIVE Kids
                     </Button>
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -593,7 +590,6 @@ export function Header(props: Props) {
                       News
                     </Button>
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -608,7 +604,6 @@ export function Header(props: Props) {
                   </PopoverContent>
                 </Popover>
                 <Button
-                  bg={bg}
                   color="black.700"
                   display="inline-flex"
                   alignItems="center"
@@ -621,7 +616,6 @@ export function Header(props: Props) {
                   Blog
                 </Button>
                 <Button
-                  bg={bg}
                   color="black.700"
                   display="inline-flex"
                   alignItems="center"
@@ -636,7 +630,6 @@ export function Header(props: Props) {
                 <Popover>
                   <PopoverTrigger>
                     <Button
-                      bg={bg}
                       color="black.700"
                       display="inline-flex"
                       alignItems="center"
@@ -651,7 +644,6 @@ export function Header(props: Props) {
                   </PopoverTrigger>
                   <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -664,7 +656,6 @@ export function Header(props: Props) {
                       All Assets
                     </Button>
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -677,7 +668,6 @@ export function Header(props: Props) {
                       Upload Video Assets
                     </Button>
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -690,7 +680,6 @@ export function Header(props: Props) {
                       Swiper Controls
                     </Button>
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -703,7 +692,6 @@ export function Header(props: Props) {
                       Error Page
                     </Button>
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -716,7 +704,6 @@ export function Header(props: Props) {
                       Sign & verify messages
                     </Button>
                     <Button
-                      bg={bg}
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -731,7 +718,6 @@ export function Header(props: Props) {
                   </PopoverContent>
                 </Popover>
                 <Button
-                  bg={bg}
                   color="black.700"
                   display="inline-flex"
                   alignItems="center"
@@ -744,7 +730,6 @@ export function Header(props: Props) {
                   Events
                 </Button>
                 <Button
-                  bg={bg}
                   color="black.700"
                   display="inline-flex"
                   alignItems="center"
@@ -762,7 +747,6 @@ export function Header(props: Props) {
                 <Popover>
                   <PopoverTrigger>
                     <Button
-                      bg={bg}
                       color="black.700"
                       display="inline-flex"
                       alignItems="center"

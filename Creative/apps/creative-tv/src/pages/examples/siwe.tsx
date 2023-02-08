@@ -87,7 +87,7 @@ function SignInButton() {
         Try it out
       </Heading>
       <p>
-        <Button onClick={signIn}>Sign-in With Ethereum</Button>
+        <Button onClick={signIn} bgColor={"#EC407A"}>Sign-in With Ethereum</Button>
       </p>
 
       {loggedInAddress && (
@@ -97,7 +97,7 @@ function SignInButton() {
           </Heading>
           <p>{loggedInAddress}</p>
           <p>
-            <Button onClick={logout}>Sign Out</Button>
+            <Button onClick={logout} bgColor={"#EC407A"}>Sign Out</Button>
           </p>
         </div>
       )}
