@@ -3,10 +3,9 @@ import { Heading } from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import useLock from 'hooks/useLock'
 import { useAccount } from 'wagmi'
+import { LOCK_ADDRESS_CREATIVE_TV } from 'utils/config'
 
-export const LOCK_ADDRESS_CREATIVE_TV = '0xb9c69af58109927cc2dcce8043f82158f7b96ca7'
-
-export default function TokenGateExample() {
+export default function TokenGate() {
   const { address } = useAccount()
   const lock = useLock({ lockAddress: LOCK_ADDRESS_CREATIVE_TV, walletAddress: address })
 

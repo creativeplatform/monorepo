@@ -44,7 +44,7 @@ export const SOCIAL_EMAIL = 'mailto:creatives@creativeplatform.xyz'
 export const SOCIAL_LENS = 'https://lensfrens.xyz/thecreative.lens'
 export const SOCIAL_LINKEDIN = 'https://www.linkedin.com/company/creativeplatform'
 
-export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum]
+export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai]
 export const POLYGON_CHAINS = [polygon, polygonMumbai]
 
 // Title text for the various transaction notifications.
@@ -52,6 +52,9 @@ export const TRANSACTION_TITLES = {
   transactionStarted: 'Local Transaction Started',
   transactionSucceed: 'Local Transaction Completed',
 }
+
+// Unlock Contracts
+export const LOCK_ADDRESS_CREATIVE_TV = '0xb9c69af58109927cc2dcce8043f82158f7b96ca7'
 
 // Livepeer API
 export const LIVEPEER_API_URL = 'https://livepeer.com/api'
