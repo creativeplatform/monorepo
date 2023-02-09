@@ -12,6 +12,7 @@ interface Video {
   downloadUrl?: string
 }
 
+// TODO: use Reat-Query's useQueryClient to invalidate the cache
 export const videoApi = axios.create({
   baseURL: 'https://livepeer.studio/api/asset',
   headers: {
