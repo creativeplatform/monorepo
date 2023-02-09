@@ -539,7 +539,7 @@ export function Header(props: Props) {
                 _focus={{ boxShadow: 'none', color: 'black.500' }}
                 onClick={() => router.push('/')}>
                 <HStack>
-                  {/* <Logo aria-label="Website logo" height={50} width={50} /> */}
+                  {/* Add CREATIVE logo here */}
                   <Heading color={useColorModeValue('black.900', 'white')} as="h1" size="16px" fontWeight={900} gap={5}>
                     {SITE_NAME}
                   </Heading>

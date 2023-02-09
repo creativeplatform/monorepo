@@ -88,6 +88,7 @@ export default function Footer(props: Props): JSX.Element {
             flexGrow: 1,
             ml: 8,
           }}>
+            {/* Add CREATIVE Logo HERE */}
           {SITE_NAME}
         </Flex>
         <Text pt={6} fontSize={'sm'} textAlign={'center'}>
