@@ -13,12 +13,16 @@ declare var process: {
     NEXT_SESSION_PASSWORD: string,
     NODE_ENV: string,
     NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
+    NEXT_PUBLIC_ALCHEMY_API_KEY: string,
+    NEXT_PUBLIC_INFURA_API_KEY: string
   }
 }
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
 export const NODE_ENV = process.env.NODE_ENV
 export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
+export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
