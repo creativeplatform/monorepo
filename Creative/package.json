@@ -1,0 +1,42 @@
+{
+  "name": "creative",
+  "version": "0.0.0",
+  "private": true,
+  "author": {
+    "name": "Creative Organization DAO, LLC.",
+    "email": "creatives@creativeplatform.xyz"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --paralell",
+    "dev:creative-tv": "turbo run dev --filter creative-tv",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "eslint-config-custom": "*",
+    "lint-staged": "^12.1.3",
+    "prettier": "latest",
+    "turbo": "^1.7.4"
+  },
+  "lint-staged": {
+    "apps/**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix"
+    ],
+    "packages/ui/**/*.{js,ts,jsx,tsx}": [
+      "eslint --fix"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "yarn@1.22.19"
+}
