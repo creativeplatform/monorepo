@@ -32,6 +32,7 @@ interface Props {
 const useLock = ({ lockAddress, walletAddress = '', redirectTo }: Props) => {
   const [checkoutHref, setCheckoutHref] = useState<string>('')
   const { isLoading, data, refetch } = useQuery<{ keys: UnlockKey[] }>({
+    // response data is { keys: UnlockKey[] }
     initialData: { keys: [] },
     queryKey: [lockAddress, walletAddress],
     queryFn: () => request(UNLOCK_API_URL, UNLOCK_QUERY_HOLDS_KEY, { lockAddress, walletAddress }),

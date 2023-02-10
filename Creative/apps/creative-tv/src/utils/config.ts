@@ -1,6 +1,7 @@
 import { ThemingProps } from '@chakra-ui/react'
 import { mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai } from '@wagmi/chains'
 import { extendTheme } from '@chakra-ui/react'
+import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way your content should be.'
@@ -58,7 +59,22 @@ export const TRANSACTION_TITLES = {
 }
 
 // Unlock Contracts
-export const LOCK_ADDRESS_CREATIVE_TV = '0xb9c69af58109927cc2dcce8043f82158f7b96ca7'
+export const LOCK_ADDRESS_CREATIVE_TV = {
+  creator:'0xb9c69af58109927cc2dcce8043f82158f7b96ca7',
+  fan: '0xe174caa294999ec622988242641a27c11e6c22d8',
+  brand: '0xb311afe316b004dbf569381ae174eaa897b757f6'
+}
+export const UNLOCK_API_URL = 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
+export const UNLOCK_QUERY_HOLDS_KEY = gql`
+query keysForLock($lockAddress: String!, $walletAddress: String!) {
+  keys(where: { lock: $lockAddress, owner: $walletAddress }) {
+    id
+    owner
+    expiration
+    cancelled
+  }
+}
+`
 
 // Livepeer API
 export const LIVEPEER_API_URL = 'https://livepeer.com/api'
