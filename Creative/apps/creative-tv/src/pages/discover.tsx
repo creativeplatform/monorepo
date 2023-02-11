@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import request from 'graphql-request'
 import { NextSeo } from 'next-seo'
-import { BreadcrumbItem, BreadcrumbLink, Breadcrumb } from '@chakra-ui/react'
+import { BreadcrumbItem, BreadcrumbLink, Breadcrumb, Box } from '@chakra-ui/react'
 import AllAssets from '../components/AllAssets'
 import { siwe } from '../pages/api/siwe/siwe'
 import { GetServerSideProps } from 'next'
@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   }
   // Brand Membership
   const hasBrandToken = await walletHasToken(LOCK_ADDRESS_CREATIVE_TV.brand, address);
-  if (!hasCreatorToken) {
+  if (!hasBrandToken) {
     return {
       redirect: {
         permanent: false,
@@ -63,14 +63,18 @@ export default function Discover() {
   const router = useRouter()
   return (
     <>
-      <NextSeo title='Discover' /><Breadcrumb>
+      <NextSeo title='Discover' />
+      <Breadcrumb>
         <BreadcrumbItem>
           <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage className="active-crumb">
           <BreadcrumbLink onClick={() => router.push('/discover')}>All Assets</BreadcrumbLink>
         </BreadcrumbItem>
-      </Breadcrumb><AllAssets>{''}</AllAssets>
+      </Breadcrumb>
+      <Box>
+        <AllAssets>{''}</AllAssets>
+      </Box>
     </>
   ) 
 }

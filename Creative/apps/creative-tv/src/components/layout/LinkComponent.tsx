@@ -1,16 +1,15 @@
-import React, { ReactNode } from 'react'
+import React, { PropsWithChildren } from 'react'
 import NextLink from 'next/link'
 import { Link, useColorModeValue } from '@chakra-ui/react'
-import { THEME_COLOR_SCHEME } from 'utils/config'
+import { THEME_COLOR_SCHEME } from 'ui/utils/config'
 
-interface Props {
+type Props = {
   href: string
-  children: ReactNode
   isExternal?: boolean
   className?: string
 }
 
-export function LinkComponent(props: Props) {
+export function LinkComponent(props: PropsWithChildren<Props>) {
   const className = props.className ?? ''
   const isExternal = props.href.match(/^([a-z0-9]*:|.{0})\/\/.*$/) || props.isExternal
   const color = useColorModeValue(`${THEME_COLOR_SCHEME}.600`, `${THEME_COLOR_SCHEME}.400`)

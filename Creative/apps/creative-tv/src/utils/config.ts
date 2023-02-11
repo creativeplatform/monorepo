@@ -1,6 +1,5 @@
-import { ThemingProps } from '@chakra-ui/react'
+import { ThemingProps, extendTheme } from '@chakra-ui/react'
 import { mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai } from '@wagmi/chains'
-import { extendTheme } from '@chakra-ui/react'
 import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'

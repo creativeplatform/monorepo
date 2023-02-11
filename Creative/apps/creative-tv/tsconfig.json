@@ -6,6 +6,6 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../../packages/ui/ConnectWallet/ConnectWallet.tsx", "src/components/layout/LinkComponent.tsx"],
   "exclude": ["node_modules"]
 }
