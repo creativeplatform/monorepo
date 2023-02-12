@@ -1,34 +1,16 @@
-import React, { ReactNode, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useAsset } from '@livepeer/react'
 import { useQuery } from '@tanstack/react-query'
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Image,
-  Stack,
-  Heading,
-  Divider,
-  ButtonGroup,
-  Button,
-  Box,
-  SimpleGrid,
-  AspectRatio,
-  Badge,
-} from '@chakra-ui/react'
+import { Card, CardBody, CardFooter, Stack, Heading, Divider, ButtonGroup, Button, Box, SimpleGrid, AspectRatio, Badge } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
-import { fetchAssets } from 'utils/fetchers/assets'
 import { LivepeerConfig } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
+import { Video } from 'utils/fetchers/assets'
 
-interface HeaderProps {
-  children: ReactNode
-}
-
-export const AllAssets = ({ children }: HeaderProps): JSX.Element => {
+export const AllAssets = (): JSX.Element => {
   const router = useRouter()
-  const { isLoading, isError, isSuccess, data, status, error } = useQuery([''], fetchAssets, { staleTime: 3000 })
+  const { isLoading, isError, data, error } = useQuery<Video[]>([''], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
+    staleTime: 3000,
+  })
 
   if (isLoading) {
     console.log('loading...')
@@ -40,14 +22,11 @@ export const AllAssets = ({ children }: HeaderProps): JSX.Element => {
     return <div>Error:</div>
   }
 
-  if (isSuccess) {
-    console.log('data', data)
-  }
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <Box>
         <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(300px, 1fr))">
-          {data.slice(0, data.length).map((video, index) => (
+          {data.map((video) => (
             <Card key={video.id}>
               <CardBody>
                 <AspectRatio maxW="560px" ratio={1}>
@@ -56,36 +35,37 @@ export const AllAssets = ({ children }: HeaderProps): JSX.Element => {
                 <Stack mt="6" spacing="3">
                   <Heading size="md">{video.name}</Heading>
                 </Stack>
-                {video?.status === 'ready' ? <Badge colorScheme="green">{video?.status}</Badge> : <Badge colorScheme="red">{video?.status}</Badge>}
+                <Badge colorScheme={video.status.phase === 'ready' ? 'green' : 'red'}>{video.status.phase}</Badge>
               </CardBody>
               <Divider />
               <CardFooter>
                 <ButtonGroup spacing="2" className="assets-btn-group">
-                  {video?.status === 'ready' ? (
-                    <Button
-                      onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
-                      className="card-mint-button"
-                      as={motion.div}
-                      _hover={{ transform: 'scale(1.1)' }}>
-                      Update Asset
-                    </Button>
+                  {video.status.phase === 'ready' ? (
+                    <>
+                      <Button
+                        onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
+                        className="card-mint-button"
+                        as={motion.div}
+                        _hover={{ transform: 'scale(1.1)' }}>
+                        Update Asset
+                      </Button>
+                      <Button
+                        onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
+                        className="card-mint-button"
+                        as={motion.div}
+                        _hover={{ transform: 'scale(1.1)' }}>
+                        Mint NFT
+                      </Button>
+                    </>
                   ) : (
-                    <Button disabled className="card-mint-button">
-                      Update Asset
-                    </Button>
-                  )}
-                  {video?.status === 'ready' ? (
-                    <Button
-                      onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
-                      className="card-mint-button"
-                      as={motion.div}
-                      _hover={{ transform: 'scale(1.1)' }}>
-                      Mint NFT
-                    </Button>
-                  ) : (
-                    <Button disabled className="card-mint-button">
-                      Mint NFT
-                    </Button>
+                    <>
+                      <Button disabled className="card-mint-button">
+                        Update Asset
+                      </Button>
+                      <Button disabled className="card-mint-button">
+                        Mint NFT
+                      </Button>
+                    </>
                   )}
                 </ButtonGroup>
               </CardFooter>
