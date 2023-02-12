@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-interface Video {
+export interface Video {
   id?: any | null
   name: string
-  status: string
+  status: { phase: string }
   playbackId: string
   storage: string
   transcodingStatus: string
@@ -21,14 +21,6 @@ export const videoApi = axios.create({
     'Content-Type': 'application/json',
   },
 })
-
-export const fetchAssets = async () => {
-  console.log('Fetching assets')
-  const response = await videoApi.get<Video[]>('')
-  const assets = response.data
-  console.log('Assets: ', assets)
-  return assets
-}
 
 export const fetchAssetId = async (id: any) => {
   const [, { assetId }] = id.queryKey
