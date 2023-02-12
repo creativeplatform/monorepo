@@ -52,7 +52,7 @@ export default function Discover() {
           <BreadcrumbLink onClick={() => router.push('/discover')}>All Assets</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
-      <AllAssets>{''}</AllAssets>
+      <AllAssets />
     </>
   )
 }
