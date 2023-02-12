@@ -13,7 +13,7 @@ interface Props {
 
 const { provider, webSocketProvider } = configureChains(
   [...POLYGON_CHAINS, mainnet],
-  [infuraProvider({ apiKey: INFURA_API_KEY, priority: 0, stallTimeout: 1_000 }), publicProvider({ priority: 2, stallTimeout: 1_000 })]
+  [infuraProvider({ apiKey: INFURA_API_KEY, priority: 0, stallTimeout: 1_000 }), publicProvider({ priority: 1, stallTimeout: 1_000 })]
 )
 
 const client = createClient(
