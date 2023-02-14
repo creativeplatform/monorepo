@@ -33,11 +33,6 @@ import { LinkComponent } from './LinkComponent'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { ConnectWallet } from './ConnectWallet'
 
-// Takes a long hash string and truncates it.
-function truncateHash(hash: string, length = 38): string {
-  return hash.replace(hash.substring(6, length), '...')
-}
-
 interface Props {
   className?: string
 }

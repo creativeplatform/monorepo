@@ -7,6 +7,7 @@ export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way your content should be.'
 export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
+export const SITE_LOGO = 'https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/'
 
 declare var process: {
   env: {
