@@ -21,6 +21,7 @@ export default function AllAssets() {
 
   if (videos.isLoading) {
     console.log('loading...')
+    // loading state
     return <Box>Loading...</Box>
   }
 
