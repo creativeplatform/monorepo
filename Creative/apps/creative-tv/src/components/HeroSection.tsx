@@ -96,7 +96,25 @@ export default function HeroSection() {
                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                 showUploadingIndicator={true}
                 controls={{
-                  autohide: 3000,
+                  autohide: 500,
+                  hotkeys: false,
+                }}
+                theme={{
+                  borderStyles: {
+                    containerBorderStyle: 'solid',
+                  },
+                  colors: {
+                    accent: '#EC407A',
+                  },
+                  space: {
+                    controlsBottomMarginX: '10px',
+                    controlsBottomMarginY: '5px',
+                    controlsTopMarginX: '15px',
+                    controlsTopMarginY: '10px',
+                  },
+                  radii: {
+                    containerBorderRadius: '0px',
+                  },
                 }}
               />
             </Box>
