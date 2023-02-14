@@ -1,79 +1,161 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
-import { Card, CardBody, CardFooter, Stack, Heading, Divider, ButtonGroup, Button, Box, SimpleGrid, AspectRatio, Badge } from '@chakra-ui/react'
+import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, IconButton, Text, Link, Image } from '@chakra-ui/react'
+import { DownloadIcon, ChatIcon, CheckIcon, CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
-import { LivepeerConfig } from '@livepeer/react'
+import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { Video } from 'utils/fetchers/assets'
+import { SITE_LOGO } from 'utils/config'
+import { FEATURED_IMAGE } from 'utils/context'
 
-export const AllAssets = (): JSX.Element => {
+const PosterImage = () => {
+  return <Image  src={`${FEATURED_IMAGE}`} height={'100%'} objectFit="cover" alt="Creative Warrior" placeholder="blur" />
+}
+
+export default function AllAssets() {
   const router = useRouter()
-  const { isLoading, isError, data, error } = useQuery<Video[]>([''], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
+  const videos = useQuery<Video[]>([''], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,
   })
 
-  if (isLoading) {
+  if (videos.isLoading) {
     console.log('loading...')
-    return <div>Loading...</div>
+    return <Box>Loading...</Box>
   }
 
-  if (isError) {
-    console.log('error', error)
-    return <div>Error:</div>
+  if (videos.isError) {
+    console.log('error', videos.error)
+    return <Box children='error' />
   }
 
   return (
     <LivepeerConfig client={useLivepeerClient}>
-      <Box>
-        <SimpleGrid spacing={4} templateColumns="repeat(auto-fill, minmax(300px, 1fr))">
-          {data.map((video) => (
-            <Card key={video.id}>
-              <CardBody>
-                <AspectRatio maxW="560px" ratio={1}>
-                  <iframe title={video.name} src={video.downloadUrl} allowFullScreen />
-                </AspectRatio>
-                <Stack mt="6" spacing="3">
-                  <Heading size="md">{video.name}</Heading>
-                </Stack>
-                <Badge colorScheme={video.status.phase === 'ready' ? 'green' : 'red'}>{video.status.phase}</Badge>
+        <SimpleGrid spacing={4} minChildWidth={350}>
+          {videos.data.map((video) => (
+            <Card
+             key={video.id}
+             maxW='md'
+             variant={"elevated"}>
+              <CardHeader>
+                <Flex>
+                  <Flex flex={1} gap={4} align="center" flexWrap={'wrap'}>
+                    <Avatar name='name' src={SITE_LOGO} />
+                    <Box>
+                      <Heading size='sm'>thecreative.eth</Heading>
+                      <Text>Creator</Text>
+                    </Box>
+                  </Flex>
+                </Flex>
+                </CardHeader>
+                <>
+              <Player 
+                  title={video.name}
+                  playbackId={video.playbackId}
+                  showTitle
+                  poster={<PosterImage />}
+                  showLoadingSpinner
+                  controls={{ autohide: 500, hotkeys: false }}
+                  autoPlay
+                  muted
+                  objectFit='cover'
+                  showPipButton
+                  autoUrlUpload={{fallback: true, ipfsGateway: 'https://w3s.link'}}
+                  theme={{
+                    borderStyles: {
+                      containerBorderStyle: 'solid',
+                    },
+                    colors: {
+                      accent: '#EC407A',
+                    },
+                    space: {
+                      controlsBottomMarginX: '10px',
+                      controlsBottomMarginY: '5px',
+                      controlsTopMarginX: '15px',
+                      controlsTopMarginY: '10px',
+                    },
+                    radii: {
+                      containerBorderRadius: '0px',
+                    },
+                  }}
+                  />
+              </>
+                <CardBody>
+                  <Badge colorScheme={video.status.phase === 'ready' ? 'green' : 'red'}>{video.status.phase}</Badge>
+                  <Stack mt="6" spacing="3">
+                    <Heading size={'md'}>{video.name.slice(0, -4)}</Heading>
+                    <Text>
+                      With Creative TV, I wanted to sync the speed of creation with the speed
+                      of design. I wanted the creator to be just as excited as the designer to
+                      create new content.
+                    </Text>
+                  </Stack>
               </CardBody>
               <Divider />
-              <CardFooter>
-                <ButtonGroup spacing="2" className="assets-btn-group">
-                  {video.status.phase === 'ready' ? (
-                    <>
-                      <Button
-                        onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
-                        className="card-mint-button"
-                        as={motion.div}
-                        _hover={{ transform: 'scale(1.1)' }}>
-                        Update Asset
-                      </Button>
-                      <Button
-                        onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
-                        className="card-mint-button"
-                        as={motion.div}
-                        _hover={{ transform: 'scale(1.1)' }}>
-                        Mint NFT
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button disabled className="card-mint-button">
-                        Update Asset
-                      </Button>
-                      <Button disabled className="card-mint-button">
-                        Mint NFT
-                      </Button>
-                    </>
-                  )}
-                </ButtonGroup>
+              <CardFooter
+                justify='space-between'
+                flexWrap='wrap'
+                sx={{
+                  '& > button': {
+                    minW: '136px',
+                  },
+                }}
+              >
+              {video.status.phase === 'ready' ? (
+                <>
+                <Button flex='1' variant='ghost' leftIcon={<ChatIcon />}>
+                  Comment
+                </Button>
+                <Button flex='1' variant='ghost' leftIcon={<LinkIcon />}>
+                  Share
+                </Button>
+                <Button 
+                  backgroundColor={'#EC407A'}
+                  onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
+                  className="card-mint-button"
+                  as={motion.div}
+                  _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+                  flex='1' 
+                  variant='ghost' 
+                  leftIcon={<DownloadIcon />}>
+                  Collect
+                </Button>
+                </>
+                ) : (
+                <>
+                  <Button 
+                    flex='1' 
+                    disabled 
+                    variant='ghost' 
+                    leftIcon={<ChatIcon />}>
+                    Comment
+                  </Button>
+                  <Button 
+                    flex='1'
+                    disabled 
+                    variant='ghost' 
+                    leftIcon={<LinkIcon />}
+                    >
+                    Share
+                  </Button>
+                  <Button
+                    leftIcon={<DownloadIcon />}
+                    backgroundColor={'#EC407A'}
+                    disabled 
+                    className="card-mint-button"
+                    as={motion.div}
+                    _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+                    flex='1' 
+                    variant='ghost' 
+                  >
+                    Collect
+                  </Button>
+                </>
+                )}
               </CardFooter>
             </Card>
           ))}
         </SimpleGrid>
-      </Box>
     </LivepeerConfig>
   )
 }
-export default AllAssets
