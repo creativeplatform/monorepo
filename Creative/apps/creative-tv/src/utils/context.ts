@@ -1,5 +1,10 @@
 import { SITE_NAME } from './config'
 
+// CREATIVE TV
+// ===========
+// This file contains the context for the Creative TV app.
+// It is used to populate the homepage and other pages with
+// the correct text and images.
 export const HERO_NAME = {
   top: 'Record Once,',
   bottom: 'Use Everywhere!',
@@ -21,3 +26,21 @@ export const FEATURED_TEXT = {
 }
 
 export const FEATURED_IMAGE = 'https://bafkreieb7xtj3yfkhi323xdf67xe763oozows6spizgwyoy5bzoiiicdxe.ipfs.nftstorage.link/'
+
+// Profile.tsx
+export const PROFILE_VIDEOS = {
+  tooltip: 'list of ypur uploaded videos',
+  tooltip_position: 'bottom',
+}
+
+export const PROFILE_CAMPAIGNS = {
+  tooltip: 'list of your campaigns',
+  tooltip_position: 'bottom',
+}
+
+
+// CREATIVE PLATFORM
+// =================
+// This file contains the context for the Creative Platform app.
+// It is used to populate the homepage and other pages with
+// the correct text and images.
