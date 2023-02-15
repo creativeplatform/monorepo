@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
-import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, IconButton, Text, Link, Image } from '@chakra-ui/react'
+import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, Text, Image } from '@chakra-ui/react'
 import { DownloadIcon, ChatIcon, CheckIcon, CheckCircleIcon, LinkIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
 import { LivepeerConfig, Player } from '@livepeer/react'
@@ -10,7 +10,7 @@ import { SITE_LOGO } from 'utils/config'
 import { FEATURED_IMAGE } from 'utils/context'
 
 const PosterImage = () => {
-  return <Image  src={`${FEATURED_IMAGE}`} height={'100%'} objectFit="cover" alt="Creative Warrior" placeholder="blur" />
+  return <Image  src={`${FEATURED_IMAGE}`} height={'100%'} objectFit="cover" alt="Creative Logo" placeholder="blur" />
 }
 
 export default function AllAssets() {
