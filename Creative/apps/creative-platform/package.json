@@ -1,6 +1,6 @@
 {
   "name": "creative-platform",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",
@@ -12,16 +12,34 @@
     "next": "^13.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "ui": "*"
+    "ui": "*",
+    "@chakra-ui/icons": "2.0.14",
+    "@chakra-ui/react": "2.4.4",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@next/font": "13.1.1",
+    "@wagmi/chains": "^0.1.7",
+    "connectkit": "^1.1.1",
+    "dayjs": "^1.11.7",
+    "ethers": "^5.5.1",
+    "framer-motion": "^8.0.2",
+    "iron-session": "^6.3.1",
+    "next-seo": "^5.15.0",
+    "react-icons": "^4.7.1",
+    "siwe": "^1.1.6",
+    "usehooks-ts": "^2.9.1",
+    "wagmi": "^0.10.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "eslint": "7.32.0",
+    "@tanstack/react-query-devtools": "4.24.4",
+    "@tsconfig/next": "^1.0.4",
+    "@types/node": "18.11.18",
+    "@types/react": "18.0.26",
+    "@types/react-dom": "18.0.10",
+    "@types/styled-components": "^5.1.26",
+    "eslint": "8.30.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
-    "@types/node": "^17.0.12",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
-    "typescript": "^4.5.3"
+    "typescript": "4.9.4"
   }
 }
