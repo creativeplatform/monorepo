@@ -1,0 +1,205 @@
+//SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import {RedirectAll, ISuperToken, IConstantFlowAgreementV1, ISuperfluid} from "./RedirectAll.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
+contract TradeableCashflow is ERC721, RedirectAll {
+
+  address internal internalContract;
+
+  //address private owner;
+  
+  uint public currentTokenID;
+
+  /// @notice The EIP-712 typehash for the contract's domain
+  bytes32 public constant DOMAIN_TYPEHASH = keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
+
+  /// @notice The EIP-712 typehash for the contract's permit
+  bytes32 public constant PERMIT_TYPEHASH = keccak256("Permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)");
+
+  /// @notice A record of states for signing / validating signatures
+  mapping (address => uint) public nonces;
+
+  constructor (
+    address _owner,
+    string memory _name,
+    string memory _symbol,
+    string memory _baseURI,
+    ISuperfluid host,
+    IConstantFlowAgreementV1 cfa,
+    ISuperToken acceptedToken
+  )
+    ERC721 ( _name, _symbol)
+    RedirectAll (
+      host,
+      cfa,
+      acceptedToken,
+      _owner
+     )
+      {
+      _mint(owner, 1);
+      _setBaseURI(_baseURI);
+      owenr = _owner;
+      currentTokenID = 0;
+  }
+
+  /** ========== public view function ========== */
+  /**
+  * @dev Returns the address of the current owner.
+  */
+  function owner() public view virtual returns (address) {
+      return owner;
+  }
+
+
+  /** ========== public mutative function ========== */
+  function safeTransferFrom(address from, address to, uint256 tokenId) public override {
+        safeTransferFrom(from, to, tokenId, "");
+  }
+
+
+  /** ========== external mutative function ========== */
+    function mint(address to) external {
+        _singlemint(to);
+    }
+
+    function batchmint(address to, uint amount) external {
+        _batchmint(to,amount);
+    }
+
+  /*
+     * @notice Triggers an approval from owner to spends
+     * @param holder The address to approve from
+     * @param spender The address to be approved
+     * @param _tokenId the tokenId which you want to approve
+     * @param nonce The contract state required to match the signature
+     * @param expiry The time at which to expire the signature
+     * @param v The recovery byte of the signature
+     * @param r Half of the ECDSA signature pair
+     * @param s Half of the ECDSA signature pair
+     */
+    function singlepermit(address holder, address spender, uint256 nonce, uint256 expiry, uint _tokenId,
+                    bool allowed, uint8 v, bytes32 r, bytes32 s) external
+    {
+        string memory name = name();
+        bytes32 DOMAIN_SEPARATOR = keccak256(abi.encode(DOMAIN_TYPEHASH,keccak256(bytes(name)),getChainId(),address(this)));
+        bytes32 STRUCTHASH = keccak256(abi.encode(PERMIT_TYPEHASH,holder,spender,nonce,expiry,allowed));
+        bytes32 digest = keccak256(abi.encodePacked("\x19\x01",DOMAIN_SEPARATOR,STRUCTHASH));
+
+        require(holder != address(0), "invalid-address-0");
+        require(holder == ecrecover(digest, v, r, s), "invalid-permit");
+        require(expiry == 0 || block.timestamp <= expiry, "permit-expired");
+        require(nonce == nonces[holder]++, "invalid-nonce");
+        uint tokenId = allowed ? _tokenId : 0;
+        _approve(spender, tokenId);
+        emit approvalwithpermit(holder, spender, tokenId);
+    }
+
+    /*
+     * @notice Triggers an approval from owner to spends
+     * @param holder The address to approve from
+     * @param spender The address to be approved
+     * @param approved appove all of the token you have 
+     * @param nonce The contract state required to match the signature
+     * @param expiry The time at which to expire the signature
+     * @param v The recovery byte of the signature
+     * @param r Half of the ECDSA signature pair
+     * @param s Half of the ECDSA signature pair
+     */
+    function allpermit(address holder, address spender, uint256 nonce, uint256 expiry,
+                    bool allowed, uint8 v, bytes32 r, bytes32 s) external
+    {
+        string memory name = name();
+        bytes32 DOMAIN_SEPARATOR = keccak256(abi.encode(DOMAIN_TYPEHASH,keccak256(bytes(name)),getChainId(),address(this)));
+        bytes32 STRUCTHASH = keccak256(abi.encode(PERMIT_TYPEHASH,holder,spender,nonce,expiry,allowed));
+        bytes32 digest = keccak256(abi.encodePacked("\x19\x01",DOMAIN_SEPARATOR,STRUCTHASH));
+
+        require(holder != address(0), "invalid-address-0");
+        require(holder == ecrecover(digest, v, r, s), "invalid-permit");
+        require(expiry == 0 || block.timestamp <= expiry, "permit-expired");
+        require(nonce == nonces[holder]++, "invalid-nonce");
+        setApprovalForAll(spender, allowed);
+        emit approvalwithallpermit(holder, spender);
+    }
+
+
+  /** ========== external mutative onlyOwner function ========== */
+
+  function setBaseURI(string memory baseURI_) external onlyOwner {
+    _setBaseURI(baseURI_);
+  }
+
+  function setTokenURI(uint256 tokenId, string memory _tokenURI) external onlyOwner {
+    _setTokenURI(tokenId,_tokenURI);
+  }
+
+  function setInternalContract(address _internalContract) external onlyOwner {
+    require(_internalContract == address(0), "you can set a null addresss");
+    internalContract = _internalContract;
+  }
+
+  function transferOwnership(address newOwner) public virtual onlyOwner {
+    require(newOwner != address(0), "Ownable: new owner is the zero address");
+    emit OwnershipTransferred(_owner, newOwner);
+    _owner = newOwner;
+  }
+
+  
+
+  /** ========== internal mutative function ========== */
+
+  /**  This function will be called every transfer()/transferfrom() happen. 
+       It's a hook from Superfluid through RedirectAll function   */
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokeniD
+  ) internal override {
+      _changeReceiver(to);
+  }
+
+  function _batchmint(address to,uint amount) internal {
+    require(amount != 0, "you must set a amount");
+    for(uint i=0; i<amount;i++){
+        _singlemint(to);
+    }
+    emit batchmints(to, amount);
+  }
+
+  function _singlemint(address to) internal {
+    require(to != address(0), "to address is not allowed be zero");
+    _safeMint(to, currentTokenID);
+    currentTokenID++;
+  }
+
+  /** ===================== internal view function ===================== */
+
+  function getChainId() internal view returns (uint) {
+    uint256 chainId;
+    assembly { chainId := chainid() }
+    return chainId;
+  }
+
+
+  /** ========== modifier ========== */
+
+
+  modifier isInternalContract {
+    require(_msgSender() == internalContract, "this function is only allowed to be called by internal contracts");
+    _;
+  }
+
+  modifier onlyOwner() {
+    require(owner() == _msgSender(), "Ownable: caller is not the owner");
+    _;
+  }
+
+  
+
+  /** ========== event ========== */
+  event approvalwithpermit(address indexed holder, address indexed spender, uint indexed tokenId);
+  event approvalwithallpermit(address indexed holder, address indexed spender);
+  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+}
