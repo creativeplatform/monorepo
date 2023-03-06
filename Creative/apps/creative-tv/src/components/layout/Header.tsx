@@ -293,7 +293,7 @@ export function Header(props: Props) {
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
                     onClick={() => router.push('')}>
-                    CREATIVE Kids
+                    CREATIVE Kidz
                   </Button>
                   <Button
                     bg={bg}
@@ -377,20 +377,7 @@ export function Header(props: Props) {
                     fontWeight={700}
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('/pages/all-assets')}>
-                    All Assets
-                  </Button>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('/pages/upload-video-assets')}>
+                    onClick={() => router.push('/upload-video-assets')}>
                     Upload Video Assets
                   </Button>
                   <Button
@@ -403,7 +390,7 @@ export function Header(props: Props) {
                     fontWeight={700}
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('/pages/swiper-controls')}>
+                    onClick={() => router.push('/swiper-controls')}>
                     Swiper Controls
                   </Button>
                   <Button
@@ -431,19 +418,6 @@ export function Header(props: Props) {
                     _focus={{ boxShadow: 'none' }}
                     onClick={() => router.push('/examples/sign')}>
                     Sign & verify messages
-                  </Button>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('/examples/siwe')}>
-                    Sign-in With Ethereum
                   </Button>
                 </PopoverContent>
               </Popover>
@@ -606,7 +580,7 @@ export function Header(props: Props) {
                   fontWeight={700}
                   _hover={{ color: cl }}
                   _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('')}>
+                  onClick={() => router.push('https://blog.creativeplatform.xyz')}>
                   Blog
                 </Button>
                 <Button
@@ -646,19 +620,7 @@ export function Header(props: Props) {
                       fontWeight={700}
                       _hover={{ color: cl }}
                       _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('/pages/all-assets')}>
-                      All Assets
-                    </Button>
-                    <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('/pages/upload-video-assets')}>
+                      onClick={() => router.push('/upload-video-assets')}>
                       Upload Video Assets
                     </Button>
                     <Button
@@ -670,7 +632,7 @@ export function Header(props: Props) {
                       fontWeight={700}
                       _hover={{ color: cl }}
                       _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('/pages/swiper-controls')}>
+                      onClick={() => router.push('/swiper-controls')}>
                       Swiper Controls
                     </Button>
                     <Button
@@ -696,18 +658,6 @@ export function Header(props: Props) {
                       _focus={{ boxShadow: 'none' }}
                       onClick={() => router.push('/examples/sign')}>
                       Sign & verify messages
-                    </Button>
-                    <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('/examples/siwe')}>
-                      Sign-in With Ethereum
                     </Button>
                   </PopoverContent>
                 </Popover>
