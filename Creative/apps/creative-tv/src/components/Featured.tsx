@@ -21,9 +21,9 @@ export default function FeaturedVideo() {
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <Container maxW={'7xl'}>
-        <Stack align={'center'} spacing={{ base: 0, md: -10 }} py={{ base: 20, md: 28 }} direction={{ base: 'column', md: 'row' }}>
+        <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 28 }} direction={{ base: 'column', md: 'row' }}>
           <Flex flex={1} justify={'left'} align={'center'} position={'relative'} w={'full'}>
-            <Box position={'relative'} height={'28s0px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
+            <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
               <IconButton
                 aria-label={'Play Button'}
                 variant={'ghost'}
@@ -48,11 +48,28 @@ export default function FeaturedVideo() {
                 controls={{
                   autohide: 3000,
                 }}
+                theme={{
+                  borderStyles: {
+                    containerBorderStyle: 'solid',
+                  },
+                  colors: {
+                    accent: '#EC407A',
+                  },
+                  space: {
+                    controlsBottomMarginX: '10px',
+                    controlsBottomMarginY: '5px',
+                    controlsTopMarginX: '15px',
+                    controlsTopMarginY: '10px',
+                  },
+                  radii: {
+                    containerBorderRadius: '0px',
+                  },
+                }}
               />
             </Box>
           </Flex>
           <Stack flex={1} spacing={{ base: 5, md: 10 }}>
-            <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: '4xl', sm: '3xl', lg: '5xl' }} zIndex={-1}>
+            <Heading lineHeight={1.5} fontWeight={600} fontSize={{ base: '3xl', sm: '3xl', lg: '4xl' }} zIndex={-1}>
               <Text
                 as={'span'}
                 position={'relative'}
