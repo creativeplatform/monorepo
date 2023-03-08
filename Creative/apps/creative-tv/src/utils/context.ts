@@ -20,8 +20,8 @@ export const HERO_BUTTONS = {
 export const HERO_IMAGE = 'https://bafybeiefwmq6zykvyhwih5qbhucxrc34zbtxjbwboz7hdgkyh3u6p2ykfa.ipfs.nftstorage.link'
 
 export const FEATURED_TEXT = {
-  top: 'Record. Watch. Brand',
-  middle: 'Stream. Create. Inspire',
+  top: 'Record. Watch. Brand.',
+  middle: 'Stream. Create. Inspire.',
   bottom: 'Engage. Dream. Earn.',
 }
 

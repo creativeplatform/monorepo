@@ -112,7 +112,7 @@ export default function AllAssets() {
                 </Button>
                 <Button 
                   backgroundColor={'#EC407A'}
-                  onClick={() => router.push(`/pages/mint-nft-video?assetId=${video.id}`)}
+                  onClick={() => router.push(`/mint-nft-video?assetId=${video.id}`)}
                   className="card-mint-button"
                   as={motion.div}
                   _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}

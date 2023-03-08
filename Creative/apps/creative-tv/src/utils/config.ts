@@ -16,7 +16,8 @@ declare var process: {
     NODE_ENV: string,
     NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
     NEXT_PUBLIC_ALCHEMY_API_KEY: string,
-    NEXT_PUBLIC_INFURA_API_KEY: string
+    NEXT_PUBLIC_INFURA_API_KEY: string,
+    NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
   }
 }
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
@@ -25,6 +26,7 @@ export const NODE_ENV = process.env.NODE_ENV
 export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
 export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
+export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
@@ -52,6 +54,22 @@ export const SOCIAL_LINKEDIN = 'https://www.linkedin.com/company/creativeplatfor
 
 export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai]
 export const POLYGON_CHAINS = [polygon, polygonMumbai]
+
+// FEATURED CAROUSEL PLAYLISTS
+export const CAROUSEL_PLAYLISTS = {
+  0: {
+    title: 'Trending 📊',
+    description: 'The most popular content on Creative TV.',
+    playbackId_1: '4f48u0omlcqyr3m6',
+    name_1: 'Rick Ross - Marketing Tips 🗝️',
+    playbackId_2: '1f71utfh75p4tpbd',
+    name_2:'Pharrell Williams - Creative Tips 🗝️',
+    playbackId_3: '888chjxkvazioepb',
+    name_3: 'Scarygary-Videoslides',
+    playbackId_4: '5b65uxvpp4faprtq',
+    name_4: 'Interview With Chatgptv2',
+  }
+}
 
 // Title text for the various transaction notifications.
 export const TRANSACTION_TITLES = {

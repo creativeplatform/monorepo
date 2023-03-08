@@ -1,12 +1,22 @@
 import { Player, useAssetMetrics, useCreateAsset } from '@livepeer/react'
-
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-
-import { Box, Text, Badge, Button, Flex, keyframes } from '@chakra-ui/react'
+import { Box, Text, Badge, Button, Flex, Progress } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
+
+interface AssetProps {
+  title: string;
+  description: string;
+  animation_url: string;
+  external_url: string;
+  image_url: string;
+  properties: {
+    playbackId: string;
+    videoIpfs: string;
+  }
+}
 
 const CreateAndViewAsset = () => {
   const [video, setVideo] = useState<File | undefined>()
@@ -36,7 +46,7 @@ const CreateAndViewAsset = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'video/*': ['.mp4'],
+      'video/*': ['*.mp4'],
     },
     maxFiles: 1,
     onDrop,
@@ -51,7 +61,11 @@ const CreateAndViewAsset = () => {
         : progress?.[0].phase === 'waiting'
         ? 'Waiting...'
         : progress?.[0].phase === 'uploading'
-        ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+        ? (
+            <Box>
+              {`Uploading:` && <Progress hasStripe isAnimated colorScheme='#EC407A' value={Math.round(progress?.[0]?.progress * 100)} /> }
+            </Box>
+        )
         : progress?.[0].phase === 'processing'
         ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
         : null,
@@ -61,8 +75,8 @@ const CreateAndViewAsset = () => {
   return (
     <Box>
       {!asset && (
-        <Box className="parent-dropZone">
-          <Box className="dropZone" as="div" {...getRootProps()}>
+        <Box className="parent-dropZone" w='100%' p={4}>
+          <Box className="dropZone" {...getRootProps()}>
             <Box as="input" {...getInputProps()} />
             <Box as="span">
               <Text className="drag-txt">Drag and drop or browse files</Text>
@@ -85,26 +99,33 @@ const CreateAndViewAsset = () => {
           <Button
             className="mint-button"
             as={motion.div}
+            bgColor={'#EC407A'}
             _hover={{ transform: 'scale(1.1)' }}
             onClick={() => {
               createAsset?.()
             }}
             disabled={isLoading || !createAsset}>
-            Upload
+            Upload Video
           </Button>
         )}
       </Flex>
       {asset?.[0]?.playbackId && (
         <Box className="Proceed-button">
           <Button
-            onClick={() => router.push(`/pages/mint-nft-video?assetId=${asset[0].id}`)}
+            onClick={() => router.push(`/mint-nft-video?assetId=${asset[0].id}`)}
             className="mint-button"
+            bgColor={'#EC407A'}
             as={motion.div}
             _hover={{ transform: 'scale(1.1)' }}>
             Proceed to Mint NFT
           </Button>
         </Box>
       )}
+      <Flex key={asset?.[0].id}>
+        <Box>Asset Name: {asset?.[0].name}</Box>
+        <Box>Playback URL: {asset?.[0].playbackUrl}</Box>
+        <Box>IPFS CID: {asset?.[0].storage?.ipfs?.cid ?? 'None'}</Box>
+      </Flex>
     </Box>
   )
 }
