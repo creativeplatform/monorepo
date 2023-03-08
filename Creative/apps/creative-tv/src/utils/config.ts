@@ -55,6 +55,22 @@ export const SOCIAL_LINKEDIN = 'https://www.linkedin.com/company/creativeplatfor
 export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai]
 export const POLYGON_CHAINS = [polygon, polygonMumbai]
 
+// FEATURED CAROUSEL PLAYLISTS
+export const CAROUSEL_PLAYLISTS = {
+  0: {
+    title: 'Trending 📊',
+    description: 'The most popular content on Creative TV.',
+    playbackId_1: '4f48u0omlcqyr3m6',
+    name_1: 'Rick Ross - Marketing Tips 🗝️',
+    playbackId_2: '1f71utfh75p4tpbd',
+    name_2:'Pharrell Williams - Creative Tips 🗝️',
+    playbackId_3: '888chjxkvazioepb',
+    name_3: 'Scarygary-Videoslides',
+    playbackId_4: '5b65uxvpp4faprtq',
+    name_4: 'Interview With Chatgptv2',
+  }
+}
+
 // Title text for the various transaction notifications.
 export const TRANSACTION_TITLES = {
   transactionStarted: 'Local Transaction Started',
