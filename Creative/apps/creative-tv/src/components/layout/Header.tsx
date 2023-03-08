@@ -390,19 +390,6 @@ export function Header(props: Props) {
                     fontWeight={700}
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('/swiper-controls')}>
-                    Swiper Controls
-                  </Button>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
                     onClick={() => router.push('')}>
                     Error Page
                   </Button>
@@ -622,18 +609,6 @@ export function Header(props: Props) {
                       _focus={{ boxShadow: 'none' }}
                       onClick={() => router.push('/upload-video-assets')}>
                       Upload Video Assets
-                    </Button>
-                    <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('/swiper-controls')}>
-                      Swiper Controls
                     </Button>
                     <Button
                       color="black.700"

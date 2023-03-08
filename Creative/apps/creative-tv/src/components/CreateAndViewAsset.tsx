@@ -1,8 +1,6 @@
 import { Player, useAssetMetrics, useCreateAsset } from '@livepeer/react'
-
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-
 import { Box, Text, Badge, Button, Flex, Progress } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import { motion } from 'framer-motion'

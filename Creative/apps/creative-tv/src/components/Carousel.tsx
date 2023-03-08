@@ -1,4 +1,4 @@
-import { Box, createIcon, Image } from "@chakra-ui/react";
+import { Box, createIcon, Heading, Image } from "@chakra-ui/react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { Provider, Carousel, LeftButton, RightButton, } from "chakra-ui-carousel";
 import { LivepeerConfig, Player } from '@livepeer/react'
@@ -21,6 +21,7 @@ export default function CarouselComponent() {
     return (
         <LivepeerConfig client={useLivepeerClient}>
             <Box>
+                <Heading as="h2" size="lg" mb={8}> You're Bigger Than You Think 💫</Heading>
                 <Provider>
                     <Carousel gap={50}>
                         <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
@@ -156,12 +157,14 @@ export default function CarouselComponent() {
                         bgColor="#EC407A"
                         customIcon={<ArrowLeftIcon />}
                         textColor={"white.500"}
-                        style={{ position: 'absolute', top: '67%', left: '340px', transform: 'translateY(-50%)' }}
+                        style={{ position: 'relative', top: '67%', left: '25rem', transform: 'translateY(-50%)' }}
+                        display={{ sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' }}
                     />
                     <RightButton 
                         bgColor="#FACB80" 
                         customIcon={<ArrowRightIcon />} 
-                        style={{ position: 'absolute', top: '67%', right: '340px', transform: 'translateY(-50%)' }} 
+                        style={{ position: 'relative', left: '30rem', transform: 'translateY(-150%)' }}
+                        display={{ sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' }} 
                     />
                 </Provider>
             </Box>
