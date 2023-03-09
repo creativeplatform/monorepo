@@ -1,18 +1,20 @@
 import React from 'react'
-import { Container, Stack, Flex, Box, Heading, Text, Image, IconButton, createIcon } from '@chakra-ui/react'
+import { Container, Stack, Flex, Box, Heading, Text, IconButton, createIcon } from '@chakra-ui/react'
+import Image from 'next/image'
 import { LIVEPEER_FEATURED_PLAYBACK_ID } from 'utils/config'
 import { FEATURED_TEXT } from 'utils/context'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
+import { CREATIVE_LOGO } from 'utils/context'
 
 const PosterImage = () => {
   return (
     <Image
-      src={'https://bafkreigqxnled3uet6dgimfjsrocoh7lw6u7a2b3jjq6r74nz4kh6a4dnm.ipfs.nftstorage.link/'}
-      height={'100%'}
-      objectFit="cover"
+      src={ CREATIVE_LOGO }
+      fill
+      style={{ objectFit: "cover" }}
       alt="Creative Logo"
-      placeholder="blur"
+      priority
     />
   )
 }

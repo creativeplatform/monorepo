@@ -1,18 +1,20 @@
-import { Box, createIcon, Heading, Image } from "@chakra-ui/react";
+import { Box, createIcon, Heading, Text } from "@chakra-ui/react";
+import Image from 'next/image'
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { Provider, Carousel, LeftButton, RightButton, } from "chakra-ui-carousel";
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { CAROUSEL_PLAYLISTS } from 'utils/config'
+import { CREATIVE_LOGO } from "utils/context";
 
 export const PosterImage = () => {
     return (
       <Image
-        src={'https://bafkreigqxnled3uet6dgimfjsrocoh7lw6u7a2b3jjq6r74nz4kh6a4dnm.ipfs.nftstorage.link/'}
-        height={'100%'}
-        objectFit="cover"
+        src={ CREATIVE_LOGO }
+        fill
+        style={{ objectFit: "cover" }}
         alt="Creative Logo"
-        placeholder="blur"
+        priority
       />
     )
 }
@@ -21,7 +23,23 @@ export default function CarouselComponent() {
     return (
         <LivepeerConfig client={useLivepeerClient}>
             <Box>
-                <Heading as="h2" size="lg" mb={8}> You're Bigger Than You Think 💫</Heading>
+            <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: '2xl', sm: '3xl', lg: '5xl' }} mb={8}>
+              <Text
+                as={'span'}
+                position={'relative'}
+                _after={{
+                  content: "''",
+                  width: 'full',
+                  height: '30%',
+                  position: 'absolute',
+                  bottom: 1,
+                  left: 0,
+                  bg: '#EE774D',
+                  zIndex: -1,
+                }}>
+                {"Bigger Than You Think"}
+              </Text>
+            </Heading>
                 <Provider>
                     <Carousel gap={50}>
                         <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
