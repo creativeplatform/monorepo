@@ -19,6 +19,7 @@ export const HERO_BUTTONS = {
 
 export const HERO_IMAGE = 'https://bafybeiefwmq6zykvyhwih5qbhucxrc34zbtxjbwboz7hdgkyh3u6p2ykfa.ipfs.nftstorage.link'
 
+// FEATURED VIDEO
 export const FEATURED_TEXT = {
   top: 'Record. Watch. Brand.',
   middle: 'Stream. Create. Inspire.',
@@ -26,6 +27,9 @@ export const FEATURED_TEXT = {
 }
 
 export const FEATURED_IMAGE = 'https://bafkreieb7xtj3yfkhi323xdf67xe763oozows6spizgwyoy5bzoiiicdxe.ipfs.nftstorage.link/'
+
+// BIGGER THAN YOU THINK
+export const CREATIVE_LOGO = '/grant-logo.png'
 
 // Profile.tsx
 export const PROFILE_VIDEOS = {
