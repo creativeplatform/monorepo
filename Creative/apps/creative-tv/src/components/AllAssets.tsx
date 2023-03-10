@@ -5,7 +5,7 @@ import { DownloadIcon, ChatIcon, CheckIcon, CheckCircleIcon, LinkIcon } from '@c
 import { motion } from 'framer-motion'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
-import { Video } from 'utils/fetchers/assets'
+import { assetData } from 'utils/fetchers/assets'
 import { SITE_LOGO } from 'utils/config'
 import { FEATURED_IMAGE } from 'utils/context'
 
@@ -15,7 +15,7 @@ const PosterImage = () => {
 
 export default function AllAssets() {
   const router = useRouter()
-  const videos = useQuery<Video[]>([''], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
+  const videos = useQuery<assetData["video"][]>([''], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,
   })
 
@@ -59,7 +59,7 @@ export default function AllAssets() {
                   controls={{ autohide: 500, hotkeys: false }}
                   autoPlay
                   muted
-                  objectFit='cover'
+                  aspectRatio='16to9'
                   showPipButton
                   autoUrlUpload={{fallback: true, ipfsGateway: 'https://w3s.link'}}
                   theme={{

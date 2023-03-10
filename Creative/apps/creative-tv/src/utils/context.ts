@@ -30,6 +30,8 @@ export const FEATURED_IMAGE = 'https://bafkreieb7xtj3yfkhi323xdf67xe763oozows6sp
 
 // BIGGER THAN YOU THINK
 export const CREATIVE_LOGO = '/grant-logo.png'
+export const HEADING_1 = "You're Bigger, Than You Think"
+export const GOVERN_DESC = "Our community is built to push creatives to the front of the line. The following videos have been voted on by the community to choose which videos should get more visibility."
 
 // Profile.tsx
 export const PROFILE_VIDEOS = {

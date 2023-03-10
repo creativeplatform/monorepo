@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import request from 'graphql-request'
 import { NextSeo } from 'next-seo'
-import { BreadcrumbItem, BreadcrumbLink, Breadcrumb, Box } from '@chakra-ui/react'
+import { BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Breadcrumb, Box } from '@chakra-ui/react'
 import AllAssets from '../components/AllAssets'
 import { siwe } from '../siwe'
 import { GetServerSideProps } from 'next'
@@ -45,7 +45,7 @@ export default function Discover() {
     <>
       <NextSeo title="Discover" />
       <Box p={4}>
-        <Breadcrumb separator='💫'>
+        <Breadcrumb>
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
           </BreadcrumbItem>

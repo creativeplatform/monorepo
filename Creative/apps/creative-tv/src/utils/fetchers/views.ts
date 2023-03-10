@@ -1,9 +1,6 @@
 import axios from 'axios'
+import { assetData } from './assets'
 
-export interface View {
-    id?: any | null
-    startViews: number
-}
 
 export const videoViews = axios.create({
     baseURL:   'https://livepeer.studio/api/data/views',
@@ -14,10 +11,10 @@ export const videoViews = axios.create({
     },
 })
 
-export const fetchViews = async (id: any) => {
+export const fetchAssetId = async (id: any) => {
     const [, { assetId }] = id.queryKey
     console.log('Fetching views')
-    const response = await videoViews.get<View>(`/${assetId}/total`)
+    const response = await videoViews.get<assetData['video']>(`/${assetId}/total`)
     const views = response.data
 
     console.log('Views: ', views)

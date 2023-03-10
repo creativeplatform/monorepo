@@ -1,11 +1,11 @@
-import { Box, createIcon, Heading, Text } from "@chakra-ui/react";
+import { Box, createIcon, Heading, Stack, Text } from "@chakra-ui/react";
 import Image from 'next/image'
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { Provider, Carousel, LeftButton, RightButton, } from "chakra-ui-carousel";
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { CAROUSEL_PLAYLISTS } from 'utils/config'
-import { CREATIVE_LOGO } from "utils/context";
+import { CREATIVE_LOGO, HEADING_1, HEADING_2, GOVERN_DESC } from "utils/context";
 
 export const PosterImage = () => {
     return (
@@ -23,7 +23,8 @@ export default function CarouselComponent() {
     return (
         <LivepeerConfig client={useLivepeerClient}>
             <Box>
-            <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: '2xl', sm: '3xl', lg: '5xl' }} mb={8}>
+                <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 28 }} direction={{ base: 'column', md: 'column' }}>
+            <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: '3xl', sm: '3xl', lg: '5xl' }} mb={4}>
               <Text
                 as={'span'}
                 position={'relative'}
@@ -37,23 +38,25 @@ export default function CarouselComponent() {
                   bg: '#EE774D',
                   zIndex: -1,
                 }}>
-                {"Bigger Than You Think"}
+                {HEADING_1}
               </Text>
             </Heading>
+            <Text color={'gray.500'}>{GOVERN_DESC}</Text>
+            </Stack>
                 <Provider>
                     <Carousel gap={50}>
-                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
+                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
                             <Player
                                 title={CAROUSEL_PLAYLISTS[0].name_1}
                                 playbackId={CAROUSEL_PLAYLISTS[0].playbackId_1}
                                 poster={<PosterImage />}
-                                showPipButton
                                 showTitle={true}
-                                aspectRatio="16to9"
+                                aspectRatio="1to1"
                                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                                 showUploadingIndicator={true}
                                 controls={{
                                 autohide: 3000,
+                                hotkeys: true
                                 }}
                                 theme={{
                                 borderStyles: {
@@ -74,18 +77,18 @@ export default function CarouselComponent() {
                                 }}
                             />
                         </Box>
-                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
+                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
                             <Player
                                 title={CAROUSEL_PLAYLISTS[0].name_2}
                                 playbackId={CAROUSEL_PLAYLISTS[0].playbackId_2}
                                 poster={<PosterImage />}
-                                showPipButton
                                 showTitle={true}
-                                aspectRatio="16to9"
+                                aspectRatio="1to1"
                                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                                 showUploadingIndicator={true}
                                 controls={{
                                 autohide: 3000,
+                                hotkeys: true
                                 }}
                                 theme={{
                                 borderStyles: {
@@ -106,18 +109,18 @@ export default function CarouselComponent() {
                                 }}
                             />
                         </Box>
-                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
+                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
                             <Player
                                 title={CAROUSEL_PLAYLISTS[0].name_3}
                                 playbackId={CAROUSEL_PLAYLISTS[0].playbackId_3}
                                 poster={<PosterImage />}
-                                showPipButton
                                 showTitle={true}
-                                aspectRatio="16to9"
+                                aspectRatio="1to1"
                                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                                 showUploadingIndicator={true}
                                 controls={{
                                 autohide: 3000,
+                                hotkeys: true
                                 }}
                                 theme={{
                                 borderStyles: {
@@ -138,18 +141,18 @@ export default function CarouselComponent() {
                                 }}
                             />
                         </Box>
-                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
+                        <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
                             <Player
                                 title={CAROUSEL_PLAYLISTS[0].name_4}
                                 playbackId={CAROUSEL_PLAYLISTS[0].playbackId_4}
                                 poster={<PosterImage />}
-                                showPipButton
                                 showTitle={true}
-                                aspectRatio="16to9"
+                                aspectRatio="1to1"
                                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                                 showUploadingIndicator={true}
                                 controls={{
                                 autohide: 3000,
+                                hotkeys: true
                                 }}
                                 theme={{
                                 borderStyles: {

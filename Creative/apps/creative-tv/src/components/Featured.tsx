@@ -23,9 +23,9 @@ export default function FeaturedVideo() {
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <Container maxW={'7xl'}>
-        <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 28 }} direction={{ base: 'column', md: 'row' }}>
+        <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 18 }} direction={{ base: 'column', md: 'row' }}>
           <Flex flex={1} justify={'left'} align={'center'} position={'relative'} w={'full'}>
-            <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
+            <Box position={'relative'} height={'260px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
               <IconButton
                 aria-label={'Play Button'}
                 variant={'ghost'}
@@ -43,8 +43,10 @@ export default function FeaturedVideo() {
                 playbackId={LIVEPEER_FEATURED_PLAYBACK_ID}
                 poster={<PosterImage />}
                 showPipButton
+                autoPlay
+                muted
                 showTitle={false}
-                aspectRatio="16to9"
+                objectFit='cover'
                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                 showUploadingIndicator={true}
                 controls={{
