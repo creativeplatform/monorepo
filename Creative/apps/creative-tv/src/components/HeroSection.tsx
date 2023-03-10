@@ -71,9 +71,9 @@ export default function HeroSection() {
               </Button>
             </Stack>
           </Stack>
-          <Flex flex={1} justify={'center'} align={'center'} position={'relative'} w={'full'}>
+          <Flex flex={1} justify={'center'} align={'center'} position={'relative'} width={'full'}>
             <Blob w={'150%'} h={'150%'} position={'absolute'} top={'-20%'} left={0} zIndex={-1} color={useColorModeValue('#FF4583', '#D93B6F')} />
-            <Box position={'relative'} height={'260px'} rounded={'2xl'} boxShadow={'2xl'} width={'full'} overflow={'hidden'}>
+            <Box position={'relative'} height={'240px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
               <IconButton
                 aria-label={'Play Button'}
                 variant={'ghost'}
@@ -90,9 +90,12 @@ export default function HeroSection() {
                 title="Creative Introduction"
                 playbackId={LIVEPEER_HERO_PLAYBACK_ID}
                 poster={<PosterImage />}
-                showPipButton
                 showTitle={false}
-                aspectRatio="16to9"
+                objectFit='cover'
+                autoPlay
+                muted
+                loop
+                priority
                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                 showUploadingIndicator={true}
                 controls={{
