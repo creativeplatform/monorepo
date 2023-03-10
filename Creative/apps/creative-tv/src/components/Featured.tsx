@@ -5,14 +5,14 @@ import { LIVEPEER_FEATURED_PLAYBACK_ID } from 'utils/config'
 import { FEATURED_TEXT } from 'utils/context'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
-import { CREATIVE_LOGO } from 'utils/context'
+import { CREATIVE_LOGO_BLK } from 'utils/context'
 
 const PosterImage = () => {
   return (
     <Image
-      src={ CREATIVE_LOGO }
+      src={ CREATIVE_LOGO_BLK }
       fill
-      style={{ objectFit: "cover" }}
+      style={{ objectFit: "contain" }}
       alt="Creative Logo"
       priority
     />
@@ -25,19 +25,7 @@ export default function FeaturedVideo() {
       <Container maxW={'7xl'}>
         <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 18 }} direction={{ base: 'column', md: 'row' }}>
           <Flex flex={1} justify={'left'} align={'center'} position={'relative'} w={'full'}>
-            <Box position={'relative'} height={'260px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
-              <IconButton
-                aria-label={'Play Button'}
-                variant={'ghost'}
-                _hover={{ bg: 'transparent' }}
-                icon={<PlayIcon w={12} h={12} />}
-                size={'lg'}
-                color={'white'}
-                position={'absolute'}
-                left={'50%'}
-                top={'50%'}
-                transform={'translateX(-50%) translateY(-50%)'}
-              />
+            <Box position={'relative'} height={'auto'} rounded={'xl'} boxShadow={'xl'} width={'auto'} overflow={'hidden'}>
               <Player
                 title="Creative Introduction"
                 playbackId={LIVEPEER_FEATURED_PLAYBACK_ID}
@@ -47,7 +35,7 @@ export default function FeaturedVideo() {
                 muted
                 loop
                 showTitle={false}
-                objectFit='cover'
+                objectFit='contain'
                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
                 showUploadingIndicator={true}
                 controls={{

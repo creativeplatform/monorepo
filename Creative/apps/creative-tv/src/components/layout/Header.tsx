@@ -23,20 +23,24 @@ import {
   Stack,
   Center,
   Divider,
+  Image,
 } from '@chakra-ui/react'
 import { useScroll } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu } from 'react-icons/ai'
-import { SITE_NAME } from 'utils/config'
+import { SITE_NAME, SITE_LOGO } from 'utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { ConnectWallet } from './ConnectWallet'
 
 interface Props {
   className?: string
+  icon?: string
+  title?: string
+  children?: React.ReactNode
 }
 
-export function Header(props: Props) {
-  const className = props.className ?? ''
+export function Header({className}:Props) {
+  const styleName = className ?? ''
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
@@ -57,7 +61,7 @@ export function Header(props: Props) {
 
   const { height } = ref.current ? ref.current : { height: 0 }
 
-  const Section = (props: any) => {
+  const Section = ({icon, title, children}:Props) => {
     const ic = useColorModeValue('brand.600', 'brand.200')
     const hbg = useColorModeValue('gray.100', 'brand.400')
     const tcl = useColorModeValue('gray.900', 'brand.100')
@@ -74,14 +78,14 @@ export function Header(props: Props) {
           viewBox="0 0 24 24"
           stroke="currentColor"
           aria-hidden="true">
-          {props.icon}
+          {icon}
         </chakra.svg>
         <Box pl={4}>
           <Text size="sm" fontWeight="700" color={tcl}>
-            {props.title}
+            {title}
           </Text>
           <chakra.div mt={1} fontSize="sm" color={dcl}>
-            {props.children}
+            {children}
           </chakra.div>
         </Box>
       </Box>
@@ -258,7 +262,7 @@ export function Header(props: Props) {
       spacing={2}
       rounded="sm"
       shadow="sm"
-      className={className}
+      className={styleName}
       zIndex={'dropdown'}
       >
         <Flex w="full" h="full" px="6" alignItems="center" justifyContent="space-between" className="mobile-view">
@@ -466,7 +470,7 @@ export function Header(props: Props) {
   return (
     <>
       <chakra.header
-        className={className}
+        className={styleName}
         ref={ref}
         shadow={y > height ? 'sm' : undefined}
         transition="box-shadow 0.2s"
@@ -476,8 +480,9 @@ export function Header(props: Props) {
         w="full"
         overflowY="hidden">
         <chakra.div h="84px" mx="auto" maxW="1770px">
-          <Flex w="full" h="full" px="6" alignItems="center" justifyContent="space-between">
-            <Flex align="flex-start">
+          <Flex minWidth="max-content" h="full" px="6" alignItems="center" justifyContent="space-between">
+            <Flex align="flex-start" >
+            <HStack p={2}>
               <Button
                 bg={bg}
                 px="0"
@@ -488,16 +493,15 @@ export function Header(props: Props) {
                 _hover={{ color: 'black' }}
                 _focus={{ boxShadow: 'none', color: 'black.500' }}
                 onClick={() => router.push('/')}>
-                <HStack>
-                  {/* Add CREATIVE logo here */}
-                  <Heading color={useColorModeValue('black.900', 'white')} as="h1" size="16px" fontWeight={900} gap={5}>
-                    {SITE_NAME}
-                  </Heading>
-                </HStack>
+                    <Image src={SITE_LOGO} alt="Creative Logo" boxSize={"4rem"} objectFit='contain'/>
+                    <Heading color={useColorModeValue('black.900', 'white')} as="h1" size="16px" fontWeight={900} gap={5}>
+                      {SITE_NAME}
+                    </Heading>
               </Button>
+              </HStack>
             </Flex>
             <Flex>
-              <HStack spacing="5" gap={30} display={{ base: 'none', md: 'flex' }}>
+              <HStack spacing="1" gap={10} display={{ base: 'none', md: 'flex' }}>
                 <Popover>
                   <PopoverTrigger>
                     <Button

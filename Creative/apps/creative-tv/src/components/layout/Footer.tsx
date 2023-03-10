@@ -1,6 +1,7 @@
-import { Box, Container, Link, SimpleGrid, Stack, Text, Flex, Tag, useColorModeValue } from '@chakra-ui/react'
+import { Box, Container, Link, SimpleGrid, Stack, Text, Flex, Tag, useColorModeValue, Image } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { SOCIAL_GITHUB, SOCIAL_TWITTER, SITE_NAME, SOCIAL_LENS, SOCIAL_DISCORD, SOCIAL_LINKEDIN, SOCIAL_EMAIL, SITE_COPYRIGHT } from 'utils/config'
+import { CREATIVE_LOGO_BLK } from 'utils/context'
 
 interface Props {
   className?: string
@@ -88,8 +89,12 @@ export default function Footer(props: Props): JSX.Element {
             flexGrow: 1,
             ml: 8,
           }}>
-            {/* Add CREATIVE Logo HERE */}
-          {SITE_NAME}
+              <Image 
+                src={ CREATIVE_LOGO_BLK }
+                alt="Creative Logo"
+                boxSize='200px'
+                objectFit = 'contain'
+              />
         </Flex>
         <Text pt={6} fontSize={'sm'} textAlign={'center'}>
           {SITE_COPYRIGHT}

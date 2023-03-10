@@ -5,14 +5,14 @@ import { Provider, Carousel, LeftButton, RightButton, } from "chakra-ui-carousel
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { CAROUSEL_PLAYLISTS } from 'utils/config'
-import { CREATIVE_LOGO, HEADING_1, GOVERN_DESC } from "utils/context";
+import { CREATIVE_LOGO_WHT, HEADING_1, GOVERN_DESC } from "utils/context";
 
 export const PosterImage = () => {
     return (
       <Image
-        src={ CREATIVE_LOGO }
+        src={ CREATIVE_LOGO_WHT }
         fill
-        style={{ objectFit: "cover" }}
+        style={{ objectFit: "contain" }}
         alt="Creative Logo"
         priority
       />
