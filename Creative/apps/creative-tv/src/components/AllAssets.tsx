@@ -10,7 +10,7 @@ import { SITE_LOGO } from 'utils/config'
 import { FEATURED_IMAGE } from 'utils/context'
 
 const PosterImage = () => {
-  return <Image  src={`${FEATURED_IMAGE}`} height={'100%'} objectFit="cover" alt="Creative Logo" placeholder="blur" />
+  return <Image  src={`${FEATURED_IMAGE}`} height={'100%'} objectFit="contain" alt="Creative Logo" />
 }
 
 export default function AllAssets() {
