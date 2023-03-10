@@ -25,7 +25,6 @@ import {
   Divider,
 } from '@chakra-ui/react'
 import { useScroll } from 'framer-motion'
-import { FaUser } from 'react-icons/fa'
 import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { SITE_NAME } from 'utils/config'
@@ -162,7 +161,7 @@ export function Header(props: Props) {
               <LinkOverlay href="https://boardroom.io/creativeorg/overview" target={'_blank'}>
                 <Text>
                   Looking for a way to help liven up our community? Introducing DAO Proposals! Our community is managed via a DAO and all that action
-                  happens here. From exciting new features to heated debates on the best way to run things, it’s all happening on DAO Proposals. So come
+                  happens here. From exciting new features to heated debates on the best way to run things, it&rsquo;s all happening on DAO Proposals. So come
                   join us and see what all the fuss is about!
                 </Text>
               </LinkOverlay>
@@ -252,18 +251,19 @@ export function Header(props: Props) {
       right={0}
       display={mobileNav.isOpen ? 'flex' : 'none'}
       flexDirection="column"
-      p={2}
-      pb={4}
-      m={2}
+      p={20}
+      pb={40}
+      m={10}
       bg={bg}
-      spacing={3}
+      spacing={2}
       rounded="sm"
       shadow="sm"
-      className={className}>
-      <Box h="4.5rem" mx="auto" maxW="1200px">
+      className={className}
+      zIndex={'dropdown'}
+      >
         <Flex w="full" h="full" px="6" alignItems="center" justifyContent="space-between" className="mobile-view">
           <Flex>
-            <HStack spacing="5" gap={30} display={{ base: 'flex', md: 'flex' }}>
+            <VStack display={{ base: 'flex', md: 'flex' }}>
               <Popover>
                 <PopoverTrigger>
                   <Button
@@ -456,15 +456,10 @@ export function Header(props: Props) {
                   <Features />
                 </PopoverContent>
               </Popover>
-              <ConnectWallet />
-              {/* <NotificationDrawer /> */}
-              <Box className="mobile-icon-box">
-                <FaUser className="user-icon" />
-              </Box>
-            </HStack>
+            </VStack>
           </Flex>
         </Flex>
-      </Box>
+
       <CloseButton aria-label="Close menu" justifySelf="self-start" className="close-btn" onClick={mobileNav.onClose} />
     </VStack>
   )
@@ -681,24 +676,20 @@ export function Header(props: Props) {
                     <Features />
                   </PopoverContent>
                 </Popover>
-
-                {/* <NotificationDrawer /> */}
               </HStack>
             </Flex>
-            {/* {children} */}
             <HStack spacing="4" display={{ base: 'flex', md: 'flex' }}>
-              <ConnectWallet />
-              {/* <NotificationDrawer /> */}
-              <ThemeSwitcher />
-              <IconButton
-                display={{ base: 'flex', md: 'none' }}
-                variant="outline"
-                aria-label="Open menu"
-                fontSize="20px"
-                colorScheme="white"
-                icon={<AiOutlineMenu />}
-                onClick={mobileNav.onOpen}
-              />
+                <ConnectWallet />
+                <ThemeSwitcher />
+                <IconButton
+                  display={{ base: 'flex', md: 'none' }}
+                  variant="outline"
+                  aria-label="Open menu"
+                  fontSize="20px"
+                  colorScheme="white"
+                  icon={<AiOutlineMenu />}
+                  onClick={mobileNav.onOpen}
+                />
             </HStack>
           </Flex>
           {MobileNavContent}

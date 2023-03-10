@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
 import { ConnectKitButton } from 'connectkit'
-
 import styled from "styled-components";
+import { Box } from '@chakra-ui/react';
+
 const StyledButton = styled.button`
   cursor: pointer;
   position: relative;
@@ -28,14 +29,16 @@ const StyledButton = styled.button`
 
 export const ConnectWallet = () => {
 	return (
-	  <ConnectKitButton.Custom>
-		{({ isConnected, isConnecting, show, hide, truncatedAddress, ensName }) => {
-		  return (
-			<StyledButton onClick={show}>
-			  {isConnected ? ensName?? truncatedAddress : "Connect Wallet"}
-			</StyledButton>
-		  );
-		}}
-	  </ConnectKitButton.Custom>
+    <Box>
+      <ConnectKitButton.Custom>
+      {({ isConnected, isConnecting, show, hide, truncatedAddress, ensName }) => {
+        return (
+        <StyledButton onClick={show}>
+          {isConnected ? ensName?? truncatedAddress : "Connect Wallet"}
+        </StyledButton>
+        );
+      }}
+      </ConnectKitButton.Custom>
+    </Box>
 	);
-  };
+};
