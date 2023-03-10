@@ -22,27 +22,26 @@ export const PosterImage = () => {
 export default function CarouselComponent() {
     return (
         <LivepeerConfig client={useLivepeerClient}>
-            <Box>
                 <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 28 }} direction={{ base: 'column', md: 'column' }}>
-            <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: '3xl', sm: '3xl', lg: '5xl' }} mb={4}>
-              <Text
-                as={'span'}
-                position={'relative'}
-                _after={{
-                  content: "''",
-                  width: 'full',
-                  height: '30%',
-                  position: 'absolute',
-                  bottom: 1,
-                  left: 0,
-                  bg: '#EE774D',
-                  zIndex: -1,
-                }}>
-                {HEADING_1}
-              </Text>
-            </Heading>
-            <Text color={'gray.500'}>{GOVERN_DESC}</Text>
-            </Stack>
+                    <Heading lineHeight={1.1} fontWeight={600} fontSize={{ base: '3xl', sm: '3xl', lg: '5xl' }} mb={4}>
+                        <Text
+                            as={'span'}
+                            position={'relative'}
+                            _after={{
+                            content: "''",
+                            width: 'full',
+                            height: '30%',
+                            position: 'absolute',
+                            bottom: 1,
+                            left: 0,
+                            bg: '#EE774D',
+                            zIndex: -1,
+                            }}>
+                            {HEADING_1}
+                        </Text>
+                    </Heading>
+                    <Text color={'gray.500'} textAlign={'center'}>{GOVERN_DESC}</Text>
+                </Stack>
                 <Provider>
                     <Carousel gap={50}>
                         <Box position={'relative'} height={'280px'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
@@ -178,7 +177,7 @@ export default function CarouselComponent() {
                         bgColor="#EC407A"
                         customIcon={<ArrowLeftIcon />}
                         textColor={"white.500"}
-                        style={{ position: 'relative', top: '67%', left: '25rem', transform: 'translateY(-50%)' }}
+                        style={{ position: 'relative', top: '0', left: '25rem', transform: 'translateY(-50%)' }}
                         display={{ sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' }}
                     />
                     <RightButton 
@@ -188,7 +187,6 @@ export default function CarouselComponent() {
                         display={{ sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' }} 
                     />
                 </Provider>
-            </Box>
         </LivepeerConfig>
     );
 }

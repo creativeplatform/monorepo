@@ -45,6 +45,7 @@ export default function FeaturedVideo() {
                 showPipButton
                 autoPlay
                 muted
+                loop
                 showTitle={false}
                 objectFit='cover'
                 autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
