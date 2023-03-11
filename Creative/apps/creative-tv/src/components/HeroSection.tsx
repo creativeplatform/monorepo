@@ -14,8 +14,9 @@ import {
   IconProps,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import { LIVEPEER_HERO_PLAYBACK_ID, NEXT_PUBLIC_STUDIO_API_KEY } from 'utils/config'
-import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS, HERO_IMAGE } from 'utils/context'
+import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS, HERO_IMAGE, FOOTER_LINKS } from 'utils/context'
 import { createReactClient, studioProvider, LivepeerConfig, Player } from '@livepeer/react'
 
 const client = createReactClient({
@@ -27,6 +28,7 @@ const PosterImage = () => {
 }
 
 export default function HeroSection() {
+  const router = useRouter()
   return (
     <LivepeerConfig client={client}>
       <Container maxW={'7xl'}>
@@ -55,7 +57,7 @@ export default function HeroSection() {
             </Heading>
             <Text color={'gray.500'}>{HERO_DESCRIPTION}</Text>
             <Stack spacing={{ base: 4, sm: 6 }} direction={{ base: 'column', sm: 'row' }}>
-              <Button rounded={'full'} size={'lg'} fontWeight={'normal'} px={6} colorScheme={'orange'} bg={'#F2C57C'} _hover={{ bg: '#D9B06F' }}>
+              <Button rounded={'full'} size={'lg'} onClick={() => router.push(FOOTER_LINKS.tutorial)} fontWeight={'normal'} px={6} colorScheme={'orange'} bg={'#F2C57C'} _hover={{ bg: '#D9B06F' }}>
                 {HERO_BUTTONS.primary.text}
               </Button>
               <Button
@@ -66,7 +68,8 @@ export default function HeroSection() {
                 colorScheme={'pink'}
                 bg={'#FF4583'}
                 _hover={{ bg: '#D93B6F' }}
-                leftIcon={<PlayIcon h={4} w={4} color={'gray.100'} />}>
+                leftIcon={<PlayIcon h={4} w={4} color={'gray.100'}/>}
+                onClick={() => router.push(FOOTER_LINKS.whitepaper)}>
                 {HERO_BUTTONS.secondary.text}
               </Button>
             </Stack>
