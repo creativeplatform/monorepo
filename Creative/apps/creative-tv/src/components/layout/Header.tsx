@@ -299,19 +299,6 @@ export function Header({className}:Props) {
                 fontWeight={700}
                 _hover={{ color: cl }}
                 _focus={{ boxShadow: 'none' }}
-                onClick={() => router.push('')}>
-                Blog
-              </Button>
-              <Button
-                bg={bg}
-                color="black.700"
-                display="inline-flex"
-                alignItems="center"
-                fontSize="14px"
-                px="0"
-                fontWeight={700}
-                _hover={{ color: cl }}
-                _focus={{ boxShadow: 'none' }}
                 onClick={() => router.push('/discover')}>
                 Discover
               </Button>
@@ -519,18 +506,6 @@ export function Header({className}:Props) {
                     </Button>
                   </PopoverContent>
                 </Popover>
-                <Button
-                  color="black.700"
-                  display="inline-flex"
-                  alignItems="center"
-                  fontSize="14px"
-                  px="0"
-                  fontWeight={700}
-                  _hover={{ color: cl }}
-                  _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('https://blog.creativeplatform.xyz')}>
-                  Blog
-                </Button>
                 <Button
                   color="black.700"
                   display="inline-flex"
