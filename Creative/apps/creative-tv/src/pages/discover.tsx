@@ -2,7 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import request from 'graphql-request'
 import { NextSeo } from 'next-seo'
-import { BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, Breadcrumb, Box } from '@chakra-ui/react'
+import { BreadcrumbItem, BreadcrumbLink, Breadcrumb, Box } from '@chakra-ui/react'
 import AllAssets from '../components/AllAssets'
 import { siwe } from '../siwe'
 import { GetServerSideProps } from 'next'
@@ -24,8 +24,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
   }
   const locks = [LOCK_ADDRESS_CREATIVE_TV.fan, LOCK_ADDRESS_CREATIVE_TV.creator, LOCK_ADDRESS_CREATIVE_TV.brand]
-  const hasToken = await walletHasToken(locks, address)
-  if (!hasToken) {
+  const tokenHolder = await walletHasToken(locks, address)
+  if (!tokenHolder) {
     return {
       redirect: {
         permanent: false,
