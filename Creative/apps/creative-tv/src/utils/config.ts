@@ -18,6 +18,7 @@ declare var process: {
     NEXT_PUBLIC_ALCHEMY_API_KEY: string,
     NEXT_PUBLIC_INFURA_API_KEY: string,
     NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
+    NEXT_PUBLIC_HOST: string
   }
 }
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
@@ -27,6 +28,7 @@ export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
 export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
+export const HOST = process.env.NEXT_PUBLIC_HOST
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({

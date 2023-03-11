@@ -2,6 +2,7 @@ import React from 'react'
 import { NextSeo } from 'next-seo'
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
+import { HOST, SITE_LOGO } from 'utils/config'
 
 export default function Unauthorized() {
   const url = new URL('https://app.unlock-protocol.com/checkout')
@@ -14,15 +15,15 @@ export default function Unauthorized() {
     pessimistic: true,
     skipRecipient: true,
     title: 'CREATIVE+Memberships',
-    icon: 'https://nftstorage.link/ipfs/bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q',
+    icon: SITE_LOGO,
     persistentCheckout: false,
     referrer: '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260',
     messageToSign: '',
     hideSoldOut: false,
-    redirectUri: 'localhost:3002/discover',
+    redirectUri: `${ HOST }/discover`,
   }
   url.searchParams.append('paywallConfig', JSON.stringify(paywallConfig))
-  url.searchParams.append('redirectTo', 'http://localhost:3002')
+  url.searchParams.append('redirectTo', HOST )
 
   return (
     <>

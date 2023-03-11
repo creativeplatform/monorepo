@@ -24,7 +24,9 @@ import {
   Center,
   Divider,
   Image,
+  Icon,
 } from '@chakra-ui/react'
+import { RiVideoUploadFill } from 'react-icons/ri'
 import { useScroll } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu } from 'react-icons/ai'
@@ -102,7 +104,7 @@ export function Header({className}:Props) {
           <LinkBox color={tcl}>
             <Section
               title="How It Works">
-              <LinkOverlay href="https://creativeplatform.xyz/docs/intro" target="_blank">
+              <LinkOverlay href="https://creativeplatform.xyz/docs/intro" target={"_blank"}>
                 <Text>Documentation on how the Creative platform works</Text>
               </LinkOverlay>
             </Section>
@@ -581,18 +583,6 @@ export function Header({className}:Props) {
                   fontWeight={700}
                   _hover={{ color: cl }}
                   _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('')}>
-                  Events
-                </Button>
-                <Button
-                  color="black.700"
-                  display="inline-flex"
-                  alignItems="center"
-                  fontSize="14px"
-                  px="0"
-                  fontWeight={700}
-                  _hover={{ color: cl }}
-                  _focus={{ boxShadow: 'none' }}
                   onClick={() => router.push('/vote')}>
                   Vote
                 </Button>
@@ -618,9 +608,23 @@ export function Header({className}:Props) {
                     <Features />
                   </PopoverContent>
                 </Popover>
+                
               </HStack>
             </Flex>
             <HStack spacing="4" display={{ base: 'flex', md: 'flex' }}>
+                <Button
+                  rightIcon={<RiVideoUploadFill />}
+                  color="black.700"
+                  display={{ sm:"none", md: "inline-flex", lg: "inline-flex", xl:"inline-flex" }}
+                  alignItems="center"
+                  fontSize="14px"
+                  px="10"
+                  fontWeight={700}
+                  _hover={{ color: cl }}
+                  _focus={{ boxShadow: 'none' }}
+                  onClick={() => router.push('/profile')}>
+                  Upload
+                </Button>
                 <ConnectWallet />
                 <ThemeSwitcher />
                 <IconButton
