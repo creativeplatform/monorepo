@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 //import { EditProfile } from "../lens";
 import { Box, Heading, Text, Image, chakra } from "@chakra-ui/react";
 import { FaTwitter, FaConnectdevelop, FaUserAlt } from "react-icons/fa";
+
 const filterAttributes = (attributes, key) => {
     return attributes.filter((attribute) => attribute.key === key);
 };

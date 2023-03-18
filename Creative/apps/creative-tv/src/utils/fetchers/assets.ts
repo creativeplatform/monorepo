@@ -58,7 +58,7 @@ export const updateAsset = async (id: any, data: any) => {
 
 // VIDEO VIEWS
 export const videoViewsApi = axios.create({
-  baseURL:   'https://livepeer.studio/api/data/views',
+  baseURL: 'https://livepeer.studio/api/data/views',
   headers: {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_STUDIO_API_KEY}`,
       Accept: 'application/json',

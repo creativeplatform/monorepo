@@ -110,6 +110,9 @@ export const SERVER_SESSION_SETTINGS = {
   },
 }
 
+// CREW3 API
+export const CREATIVE_CREW3 = 'thecreativedao'
+
 // 1. export the LENS contract address
 export const LENS_CONTRACT_ADDRESS = '0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d'
 
