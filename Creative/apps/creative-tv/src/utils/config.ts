@@ -62,14 +62,14 @@ export const CAROUSEL_PLAYLISTS = {
   0: {
     title: 'Trending 📊',
     description: 'The most popular content on Creative TV.',
-    playbackId_1: '4f48u0omlcqyr3m6',
-    name_1: 'Rick Ross - Marketing Tips 🗝️',
-    playbackId_2: '1f71utfh75p4tpbd',
-    name_2:'Pharrell Williams - Creative Tips 🗝️',
-    playbackId_3: '888chjxkvazioepb',
-    name_3: 'Scarygary-Videoslides',
-    playbackId_4: '5b65uxvpp4faprtq',
-    name_4: 'Interview With Chatgptv2',
+    playbackId_1: '2cf3hdfx83kqqucf',
+    name_1: 'The Wizards Hat ⌐◨-◨ Animated Short Film',
+    playbackId_2: 'c3c7u34h2y47jqpd',
+    name_2:'Scary Gary Chucks',
+    playbackId_3: '4d8b5ud89j96qkwt',
+    name_3: 'This is Nouns',
+    playbackId_4: '6461dsqs9qjr1dji',
+    name_4: 'Episode 1 - Wait a minute, who are you?',
   }
 }
 
@@ -100,7 +100,7 @@ export const UNLOCK_QUERY_HOLDS_KEY = gql`
 // Livepeer API
 export const LIVEPEER_API_URL = 'https://livepeer.com/api'
 export const LIVEPEER_HERO_PLAYBACK_ID = '3713lxes2gdtl77t'
-export const LIVEPEER_FEATURED_PLAYBACK_ID = 'c3c7u34h2y47jqpd'
+export const LIVEPEER_FEATURED_PLAYBACK_ID = 'ed401mvzp9c9z8gq'
 
 export const SERVER_SESSION_SETTINGS = {
   cookieName: SITE_NAME,
