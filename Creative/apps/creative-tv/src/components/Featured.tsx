@@ -27,7 +27,7 @@ export default function FeaturedVideo() {
           <Flex flex={1} justify={'left'} align={'center'} position={'relative'} w={'full'}>
             <Box position={'relative'} height={'auto'} rounded={'xl'} boxShadow={'xl'} width={'auto'} overflow={'hidden'}>
               <Player
-                title="Creative Introduction"
+                title="Creative Featured Video"
                 playbackId={LIVEPEER_FEATURED_PLAYBACK_ID}
                 poster={<PosterImage />}
                 showPipButton
