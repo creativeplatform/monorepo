@@ -24,7 +24,6 @@ import {
   Center,
   Divider,
   Image,
-  Icon,
 } from '@chakra-ui/react'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { useScroll } from 'framer-motion'
@@ -260,10 +259,10 @@ export function Header({className}:Props) {
                     fontWeight={700}
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('')}>
-                    CREATIVE Kidz
+                    onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
+                    CREATIVE Kidz ⌐◨-◨
                   </Button>
-                  <Button
+                  {/* <Button
                     bg={bg}
                     color="black.700"
                     px="0"
@@ -275,8 +274,8 @@ export function Header({className}:Props) {
                     _focus={{ boxShadow: 'none' }}
                     onClick={() => router.push('')}>
                     News
-                  </Button>
-                  <Button
+                  </Button> */}
+                  {/* <Button
                     bg={bg}
                     color="black.700"
                     px="0"
@@ -288,7 +287,7 @@ export function Header({className}:Props) {
                     _focus={{ boxShadow: 'none' }}
                     onClick={() => router.push('')}>
                     Learning
-                  </Button>
+                  </Button> */}
                 </PopoverContent>
               </Popover>
               <Button
@@ -479,10 +478,10 @@ export function Header({className}:Props) {
                       fontWeight={700}
                       _hover={{ color: cl }}
                       _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('')}>
-                      CREATIVE Kids
+                      onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
+                      CREATIVE Kidz ⌐◨-◨
                     </Button>
-                    <Button
+                    {/* <Button
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -493,8 +492,8 @@ export function Header({className}:Props) {
                       _focus={{ boxShadow: 'none' }}
                       onClick={() => router.push('')}>
                       News
-                    </Button>
-                    <Button
+                    </Button> */}
+                    {/* <Button
                       color="black.700"
                       px="0"
                       display="inline-flex"
@@ -505,7 +504,7 @@ export function Header({className}:Props) {
                       _focus={{ boxShadow: 'none' }}
                       onClick={() => router.push('')}>
                       Learning
-                    </Button>
+                    </Button> */}
                   </PopoverContent>
                 </Popover>
                 <Button
