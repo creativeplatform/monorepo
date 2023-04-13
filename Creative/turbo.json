@@ -4,7 +4,6 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_STUDIO_API_KEY", "NEXT_SESSION_PASSWORD", "NODE_ENV", "NEXT_PUBLIC_SIWE_SESSION_SECRET"],
       "outputs": ["dist/**", ".next/**"]
     },
     "prettier": {
