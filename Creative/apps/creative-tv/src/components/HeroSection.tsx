@@ -75,7 +75,7 @@ export default function HeroSection() {
             </Stack>
           </Stack>
           <Flex flex={1} justify={'center'} align={'center'} position={'relative'} width={'full'}>
-            <Blob w={'150%'} h={'150%'} position={'absolute'} top={'-20%'} left={0} zIndex={-1} color={useColorModeValue('#FF4583', '#D93B6F')} />
+            <Blob w={'120%'} h={'120%'} position={'absolute'} top={'8%'} left={0} zIndex={-1} color={useColorModeValue('#FF4583', '#D93B6F')} />
             <Box position={'relative'} height={'auto'} rounded={'2xl'} boxShadow={'2xl'} width={'auto'} overflow={'hidden'}>
               <IconButton
                 aria-label={'Play Button'}
