@@ -62,7 +62,7 @@ export const CAROUSEL_PLAYLISTS = {
   0: {
     title: 'Trending 📊',
     description: 'The most popular content on Creative TV.',
-    playbackId_1: '2cf3hdfx83kqqucf',
+    playbackId_1: 'd82af4v0nip5tka7',
     name_1: 'The Wizards Hat ⌐◨-◨ Animated Short Film',
     playbackId_2: 'c3c7u34h2y47jqpd',
     name_2:'Scary Gary Chucks',
