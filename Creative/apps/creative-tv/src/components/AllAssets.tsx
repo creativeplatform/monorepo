@@ -7,10 +7,10 @@ import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { assetData } from 'utils/fetchers/assets'
 import { SITE_LOGO } from 'utils/config'
-import { FEATURED_IMAGE } from 'utils/context'
+import { CREATIVE_LOGO_WHT } from 'utils/context'
 
 const PosterImage = () => {
-  return <Image  src={`${FEATURED_IMAGE}`} height={'100%'} objectFit="contain" alt="Creative Logo" />
+  return <Image  src={`${CREATIVE_LOGO_WHT}`} height={'100%'} objectFit="contain" alt="Creative Logo" />
 }
 
 export default function AllAssets() {
@@ -30,7 +30,9 @@ export default function AllAssets() {
     return <Box children='error' />
   }
 
-  const readyVideos = videos.data.filter((video) => video.status.phase === 'ready')
+  const readyVideos = videos.data.filter(
+    (video): video is assetData["video"] => video.status.phase === 'ready'
+  );
 
   return (
   <LivepeerConfig client={useLivepeerClient}>

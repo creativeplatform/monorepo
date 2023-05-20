@@ -36,7 +36,7 @@ export const FEATURED_TEXT = {
   bottom: 'Engage. Dream. Earn.',
 }
 
-export const FEATURED_IMAGE = '/Blog_Logo_wht.png'
+// export const FEATURED_IMAGE = ""
 
 // BIGGER THAN YOU THINK
 export const CREATIVE_LOGO_BLK = '/Blog-Logo_blk.png'
