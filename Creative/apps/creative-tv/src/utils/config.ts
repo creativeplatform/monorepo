@@ -99,8 +99,8 @@ export const UNLOCK_QUERY_HOLDS_KEY = gql`
 
 // Livepeer API
 export const LIVEPEER_API_URL = 'https://livepeer.com/api'
-export const LIVEPEER_HERO_PLAYBACK_ID = '3713lxes2gdtl77t'
-export const LIVEPEER_FEATURED_PLAYBACK_ID = '5c2bzf537qbq0r7o'
+export const LIVEPEER_HERO_PLAYBACK_ID = '3713lxes2gdtl77t' // Welcome To Creative Organization DAO
+export const LIVEPEER_FEATURED_PLAYBACK_ID = '5c2bzf537qbq0r7o'// The Creative Podcast Episode 03
 
 export const SERVER_SESSION_SETTINGS = {
   cookieName: SITE_NAME,
