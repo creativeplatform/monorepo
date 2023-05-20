@@ -111,7 +111,7 @@ export function Header({className}:Props) {
           <LinkBox color={tcl}>
             <Section
               title="CREATIVE Platform">
-              <LinkOverlay href="https://yellow-term-1103.on.fleek.co/" target={'_blank'}>
+              <LinkOverlay href="https://creativeplatform.xyz">
                 <Text>
                   Creatives want the ability to create great content and profits when they want without having to shell out 💰 to do it. So we built our
                   own solution.
@@ -145,7 +145,7 @@ export function Header({className}:Props) {
   
           <LinkBox color={tcl}>
             <Section
-              title="Feature Suggestions"
+              title="Bugs/Feature Suggestions"
             >
               <LinkOverlay href="https://feedback.creativeplatform.xyz" target={'_blank'}>
                 <Text>Suggest a feature to the Creative community for the good of the platform.</Text>
