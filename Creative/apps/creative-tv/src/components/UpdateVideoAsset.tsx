@@ -16,12 +16,11 @@ const UpdateVideoAsset = ({ children }: HeaderProps): JSX.Element => {
         <BreadcrumbItem>
           <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
         </BreadcrumbItem>
-
         <BreadcrumbItem isCurrentPage className="active-crumb">
           <BreadcrumbLink href="#">Update Video Assets</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
-      <LivepeerConfig client={useLivepeerClient}>{/* <UpdateAsset /> */}</LivepeerConfig>
+      <LivepeerConfig client={useLivepeerClient}>{}</LivepeerConfig>
     </Box>
   )
 }
