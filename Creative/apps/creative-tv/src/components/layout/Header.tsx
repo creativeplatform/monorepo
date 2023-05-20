@@ -262,32 +262,6 @@ export function Header({className}:Props) {
                     onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
                     CREATIVE Kidz ⌐◨-◨
                   </Button>
-                  {/* <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('')}>
-                    News
-                  </Button> */}
-                  {/* <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('')}>
-                    Learning
-                  </Button> */}
                 </PopoverContent>
               </Popover>
               <Button
@@ -303,65 +277,6 @@ export function Header({className}:Props) {
                 onClick={() => router.push('/discover')}>
                 Discover
               </Button>
-              <Popover>
-                <PopoverTrigger>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    className="content_items"
-                    px="0"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    rightIcon={<IoIosArrowDown />}>
-                    Pages
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent w="13vw" maxW="md" className="content_child_items" _focus={{ boxShadow: 'md' }}>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('/upload-video-assets')}>
-                    Upload Video Assets
-                  </Button>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('')}>
-                    Error Page
-                  </Button>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('/examples/sign')}>
-                    Sign & verify messages
-                  </Button>
-                </PopoverContent>
-              </Popover>
               <Button
                 bg={bg}
                 color="black.700"
@@ -385,7 +300,7 @@ export function Header({className}:Props) {
                 fontWeight={700}
                 _hover={{ color: cl }}
                 _focus={{ boxShadow: 'none' }}
-                onClick={() => router.push('/vote')}>
+                onClick={() => router.push('https://vote.creativeplatform.xyz')}>
                 Vote
               </Button>
               <Center height="50px">
@@ -481,30 +396,6 @@ export function Header({className}:Props) {
                       onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
                       CREATIVE Kidz ⌐◨-◨
                     </Button>
-                    {/* <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('')}>
-                      News
-                    </Button> */}
-                    {/* <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('')}>
-                      Learning
-                    </Button> */}
                   </PopoverContent>
                 </Popover>
                 <Button
@@ -519,60 +410,6 @@ export function Header({className}:Props) {
                   onClick={() => router.push('/discover')}>
                   Discover
                 </Button>
-                <Popover>
-                  <PopoverTrigger>
-                    <Button
-                      color="black.700"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      px="0"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      rightIcon={<IoIosArrowDown />}>
-                      Pages
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
-                    <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('/upload-video-assets')}>
-                      Upload Video Assets
-                    </Button>
-                    <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('')}>
-                      Error Page
-                    </Button>
-                    <Button
-                      color="black.700"
-                      px="0"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('/examples/sign')}>
-                      Sign & verify messages
-                    </Button>
-                  </PopoverContent>
-                </Popover>
                 <Button
                   color="black.700"
                   display="inline-flex"
@@ -582,7 +419,7 @@ export function Header({className}:Props) {
                   fontWeight={700}
                   _hover={{ color: cl }}
                   _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('/vote')}>
+                  onClick={() => router.push('https://vote.creativeplatform.xyz')}>
                   Vote
                 </Button>
                 <Center height="50px">
@@ -621,7 +458,7 @@ export function Header({className}:Props) {
                   fontWeight={700}
                   _hover={{ color: cl }}
                   _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('/profile')}>
+                  onClick={() => router.push('/upload-video-assets')}>
                   Upload
                 </Button>
                 <ConnectWallet />
