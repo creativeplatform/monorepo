@@ -3,7 +3,7 @@ import { Player, useAssetMetrics, useCreateAsset } from '@livepeer/react'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-import { Box, Text, Badge, Button, HStack, Progress, Input, Textarea } from '@chakra-ui/react'
+import { Box, Text, Badge, Button, HStack, Progress } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
@@ -98,7 +98,6 @@ const CreateAndViewAsset = () => {
               </Text>
               <video
                 src={URL.createObjectURL(video)}
-                height={500}
                 controls
                 style={{ maxWidth: '100%', marginTop: '8px' }}
               />
@@ -107,21 +106,6 @@ const CreateAndViewAsset = () => {
         </Box>
       )}
       {asset?.[0]?.playbackId && <Player title={asset[0].name} playbackId={asset[0].playbackId} />}
-      <Box mb={5}>
-        <Input
-          placeholder="Title"
-          value={assetData.title}
-          onChange={(e) => setAssetData({ ...assetData, title: e.target.value })}
-          />
-      </Box>
-        
-        <Box mb={5}>
-          <Textarea
-          placeholder="Description"
-          value={assetData.description}
-          onChange={(e) => setAssetData({ ...assetData, description: e.target.value })}
-          />
-        </Box>
       <Box className="upload-button">
         <Box>
           {metrics?.metrics?.[0] && <Badge className="views-video">Views: {metrics?.metrics?.[0]?.startViews}</Badge>}
@@ -155,14 +139,11 @@ const CreateAndViewAsset = () => {
         </Box>
       )}
       <Box key={asset?.[0].id}>
-        <HStack spacing={'10px'}>
+        <HStack spacing={'5px'}>
           <Box >Asset Name: {asset?.[0].name}</Box>
           <Box>Playback URL: {asset?.[0].playbackUrl}</Box>
           <Box>IPFS CID: {asset?.[0].storage?.ipfs?.cid ?? 'None'}</Box>
-          <Box>Title: {assetData.title}</Box>
-          <Box>Description: {assetData.description}</Box>
         </HStack>
-        
       </Box>
     </Box>
   )
