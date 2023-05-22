@@ -18,7 +18,8 @@ declare var process: {
     NEXT_PUBLIC_ALCHEMY_API_KEY: string,
     NEXT_PUBLIC_INFURA_API_KEY: string,
     NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
-    NEXT_PUBLIC_HOST: string
+    NEXT_PUBLIC_HOST: string,
+    NEXT_PUBLIC_SMART_WALLET: string
   }
 }
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
@@ -29,6 +30,7 @@ export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
+export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
@@ -56,6 +58,7 @@ export const SOCIAL_LINKEDIN = 'https://www.linkedin.com/company/creativeplatfor
 
 export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai]
 export const POLYGON_CHAINS = [polygon, polygonMumbai]
+export const MUMBAI_CHAIN = [polygonMumbai]
 
 // FEATURED CAROUSEL PLAYLISTS
 export const CAROUSEL_PLAYLISTS = {
@@ -112,6 +115,12 @@ export const SERVER_SESSION_SETTINGS = {
 
 // CREW3 API
 export const CREATIVE_CREW3 = 'thecreativedao'
+
+//FACTORY CONTRACT MUMBAI
+export const FACTORY_CONTRACT_ADDRESS = '0x86a72d44Bb24e7abad613b96C33726CBa6Ae3FB8'
+
+// VIDEO NFT MUMBAI
+export const VIDEO_NFT_CONTRACT_ADDRESS = '0x205e06b24328b59e3846c3Fa4a55de7c1D6b227C'
 
 // 1. export the LENS contract address
 export const LENS_CONTRACT_ADDRESS = '0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d'

@@ -31,7 +31,8 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { SITE_NAME, SITE_LOGO } from 'utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import { ConnectWallet } from './ConnectWallet'
+import { ConnectWallet } from '@thirdweb-dev/react'
+
 
 interface Props {
   className?: string
