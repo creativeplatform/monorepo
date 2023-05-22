@@ -1,12 +1,13 @@
 import { Player, useAssetMetrics, useCreateAsset } from '@livepeer/react'
+
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Box, Text, Badge, Button, Flex, Progress, Textarea } from '@chakra-ui/react'
-import NextLink from 'next/link'
+
+import { Box, Text, Badge, Button, HStack, Progress, Input, Textarea } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
-interface AssetProps {
+interface AssetData {
   title: string;
   description: string;
   animation_url: string;
@@ -17,12 +18,20 @@ interface AssetProps {
     videoIpfs: string;
   }
 }
-
 const CreateAndViewAsset = () => {
   const [video, setVideo] = useState<File | undefined>()
-  const [description, setDescription] = useState('')
-  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>('');
-
+  const [assetData, setAssetData] = useState<AssetData>({
+    title: '',
+    description: '',
+    animation_url: '',
+    external_url: '',
+    image_url: '',
+    properties: {
+      playbackId: '',
+      videoIpfs: '',
+    },
+  });
+  
   const {
     mutate: createAsset,
     data: asset,
@@ -32,7 +41,7 @@ const CreateAndViewAsset = () => {
   } = useCreateAsset(
     video
       ? {
-          sources: [{ name: video.name, file: video }] as const,
+          sources: [{ name: video.name, file: video, data: assetData, }] as const,
         }
       : null
   )
@@ -43,21 +52,16 @@ const CreateAndViewAsset = () => {
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
       setVideo(acceptedFiles[0])
-      setVideoPreviewUrl(URL.createObjectURL(acceptedFiles[0]));
     }
   }, [])
-
-  const { getRootProps, getInputProps, open } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'video/*': ['.mp4'],
     },
     maxFiles: 1,
     onDrop,
   })
-  
-
   const isLoading = useMemo(() => status === 'loading' || (asset?.[0] && asset[0].status?.phase !== 'ready'), [status, asset])
-
   const progressFormatted = useMemo(
     () =>
       progress?.[0].phase === 'failed'
@@ -79,73 +83,88 @@ const CreateAndViewAsset = () => {
   return (
     <Box>
       {!asset && (
-        <Box className="parent-dropZone" mt={10}>
-          <Box className="dropZone" {...getRootProps()} style={{ width: "100%", height: "20%", border: "1px dashed" }}>
+        <Box className="parent-dropZone" w='100%' p={4} border='4px dashed #EC407A' my={5} cursor={'pointer'}>
+          <Box className="dropZone" {...getRootProps()}>
             <Box as="input" {...getInputProps()} />
-            <Box as="span">
-              <Text className="drag-txt">Drag & Drop or Browse Files</Text>
+            <Box as="span" className="drag-txt">
+              Drag and Drop or Browse Files
             </Box>
-            {videoPreviewUrl && <video src={videoPreviewUrl} autoPlay controls />}
           </Box>
-
           {error?.message && <Text variant="red">{error.message}</Text>}
+          {video && (
+            <Box mt={4}>
+              <Text fontSize="lg" fontWeight="bold">
+                Video Preview:
+              </Text>
+              <video
+                src={URL.createObjectURL(video)}
+                height={500}
+                controls
+                style={{ maxWidth: '100%', marginTop: '8px' }}
+              />
+            </Box>
+          )}
         </Box>
       )}
-
       {asset?.[0]?.playbackId && <Player title={asset[0].name} playbackId={asset[0].playbackId} />}
-      
-
-      
-
-      <Flex className="upload-button" my={5}>
-        <Flex>
+      <Box mb={5}>
+        <Input
+          placeholder="Title"
+          value={assetData.title}
+          onChange={(e) => setAssetData({ ...assetData, title: e.target.value })}
+          />
+      </Box>
+        
+        <Box mb={5}>
+          <Textarea
+          placeholder="Description"
+          value={assetData.description}
+          onChange={(e) => setAssetData({ ...assetData, description: e.target.value })}
+          />
+        </Box>
+      <Box className="upload-button">
+        <Box>
           {metrics?.metrics?.[0] && <Badge className="views-video">Views: {metrics?.metrics?.[0]?.startViews}</Badge>}
           {video ? <Badge className="video-name">{video.name}</Badge> : <Box></Box>}
           {progressFormatted && <Text className="processing-video">{progressFormatted}</Text>}
-        </Flex>
+        </Box>
         {!asset?.[0].id && (
           <Button
-          className="mint-button"
-          as={motion.div}
-          bgColor={'#EC407A'}
-          _hover={{ transform: 'scale(1.1)' }}
-          onClick={open}
-          disabled={isLoading || !createAsset}
-        >
-          Upload Video
-        </Button>
-        
+            className="mint-button"
+            as={motion.div}
+            bgColor={'#EC407A'}
+            _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+            onClick={() => {
+              createAsset?.()
+            }}
+            disabled={isLoading || !createAsset}>
+            Upload Video
+          </Button>
         )}
-      </Flex>
-      <Box mt={10}>
-        <Text>Video Description</Text>
-        {/* Add the video description form */}
-        <Textarea
-          placeholder="Enter video description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
       </Box>
-
-      <Flex key={asset?.[0].id}>
-        <Box>Asset Name: {asset?.[0].name}</Box>
-        <Box>Playback URL: {asset?.[0].playbackUrl}</Box>
-        <Box>IPFS CID: {asset?.[0].storage?.ipfs?.cid ?? 'None'}</Box>
-      </Flex>
       {asset?.[0]?.playbackId && (
-        <Box className="Proceed-button" my={5}>
+        <Box className="Proceed-button">
           <Button
             onClick={() => router.push(`/mint-nft-video?assetId=${asset[0].id}`)}
             className="mint-button"
             bgColor={'#EC407A'}
             as={motion.div}
-            _hover={{ transform: 'scale(1.1)' }}>
+            _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}>
             Proceed to Mint NFT
           </Button>
         </Box>
       )}
+      <Box key={asset?.[0].id}>
+        <HStack spacing={'10px'}>
+          <Box >Asset Name: {asset?.[0].name}</Box>
+          <Box>Playback URL: {asset?.[0].playbackUrl}</Box>
+          <Box>IPFS CID: {asset?.[0].storage?.ipfs?.cid ?? 'None'}</Box>
+          <Box>Title: {assetData.title}</Box>
+          <Box>Description: {assetData.description}</Box>
+        </HStack>
+        
+      </Box>
     </Box>
   )
 }
-
 export default CreateAndViewAsset
