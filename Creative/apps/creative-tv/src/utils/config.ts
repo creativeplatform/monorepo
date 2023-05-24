@@ -82,12 +82,26 @@ export const TRANSACTION_TITLES = {
   transactionSucceed: 'Local Transaction Completed',
 }
 
-// Unlock Contracts
+// Unlock Contracts (Polygon)
 export const LOCK_ADDRESS_CREATIVE_TV = {
   creator: '0xb9c69af58109927cc2dcce8043f82158f7b96ca7',
   fan: '0xe174caa294999ec622988242641a27c11e6c22d8',
   brand: '0xb311afe316b004dbf569381ae174eaa897b757f6',
 }
+
+// Unlock Contracts (GOERLI)
+export const LOCK_ADDRESS_GOERLI_TESTNET = '0xC9bdfA5f177961D96F137C42241e8EcBCa605781'
+
+// Account Factory (GOERLI)
+export const ACCOUNT_FACTORY_TESTNET = '0x75A2853a6a8D7C5AcD36c3187a8Ed5979dD9aEEf'
+
+// FACTORY CONTRACT (MUMBAI)
+export const ACCOUNT_FACTORY_MUMBAI = '0x86a72d44Bb24e7abad613b96C33726CBa6Ae3FB8'
+
+
+// CREATIVE ADDRESS
+export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
+
 export const UNLOCK_API_URL = 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
 export const UNLOCK_QUERY_HOLDS_KEY = gql`
   query keysForLock($lockAddresses: [String!]!, $walletAddress: String!) {
@@ -116,8 +130,7 @@ export const SERVER_SESSION_SETTINGS = {
 // CREW3 API
 export const CREATIVE_CREW3 = 'thecreativedao'
 
-//FACTORY CONTRACT MUMBAI
-export const FACTORY_CONTRACT_ADDRESS = '0x86a72d44Bb24e7abad613b96C33726CBa6Ae3FB8'
+
 
 // VIDEO NFT MUMBAI
 export const VIDEO_NFT_CONTRACT_ADDRESS = '0x205e06b24328b59e3846c3Fa4a55de7c1D6b227C'

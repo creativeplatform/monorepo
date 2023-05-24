@@ -11,7 +11,8 @@ const PosterImage = () => {
   return (
     <Image
       src={ CREATIVE_LOGO_BLK }
-      fill
+      width={250}
+      height={250}
       style={{ objectFit: "contain" }}
       alt="Creative Logo"
       priority

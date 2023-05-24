@@ -11,7 +11,7 @@ export function ThemeSwitcher(props: Props) {
   const { colorMode, toggleColorMode } = useColorMode()
 
   return (
-    <Box className={className} onClick={toggleColorMode} _hover={{ cursor: 'pointer' }}>
+    <Box className={className} onClick={toggleColorMode} _hover={{ cursor: 'pointer' }} px={4}>
       {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
     </Box>
   )
