@@ -19,12 +19,10 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
           </BreadcrumbItem>
-
           <BreadcrumbItem isCurrentPage className="active-crumb">
             <BreadcrumbLink href="#">Mint NFT Video</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-
         <WagmiNft />
       </Box>
     </LivepeerConfig>

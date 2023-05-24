@@ -8,7 +8,7 @@ import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi'
 // See: https://wagmi.sh/docs/typescript
 import videoNftAbi from './videoNftAbi'
 
-import { Box, Button, Flex } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 
 const WagmiNft = () => {
@@ -59,25 +59,39 @@ const WagmiNft = () => {
         <>
           <p>{assetId}</p>
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
-            <button
+            <Button
+              className="upload-button"
+              as={motion.div}
+              bgColor={'#EC407A'}
+              _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
               onClick={() => {
                 updateAsset?.()
               }}>
               Upload to IPFS
-            </button>
+            </Button>
           ) : contractWriteData?.hash && isSuccess ? (
             <a target="_blank" href={`https://mumbai.polygonscan.com/tx/${contractWriteData.hash}`} rel="noreferrer">
-              <button>View Mint Transaction</button>
+              <Button 
+              className="tx-button"
+              as={motion.div}
+              bgColor={'gray'}
+              _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}>
+                View Mint Transaction
+              </Button>
             </a>
           ) : contractWriteError ? (
             <p>{contractWriteError.message}</p>
           ) : asset?.storage?.status?.phase === 'ready' && write ? (
-            <button
+            <Button
+            className="mint-button"
+            as={motion.div}
+            bgColor={'#EC407A'}
+            _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
               onClick={() => {
                 write()
               }}>
               Mint NFT
-            </button>
+            </Button>
           ) : (
             <></>
           )}

@@ -45,6 +45,8 @@ export const HEADING_1 = "You're Bigger, Than You Think 🧠"
 export const GOVERN_DESC = "Our community is built to push creatives to the front of the line. The following videos have been voted on by the community to choose which videos should get more visibility."
 
 // Profile.tsx
+export const PFP = '/0.png'
+
 export const PROFILE_VIDEOS = {
   tooltip: 'list of ypur uploaded videos',
   tooltip_position: 'bottom',

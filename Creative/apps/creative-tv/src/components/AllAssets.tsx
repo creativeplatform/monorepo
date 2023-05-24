@@ -10,7 +10,7 @@ import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 
 const PosterImage = () => {
-  return <Image  src={`${CREATIVE_LOGO_WHT}`} height={'100%'} objectFit="contain" alt="Creative Logo" />
+  return <Image  src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
 }
 
 export default function AllAssets() {
@@ -45,7 +45,7 @@ export default function AllAssets() {
             <CardHeader>
               <Flex>
                 <Flex flex={1} gap={4} align="center" flexWrap={'wrap'}>
-                  <Avatar name='name' src={SITE_LOGO} />
+                  <Avatar name='creative' src={SITE_LOGO} />
                   <Box>
                     <Heading size='sm'>thecreative.eth</Heading>
                     <Text>Creator</Text>

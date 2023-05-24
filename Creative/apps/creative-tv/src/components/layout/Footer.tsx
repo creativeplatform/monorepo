@@ -91,6 +91,8 @@ export default function Footer(props: Props): JSX.Element {
               <Image 
                 src={ CREATIVE_LOGO_BLK }
                 alt="Creative Logo"
+                width={250}
+                height={'auto'}
                 boxSize='200px'
                 objectFit = 'contain'
               />

@@ -24,14 +24,26 @@ import {
   Center,
   Divider,
   Image,
+  Menu,
+  MenuButton,
+  Avatar,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from '@chakra-ui/react'
+import truncateEthAddress from 'truncate-eth-address'
+import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { useScroll } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
-import { AiOutlineMenu } from 'react-icons/ai'
-import { SITE_NAME, SITE_LOGO } from 'utils/config'
+import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
+import { MdOutlineAccountCircle } from 'react-icons/md'
+import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
+import { PFP } from 'utils/context'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import { ConnectWallet } from './ConnectWallet'
+import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useBalance, Web3Button } from '@thirdweb-dev/react'
+import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
+
 
 interface Props {
   className?: string
@@ -45,6 +57,42 @@ export function Header({className}:Props) {
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
+
+  // Currently connected wallet address
+  const address = useAddress()
+  const disconnect = useDisconnect()
+
+  // Get the Lock contract we deployed
+  const { contract } = useContract(LOCK_ADDRESS_GOERLI_TESTNET)
+
+  const { data: amount, isLoading: amountLoading } = useContractRead(contract, "keyPrice")
+
+  // Determine whether the connected wallet address has a valid subscription
+  const { data: subscribed, isLoading } = useContractRead(
+    contract,
+    "getHasValidKey",
+    [address]
+  );
+
+  // Read the duration of a subscription
+  const { data: expirationDuration, isLoading: expirationLoading } =
+    useContractRead(contract, "expirationDuration");
+
+  // Function to purchase a subscription NFT on the Lock contract
+  const { mutateAsync: purchase } = useContractWrite(contract, "purchase");
+  const call = async () => {
+    try {
+      const data = await purchase({
+        args: [[1], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], []],
+      });
+      console.info("contract call success", data);
+    } catch (err) {
+      console.error("contract call failure", err);
+    }
+  };
+
+  // Native Token
+  const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
@@ -329,7 +377,6 @@ export function Header({className}:Props) {
             </VStack>
           </Flex>
         </Flex>
-
       <CloseButton aria-label="Close menu" justifySelf="self-start" className="close-btn" onClick={mobileNav.onClose} />
     </VStack>
   )
@@ -444,25 +491,49 @@ export function Header({className}:Props) {
                     <Features />
                   </PopoverContent>
                 </Popover>
-                
+                <Center height="50px">
+                  <Divider orientation="vertical" />
+                </Center>
+                <ThemeSwitcher />
               </HStack>
             </Flex>
-            <HStack spacing="4" display={{ base: 'flex', md: 'flex' }}>
-                <Button
-                  rightIcon={<RiVideoUploadFill />}
-                  color="black.700"
-                  display={{ sm:"none", md: "inline-flex", lg: "inline-flex", xl:"inline-flex" }}
-                  alignItems="center"
-                  fontSize="14px"
-                  px="10"
-                  fontWeight={700}
-                  _hover={{ color: cl }}
-                  _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('/upload-video-assets')}>
-                  Upload
-                </Button>
-                <ConnectWallet />
-                <ThemeSwitcher />
+            <Flex>
+            {address && tokenBalance ? (
+              <Flex flexDirection={'column'}>
+                <Text size="sm" fontWeight="700">
+                  {truncateEthAddress(address)}
+                </Text>
+                <Text size="sm" fontWeight="700">
+                  Balance: {tokenBalance.displayValue} {tokenBalance.symbol}
+                </Text>
+              </Flex>
+              ) : (
+                <></>
+            )}
+            {!address ? (
+             <ConnectWallet />
+            ) : (
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                  <Avatar name='creative' src={PFP} />
+                </MenuButton> 
+                  {!subscribed ? (
+                    <MenuList>
+                      <MenuItem icon={<WarningIcon />} onClick={call}>Subscribe</MenuItem>
+                      <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
+                    </MenuList>
+                  ) : (
+                    <MenuList>
+                      
+                      <MenuDivider />
+                      <MenuItem icon={<MdOutlineAccountCircle />}>Profile</MenuItem>
+                      <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push('/upload-video-assets')}>Upload</MenuItem>
+                      <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
+                    </MenuList>
+                  )}
+              </Menu>
+            )}
+            </Flex>
                 <IconButton
                   display={{ base: 'flex', md: 'none' }}
                   variant="outline"
@@ -472,7 +543,6 @@ export function Header({className}:Props) {
                   icon={<AiOutlineMenu />}
                   onClick={mobileNav.onOpen}
                 />
-            </HStack>
           </Flex>
           {MobileNavContent}
         </chakra.div>

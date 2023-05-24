@@ -1,7 +1,7 @@
 import { configureChains, createClient, mainnet, WagmiConfig } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
-import { POLYGON_CHAINS, SITE_NAME, INFURA_API_KEY } from '../utils/config'
+import { MUMBAI_CHAIN, SITE_NAME, INFURA_API_KEY } from '../utils/config'
 import { useColorMode } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { siwe } from '../siwe'
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { provider, webSocketProvider } = configureChains(
-  [...POLYGON_CHAINS, mainnet],
+  [...MUMBAI_CHAIN],
   [infuraProvider({ apiKey: INFURA_API_KEY, priority: 0, stallTimeout: 1_000 }), publicProvider({ priority: 1, stallTimeout: 1_000 })]
 )
 
@@ -22,7 +22,7 @@ const client = createClient(
     autoConnect: true,
     provider,
     webSocketProvider,
-    chains: POLYGON_CHAINS,
+    chains: MUMBAI_CHAIN,
   })
 )
 
