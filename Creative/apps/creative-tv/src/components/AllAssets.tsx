@@ -10,7 +10,7 @@ import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 
 const PosterImage = () => {
-  return <Image  src={`${CREATIVE_LOGO_WHT}`} width={250} height={250} objectFit="contain" alt="Creative Logo" />
+  return <Image  src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
 }
 
 export default function AllAssets() {

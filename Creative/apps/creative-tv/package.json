@@ -18,7 +18,7 @@
     "@livepeer/react": "^2.1.5",
     "@next/font": "13.1.1",
     "@thirdweb-dev/chains": "^0.1.18",
-    "@thirdweb-dev/react": "^3.12.2",
+    "@thirdweb-dev/react": "3.11.11",
     "@thirdweb-dev/sdk": "^3.10.17",
     "@wagmi/chains": "^0.1.7",
     "chakra-ui-carousel": "^1.0.7",

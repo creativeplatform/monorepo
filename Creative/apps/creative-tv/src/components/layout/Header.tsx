@@ -38,10 +38,10 @@ import { useScroll } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
 import { MdOutlineAccountCircle } from 'react-icons/md'
-import { SITE_NAME, SITE_LOGO, LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
+import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useBalance, useTokenBalance } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useBalance, Web3Button } from '@thirdweb-dev/react'
 import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
 
 
@@ -65,6 +65,8 @@ export function Header({className}:Props) {
   // Get the Lock contract we deployed
   const { contract } = useContract(LOCK_ADDRESS_GOERLI_TESTNET)
 
+  const { data: amount, isLoading: amountLoading } = useContractRead(contract, "keyPrice")
+
   // Determine whether the connected wallet address has a valid subscription
   const { data: subscribed, isLoading } = useContractRead(
     contract,
@@ -81,7 +83,7 @@ export function Header({className}:Props) {
   const call = async () => {
     try {
       const data = await purchase({
-        args: [[0], [address], [address], [address], [0]],
+        args: [[1], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], []],
       });
       console.info("contract call success", data);
     } catch (err) {
