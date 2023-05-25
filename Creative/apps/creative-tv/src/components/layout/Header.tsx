@@ -83,7 +83,7 @@ export function Header({className}:Props) {
   const call = async () => {
     try {
       const data = await purchase({
-        args: [[1], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], []],
+        args: [[amount], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], []],
       });
       console.info("contract call success", data);
     } catch (err) {
