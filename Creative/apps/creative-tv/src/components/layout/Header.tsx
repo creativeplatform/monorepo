@@ -34,6 +34,7 @@ import {
 import truncateEthAddress from 'truncate-eth-address'
 import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
 import { RiVideoUploadFill } from 'react-icons/ri'
+import { HiOutlineClipboardCopy } from 'react-icons/hi';
 import { useScroll } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
@@ -506,15 +507,19 @@ export function Header({className}:Props) {
                 </MenuButton> 
                   {!subscribed ? (
                     <MenuList>
-                      <MenuItem>CRTV # {truncateEthAddress(address)}</MenuItem>
+                      <MenuItem icon={<HiOutlineClipboardCopy />}>{truncateEthAddress(address)}</MenuItem>
+                      <MenuDivider />
                       <MenuItem icon={<WarningIcon />} onClick={call}>Subscribe</MenuItem>
+                      <MenuDivider />
                       <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
                     </MenuList>
                   ) : (
                     <MenuList>
-                      <MenuItem>CRTV # {truncateEthAddress(address)}</MenuItem>
+                      <MenuItem icon={<HiOutlineClipboardCopy />}>{truncateEthAddress(address)}</MenuItem>
+                      <MenuDivider />
                       <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => router.push(`/profile/${address}`)}>Profile</MenuItem>
                       <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push('/upload-video-assets')}>Upload</MenuItem>
+                      <MenuDivider />
                       <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
                     </MenuList>
                   )}
