@@ -57,7 +57,7 @@ export default function HeroSection() {
             </Heading>
             <Text color={'gray.500'}>{HERO_DESCRIPTION}</Text>
             <Stack spacing={{ base: 4, sm: 6 }} direction={{ base: 'column', sm: 'row' }}>
-              <Button rounded={'full'} size={'lg'} onClick={() => router.push(FOOTER_LINKS.tutorial)} fontWeight={'normal'} px={6} colorScheme={'orange'} bg={'#F2C57C'} _hover={{ bg: '#D9B06F' }}>
+              <Button rounded={'full'} size={'lg'} onClick={() => router.push(HERO_BUTTONS.primary.href)} fontWeight={'normal'} px={6} colorScheme={'orange'} bg={'#F2C57C'} _hover={{ bg: '#D9B06F' }}>
                 {HERO_BUTTONS.primary.text}
               </Button>
               <Button
@@ -69,7 +69,7 @@ export default function HeroSection() {
                 bg={'#FF4583'}
                 _hover={{ bg: '#D93B6F' }}
                 leftIcon={<PlayIcon h={4} w={4} color={'gray.100'}/>}
-                onClick={() => router.push(FOOTER_LINKS.whitepaper)}>
+                onClick={() => router.push(HERO_BUTTONS.secondary.href)}>
                 {HERO_BUTTONS.secondary.text}
               </Button>
             </Stack>
