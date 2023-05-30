@@ -11,20 +11,22 @@ import {
     Input,
     useToast,
     Image,
+    ButtonGroup,
+    IconButton,
 } from '@chakra-ui/react'
 import {
-    MediaRenderer,
-    Web3Button,
     useAddress,
     useContract,
     useOwnedNFTs,
     useNFTBalance,
     useContractWrite,
-    ContractMetadata,
 } from '@thirdweb-dev/react'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
 import { useRouter } from 'next/router'
+import { HiOutlineClipboardCopy } from 'react-icons/Hi';
+import { Avatar } from 'connectkit'
+
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -53,10 +55,14 @@ export default function ProfilePage() {
     
     return (
         <Container maxW={"1200px"} mt={10}>
-            <Button onClick={() => router.push("/")}>Back</Button>
+            <Button colorScheme={'blue'} onClick={() => router.push("/")}>Back</Button>
             <Heading mt={10}>Profile</Heading>
             <Box mt={5}>
-                <Text>Account # {address}</Text>
+                <ButtonGroup size='sm' isAttached variant='outline'>
+                    <Text>CRTV # &nbsp;</Text>
+                    <Button>{address}</Button>
+                    <IconButton aria-label='Add to clipboard' icon={<HiOutlineClipboardCopy />} />
+                </ButtonGroup>
             </Box>
             <Box mt={5}>
                 <Text fontWeight={'bold'}>My Memberships:</Text>
@@ -101,7 +107,7 @@ export default function ProfilePage() {
                             </Flex>
                                 {lendingAddress != "" && (
                                     <Box mb={4} mx={'auto'}>
-                                    <Button colorScheme='pink' onClick={() => call()}>Lend</Button>
+                                    <Button colorScheme='pink'>Lend</Button>
                                     </Box>
                                 )}
                         </Card>
