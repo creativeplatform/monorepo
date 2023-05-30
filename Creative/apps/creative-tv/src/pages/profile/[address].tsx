@@ -22,10 +22,8 @@ import {
     useContractWrite,
 } from '@thirdweb-dev/react'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
-import { PFP } from 'utils/context'
 import { useRouter } from 'next/router'
-import { HiOutlineClipboardCopy } from 'react-icons/Hi';
-import { Avatar } from 'connectkit'
+import { HiOutlineClipboardCopy } from 'react-icons/hi';
 
 
 export default function ProfilePage() {
