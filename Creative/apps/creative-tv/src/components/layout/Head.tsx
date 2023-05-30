@@ -15,7 +15,7 @@ export function Head(props: Props) {
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta property="og:title" content={SITE_NAME} />
       <meta property="og:description" content={props.description ?? SITE_DESCRIPTION} />
-      <meta property="og:image" content="creative-membership.gif" />
+      <meta property="og:image" content="/creative-membership.gif" />
       <meta property="og:image:type" content="image/gif" />
     </NextHead>
   )
