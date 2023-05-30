@@ -38,7 +38,7 @@ import { useScroll } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
 import { MdOutlineAccountCircle } from 'react-icons/md'
-import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
+import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useBalance, Web3Button } from '@thirdweb-dev/react'
@@ -63,7 +63,7 @@ export function Header({className}:Props) {
   const disconnect = useDisconnect()
 
   // Get the Lock contract we deployed
-  const { contract } = useContract(LOCK_ADDRESS_GOERLI_TESTNET)
+  const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
 
   const { data: amount, isLoading: amountLoading } = useContractRead(contract, "keyPrice")
 
@@ -83,7 +83,7 @@ export function Header({className}:Props) {
   const call = async () => {
     try {
       const data = await purchase({
-        args: [[amount], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], []],
+        args: [[amount], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [FREE_LOCK_ADDRESS_GOERLI_TESTNET.data]],
       });
       console.info("contract call success", data);
     } catch (err) {
@@ -500,11 +500,8 @@ export function Header({className}:Props) {
             <Flex>
             {address && tokenBalance ? (
               <Flex flexDirection={'column'}>
-                <Text size="sm" fontWeight="700">
-                  {truncateEthAddress(address)}
-                </Text>
-                <Text size="sm" fontWeight="700">
-                  Balance: {tokenBalance.displayValue} {tokenBalance.symbol}
+                <Text size="sm" fontWeight="700" align={'center'}>
+                 CRTV # {truncateEthAddress(address)}
                 </Text>
               </Flex>
               ) : (
@@ -524,8 +521,6 @@ export function Header({className}:Props) {
                     </MenuList>
                   ) : (
                     <MenuList>
-                      
-                      <MenuDivider />
                       <MenuItem icon={<MdOutlineAccountCircle />}>Profile</MenuItem>
                       <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push('/upload-video-assets')}>Upload</MenuItem>
                       <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>

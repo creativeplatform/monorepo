@@ -18,14 +18,14 @@ import {
     useContract,
     useOwnedNFTs,
 } from '@thirdweb-dev/react'
-import { LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
+import { FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
 import { useRouter } from 'next/router'
 
 export default function ProfilePage() {
     const router = useRouter();
     const address = useAddress();
-    const { contract: membership } = useContract(LOCK_ADDRESS_GOERLI_TESTNET);
+    const { contract: membership } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address);
     
     const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(membership, address);
     
@@ -65,7 +65,7 @@ export default function ProfilePage() {
                             {transferAddress != "" && (
                                 <Box mb={4} mx={'auto'}>
                                     <Web3Button
-                                    contractAddress={LOCK_ADDRESS_GOERLI_TESTNET}
+                                    contractAddress={FREE_LOCK_ADDRESS_GOERLI_TESTNET.address}
                                     action={(contract) => {
                                         contract.call("transferFrom", [address, transferAddress, nft.metadata.id])
                                       }}
