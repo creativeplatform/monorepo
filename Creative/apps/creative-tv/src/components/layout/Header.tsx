@@ -497,16 +497,6 @@ export function Header({className}:Props) {
                 <ThemeSwitcher />
               </HStack>
             </Flex>
-            <Flex>
-            {address && tokenBalance ? (
-              <Flex flexDirection={'column'}>
-                <Text size="sm" fontWeight="700" align={'center'}>
-                 CRTV # {truncateEthAddress(address)}
-                </Text>
-              </Flex>
-              ) : (
-                <></>
-            )}
             {!address ? (
              <ConnectWallet />
             ) : (
@@ -516,19 +506,20 @@ export function Header({className}:Props) {
                 </MenuButton> 
                   {!subscribed ? (
                     <MenuList>
+                      <MenuItem>CRTV # {truncateEthAddress(address)}</MenuItem>
                       <MenuItem icon={<WarningIcon />} onClick={call}>Subscribe</MenuItem>
                       <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
                     </MenuList>
                   ) : (
                     <MenuList>
-                      <MenuItem icon={<MdOutlineAccountCircle />}>Profile</MenuItem>
+                      <MenuItem>CRTV # {truncateEthAddress(address)}</MenuItem>
+                      <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => router.push(`/profile/${address}`)}>Profile</MenuItem>
                       <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push('/upload-video-assets')}>Upload</MenuItem>
                       <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
                     </MenuList>
                   )}
               </Menu>
             )}
-            </Flex>
                 <IconButton
                   display={{ base: 'flex', md: 'none' }}
                   variant="outline"

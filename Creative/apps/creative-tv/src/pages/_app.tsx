@@ -7,7 +7,6 @@ import { Layout } from 'components/layout'
 import { ChakraProvider } from 'providers/Chakra'
 import { useIsMounted } from 'hooks/useIsMounted'
 import { Seo } from 'components/layout/Seo'
-import { Web3Provider } from 'providers/Web3'
 import { SMART_WALLET_KEY, ACCOUNT_FACTORY_TESTNET } from 'utils/config'
 
 // This is the chain your dApp will work on.

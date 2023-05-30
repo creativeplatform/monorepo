@@ -53,7 +53,7 @@ const WagmiNft = () => {
   return (
     <Box className="address-mint">
       <Button className="card-mint-button" as={motion.div} _hover={{ transform: 'scale(1.1)' }}>
-        {!address ? 'Connect Wallet' : address}
+        {!address ? 'Sign In' : address}
       </Button>
       {address && assetId && (
         <>
