@@ -30,6 +30,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  useClipboard,
 } from '@chakra-ui/react'
 import truncateEthAddress from 'truncate-eth-address'
 import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
@@ -43,7 +44,7 @@ import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNE
 import { PFP } from 'utils/context'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useBalance, Web3Button } from '@thirdweb-dev/react'
-import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
+import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk"
 
 
 interface Props {
@@ -58,11 +59,12 @@ export function Header({className}:Props) {
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
+  
 
   // Currently connected wallet address
   const address = useAddress()
   const disconnect = useDisconnect()
-
+  const { onCopy, value, setValue, hasCopied } = useClipboard("")
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
 
@@ -507,7 +509,7 @@ export function Header({className}:Props) {
                 </MenuButton> 
                   {!subscribed ? (
                     <MenuList>
-                      <MenuItem icon={<HiOutlineClipboardCopy />}>{truncateEthAddress(address)}</MenuItem>
+                      <MenuItem icon={<HiOutlineClipboardCopy />}>{truncateEthAddress(`${address}`)}</MenuItem>
                       <MenuDivider />
                       <MenuItem icon={<WarningIcon />} onClick={call}>Subscribe</MenuItem>
                       <MenuDivider />

@@ -66,7 +66,7 @@ export default function ProfilePage() {
                 <Text fontWeight={'bold'}>My Memberships:</Text>
                 <SimpleGrid columns={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (
-                        <Card overflow={"hidden"} p={2}>
+                        <Card key={nft.metadata.id} overflow={"hidden"} p={2}>
                             <Image 
                                 src={`${nft.metadata.image}`}
                                 height={250}
