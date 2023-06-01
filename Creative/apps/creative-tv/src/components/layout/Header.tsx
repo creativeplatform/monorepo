@@ -184,7 +184,7 @@ export function Header({className}:Props) {
             <Section
               title="DAO Proposals"
             >
-              <LinkOverlay href="https://boardroom.io/creativeorg/overview" target={'_blank'}>
+              <LinkOverlay href="https://dao.creativeplatform.xyz" target={'_blank'}>
                 <Text>
                   Looking for a way to help liven up our community? Introducing DAO Proposals! Our community is managed via a DAO and all that action
                   happens here. From exciting new features to heated debates on the best way to run things, it&rsquo;s all happening on DAO Proposals. So come
