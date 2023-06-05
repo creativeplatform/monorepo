@@ -28,28 +28,41 @@ import { HiOutlineClipboardCopy } from 'react-icons/hi';
 
 export default function ProfilePage() {
     const router = useRouter();
+    const [ transferAddress, setTransferAddress ] = useState('');
+    const [ lendingAddress, setLendingAddress ] = useState('');
+    const toast = useToast();
     const address = useAddress();
+
     const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address);
     
     const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(contract, address);
 
-    const { data: ownerBalance, isLoading: loadingBalance, error: balanceError } = useNFTBalance(contract, address);
+    const { data: ownerBalance } = useNFTBalance(contract, address);
     
-    const { mutateAsync: lendKey, isLoading } = useContractWrite(contract, "lendKey")
+    const { mutateAsync: lendKey } = useContractWrite(contract, "lendKey")
 
-    // const call = async () => {
-    //     try {
-    //       const data = await lendKey({ args: [_from, _recipient, _tokenId] });
-    //       console.info("contract call successs", data);
-    //     } catch (err) {
-    //       console.error("contract call failure", err);
-    //     }
-    //   }
-    
-    const [ transferAddress, setTransferAddress ] = useState('');
-    const [ lendingAddress, setLendingAddress ] = useState('');
-
-    const toast = useToast();
+    const call = async () => {
+        try {
+          const data = await lendKey({ args: [address, lendingAddress, ownedNFTs?.[0].metadata.id] });
+          console.info("contract call successs", data);
+          toast({
+            title: 'Key Lending',
+            description: 'Successfully rented out your membership 🙌🏾',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          })
+        } catch (err) {
+          console.error("contract call failure", err);
+          toast({
+            title: 'Error',
+            description: `${err}`,
+            status: 'warning',
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+      }
     
     return (
         <Container maxW={"1200px"} mt={10}>
@@ -63,10 +76,11 @@ export default function ProfilePage() {
                 </ButtonGroup>
             </Box>
             <Box mt={5}>
-                <Text fontWeight={'bold'}>My Memberships:</Text>
+                <Text fontWeight={'bold'}>My Membership:</Text>
                 <SimpleGrid columns={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (
-                        <Card key={nft.metadata.id} overflow={"hidden"} p={2}>
+                        <Box>
+                        <Card key={nft.metadata.id} overflow={"hidden"} p={2} mb={4}>
                             <Image 
                                 src={`${nft.metadata.image}`}
                                 height={250}
@@ -76,8 +90,12 @@ export default function ProfilePage() {
                                 <Text ml={4} fontWeight={'bold'}>{nft.metadata.name}</Text>
                                 <Text mr={4}>Qty: {ownerBalance?.toString()}</Text>
                             </Flex>
+                            <Flex justifyContent={"center"} direction={"row"} p={2}>
+                                <Text fontSize='xs'>{nft.metadata.description}</Text>
+                            </Flex>
+                        </Card>
                             <Flex>
-                            <Text fontSize={"x-small"} ml={4}>Transfer to:</Text>
+                            <Text fontSize={"x-small"} ml={4}>Export to:</Text>
                             <Input
                                 placeholder={"0x00000"}
                                 width={"90%"}
@@ -93,7 +111,7 @@ export default function ProfilePage() {
                                 </Box>
                             )}
                             <Flex>
-                                <Text fontSize={"x-small"} ml={4}>Lend to:</Text>
+                                <Text fontSize={"x-small"} ml={4}>Rent to:</Text>
                                     <Input
                                         placeholder={"0x00000"}
                                         width={"90%"}
@@ -105,10 +123,10 @@ export default function ProfilePage() {
                             </Flex>
                                 {lendingAddress != "" && (
                                     <Box mb={4} mx={'auto'}>
-                                    <Button colorScheme='pink'>Lend</Button>
+                                    <Button colorScheme='pink' onClick={() => call()}>Lend</Button>
                                     </Box>
                                 )}
-                        </Card>
+                        </Box>
                     ))}
                 </SimpleGrid>
             </Box>
