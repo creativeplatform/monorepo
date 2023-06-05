@@ -43,8 +43,7 @@ import { MdOutlineAccountCircle } from 'react-icons/md'
 import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useBalance, Web3Button } from '@thirdweb-dev/react'
-import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk"
+import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect } from '@thirdweb-dev/react'
 
 
 interface Props {
@@ -68,8 +67,8 @@ export function Header({className}:Props) {
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
 
-  const { data: amount, isLoading: amountLoading } = useContractRead(contract, "keyPrice")
 
+  /*******  CONTRACT READING ********/
   // Determine whether the connected wallet address has a valid subscription
   const { data: subscribed, isLoading } = useContractRead(
     contract,
@@ -80,22 +79,42 @@ export function Header({className}:Props) {
   // Read the duration of a subscription
   const { data: expirationDuration, isLoading: expirationLoading } =
     useContractRead(contract, "expirationDuration");
+  
+  //Read the Key Price of a subscription
+  const { data: price, isLoading: priceIsLoading } = useContractRead(contract, "keyPrice");
 
+
+
+  /*******  CONTRACT WRITING ********/
   // Function to purchase a subscription NFT on the Lock contract
   const { mutateAsync: purchase } = useContractWrite(contract, "purchase");
   const call = async () => {
     try {
       const data = await purchase({
-        args: [[amount], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [FREE_LOCK_ADDRESS_GOERLI_TESTNET.data]],
+        args: [[price], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [FREE_LOCK_ADDRESS_GOERLI_TESTNET.data]],
       });
       console.info("contract call success", data);
+      toast({
+        title: 'Subscription',
+        description: 'Succesfully Subscribed 🎉',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
     } catch (err) {
       console.error("contract call failure", err);
+      toast({
+        title: 'Subscription Error',
+        description: 'Subscription Failed 😫',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+      })
     }
   };
 
   // Native Token
-  const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
+  // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
@@ -184,7 +203,7 @@ export function Header({className}:Props) {
             <Section
               title="DAO Proposals"
             >
-              <LinkOverlay href="https://boardroom.io/creativeorg/overview" target={'_blank'}>
+              <LinkOverlay href="https://dao.creativeplatform.xyz" target={'_blank'}>
                 <Text>
                   Looking for a way to help liven up our community? Introducing DAO Proposals! Our community is managed via a DAO and all that action
                   happens here. From exciting new features to heated debates on the best way to run things, it&rsquo;s all happening on DAO Proposals. So come
@@ -511,9 +530,26 @@ export function Header({className}:Props) {
                     <MenuList>
                       <MenuItem icon={<HiOutlineClipboardCopy />}>{truncateEthAddress(`${address}`)}</MenuItem>
                       <MenuDivider />
-                      <MenuItem icon={<WarningIcon />} onClick={call}>Subscribe</MenuItem>
+                      <MenuItem 
+                        icon={<WarningIcon />} 
+                        onClick={() => {
+                          call(); 
+                        }}
+                      >Subscribe for ${price.toString()}</MenuItem>
                       <MenuDivider />
-                      <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
+                      <MenuItem icon={<AiOutlineDisconnect />} 
+                        onClick={() => {
+                          disconnect();
+                          toast({
+                            title: 'Sign Out',
+                            description: 'Successfully signed out.',
+                            status: 'info',
+                            duration: 5000,
+                            isClosable: true,
+                          })
+                        }}>
+                        Sign Out
+                      </MenuItem>
                     </MenuList>
                   ) : (
                     <MenuList>
@@ -522,7 +558,19 @@ export function Header({className}:Props) {
                       <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => router.push(`/profile/${address}`)}>Profile</MenuItem>
                       <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push('/upload-video-assets')}>Upload</MenuItem>
                       <MenuDivider />
-                      <MenuItem icon={<AiOutlineDisconnect />} onClick={disconnect}>Sign Out</MenuItem>
+                      <MenuItem icon={<AiOutlineDisconnect />} 
+                        onClick={() => {
+                          disconnect();
+                          toast({
+                            title: 'Sign Out',
+                            description: 'Successfully signed out.',
+                            status: 'info',
+                            duration: 5000,
+                            isClosable: true,
+                          })
+                        }}>
+                        Sign Out
+                      </MenuItem>
                     </MenuList>
                   )}
               </Menu>

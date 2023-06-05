@@ -1,14 +1,13 @@
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThirdwebProvider, ThirdwebSDKProvider, coinbaseWallet, localWallet, metamaskWallet, smartWallet } from "@thirdweb-dev/react";
+import { ThirdwebProvider, coinbaseWallet, localWallet, metamaskWallet, smartWallet } from "@thirdweb-dev/react";
 import { Goerli } from '@thirdweb-dev/chains'
 import { Layout } from 'components/layout'
 import { ChakraProvider } from 'providers/Chakra'
 import { useIsMounted } from 'hooks/useIsMounted'
 import { Seo } from 'components/layout/Seo'
 import { SMART_WALLET_KEY, ACCOUNT_FACTORY_TESTNET } from 'utils/config'
-import { ethers } from "ethers"
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
