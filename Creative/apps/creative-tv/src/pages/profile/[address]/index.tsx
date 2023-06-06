@@ -13,6 +13,7 @@ import {
     Image,
     ButtonGroup,
     IconButton,
+    Link,
 } from '@chakra-ui/react'
 import {
     useAddress,
@@ -21,9 +22,12 @@ import {
     useNFTBalance,
     useContractWrite,
 } from '@thirdweb-dev/react'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
+//import { CountdownCircleTimer } from 'react-countdown-circle-timer'
+import{ Emoji } from 'ui'
+import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
 import { useRouter } from 'next/router'
-import { HiOutlineClipboardCopy } from 'react-icons/hi';
+import { HiOutlineClipboardCopy } from 'react-icons/hi'
+import { MdAutorenew, MdCancel } from 'react-icons/md'
 
 
 export default function ProfilePage() {
@@ -38,10 +42,14 @@ export default function ProfilePage() {
     const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(contract, address);
 
     const { data: ownerBalance } = useNFTBalance(contract, address);
-    
-    const { mutateAsync: lendKey } = useContractWrite(contract, "lendKey")
 
-    const call = async () => {
+    /******* READ FROM CONTRACT ******/
+    //const { data: expiring, isLoading: loadingIsExpiring } = useContractRead(contract, "expirationDuration");
+
+    /****** WRITE TO CONTRACT *******/
+    const { mutateAsync: lendKey } = useContractWrite(contract, "lendKey");
+
+    const lend = async () => {
         try {
           const data = await lendKey({ args: [address, lendingAddress, ownedNFTs?.[0].metadata.id] });
           console.info("contract call successs", data);
@@ -62,13 +70,72 @@ export default function ProfilePage() {
             isClosable: true,
           })
         }
-      }
+    }
+    const { mutateAsync: renewMembershipFor, isLoading: renewMembershipForIsLoading } = useContractWrite(contract, "renewMembershipFor")
+
+    const renew = async () => {
+        try {
+        const data = await renewMembershipFor({ args: [ownedNFTs?.[0].metadata.id, CREATIVE_ADDRESS] });
+        console.info("contract call successs", data);
+        toast({
+            title: 'Membership Renewal',
+            description: 'Successfully renewed your membership 🙌🏾',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          })
+        } catch (err) {
+        console.error("contract call failure", err);
+        toast({
+            title: 'Error',
+            description: `${err}`,
+            status: 'warning',
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+    }
+
+    const { mutateAsync: cancelAndRefund, isLoading: cancelAndRefundIsLoading } = useContractWrite(contract, "cancelAndRefund")
+
+    const cancelMembership = async () => {
+        try {
+        const data = await cancelAndRefund({ args: [ownedNFTs?.[0].metadata.id] });
+        console.info("contract call successs", data);
+        toast({
+            title: 'Membership Cancelled',
+            description: 'Sorry to see you go... 🥹',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          })
+        } catch (err) {
+        console.error("contract call failure", err);
+        toast({
+            title: 'Error',
+            description: `${err}`,
+            status: 'warning',
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+    }
+
+    // const renderTime = ({ remainingTime }: { remainingTime: number }) => {
+    //     const hours = Math.floor(remainingTime / 3600)
+    //     const minutes = Math.floor((remainingTime % 3600) / 60)
+    //     const seconds = remainingTime % 60
+    //     if (remainingTime === 0) {
+    //         return <div className="timer">Services Expired...</div>;
+    //       }
+    //     return `${hours}:${minutes}:${seconds}`
+    //   }
     
     return (
         <Container maxW={"1200px"} mt={10}>
             <Button colorScheme={'blue'} onClick={() => router.push("/")}>Back</Button>
-            <Heading mt={10}>Profile</Heading>
-            <Box mt={5}>
+            <Heading mt={10}>Creative Profile</Heading>
+            <Box mt={5} key={address}>
                 <ButtonGroup size='sm' isAttached variant='outline'>
                     <Text>CRTV # &nbsp;</Text>
                     <Button>{address}</Button>
@@ -76,10 +143,10 @@ export default function ProfilePage() {
                 </ButtonGroup>
             </Box>
             <Box mt={5}>
-                <Text fontWeight={'bold'}>My Membership:</Text>
                 <SimpleGrid columns={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (
                         <Box>
+                        <Text fontWeight={'bold'}><Emoji symbol='🪪' label='identification'/> Membership:</Text>
                         <Card key={nft.metadata.id} overflow={"hidden"} p={2} mb={4}>
                             <Image 
                                 src={`${nft.metadata.image}`}
@@ -90,9 +157,28 @@ export default function ProfilePage() {
                                 <Text ml={4} fontWeight={'bold'}>{nft.metadata.name}</Text>
                                 <Text mr={4}>Qty: {ownerBalance?.toString()}</Text>
                             </Flex>
-                            <Flex justifyContent={"center"} direction={"row"} p={2}>
+                            <Flex justifyContent={"center"} direction={"row"} p={2} mb={4}>
                                 <Text fontSize='xs'>{nft.metadata.description}</Text>
                             </Flex>
+                            {/* <Flex justifyContent={"center"} alignItems={"center"} direction={"column"} p={5}>
+                                <Text fontSize={'sm'}>Expires:</Text>
+                                {!loadingIsExpiring && (
+                                    <Box>
+                                        <CountdownCircleTimer
+                                            isPlaying
+                                            duration={expiring}
+                                            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                                            colorsTime={[7, 5, 2, 0]}
+                                        >
+                                            {renderTime}
+                                        </CountdownCircleTimer>
+                                    </Box>
+                                )}
+                            </Flex> */}
+                            <ButtonGroup justifyContent={"center"}>
+                                <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => renew()} isLoading={renewMembershipForIsLoading}>RENEW</Button>
+                                <Button colorScheme={'red'} leftIcon={<MdCancel />} onClick={() => cancelMembership()} isLoading={cancelAndRefundIsLoading}>CANCEL</Button>
+                            </ButtonGroup>
                         </Card>
                             <Flex>
                             <Text fontSize={"x-small"} ml={4}>Export to:</Text>
@@ -123,11 +209,21 @@ export default function ProfilePage() {
                             </Flex>
                                 {lendingAddress != "" && (
                                     <Box mb={4} mx={'auto'}>
-                                    <Button colorScheme='pink' onClick={() => call()}>Lend</Button>
+                                    <Button colorScheme='pink' onClick={() => lend()}>Lend</Button>
                                     </Box>
                                 )}
                         </Box>
                     ))}
+                    <Box>
+                        <Text fontWeight={'bold'}><Emoji symbol='🪙' label='coin'/> MeToken:</Text>
+                        <Text fontSize={'small'}>To generate revenue on our platform, you need to create a <Link href='https://metokens.com' color='#EC407A'>MeToken</Link>. This token serves as your unique identity as a creator and provides a way to monetize your creative journey. With MeToken, viewers can tip you and buy your products within our platform's creative ecosystem. It offers a convenient and integrated method for transactions and supports your growth as a creator.</Text>
+                    </Box>
+                    <Box>
+                        <Text fontWeight={'bold'}><Emoji symbol='🎥' label='video camera'/> Video Uploads:</Text>
+                    </Box>
+                    <Box>
+                        <Text fontWeight={'bold'}><Emoji symbol='💰' label='money bag'/> Earnings:</Text>
+                    </Box>
                 </SimpleGrid>
             </Box>
         </Container>
