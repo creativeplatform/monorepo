@@ -134,7 +134,3101 @@ export const SERVER_SESSION_SETTINGS = {
 // CREW3 API
 export const CREATIVE_CREW3 = 'thecreativedao'
 
+// METOKENS CONTRACT ADDRESS
+// METOKENS GOERLI
+export const METOKENS_ADDRESS_GOERLI = {
+  foundryFacet: '0x09a2e447ED411EaC76c5aff9168bde1f9D4B154f',
+  hubFacet: '0xa6A9320205A290903DA361b8a2073284787acF7f',
+  metokenFactory: '0x88B30Fe63473EeB33a0E2E8e46563c265AC3FD49',
+  metokensRegistryFactory: '0xab90dDCBD864c4D6f51B20d969E06d70399aB79d',
+  meTokenDiamond: '0xBdC97D61E8198880c966716df8613cb2fE073D90',
+}
 
+// METOKENS MAINNET
+export const METOKENS_ADDRESS_MAINNET = {
+  foundryFacet: '0xA56AAF637b057a5EDf7b7252D0B7280042E71335',
+  hubFacet: '0x4555cf6E984186F6C0dfeba1A26764b21553B39f',
+  meTokenFactory: '0x8D4ee3599aF814bF3Aa884c161f0dE81d9e97225',
+  metokensRegistryFactory: '0x8b91FcF2230ab04A46e2D83aaF062EC1B5AAAa5c',
+  meTokenDiamond: '0x0B4ec400e8D10218D0869a5b0036eA4BCf92d905',
+}
+
+// METOKENS CONTRACT ABI
+
+export const FOUNDRY_FACET_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'asset',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'burner',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'meTokensBurned',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assetsReturned',
+        type: 'uint256',
+      },
+    ],
+    name: 'Burn',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'asset',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'donor',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assetsDeposited',
+        type: 'uint256',
+      },
+    ],
+    name: 'Donate',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'asset',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'depositor',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assetsDeposited',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'meTokensMinted',
+        type: 'uint256',
+      },
+    ],
+    name: 'Mint',
+    type: 'event',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'meTokensBurned', type: 'uint256' },
+      { internalType: 'address', name: 'recipient', type: 'address' },
+    ],
+    name: 'burn',
+    outputs: [
+      { internalType: 'uint256', name: 'assetsReturned', type: 'uint256' },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'meTokensBurned', type: 'uint256' },
+      { internalType: 'address', name: 'sender', type: 'address' },
+    ],
+    name: 'calculateAssetsReturned',
+    outputs: [
+      { internalType: 'uint256', name: 'assetsReturned', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'assetsDeposited', type: 'uint256' },
+    ],
+    name: 'calculateMeTokensMinted',
+    outputs: [
+      { internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'assetsDeposited', type: 'uint256' },
+    ],
+    name: 'donate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'assetsDeposited', type: 'uint256' },
+      { internalType: 'address', name: 'recipient', type: 'address' },
+    ],
+    name: 'mint',
+    outputs: [
+      { internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'assetsDeposited', type: 'uint256' },
+      { internalType: 'address', name: 'recipient', type: 'address' },
+      { internalType: 'uint256', name: 'deadline', type: 'uint256' },
+      { internalType: 'uint8', name: 'vSig', type: 'uint8' },
+      { internalType: 'bytes32', name: 'rSig', type: 'bytes32' },
+      { internalType: 'bytes32', name: 'sSig', type: 'bytes32' },
+    ],
+    name: 'mintWithPermit',
+    outputs: [
+      { internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+]
+
+export const HUB_FACET_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
+    ],
+    name: 'CancelUpdate',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
+    ],
+    name: 'Deactivate',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
+    ],
+    name: 'FinishUpdate',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'targetRefundRatio',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint32',
+        name: 'targetReserveWeight',
+        type: 'uint32',
+      },
+      {
+        indexed: false,
+        internalType: 'bool',
+        name: 'reconfigure',
+        type: 'bool',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'startTime',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'endTime',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'endCooldown',
+        type: 'uint256',
+      },
+    ],
+    name: 'InitUpdate',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'asset',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'vault',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'refundRatio',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'baseY',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint32',
+        name: 'reserveWeight',
+        type: 'uint32',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes',
+        name: 'encodedVaultArgs',
+        type: 'bytes',
+      },
+    ],
+    name: 'Register',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
+    ],
+    name: 'TransferHubOwnership',
+    type: 'event',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
+    name: 'cancelUpdate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'count',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
+    name: 'deactivate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
+    name: 'finishUpdate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
+    name: 'getBasicHubInfo',
+    outputs: [
+      { internalType: 'uint256', name: 'refundRatio', type: 'uint256' },
+      { internalType: 'address', name: 'owner', type: 'address' },
+      { internalType: 'address', name: 'vault', type: 'address' },
+      { internalType: 'address', name: 'asset', type: 'address' },
+      { internalType: 'bool', name: 'updating', type: 'bool' },
+      { internalType: 'bool', name: 'active', type: 'bool' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
+    name: 'getHubInfo',
+    outputs: [
+      {
+        components: [
+          { internalType: 'uint256', name: 'startTime', type: 'uint256' },
+          { internalType: 'uint256', name: 'endTime', type: 'uint256' },
+          { internalType: 'uint256', name: 'endCooldown', type: 'uint256' },
+          { internalType: 'uint256', name: 'refundRatio', type: 'uint256' },
+          {
+            internalType: 'uint256',
+            name: 'targetRefundRatio',
+            type: 'uint256',
+          },
+          { internalType: 'address', name: 'owner', type: 'address' },
+          { internalType: 'address', name: 'vault', type: 'address' },
+          { internalType: 'address', name: 'asset', type: 'address' },
+          { internalType: 'bool', name: 'updating', type: 'bool' },
+          { internalType: 'bool', name: 'reconfigure', type: 'bool' },
+          { internalType: 'bool', name: 'active', type: 'bool' },
+        ],
+        internalType: 'struct HubInfo',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'hubCooldown',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'hubDuration',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'hubWarmup',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'id', type: 'uint256' },
+      { internalType: 'uint256', name: 'targetRefundRatio', type: 'uint256' },
+      { internalType: 'uint32', name: 'targetReserveWeight', type: 'uint32' },
+    ],
+    name: 'initUpdate',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'owner', type: 'address' },
+      { internalType: 'address', name: 'asset', type: 'address' },
+      { internalType: 'contract IVault', name: 'vault', type: 'address' },
+      { internalType: 'uint256', name: 'refundRatio', type: 'uint256' },
+      { internalType: 'uint256', name: 'baseY', type: 'uint256' },
+      { internalType: 'uint32', name: 'reserveWeight', type: 'uint32' },
+      { internalType: 'bytes', name: 'encodedVaultArgs', type: 'bytes' },
+    ],
+    name: 'register',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'period', type: 'uint256' }],
+    name: 'setHubCooldown',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'period', type: 'uint256' }],
+    name: 'setHubDuration',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'period', type: 'uint256' }],
+    name: 'setHubWarmup',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'id', type: 'uint256' },
+      { internalType: 'address', name: 'newOwner', type: 'address' },
+    ],
+    name: 'transferHubOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+]
+
+export const METOKEN_FACTORY_ABI = [
+  {
+    inputs: [
+      { internalType: 'string', name: 'name', type: 'string' },
+      { internalType: 'string', name: 'symbol', type: 'string' },
+      { internalType: 'address', name: 'diamond', type: 'address' },
+    ],
+    name: 'create',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+]
+
+export const METOKENS_REGISTRY_ABI = [
+  {
+    inputs: [],
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+    ],
+    name: 'CancelResubscribe',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+    ],
+    name: 'CancelTransferMeTokenOwnership',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      { indexed: false, internalType: 'address', name: 'to', type: 'address' },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+    ],
+    name: 'ClaimMeTokenOwnership',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+    ],
+    name: 'FinishResubscribe',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'targetHubId',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'migration',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes',
+        name: 'encodedMigrationArgs',
+        type: 'bytes',
+      },
+    ],
+    name: 'InitResubscribe',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'minted',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'asset',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assetsDeposited',
+        type: 'uint256',
+      },
+      { indexed: false, internalType: 'string', name: 'name', type: 'string' },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'symbol',
+        type: 'string',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'hubId',
+        type: 'uint256',
+      },
+    ],
+    name: 'Subscribe',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      { indexed: false, internalType: 'address', name: 'to', type: 'address' },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+    ],
+    name: 'TransferMeTokenOwnership',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'bool', name: 'add', type: 'bool' },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'UpdateBalanceLocked',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: 'bool', name: 'add', type: 'bool' },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'UpdateBalancePooled',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'meToken',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newBalance',
+        type: 'uint256',
+      },
+    ],
+    name: 'UpdateBalances',
+    type: 'event',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'meToken', type: 'address' }],
+    name: 'cancelResubscribe',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'cancelTransferMeTokenOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'oldOwner', type: 'address' }],
+    name: 'claimMeTokenOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'meToken', type: 'address' }],
+    name: 'finishResubscribe',
+    outputs: [
+      {
+        components: [
+          { internalType: 'address', name: 'owner', type: 'address' },
+          { internalType: 'uint256', name: 'hubId', type: 'uint256' },
+          { internalType: 'uint256', name: 'balancePooled', type: 'uint256' },
+          { internalType: 'uint256', name: 'balanceLocked', type: 'uint256' },
+          { internalType: 'uint256', name: 'startTime', type: 'uint256' },
+          { internalType: 'uint256', name: 'endTime', type: 'uint256' },
+          { internalType: 'uint256', name: 'targetHubId', type: 'uint256' },
+          { internalType: 'address', name: 'migration', type: 'address' },
+        ],
+        internalType: 'struct MeTokenInfo',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'meToken', type: 'address' }],
+    name: 'getBasicMeTokenInfo',
+    outputs: [
+      { internalType: 'address', name: 'owner', type: 'address' },
+      { internalType: 'uint256', name: 'hubId', type: 'uint256' },
+      { internalType: 'uint256', name: 'balancePooled', type: 'uint256' },
+      { internalType: 'uint256', name: 'balanceLocked', type: 'uint256' },
+      { internalType: 'address', name: 'migration', type: 'address' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'meToken', type: 'address' }],
+    name: 'getMeTokenInfo',
+    outputs: [
+      {
+        components: [
+          { internalType: 'address', name: 'owner', type: 'address' },
+          { internalType: 'uint256', name: 'hubId', type: 'uint256' },
+          { internalType: 'uint256', name: 'balancePooled', type: 'uint256' },
+          { internalType: 'uint256', name: 'balanceLocked', type: 'uint256' },
+          { internalType: 'uint256', name: 'startTime', type: 'uint256' },
+          { internalType: 'uint256', name: 'endTime', type: 'uint256' },
+          { internalType: 'uint256', name: 'targetHubId', type: 'uint256' },
+          { internalType: 'address', name: 'migration', type: 'address' },
+        ],
+        internalType: 'struct MeTokenInfo',
+        name: '',
+        type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+    name: 'getOwnerMeToken',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'oldOwner', type: 'address' }],
+    name: 'getPendingOwner',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'targetHubId', type: 'uint256' },
+      { internalType: 'address', name: 'migration', type: 'address' },
+      { internalType: 'bytes', name: 'encodedMigrationArgs', type: 'bytes' },
+    ],
+    name: 'initResubscribe',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'owner', type: 'address' }],
+    name: 'isOwner',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'meTokenDuration',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'meTokenWarmup',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'period', type: 'uint256' }],
+    name: 'setMeTokenDuration',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'period', type: 'uint256' }],
+    name: 'setMeTokenWarmup',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'string', name: 'name', type: 'string' },
+      { internalType: 'string', name: 'symbol', type: 'string' },
+      { internalType: 'uint256', name: 'hubId', type: 'uint256' },
+      { internalType: 'uint256', name: 'assetsDeposited', type: 'uint256' },
+    ],
+    name: 'subscribe',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
+    name: 'transferMeTokenOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { internalType: 'address', name: 'meToken', type: 'address' },
+      { internalType: 'uint256', name: 'newBalance', type: 'uint256' },
+    ],
+    name: 'updateBalances',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+]
+
+export const METOKENS_DIAMOND_ABI = [
+  {
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MeTokensDiamond",
+  "sourceName": "hardhat-diamond-abi/HardhatDiamondABI.sol",
+  "abi": [
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  }
+  ],
+  "name": "getCurveInfo",
+  "outputs": [
+  {
+  "components": [
+  {
+  "internalType": "uint256",
+  "name": "baseY",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "targetBaseY",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint32",
+  "name": "reserveWeight",
+  "type": "uint32"
+  },
+  {
+  "internalType": "uint32",
+  "name": "targetReserveWeight",
+  "type": "uint32"
+  }
+  ],
+  "internalType": "struct LibCurve.CurveInfo",
+  "name": "",
+  "type": "tuple"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "meTokensBurned",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "supply",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balancePooled",
+  "type": "uint256"
+  }
+  ],
+  "name": "viewAssetsReturned",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "supply",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balancePooled",
+  "type": "uint256"
+  }
+  ],
+  "name": "viewMeTokensMinted",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "meTokensBurned",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "supply",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balancePooled",
+  "type": "uint256"
+  }
+  ],
+  "name": "viewTargetAssetsReturned",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "supply",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balancePooled",
+  "type": "uint256"
+  }
+  ],
+  "name": "viewTargetMeTokensMinted",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "components": [
+  {
+  "internalType": "bytes4[]",
+  "name": "functionSelectors",
+  "type": "bytes4[]"
+  },
+  {
+  "internalType": "address",
+  "name": "facetAddress",
+  "type": "address"
+  },
+  {
+  "internalType": "enum IDiamondCut.FacetCutAction",
+  "name": "action",
+  "type": "uint8"
+  }
+  ],
+  "indexed": false,
+  "internalType": "struct IDiamondCut.FacetCut[]",
+  "name": "diamondCut",
+  "type": "tuple[]"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "init",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "bytes",
+  "name": "data",
+  "type": "bytes"
+  }
+  ],
+  "name": "DiamondCut",
+  "type": "event"
+  },
+  {
+  "inputs": [
+  {
+  "components": [
+  {
+  "internalType": "bytes4[]",
+  "name": "functionSelectors",
+  "type": "bytes4[]"
+  },
+  {
+  "internalType": "address",
+  "name": "facetAddress",
+  "type": "address"
+  },
+  {
+  "internalType": "enum IDiamondCut.FacetCutAction",
+  "name": "action",
+  "type": "uint8"
+  }
+  ],
+  "internalType": "struct IDiamondCut.FacetCut[]",
+  "name": "cut",
+  "type": "tuple[]"
+  },
+  {
+  "internalType": "address",
+  "name": "init",
+  "type": "address"
+  },
+  {
+  "internalType": "bytes",
+  "name": "data",
+  "type": "bytes"
+  }
+  ],
+  "name": "diamondCut",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "bytes4",
+  "name": "functionSelector",
+  "type": "bytes4"
+  }
+  ],
+  "name": "facetAddress",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "facetAddress_",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "facetAddresses",
+  "outputs": [
+  {
+  "internalType": "address[]",
+  "name": "facetAddresses_",
+  "type": "address[]"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "facet",
+  "type": "address"
+  }
+  ],
+  "name": "facetFunctionSelectors",
+  "outputs": [
+  {
+  "internalType": "bytes4[]",
+  "name": "facetFunctionSelectors_",
+  "type": "bytes4[]"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "facets",
+  "outputs": [
+  {
+  "components": [
+  {
+  "internalType": "address",
+  "name": "facetAddress",
+  "type": "address"
+  },
+  {
+  "internalType": "bytes4[]",
+  "name": "functionSelectors",
+  "type": "bytes4[]"
+  }
+  ],
+  "internalType": "struct IDiamondLoupeFacet.Facet[]",
+  "name": "facets_",
+  "type": "tuple[]"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "bytes4",
+  "name": "interfaceId",
+  "type": "bytes4"
+  }
+  ],
+  "name": "supportsInterface",
+  "outputs": [
+  {
+  "internalType": "bool",
+  "name": "",
+  "type": "bool"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "rate",
+  "type": "uint256"
+  }
+  ],
+  "name": "SetBurnBuyerFee",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "rate",
+  "type": "uint256"
+  }
+  ],
+  "name": "SetBurnOwnerFee",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "rate",
+  "type": "uint256"
+  }
+  ],
+  "name": "SetMintFee",
+  "type": "event"
+  },
+  {
+  "inputs": [],
+  "name": "burnBuyerFee",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "burnOwnerFee",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "mintFee",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "rate",
+  "type": "uint256"
+  }
+  ],
+  "name": "setBurnBuyerFee",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "rate",
+  "type": "uint256"
+  }
+  ],
+  "name": "setBurnOwnerFee",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "rate",
+  "type": "uint256"
+  }
+  ],
+  "name": "setMintFee",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "asset",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "burner",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "recipient",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "meTokensBurned",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "assetsReturned",
+  "type": "uint256"
+  }
+  ],
+  "name": "Burn",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "asset",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "donor",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  }
+  ],
+  "name": "Donate",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "asset",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "depositor",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "recipient",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "meTokensMinted",
+  "type": "uint256"
+  }
+  ],
+  "name": "Mint",
+  "type": "event"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "meTokensBurned",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "recipient",
+  "type": "address"
+  }
+  ],
+  "name": "burn",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "meTokensBurned",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "sender",
+  "type": "address"
+  }
+  ],
+  "name": "calculateAssetsReturned",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "assetsReturned",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  }
+  ],
+  "name": "calculateMeTokensMinted",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "meTokensMinted",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  }
+  ],
+  "name": "donate",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "recipient",
+  "type": "address"
+  }
+  ],
+  "name": "mint",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "recipient",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "deadline",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint8",
+  "name": "vSig",
+  "type": "uint8"
+  },
+  {
+  "internalType": "bytes32",
+  "name": "rSig",
+  "type": "bytes32"
+  },
+  {
+  "internalType": "bytes32",
+  "name": "sSig",
+  "type": "bytes32"
+  }
+  ],
+  "name": "mintWithPermit",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  }
+  ],
+  "name": "CancelUpdate",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  }
+  ],
+  "name": "Deactivate",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  }
+  ],
+  "name": "FinishUpdate",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "targetRefundRatio",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint32",
+  "name": "targetReserveWeight",
+  "type": "uint32"
+  },
+  {
+  "indexed": false,
+  "internalType": "bool",
+  "name": "reconfigure",
+  "type": "bool"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "startTime",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "endTime",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "endCooldown",
+  "type": "uint256"
+  }
+  ],
+  "name": "InitUpdate",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "asset",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "vault",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "refundRatio",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "baseY",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint32",
+  "name": "reserveWeight",
+  "type": "uint32"
+  },
+  {
+  "indexed": false,
+  "internalType": "bytes",
+  "name": "encodedVaultArgs",
+  "type": "bytes"
+  }
+  ],
+  "name": "Register",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "newOwner",
+  "type": "address"
+  }
+  ],
+  "name": "TransferHubOwnership",
+  "type": "event"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  }
+  ],
+  "name": "cancelUpdate",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "count",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  }
+  ],
+  "name": "deactivate",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  }
+  ],
+  "name": "finishUpdate",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  }
+  ],
+  "name": "getHubInfo",
+  "outputs": [
+  {
+  "components": [
+  {
+  "internalType": "uint256",
+  "name": "startTime",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "endTime",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "endCooldown",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "refundRatio",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "targetRefundRatio",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  },
+  {
+  "internalType": "address",
+  "name": "vault",
+  "type": "address"
+  },
+  {
+  "internalType": "address",
+  "name": "asset",
+  "type": "address"
+  },
+  {
+  "internalType": "bool",
+  "name": "updating",
+  "type": "bool"
+  },
+  {
+  "internalType": "bool",
+  "name": "reconfigure",
+  "type": "bool"
+  },
+  {
+  "internalType": "bool",
+  "name": "active",
+  "type": "bool"
+  }
+  ],
+  "internalType": "struct HubInfo",
+  "name": "",
+  "type": "tuple"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "hubCooldown",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "hubDuration",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "hubWarmup",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "targetRefundRatio",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint32",
+  "name": "targetReserveWeight",
+  "type": "uint32"
+  }
+  ],
+  "name": "initUpdate",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  },
+  {
+  "internalType": "address",
+  "name": "asset",
+  "type": "address"
+  },
+  {
+  "internalType": "contract IVault",
+  "name": "vault",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "refundRatio",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "baseY",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint32",
+  "name": "reserveWeight",
+  "type": "uint32"
+  },
+  {
+  "internalType": "bytes",
+  "name": "encodedVaultArgs",
+  "type": "bytes"
+  }
+  ],
+  "name": "register",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "cooldown",
+  "type": "uint256"
+  }
+  ],
+  "name": "setHubCooldown",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "duration",
+  "type": "uint256"
+  }
+  ],
+  "name": "setHubDuration",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "warmup",
+  "type": "uint256"
+  }
+  ],
+  "name": "setHubWarmup",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "id",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "newOwner",
+  "type": "address"
+  }
+  ],
+  "name": "transferHubOwnership",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": true,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "CancelResubscribe",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "from",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "CancelTransferMeTokenOwnership",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "from",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "to",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "ClaimMeTokenOwnership",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": true,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "FinishResubscribe",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": true,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "targetHubId",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "migration",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "bytes",
+  "name": "encodedMigrationArgs",
+  "type": "bytes"
+  }
+  ],
+  "name": "InitResubscribe",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": true,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": true,
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "minted",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "asset",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  },
+  {
+  "indexed": false,
+  "internalType": "string",
+  "name": "name",
+  "type": "string"
+  },
+  {
+  "indexed": false,
+  "internalType": "string",
+  "name": "symbol",
+  "type": "string"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  }
+  ],
+  "name": "Subscribe",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "from",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "to",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "TransferMeTokenOwnership",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "bool",
+  "name": "add",
+  "type": "bool"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "amount",
+  "type": "uint256"
+  }
+  ],
+  "name": "UpdateBalanceLocked",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "bool",
+  "name": "add",
+  "type": "bool"
+  },
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "amount",
+  "type": "uint256"
+  }
+  ],
+  "name": "UpdateBalancePooled",
+  "type": "event"
+  },
+  {
+  "anonymous": false,
+  "inputs": [
+  {
+  "indexed": false,
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "indexed": false,
+  "internalType": "uint256",
+  "name": "newBalance",
+  "type": "uint256"
+  }
+  ],
+  "name": "UpdateBalances",
+  "type": "event"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "cancelResubscribe",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "cancelTransferMeTokenOwnership",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "oldOwner",
+  "type": "address"
+  }
+  ],
+  "name": "claimMeTokenOwnership",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "finishResubscribe",
+  "outputs": [
+  {
+  "components": [
+  {
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balancePooled",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balanceLocked",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "startTime",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "endTime",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "endCooldown",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "targetHubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "migration",
+  "type": "address"
+  }
+  ],
+  "internalType": "struct MeTokenInfo",
+  "name": "",
+  "type": "tuple"
+  }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  }
+  ],
+  "name": "getMeTokenInfo",
+  "outputs": [
+  {
+  "components": [
+  {
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balancePooled",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "balanceLocked",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "startTime",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "endTime",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "endCooldown",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "targetHubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "migration",
+  "type": "address"
+  }
+  ],
+  "internalType": "struct MeTokenInfo",
+  "name": "",
+  "type": "tuple"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  }
+  ],
+  "name": "getOwnerMeToken",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "oldOwner",
+  "type": "address"
+  }
+  ],
+  "name": "getPendingOwner",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "targetHubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "address",
+  "name": "migration",
+  "type": "address"
+  },
+  {
+  "internalType": "bytes",
+  "name": "encodedMigrationArgs",
+  "type": "bytes"
+  }
+  ],
+  "name": "initResubscribe",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "owner",
+  "type": "address"
+  }
+  ],
+  "name": "isOwner",
+  "outputs": [
+  {
+  "internalType": "bool",
+  "name": "",
+  "type": "bool"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "meTokenCooldown",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "meTokenDuration",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "meTokenWarmup",
+  "outputs": [
+  {
+  "internalType": "uint256",
+  "name": "",
+  "type": "uint256"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "cooldown",
+  "type": "uint256"
+  }
+  ],
+  "name": "setMeTokenCooldown",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "duration",
+  "type": "uint256"
+  }
+  ],
+  "name": "setMeTokenDuration",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "uint256",
+  "name": "warmup",
+  "type": "uint256"
+  }
+  ],
+  "name": "setMeTokenWarmup",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "string",
+  "name": "name",
+  "type": "string"
+  },
+  {
+  "internalType": "string",
+  "name": "symbol",
+  "type": "string"
+  },
+  {
+  "internalType": "uint256",
+  "name": "hubId",
+  "type": "uint256"
+  },
+  {
+  "internalType": "uint256",
+  "name": "assetsDeposited",
+  "type": "uint256"
+  }
+  ],
+  "name": "subscribe",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "newOwner",
+  "type": "address"
+  }
+  ],
+  "name": "transferMeTokenOwnership",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "meToken",
+  "type": "address"
+  },
+  {
+  "internalType": "uint256",
+  "name": "newBalance",
+  "type": "uint256"
+  }
+  ],
+  "name": "updateBalances",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "deactivateController",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "diamondController",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "durationsController",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "feesController",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "meTokenRegistryController",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "registerController",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "newController",
+  "type": "address"
+  }
+  ],
+  "name": "setDeactivateController",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "newController",
+  "type": "address"
+  }
+  ],
+  "name": "setDiamondController",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "newController",
+  "type": "address"
+  }
+  ],
+  "name": "setDurationsController",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "newController",
+  "type": "address"
+  }
+  ],
+  "name": "setFeesController",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "newController",
+  "type": "address"
+  }
+  ],
+  "name": "setMeTokenRegistryController",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "newController",
+  "type": "address"
+  }
+  ],
+  "name": "setRegisterController",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [
+  {
+  "internalType": "address",
+  "name": "forwarder",
+  "type": "address"
+  }
+  ],
+  "name": "setTrustedForwarder",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+  },
+  {
+  "inputs": [],
+  "name": "trustedForwarder",
+  "outputs": [
+  {
+  "internalType": "address",
+  "name": "",
+  "type": "address"
+  }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+  }
+  ],
+  "deployedBytecode": "",
+  "bytecode": "",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+  }
+]
+
+
+// DAI ADDRESS
+export const DAI = {
+  goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
+  mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+}
+
+// ERC20 ABI
+export const ERC20_ABI = [
+  {
+    constant: true,
+    inputs: [],
+    name: 'name',
+    outputs: [
+      {
+        name: '',
+        type: 'string',
+      },
+    ],
+    payable: false,
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'decimals',
+    outputs: [
+      {
+        name: '',
+        type: 'uint8',
+      },
+    ],
+    payable: false,
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        name: '_owner',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        name: 'balance',
+        type: 'uint256',
+      },
+    ],
+    payable: false,
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'symbol',
+    outputs: [
+      {
+        name: '',
+        type: 'string',
+      },
+    ],
+    payable: false,
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_spender',
+        type: 'address',
+      },
+      {
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'approve',
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: '_to',
+        type: 'address',
+      },
+      {
+        name: '_value',
+        type: 'uint256',
+      },
+    ],
+    name: 'transfer',
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'spender',
+        type: 'address',
+      },
+    ],
+    name: 'allowance',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+]
+
+
+// ETH MAINNET THIRDWEB RPC
+export const MAINNET_RPC = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || 'https://ethereum.rpc.thirdweb.com'
 
 // VIDEO NFT MUMBAI
 export const VIDEO_NFT_CONTRACT_ADDRESS = '0x205e06b24328b59e3846c3Fa4a55de7c1D6b227C'
