@@ -22,8 +22,10 @@ export type Video = {
 }
 
 export type Views = {
+  [x: string]: any
   id?: any | null
-  startViews: number
+  playbackId: string
+  publicViews: any
 }
 
 // TODO: use Reat-Query's useQueryClient to invalidate the cache
@@ -54,24 +56,4 @@ export const updateAsset = async (id: any, data: any) => {
 
   console.log('Asset: ', asset)
   return asset
-}
-
-// VIDEO VIEWS
-export const videoViewsApi = axios.create({
-  baseURL: 'https://livepeer.studio/api/data/views',
-  headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STUDIO_API_KEY}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-  },
-})
-
-export const fetchAssetViews = async (id: any ) => {
-  const [, { assetId }] = id.queryKey
-  console.log('Fetching views')
-  const response = await videoViewsApi.get<assetData['views']>(`/${assetId}/total`)
-  const assetViews = response.data
-
-  console.log('Views: ', assetViews)
-  return assetViews
 }
