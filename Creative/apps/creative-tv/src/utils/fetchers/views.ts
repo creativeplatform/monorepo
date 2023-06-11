@@ -1,22 +1,21 @@
-import axios from 'axios'
-import { assetData } from './assets'
+import axios, { AxiosError } from 'axios'
+import { assetData } from './assets';
 
-
-export const videoViews = axios.create({
-    baseURL:   'https://livepeer.studio/api/data/views',
+export const videoApi = axios.create({
+    baseURL: 'https://livepeer.studio/api/data/views/query/total/',
     headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_STUDIO_API_KEY}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STUDIO_API_KEY}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
-})
+  })
 
-export const fetchAssetId = async (id: any) => {
-    const [, { assetId }] = id.queryKey
-    console.log('Fetching views')
-    const response = await videoViews.get<assetData['video']>(`/${assetId}/total`)
-    const views = response.data
-
-    console.log('Views: ', views)
-    return views
-}
+export const fetchVideoViews = async (playbackId: string) => {
+    const response = await videoApi.get<assetData['views']>(`${playbackId}`);
+    try {
+        return response.data;
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        throw new Error(axiosError.message);
+    }
+};
