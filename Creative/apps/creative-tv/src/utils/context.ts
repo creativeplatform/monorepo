@@ -41,7 +41,7 @@ export const FEATURED_TEXT = {
 // BIGGER THAN YOU THINK
 export const CREATIVE_LOGO_BLK = '/Blog-Logo_blk.png'
 export const CREATIVE_LOGO_WHT = '/Blog-Logo_wht.png'
-export const HEADING_1 = "You're Bigger, Than You Think 🧠"
+export const HEADING_1 = "You're Bigger, Than You Think"
 export const GOVERN_DESC = "Our community is built to push creatives to the front of the line. The following videos have been voted on by the community to choose which videos should get more visibility."
 
 // Profile.tsx

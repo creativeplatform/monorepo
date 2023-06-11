@@ -520,7 +520,9 @@ export function Header({className}:Props) {
               </HStack>
             </Flex>
             {!address ? (
-             <ConnectWallet />
+             <ConnectWallet
+              btnTitle={"Sign In"}
+             />
             ) : (
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>

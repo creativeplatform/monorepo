@@ -1,11 +1,12 @@
-import { Box, createIcon, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, createIcon, Heading, Stack, Text } from "@chakra-ui/react"
 import Image from 'next/image'
+import { Emoji } from "ui"
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
-import { Provider, Carousel, LeftButton, RightButton, } from "chakra-ui-carousel";
+import { Provider, Carousel, LeftButton, RightButton, } from "chakra-ui-carousel"
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { CAROUSEL_PLAYLISTS } from 'utils/config'
-import { CREATIVE_LOGO_WHT, HEADING_1, GOVERN_DESC } from "utils/context";
+import { CREATIVE_LOGO_WHT, HEADING_1, GOVERN_DESC } from "utils/context"
 
 export const PosterImage = () => {
     return (
