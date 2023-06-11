@@ -10,20 +10,22 @@ import { fetchVideoViews } from 'utils/fetchers/views'
 import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 
+type ApiResponse<TData> = { data?: TData; errors?: any[] }
+
 const PosterImage = () => {
   return <Image src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
 }
 
 export default function AllAssets() {
   const router = useRouter()
-  const videos = useQuery<assetData["video"][]>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
+  const videosQuery = useQuery<ApiResponse<assetData['video'][]>>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,
   })
   const viewsQuery = useQuery<assetData['views'][]>(
     ['publicViews'],
     async () => {
-      if (videos.data) {
-        const viewsPromises = videos.data.map((video) =>
+      if (videosQuery.data?.data) {
+        const viewsPromises = videosQuery.data.data.map((video) =>
           fetchVideoViews(video.playbackId).then((res) => res.data?.publicViews || 0)
         )
         const views = await Promise.all(viewsPromises)
@@ -32,25 +34,23 @@ export default function AllAssets() {
       return []
     },
     {
-      enabled: Boolean(videos.data),
+      enabled: Boolean(videosQuery.data),
       staleTime: 3000,
     }
   )
 
-  if (videos.isLoading) {
+  if (videosQuery.isLoading) {
     console.log('loading...')
     // loading state
     return <Box>Loading...</Box>
   }
 
-  if (videos.isError) {
-    console.log('error', videos.error)
-    return <Box children='error' />
+  if (videosQuery.isError || videosQuery.data.errors) {
+    console.log('error', videosQuery.error)
+    return <Box children="error" />
   }
 
-  const readyVideos = videos.data.filter(
-    (video): video is assetData["video"] => video.status.phase === 'ready'
-  )
+  const readyVideos = videosQuery.data.data?.filter((video): video is assetData['video'] => video.status.phase === 'ready') ?? []
 
   return (
     <LivepeerConfig client={useLivepeerClient}>

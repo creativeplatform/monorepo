@@ -11,8 +11,9 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
       },
     })
 
-    res.status(200).json(response.data)
+    res.status(200).json({ data: response.data })
   } catch (e) {
+    console.log((e as any).response.data)
     res.status(500).json({ errors: ['Something went wrong'] })
   }
 }
