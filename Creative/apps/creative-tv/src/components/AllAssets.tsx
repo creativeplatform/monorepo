@@ -21,23 +21,6 @@ export default function AllAssets() {
   const videosQuery = useQuery<ApiResponse<assetData['video'][]>>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,
   })
-  const viewsQuery = useQuery<assetData['views'][]>(
-    ['publicViews'],
-    async () => {
-      if (videosQuery.data?.data) {
-        const viewsPromises = videosQuery.data.data.map((video) =>
-          fetchVideoViews(video.playbackId).then((res) => res.data?.publicViews || 0)
-        )
-        const views = await Promise.all(viewsPromises)
-        return views
-      }
-      return []
-    },
-    {
-      enabled: Boolean(videosQuery.data),
-      staleTime: 3000,
-    }
-  )
 
   if (videosQuery.isLoading) {
     console.log('loading...')
@@ -56,8 +39,6 @@ export default function AllAssets() {
     <LivepeerConfig client={useLivepeerClient}>
       <SimpleGrid spacing={4} minChildWidth={350}>
         {readyVideos.map((video) => {
-          const views = viewsQuery.data?.find((view) => view?.playbackId === video?.playbackId)
-          const totalViews = views || 0
           return (
             <Card key={video.id} maxW="md" variant={'elevated'}>
               <CardHeader>
@@ -107,7 +88,7 @@ export default function AllAssets() {
                 <Flex>
                   <Badge colorScheme={video.status.phase === 'ready' ? 'green' : 'red'}>{video.status.phase}</Badge>
                   <Spacer />
-                  <Text>Views: {totalViews.toString()}</Text> {/* Displaying the view count */}
+                  <Text>Views: {video.viewCount.toString()}</Text> {/* Displaying the view count */}
                 </Flex>
                 <Stack mt="6" spacing="3">
                   <Heading size={'md'}>{video.name.slice(0, -4)}</Heading>

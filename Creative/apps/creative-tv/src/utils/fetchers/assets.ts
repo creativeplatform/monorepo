@@ -19,6 +19,7 @@ export type Video = {
   createdAt: bigint
   updatedAt: bigint
   downloadUrl?: string
+  viewCount: number
 }
 
 export type Views = {
