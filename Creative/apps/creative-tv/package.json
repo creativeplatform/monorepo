@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.10.6",
     "@livepeer/react": "^2.1.5",
     "@next/font": "13.1.1",
+    "@orbisclub/orbis-sdk": "^0.4.66",
     "@thirdweb-dev/chains": "^0.1.18",
     "@thirdweb-dev/react": "3.11.11",
     "@thirdweb-dev/sdk": "^3.10.17",
