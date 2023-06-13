@@ -6,7 +6,6 @@ import { motion } from 'framer-motion'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { assetData } from 'utils/fetchers/assets'
-import { fetchVideoViews } from 'utils/fetchers/views'
 import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 
