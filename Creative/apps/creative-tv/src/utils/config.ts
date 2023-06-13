@@ -1056,11 +1056,7 @@ export const METOKENS_REGISTRY_ABI = [
 ]
 
 export const METOKENS_DIAMOND_ABI = [
-  {
-  "_format": "hh-sol-artifact-1",
-  "contractName": "MeTokensDiamond",
-  "sourceName": "hardhat-diamond-abi/HardhatDiamondABI.sol",
-  "abi": [
+ 
   {
   "inputs": [
   {
@@ -3079,12 +3075,6 @@ export const METOKENS_DIAMOND_ABI = [
   ],
   "stateMutability": "view",
   "type": "function"
-  }
-  ],
-  "deployedBytecode": "",
-  "bytecode": "",
-  "linkReferences": {},
-  "deployedLinkReferences": {}
   }
 ]
 
