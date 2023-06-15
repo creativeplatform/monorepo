@@ -145,9 +145,9 @@ export default function ProfilePage() {
             <Box mt={5}>
                 <SimpleGrid columns={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (
-                        <Box>
+                        <Box key={nft.metadata.id}>
                         <Text fontWeight={'bold'}><Emoji symbol='🪪' label='identification'/> Membership:</Text>
-                        <Card key={nft.metadata.id} overflow={"hidden"} p={2} mb={4}>
+                        <Card  overflow={"hidden"} p={2} mb={4}>
                             <Image 
                                 src={`${nft.metadata.image}`}
                                 height={250}
@@ -213,7 +213,7 @@ export default function ProfilePage() {
                                     </Box>
                                 )}
                         </Box>
-                    ))}
+                        ))}
                     <Box>
                         <Text fontWeight={'bold'}><Emoji symbol='🪙' label='coin'/> MeToken:</Text>
                         <Text fontSize={'small'}>To generate revenue on our platform, you need to create a <Link href='https://metokens.com' color='#EC407A'>MeToken</Link>. This token serves as your unique identity as a creator and provides a way to monetize your creative journey. With MeToken, viewers can tip you and buy your products within our platform's creative ecosystem. It offers a convenient and integrated method for transactions and supports your growth as a creator.</Text>
