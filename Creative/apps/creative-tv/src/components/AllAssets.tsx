@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
-import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, Text, Image, Spacer } from '@chakra-ui/react'
+import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, Text, Image, Spacer, ButtonGroup } from '@chakra-ui/react'
 import { DownloadIcon, ChatIcon, LinkIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
 import { LivepeerConfig, Player } from '@livepeer/react'
@@ -8,6 +8,8 @@ import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { assetData } from 'utils/fetchers/assets'
 import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
+import { Discussion } from "@orbisclub/components";
+import "@orbisclub/components/dist/index.modern.css";
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
@@ -59,8 +61,6 @@ export default function AllAssets() {
                   poster={<PosterImage />}
                   showLoadingSpinner
                   controls={{ autohide: 500, hotkeys: false }}
-                  autoPlay
-                  muted
                   aspectRatio="16to9"
                   showPipButton
                   autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
@@ -108,10 +108,10 @@ export default function AllAssets() {
               >
                 {video.status.phase === 'ready' ? (
                   <>
-                    <Button flex="1" variant="ghost" leftIcon={<ChatIcon />}>
-                      Comment
-                    </Button>
-                    <Button flex="1" variant="ghost" leftIcon={<LinkIcon />}>
+                  
+                  <ButtonGroup mb={5} spacing={10}>
+                    <Button as={motion.div}
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<LinkIcon />}>
                       Share
                     </Button>
                     <Button
@@ -126,27 +126,16 @@ export default function AllAssets() {
                     >
                       Collect
                     </Button>
+                  </ButtonGroup>
+                  <Divider mb={5}/>
+                  <Discussion 
+                    theme="kjzl6cwe1jw14ars78xj074bqeioh0b37cbf7dllsms8zh6wsxq9h33sum8xd7u" 
+                    context="kjzl6cwe1jw1480dsrs4k90sgkrr2te7mkegvg9nxdan55umc977yu9awecc53v" 
+                  />
                   </>
                 ) : (
                   <>
-                    <Button flex="1" disabled variant="ghost" leftIcon={<ChatIcon />}>
-                      Comment
-                    </Button>
-                    <Button flex="1" disabled variant="ghost" leftIcon={<LinkIcon />} >
-                      Share
-                    </Button>
-                    <Button
-                      leftIcon={<DownloadIcon />}
-                      backgroundColor={'#EC407A'}
-                      disabled
-                      className="card-mint-button"
-                      as={motion.div}
-                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-                      flex="1"
-                      variant="ghost"
-                    >
-                      Collect
-                    </Button>
+                  {''}
                   </>
                 )}
               </CardFooter>
