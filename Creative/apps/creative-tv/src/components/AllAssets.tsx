@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, Text, Image, Spacer, ButtonGroup } from '@chakra-ui/react'
-import { DownloadIcon, ChatIcon, LinkIcon } from '@chakra-ui/icons'
+import { DownloadIcon, LinkIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
