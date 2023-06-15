@@ -145,7 +145,7 @@ export default function ProfilePage() {
             <Box mt={5}>
                 <SimpleGrid columns={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (
-                        <Box key={nft.metadata.id}>
+                        <Box key={nft.metadata.id.toString()}>
                         <Text fontWeight={'bold'}><Emoji symbol='🪪' label='identification'/> Membership:</Text>
                         <Card  overflow={"hidden"} p={2} mb={4}>
                             <Image 
