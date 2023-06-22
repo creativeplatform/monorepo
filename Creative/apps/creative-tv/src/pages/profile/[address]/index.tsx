@@ -25,6 +25,7 @@ import {
 //import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import{ Emoji } from 'ui'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
+import truncateEthAddress from 'truncate-eth-address'
 import { useRouter } from 'next/router'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdAutorenew, MdCancel } from 'react-icons/md'
@@ -121,6 +122,21 @@ export default function ProfilePage() {
         }
     }
 
+    const handleCopyAddress = () => {
+        navigator.clipboard.writeText(address ?? '');
+        // Optionally, you can show a success message or perform any other actions
+        console.log('Address copied:', address);
+        toast({
+          title: 'Address Copied',
+          description: 'Successfully Copied ' + truncateEthAddress(`${address}`),
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        })
+      };
+    
+
+// RENDER REMAINING TIME FOR COUNTDOWN TIMER
     // const renderTime = ({ remainingTime }: { remainingTime: number }) => {
     //     const hours = Math.floor(remainingTime / 3600)
     //     const minutes = Math.floor((remainingTime % 3600) / 60)
@@ -137,9 +153,9 @@ export default function ProfilePage() {
             <Heading mt={10}>Creative Profile</Heading>
             <Box mt={5} key={address}>
                 <ButtonGroup size='sm' isAttached variant='outline'>
-                    <Text>CRTV # &nbsp;</Text>
+                    <Text as={'b'} fontSize={'2xl'}>CRTV Account &nbsp;</Text>
                     <Button>{address}</Button>
-                    <IconButton aria-label='Add to clipboard' icon={<HiOutlineClipboardCopy />} />
+                    <IconButton aria-label='Add to clipboard' icon={<HiOutlineClipboardCopy />} onClick={() => { handleCopyAddress() }} />
                 </ButtonGroup>
             </Box>
             <Box mt={5}>
