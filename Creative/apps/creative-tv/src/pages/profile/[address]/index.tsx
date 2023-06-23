@@ -22,7 +22,6 @@ import {
     useNFTBalance,
     useContractWrite,
 } from '@thirdweb-dev/react'
-//import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import{ Emoji } from 'ui'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
