@@ -110,7 +110,7 @@ export default function AllAssets() {
                   <>
                   <ButtonGroup mb={5} spacing={10}>
                   <Button as={motion.div}
-                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<ChatIcon />}>
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<ChatIcon />} onClick={() => router.push(`video/${video?.playbackId}`)}>
                       Comment
                     </Button>
                     <Button as={motion.div}
@@ -119,7 +119,7 @@ export default function AllAssets() {
                     </Button>
                     <Button
                       backgroundColor={'#EC407A'}
-                      onClick={() => router.push(`/mint-nft-video?assetId=${video.id}`)}
+                      onClick={() => router.push(`/mint-nft-video?assetId=${video?.id}`)}
                       className="card-mint-button"
                       as={motion.div}
                       _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}

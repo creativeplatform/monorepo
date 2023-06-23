@@ -47,7 +47,6 @@ import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNE
 import { PFP } from 'utils/context'
 
 
-
 interface Props {
   className?: string
   icon?: string
@@ -587,7 +586,7 @@ export function Header({className}:Props) {
                         onClick={() => {
                           handlePaywallCheckout(); 
                         }}
-                      >Subscribe for ${price.toString()}</MenuItem>
+                      >Subscribe for ${price?.toString()}</MenuItem>
                       <MenuDivider />
                       <MenuItem icon={<AiOutlineDisconnect />} 
                         onClick={() => {
