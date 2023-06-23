@@ -34,9 +34,11 @@ export default function VideoPage() {
     const address = useAddress()
 
     return (
-        <NextSeo title="" />
-        <Container maxW={"1200px"} mt={10}>
-            <Button colorScheme={'blue'} onClick={() => router.push("/")}>Back</Button>
-        </Container>
+        <>
+            <NextSeo title="" />
+            <Container maxW={"1200px"} mt={10}>
+                <Button colorScheme={'blue'} onClick={() => router.push("/")}>Back</Button>
+            </Container>
+        </>
     )
 }
