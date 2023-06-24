@@ -42,15 +42,14 @@ const PosterImage = () => {
 
 const VideoPage = () => {
     const router = useRouter()
-    const { query: { playbackId } } = router;
     const address = useAddress()
     const toast = useToast()
-    const { id } = router.query; // Access the video ID from the router's query object
+    const { playbackId } = router.query; // Access the video ID from the router's query object
     const videoQuery = useQuery<assetData['video'][]>(['assetId', playbackId], fetchAssetId, {
         staleTime: 3000,
       });
     
-      if (videoQuery.isLoading) {
+      if (videoQuery?.isLoading) {
         console.log('loading...')
         // loading state
         return <Box>Loading...</Box>
