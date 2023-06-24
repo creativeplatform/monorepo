@@ -7,14 +7,16 @@ export type assetData = {
   description: string
   video: Video
   views: Views
+  
 }
 
 export type Video = {
   id?: any | null
   name: string
-  status: { phase: string }
+  status: { phase: string| null, updatedAt: bigint, progress: string | null, errorMessage: string | null }
   playbackId: string
-  storage: string
+  creatorId: string | null
+  storage: string | null
   transcodingStatus: string
   createdAt: bigint
   updatedAt: bigint
@@ -41,13 +43,15 @@ export const videoApi = axios.create({
 
 export const fetchAssetId = async (id: any) => {
   const [, { assetId }] = id.queryKey
-  console.log('Fetching assets')
-  const response = await videoApi.get<assetData["video"]>(`/${assetId}?details=true`)
+  console.log('Fetching asset')
+  const response = await videoApi.get<assetData['video']>(`/${assetId}?details=true`)
   const asset = response.data
 
   console.log('Asset: ', asset)
-  return asset
+  return [asset]
 }
+
+
 
 export const updateAsset = async (id: any, data: any) => {
   const [, { assetId }] = id.queryKey
@@ -56,5 +60,5 @@ export const updateAsset = async (id: any, data: any) => {
   const asset = response.data
 
   console.log('Asset: ', asset)
-  return asset
+  return [asset]
 }
