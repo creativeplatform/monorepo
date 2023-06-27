@@ -12,15 +12,35 @@ import { Box, Button } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 
 const WagmiNft = () => {
+  // Retrieve the user's account address
   const { address } = useAccount()
+
+  // Access the Next.js router
   const router = useRouter()
+
+  // Extract the assetId from the router's query parameters
   const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [router?.query])
-  const { data: asset } = useAsset({
+
+  // Fetch the asset data using the useAsset hook
+  const { data: asset, isError: assetError, isLoading: assetLoading } = useAsset({
     assetId,
     enabled: assetId?.length === 36,
     refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
   })
 
+  // Check if the asset data is still loading
+  if (assetLoading) {
+    // Render loading state
+    return <Box>Loading asset data...</Box>
+  }
+
+  // Check if there was an error fetching the asset data
+  if (assetError) {
+    // Render error state
+    return <Box>Error fetching asset data</Box>
+  }
+
+  // Retrieve the updateAsset function from the useUpdateAsset hook
   const { mutate: updateAsset } = useUpdateAsset(
     asset
       ? {
@@ -32,6 +52,7 @@ const WagmiNft = () => {
       : null
   )
 
+  // Prepare the contract write configuration using the usePrepareContractWrite hook
   const { config } = usePrepareContractWrite({
     // The demo NFT contract address on Polygon Mumbai
     address: '0xdfcb0abE62911aC9eaB22D2E662F53CF4C7f90d4',
@@ -48,6 +69,7 @@ const WagmiNft = () => {
     },
   })
 
+  // Perform the contract write operation using the useContractWrite hook
   const { data: contractWriteData, isSuccess, write, error: contractWriteError } = useContractWrite(config)
 
   return (
@@ -71,11 +93,11 @@ const WagmiNft = () => {
             </Button>
           ) : contractWriteData?.hash && isSuccess ? (
             <a target="_blank" href={`https://mumbai.polygonscan.com/tx/${contractWriteData.hash}`} rel="noreferrer">
-              <Button 
-              className="tx-button"
-              as={motion.div}
-              bgColor={'gray'}
-              _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}>
+              <Button
+                className="tx-button"
+                as={motion.div}
+                bgColor={'gray'}
+                _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}>
                 View Mint Transaction
               </Button>
             </a>
@@ -83,10 +105,10 @@ const WagmiNft = () => {
             <p>{contractWriteError.message}</p>
           ) : asset?.storage?.status?.phase === 'ready' && write ? (
             <Button
-            className="mint-button"
-            as={motion.div}
-            bgColor={'#EC407A'}
-            _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+              className="mint-button"
+              as={motion.div}
+              bgColor={'#EC407A'}
+              _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
               onClick={() => {
                 write()
               }}>

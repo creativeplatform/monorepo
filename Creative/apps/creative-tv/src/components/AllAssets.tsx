@@ -110,7 +110,7 @@ export default function AllAssets() {
                   <>
                   <ButtonGroup mb={5} spacing={10}>
                   <Button as={motion.div}
-                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<ChatIcon />} onClick={() => router.push(`discover/${video?.playbackId}`)}>
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<ChatIcon />} onClick={() => router.push(`discover/${encodeURIComponent(video?.id)}`)}>
                       Comment
                     </Button>
                     <Button as={motion.div}
