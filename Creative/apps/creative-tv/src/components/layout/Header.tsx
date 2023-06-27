@@ -30,9 +30,10 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  useClipboard,
 } from '@chakra-ui/react'
 import truncateEthAddress from 'truncate-eth-address'
+import { Paywall } from '@unlock-protocol/paywall'
+import networks from '@unlock-protocol/networks'
 import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { HiOutlineClipboardCopy } from 'react-icons/hi';
@@ -40,10 +41,10 @@ import { useScroll } from 'framer-motion'
 import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
 import { MdOutlineAccountCircle } from 'react-icons/md'
+import { ThemeSwitcher } from './ThemeSwitcher'
+import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useSDK, useSigner } from '@thirdweb-dev/react'
 import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
-import { ThemeSwitcher } from './ThemeSwitcher'
-import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect } from '@thirdweb-dev/react'
 
 
 interface Props {
@@ -58,63 +59,111 @@ export function Header({className}:Props) {
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
+  const sdk = useSDK()
+  const signer = useSigner()
   
-
   // Currently connected wallet address
   const address = useAddress()
+  const [content, setContent] = useState<string | undefined>('');
   const disconnect = useDisconnect()
-  const { onCopy, value, setValue, hasCopied } = useClipboard("")
+
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
 
-
+  // Get the Membership Price
+  const { data: price, isLoading: priceLoading } = useContractRead(contract, "keyPrice");
+  
   /*******  CONTRACT READING ********/
   // Determine whether the connected wallet address has a valid subscription
-  const { data: subscribed, isLoading } = useContractRead(
-    contract,
-    "getHasValidKey",
-    [address]
-  );
-
-  // Read the duration of a subscription
-  const { data: expirationDuration, isLoading: expirationLoading } =
-    useContractRead(contract, "expirationDuration");
+  const { data: subscribed } = useContractRead(contract, "getHasValidKey", [address]);
   
-  //Read the Key Price of a subscription
-  const { data: price, isLoading: priceIsLoading } = useContractRead(contract, "keyPrice");
+  // /*******  CONTRACT WRITING ********/
+  // const { mutateAsync: purchaseMembership } = await subscription?.call("purchase");
+  // const purchaseMembership = async () => {
+  //   // Function to purchase a subscription NFT on the Lock contract
+  //   try {
+  //     const data = await purchase({
+  //       args: [[price], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [FREE_LOCK_ADDRESS_GOERLI_TESTNET.data]],
+  //     });
+  //     console.info("contract call success", data);
+  //     toast({
+  //       title: 'Subscription',
+  //       description: 'Succesfully Subscribed 🎉',
+  //       status: 'success',
+  //       duration: 5000,
+  //       isClosable: true,
+  //     })
+  //   } catch (err) {
+  //     console.error("contract call failure", err);
+  //     toast({
+  //       title: 'Subscription Error',
+  //       description: 'Subscription Failed 😫',
+  //       status: 'warning',
+  //       duration: 5000,
+  //       isClosable: true,
+  //     })
+  //   }
+  // };
 
+  // Native Token
+  // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
 
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText(address ?? '');
+    // Optionally, you can show a success message or perform any other actions
+    console.log('Address copied:', address);
+    toast({
+      title: 'Address Copied',
+      description: 'Successfully Copied ' + truncateEthAddress(`${address}`),
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
+  };
 
-  /*******  CONTRACT WRITING ********/
-  // Function to purchase a subscription NFT on the Lock contract
-  const { mutateAsync: purchase } = useContractWrite(contract, "purchase");
-  const call = async () => {
+  // See https://docs.unlock-protocol.com/getting-started/locking-page#configure-the-paywall
+  const paywallConfig = {
+    "icon":"","locks":{"0x697560ba635e92c19e660fa0eb0bdfcd7938a08b":{"network":5,"skipRecipient":true}},"title":"Creator Test","skipSelect":true,"hideSoldOut":false,"pessimistic":true,"redirectUri":"https://localhost:3000","messageToSign":"Creative TV Access: I, [Your Name], request access to the Creative TV platform as a Creator. By signing this message, I verify my identity and agree to abide by the platform's terms & conditions.  Please sign this message using your wallet, granting you access to the Creative TV platform as a Creator.","skipRecipient":true,"endingCallToAction":"This Stage Is Yours","persistentCheckout":false
+}
+
+  // Configure networks to use
+  // You can also use @unlock-protocol/networks for convenience...
+
+  // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
+  // If no provider is set, the library uses window.ethereum
+  const provider = window.ethereum
+
+  const paywall = new Paywall(paywallConfig, networks, provider)
+
+  // Loads the checkout UI
+  const handlePaywallCheckout = async () => {
     try {
-      const data = await purchase({
-        args: [[price], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [FREE_LOCK_ADDRESS_GOERLI_TESTNET.data]],
-      });
-      console.info("contract call success", data);
+      const response = await paywall.loadCheckoutModal();
+      // Handle the response from the paywall modal
+      console.log(response);
       toast({
-        title: 'Subscription',
-        description: 'Succesfully Subscribed 🎉',
+        title: 'Welcome Creative',
+        description: 'Successfully Subscribed 🎉',
         status: 'success',
         duration: 5000,
         isClosable: true,
       })
-    } catch (err) {
-      console.error("contract call failure", err);
+    } catch (error) {
+      // Handle any errors that occur during the checkout process
+      console.error(error);
       toast({
-        title: 'Subscription Error',
-        description: 'Subscription Failed 😫',
+        title: 'Error',
+        description: `${error}`,
         status: 'warning',
         duration: 5000,
         isClosable: true,
       })
     }
-  };
+  }
 
-  // Native Token
-  // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
+  // response is set when the modal is closed. response may include hash (the transaction hash) and lock (the address of the lock to which the transaction was sent)
+  
+  
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
@@ -530,18 +579,19 @@ export function Header({className}:Props) {
                 </MenuButton> 
                   {!subscribed ? (
                     <MenuList>
-                      <MenuItem icon={<HiOutlineClipboardCopy />}>{truncateEthAddress(`${address}`)}</MenuItem>
+                      <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()} >{truncateEthAddress(`${address}`)}</MenuItem>
                       <MenuDivider />
                       <MenuItem 
-                        icon={<WarningIcon />} 
+                        icon={<WarningIcon />}
                         onClick={() => {
-                          call(); 
+                          handlePaywallCheckout(); 
                         }}
-                      >Subscribe for ${price.toString()}</MenuItem>
+                      >Subscribe for ${price?.toString()}</MenuItem>
                       <MenuDivider />
                       <MenuItem icon={<AiOutlineDisconnect />} 
                         onClick={() => {
                           disconnect();
+                          router.push('/');
                           toast({
                             title: 'Sign Out',
                             description: 'Successfully signed out.',
@@ -555,7 +605,7 @@ export function Header({className}:Props) {
                     </MenuList>
                   ) : (
                     <MenuList>
-                      <MenuItem icon={<HiOutlineClipboardCopy />}>{truncateEthAddress(address)}</MenuItem>
+                      <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>{truncateEthAddress(address)}</MenuItem>
                       <MenuDivider />
                       <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => router.push(`/profile/${address}`)}>Profile</MenuItem>
                       <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push(`/profile/${address}/upload`)}>Upload</MenuItem>
@@ -563,6 +613,7 @@ export function Header({className}:Props) {
                       <MenuItem icon={<AiOutlineDisconnect />} 
                         onClick={() => {
                           disconnect();
+                          router.push('/');
                           toast({
                             title: 'Sign Out',
                             description: 'Successfully signed out.',
@@ -577,15 +628,15 @@ export function Header({className}:Props) {
                   )}
               </Menu>
             )}
-                <IconButton
-                  display={{ base: 'flex', md: 'none' }}
-                  variant="outline"
-                  aria-label="Open menu"
-                  fontSize="20px"
-                  colorScheme="white"
-                  icon={<AiOutlineMenu />}
-                  onClick={mobileNav.onOpen}
-                />
+              <IconButton
+                display={{ base: 'flex', md: 'none' }}
+                variant="outline"
+                aria-label="Open menu"
+                fontSize="20px"
+                colorScheme="white"
+                icon={<AiOutlineMenu />}
+                onClick={mobileNav.onOpen}
+              />
           </Flex>
           {MobileNavContent}
         </chakra.div>

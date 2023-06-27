@@ -1,14 +1,15 @@
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
-import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, Text, Image, Spacer } from '@chakra-ui/react'
-import { DownloadIcon, ChatIcon, LinkIcon } from '@chakra-ui/icons'
+import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, Text, Image, Spacer, ButtonGroup } from '@chakra-ui/react'
+import { DownloadIcon, LinkIcon, ChatIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { assetData } from 'utils/fetchers/assets'
-import { fetchVideoViews } from 'utils/fetchers/views'
 import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
+// import { Discussion } from "@orbisclub/components";
+// import "@orbisclub/components/dist/index.modern.css";
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
@@ -54,14 +55,12 @@ export default function AllAssets() {
               </CardHeader>
               <>
                 <Player
-                  title={video.name}
-                  playbackId={video.playbackId}
+                  title={video?.name}
+                  playbackId={video?.playbackId}
                   showTitle
                   poster={<PosterImage />}
                   showLoadingSpinner
                   controls={{ autohide: 500, hotkeys: false }}
-                  autoPlay
-                  muted
                   aspectRatio="16to9"
                   showPipButton
                   autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
@@ -86,12 +85,12 @@ export default function AllAssets() {
               </>
               <CardBody>
                 <Flex>
-                  <Badge colorScheme={video.status.phase === 'ready' ? 'green' : 'red'}>{video.status.phase}</Badge>
+                  <Badge colorScheme={video?.status.phase === 'ready' ? 'green' : 'red'}>{video?.status.phase}</Badge>
                   <Spacer />
-                  <Text>Views: {video.viewCount.toString()}</Text> {/* Displaying the view count */}
+                  <Text>Views: {video?.viewCount.toString()}</Text> {/* Displaying the view count */}
                 </Flex>
                 <Stack mt="6" spacing="3">
-                  <Heading size={'md'}>{video.name.slice(0, -4)}</Heading>
+                  <Heading size={'md'}>{video?.name.slice(0, -4)}</Heading>
                   <Text>
                     With Creative TV, we wanted to sync the speed of creation with the speed of design. We wanted the creator to be just as excited as the designer to create new content.
                   </Text>
@@ -109,15 +108,18 @@ export default function AllAssets() {
               >
                 {video.status.phase === 'ready' ? (
                   <>
-                    <Button flex="1" variant="ghost" leftIcon={<ChatIcon />}>
+                  <ButtonGroup mb={5} spacing={10}>
+                  <Button as={motion.div}
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<ChatIcon />} onClick={() => router.push(`discover/${encodeURIComponent(video?.id)}`)}>
                       Comment
                     </Button>
-                    <Button flex="1" variant="ghost" leftIcon={<LinkIcon />}>
+                    <Button as={motion.div}
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<LinkIcon />}>
                       Share
                     </Button>
                     <Button
                       backgroundColor={'#EC407A'}
-                      onClick={() => router.push(`/mint-nft-video?assetId=${video.id}`)}
+                      onClick={() => router.push(`/mint-nft-video?assetId=${video?.id}`)}
                       className="card-mint-button"
                       as={motion.div}
                       _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
@@ -127,27 +129,11 @@ export default function AllAssets() {
                     >
                       Collect
                     </Button>
+                  </ButtonGroup>
                   </>
                 ) : (
                   <>
-                    <Button flex="1" disabled variant="ghost" leftIcon={<ChatIcon />}>
-                      Comment
-                    </Button>
-                    <Button flex="1" disabled variant="ghost" leftIcon={<LinkIcon />} >
-                      Share
-                    </Button>
-                    <Button
-                      leftIcon={<DownloadIcon />}
-                      backgroundColor={'#EC407A'}
-                      disabled
-                      className="card-mint-button"
-                      as={motion.div}
-                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-                      flex="1"
-                      variant="ghost"
-                    >
-                      Collect
-                    </Button>
+                  {''}
                   </>
                 )}
               </CardFooter>
