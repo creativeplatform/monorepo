@@ -1,19 +1,38 @@
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { useRouter } from 'next/router'
-
 import { useMemo } from 'react'
-import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi'
+// import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { 
+  useAddress, 
+  useSigner, 
+  useSDK, 
+  useContract, 
+  useContractWrite, 
+  useContractRead, 
+  useContractEvents, 
+  useContractMetadata  
+} from '@thirdweb-dev/react'
 
-// The demo NFT contract ABI (exported as `const`)
-// See: https://wagmi.sh/docs/typescript
-import videoNftAbi from './videoNftAbi'
-
-import { Box, Button } from '@chakra-ui/react'
+// The ContractMetadata smart contract is an extension usable with any smart contract. It lets you define metadata for your smart contract. 
+// Additionally, ContractMetadata is necessary to enable royalties on NFT contracts on OpenSea.
+// See: https://portal.thirdweb.com/solidity/extensions/contractmetadata
+import "@thirdweb-dev/contracts/extension/ContractMetadata.sol";
+import { Box, Button, useToast } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
+import { CREATIVE_ADDRESS } from 'utils/config'
 
-const WagmiNft = () => {
+const WagmiNft = async () => {
+  const toast = useToast()
   // Retrieve the user's account address
-  const { address } = useAccount()
+  const address = useAddress()
+
+  // If there is an address we can use the useSDK hook to get a SDK instance
+    const sdk = useSDK()
+  
+  // If there is an address we can use the useSigner hook to get a signer instance
+  if ( address ) {
+    const signer = useSigner()
+  }
 
   // Access the Next.js router
   const router = useRouter()
@@ -51,26 +70,57 @@ const WagmiNft = () => {
         }
       : null
   )
+  
+  function _canSetContractURI(): typeof address {
+    // Function implementation goes here
+    return address
+  }
 
-  // Prepare the contract write configuration using the usePrepareContractWrite hook
-  const { config } = usePrepareContractWrite({
-    // The demo NFT contract address on Polygon Mumbai
-    address: '0xdfcb0abE62911aC9eaB22D2E662F53CF4C7f90d4',
-    abi: videoNftAbi,
-    functionName: 'feed',
-    args: [
-      {
-        gasLimit: 1300000,
-      },
-    ],
-    enabled: Boolean(address && asset?.storage?.ipfs?.nftMetadata?.url),
-    onSettled(data, error) {
-      console.log('Settled', { data, error })
-    },
-  })
+  const explorerAPIURL = "https://api-goerli.etherscan.io/"
+  const explorerAPIKey = "WQIC9NYX6QTNPH4QCKCETQ7XQH76DRWI6G"
 
-  // Perform the contract write operation using the useContractWrite hook
-  const { data: contractWriteData, isSuccess, write, error: contractWriteError } = useContractWrite(config)
+    const deployNFT = async () => {
+      if (sdk) {
+        try {
+          const videoNFT = await sdk.deployer.deployBuiltInContract('edition-drop', {
+            name: 'Creative Episode Drop',
+            primary_sale_recipient: address,
+            voting_token_address: address, // Replace with the actual meToken address or the creator address
+            app_uri: "https://tv.creativeplatform.xyz",
+            description: "This text will be replaced by the description of the episode.",// Description of the content
+            image: asset?.storage?.ipfs?.nftMetadata?.url,
+            symbol: "EPISD",
+            platform_fee_basis_points: 500, // 5% platform fee,
+            platform_fee_recipient: address, // service fee for creator to pay
+            fee_recipient: CREATIVE_ADDRESS, // Fee is paid to DAO wallet
+            seller_fee_basis_points: 100, // 1% fee from the seller of the membership
+          });
+          console.log('Contract deployed successfully', videoNFT);
+          toast({
+            title: '⏳ Not Done Yet - Verifying...',
+            description: `Contract deployed successfully: ${videoNFT}`,
+            status: 'warning',
+            duration: 5000,
+            isClosable: true,
+          })
+          const verfiedNFT = await sdk.verifier.verifyThirdwebContract(videoNFT, explorerAPIURL, explorerAPIKey);
+          console.log('Contract verified successfully', verfiedNFT);
+          toast({
+            title: '🎉 Done!',
+            description: `Successfully Verified!`,
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          }) // Add toast message for contract verification
+          
+        } catch (error) {
+          // Handle deployment error
+          console.error('Error deploying the contract:', error);
+        }
+      } else {
+        console.error('SDK is not defined.'); // Handle the case when SDK is not initialized
+      }
+    };
 
   return (
     <Box className="address-mint">
@@ -91,8 +141,8 @@ const WagmiNft = () => {
               }}>
               Upload to IPFS
             </Button>
-          ) : contractWriteData?.hash && isSuccess ? (
-            <a target="_blank" href={`https://mumbai.polygonscan.com/tx/${contractWriteData.hash}`} rel="noreferrer">
+          ) : videoNFT && isSuccess ? (
+            <a target="_blank" href={`https://mumbai.polygonscan.com/tx/${videoNFT}`} rel="noreferrer">
               <Button
                 className="tx-button"
                 as={motion.div}
@@ -102,7 +152,7 @@ const WagmiNft = () => {
               </Button>
             </a>
           ) : contractWriteError ? (
-            <p>{contractWriteError.message}</p>
+            <p>{contractWriteError.{''}}</p>
           ) : asset?.storage?.status?.phase === 'ready' && write ? (
             <Button
               className="mint-button"
@@ -110,7 +160,7 @@ const WagmiNft = () => {
               bgColor={'#EC407A'}
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
               onClick={() => {
-                write()
+                deployNFT()
               }}>
               Mint NFT
             </Button>
