@@ -20,6 +20,7 @@ declare var process: {
     NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
     NEXT_PUBLIC_HOST: string,
     NEXT_PUBLIC_SMART_WALLET: string
+    NEXT_PUBLIC_EXPLORER_KEY: string
   }
 }
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
@@ -31,6 +32,7 @@ export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
 export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET
+export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
@@ -47,6 +49,11 @@ export const THEME_COLOR_MODES = extendTheme({
 export const THEME_COLOR_SCHEME: ThemingProps['colorScheme'] = 'brand'
 export const THEME_CONFIG = {
   initialColorMode: THEME_INITIAL_COLOR,
+}
+
+export const EXPLORER_API_URL = {
+  GOERLI: 'https://api-goerli.etherscan.io/',
+  POLYGON: 'https://api.polygonscan.com/',
 }
 
 // LINKS

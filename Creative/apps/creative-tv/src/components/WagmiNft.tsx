@@ -1,39 +1,34 @@
-import { useEffect } from 'react';
-import { useAsset, useUpdateAsset } from '@livepeer/react';
+import { useMemo, useEffect } from 'react';
+import { useAsset, useUpdateAsset } from '@livepeer/react'
+import { AddressZero } from '@ethersproject/constants';
+import { readFileSync } from 'fs';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
-// import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import {
+  ThirdwebProvider,
   useAddress,
   useSigner,
-  useSDK,
   useContract,
   useContractWrite,
   useContractRead,
   useContractEvents,
   useContractMetadata,
 } from '@thirdweb-dev/react';
-
+import sdk from 'hooks/useInitThirdweb';
 // The ContractMetadata smart contract is an extension usable with any smart contract. It lets you define metadata for your smart contract.
 // Additionally, ContractMetadata is necessary to enable royalties on NFT contracts on OpenSea.
 // See: https://portal.thirdweb.com/solidity/extensions/contractmetadata
 import '@thirdweb-dev/contracts/extension/ContractMetadata.sol';
 import { Box, Button, useToast } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { CREATIVE_ADDRESS } from 'utils/config';
+import { CREATIVE_ADDRESS, EXPLORER_KEY, EXPLORER_API_URL } from 'utils/config';
 
-const WagmiNft = () => {
+const WagmiNft = async () => {
   const toast = useToast();
   // Retrieve the user's account address
   const address = useAddress();
 
-  // If there is an address we can use the useSDK hook to get an SDK instance
-  const sdk = useSDK();
-
   // If there is an address we can use the useSigner hook to get a signer instance
-  if (address) {
-    const signer = useSigner();
-  }
+  const signer = useSigner();
 
   // Access the Next.js router
   const router = useRouter();
@@ -71,65 +66,58 @@ const WagmiNft = () => {
         }
       : null
   );
-
-  function _canSetContractURI(): typeof address {
-    // Function implementation goes here
-    return address;
-  }
-
-  const explorerAPIURL = 'https://api-goerli.etherscan.io/';
-  const explorerAPIKey = 'WQIC9NYX6QTNPH4QCKCETQ7XQH76DRWI6G';
-
-  const deployNFT = async () => {
-    if (sdk) {
+  const deployDrop = async () => {
       try {
-        const contractAddress = await sdk?.deployer.deployBuiltInContract('edition-drop', {
+        const editionDropAddress = await sdk?.deployer.deployEditionDrop({
           name: 'Creative Episode Drop',
-          primary_sale_recipient: address,
-          voting_token_address: address, // Replace with the actual meToken address or the creator address
-          app_uri: 'https://tv.creativeplatform.xyz',
           description: 'This text will be replaced by the description of the episode.', // Description of the content
-          image: asset?.storage?.ipfs?.nftMetadata?.url,
-          symbol: 'EPISD',
-          platform_fee_basis_points: 500, // 5% platform fee,
-          platform_fee_recipient: address, // service fee for creator to pay
-          fee_recipient: CREATIVE_ADDRESS, // Fee is paid to DAO wallet
-          seller_fee_basis_points: 100, // 1% fee from the seller of the membership
+          image: readFileSync(`${asset?.storage?.ipfs?.nftMetadata?.url}`), // Image of the content
+          primary_sale_recipient: `${address}`,
         });
-        console.log('Contract Address:', contractAddress);
+        // this initialization returns the address of our contract
+        // we use this to initialize the contract on the thirdweb sdk
+        const editionDrop = await sdk?.getContract(`${editionDropAddress}`, "edition-drop");
+
+        // With this, we can get the metadata of our contract
+        const metadata = await editionDrop?.metadata.get();
+        
+        // Successfully deployed edition drop contract
+        console.log(
+          "✅ Successfully deployed editionDrop contract, address:",
+          editionDropAddress,
+        );
         toast({
-          title: '⏳ Not Done Yet - Verifying...',
-          description: `Contract deployed successfully: ${contractAddress}`,
+          title: '⏳ Not Done Yet - Creating MetaData...',
+          description: `Contract deployed successfully: ${editionDropAddress}`,
           status: 'warning',
           duration: 5000,
           isClosable: true,
         });
-        const contract = await sdk?.getContract(contractAddress);
-        const verfiedNFT = await sdk?.verifier.verifyThirdwebContract(contract.erc1155.getAddress(), explorerAPIURL, explorerAPIKey);
-        console.log('Contract verified successfully', verfiedNFT);
+        // Successfully created metadata
+        console.log("✅ editionDrop metadata:", metadata);
+        toast({
+          title: '⏳ Not Done Yet - Verifying...',
+          description: `Contract deployed successfully: ${editionDropAddress}`,
+          status: 'warning',
+          duration: 5000,
+          isClosable: true,
+        });
+        const verifiedEditionDrop = await sdk?.verifier.verifyThirdwebContract(`${editionDropAddress}`, EXPLORER_API_URL.GOERLI, EXPLORER_KEY);
+        // Contract verified successfully
+        console.log('✅ Contract verified successfully', verifiedEditionDrop);
         toast({
           title: '🎉 Done!',
-          description: `Successfully Verified!`,
+          description: `Successfully Verified ${editionDropAddress}`,
           status: 'success',
           duration: 5000,
           isClosable: true,
-        }); // Add toast message for contract verification
-        
+        });
       } catch (error) {
         // Handle deployment error
-        console.error('Error deploying the contract:', error);
+        console.error('failed to deploy editionDrop contract', error);
       }
-    } else {
-      console.error('SDK is not defined.'); // Handle the case when SDK is not initialized
-    }
-  };
-
-  useEffect(() => {
-    if (address && assetId && asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready') {
-      updateAsset?.();
-    }
-  }, [address, assetId, asset]);
-
+    };
+    
   return (
     <Box className="address-mint">
       <Button className="card-mint-button" as={motion.div} _hover={{ transform: 'scale(1.1)' }}>
@@ -157,7 +145,7 @@ const WagmiNft = () => {
               bgColor={'#EC407A'}
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
               onClick={() => {
-                deployNFT();
+                deployDrop();
               }}
             >
               Mint NFT
