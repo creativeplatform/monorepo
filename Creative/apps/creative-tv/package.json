@@ -46,7 +46,8 @@
     "turbo": "^1.7.4",
     "ui": "*",
     "usehooks-ts": "^2.9.1",
-    "wagmi": "^0.10.0"
+    "wagmi": "^0.10.0",
+    "webpack": "^5.88.1"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "4.24.4",
