@@ -3,7 +3,7 @@ import { Player, useAssetMetrics, useCreateAsset } from '@livepeer/react'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-import { Box, Text, Badge, Button, HStack, Progress } from '@chakra-ui/react'
+import { Box, Text, Badge, Button, HStack, Progress, Container } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
@@ -56,7 +56,7 @@ const CreateAndViewAsset = () => {
   }, [])
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      'video/*': ['.mp4'],
+      'video/*': ['.mp4', '.mov', '.mkv', '.avi', '.wmv', '.flv', '.webm'],
     },
     maxFiles: 1,
     onDrop,
@@ -81,7 +81,7 @@ const CreateAndViewAsset = () => {
   )
   const router = useRouter()
   return (
-    <Box>
+    <Container>
       {!asset && (
         <Box className="parent-dropZone" w='100%' p={4} border='4px dashed #EC407A' my={5} cursor={'pointer'}>
           <Box className="dropZone" {...getRootProps()}>
@@ -145,7 +145,7 @@ const CreateAndViewAsset = () => {
           <Box>IPFS CID: {asset?.[0].storage?.ipfs?.cid ?? 'None'}</Box>
         </HStack>
       </Box>
-    </Box>
+    </Container>
   )
 }
 export default CreateAndViewAsset

@@ -1,16 +1,28 @@
+import { useEffect } from 'react';
 import { useSDK } from "@thirdweb-dev/react";
 
-const sdk = useSDK();
+const useInitThirdweb = () => {
+  const sdk = useSDK();
 
-(async () => {
-  try {
-    const address = await sdk?.getSigner()?.getAddress();
-    console.log("👋 SDK initialized by address:", address)
-  } catch (err) {
-    console.error("Failed to get apps from the sdk", err);
-    process.exit(1);
-  }
-})();
+  useEffect(() => {
+    // Initialize the Thirdweb SDK
+    const initializeSDK = async () => {
+      try {
+        // Get the address from the connected wallet's signer
+        const address = await sdk?.getSigner()?.getAddress();
+        console.log("👋 SDK initialized by address:", address);
+      } catch (err) {
+        console.error("Failed to get address from the sdk", err);
+      }
+    };
 
-// We are exporting the initialized thirdweb SDK so that we can use it in our other scripts
-export default sdk;
+    // Call the initializeSDK function when the sdk value changes
+    initializeSDK();
+  }, [sdk]);
+
+  // Rest of your component code...
+
+  // Replace with your component JSX
+};
+
+export default useInitThirdweb;
