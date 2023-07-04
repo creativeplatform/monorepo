@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useAddress } from '@thirdweb-dev/react';
 import useDeployEditionDrop from 'hooks/useDeployDrop';
 import { EXPLORER_API_URL, EXPLORER_KEY } from 'utils/config';
+import { videoNftAbi } from './videoNftAbi';
 
 const WagmiNft = () => {
   const deployEditionDrop = useDeployEditionDrop(); // Custom hook for deploying edition drop contract
@@ -55,26 +56,28 @@ const WagmiNft = () => {
           <p>{assetId}</p>
 
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
-            <Button
-              className="upload-button"
-              as={motion.div}
-              bgColor="#EC407A"
-              _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-              onClick={() => {
-                updateAsset?.(); // Function to upload asset to IPFS
-              }}
-            >
-              Upload to IPFS
-            </Button>  
+             <Button
+             className="upload-button"
+             as={motion.div}
+             bgColor="#EC407A"
+             _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+             onClick={(e) => {
+              e.preventDefault();
+              updateAsset?.(); // Function to upload asset to IPFS
+             }}
+           >
+             Upload to IPFS
+           </Button> 
           ) : null}
 
-          {asset?.storage?.status?.phase === 'ready' ? (
+          {asset?.storage?.ipfs?.cid ? (
             <Button
               className="mint-button"
               as={motion.div}
               bgColor="#EC407A"
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 deployEditionDrop // Function to deploy edition drop contract
               }}
             >

@@ -74,6 +74,7 @@ const useDeployEditionDrop = () => {
   }
 
   // Return any necessary values or functions here
+  return editionDropAddress
 };
 
 export default useDeployEditionDrop;
