@@ -16,9 +16,13 @@ const WagmiNft = () => {
     router?.query,
   ]);
   
-  const { data: asset, isError: assetError, isLoading: assetLoading } = useAsset({
-    assetId: assetId || '', // Provide a default value when assetId is undefined
-    enabled: assetId?.length === 36,
+   // Getting asset and refreshing for the status
+   const {
+    data: asset,
+    error,
+    status: assetStatus,
+  } = useAsset({
+    assetId: createdAsset?.[0].id,
     refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
   });
   

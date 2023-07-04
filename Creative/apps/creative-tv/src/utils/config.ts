@@ -5,6 +5,7 @@ import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way your content should be.'
+export const SITE_IMAGE = '/creative-membership.gif'
 export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
@@ -114,10 +115,10 @@ export const FREE_LOCK_ADDRESS_GOERLI_TESTNET = {
 }
 
 // Account Factory (GOERLI)
-export const ACCOUNT_FACTORY_TESTNET = '0x75A2853a6a8D7C5AcD36c3187a8Ed5979dD9aEEf'
+export const ACCOUNT_FACTORY_TESTNET = '0xEA69aD73011E39E223873214a1F98aFF008A8ab6'
 
-// FACTORY CONTRACT (MUMBAI)
-export const ACCOUNT_FACTORY_MUMBAI = '0x86a72d44Bb24e7abad613b96C33726CBa6Ae3FB8'
+// FACTORY CONTRACT (POLYGON)
+export const ACCOUNT_FACTORY_MUMBAI = ''
 
 
 // CREATIVE ADDRESS
