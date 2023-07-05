@@ -1,10 +1,11 @@
 import { ThemingProps } from '@chakra-ui/react'
-import { mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai } from '@wagmi/chains'
+import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains'
 import { extendTheme } from '@chakra-ui/react'
 import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way your content should be.'
+export const SITE_IMAGE = '/creative-membership.gif'
 export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
@@ -19,7 +20,7 @@ declare var process: {
     NEXT_PUBLIC_INFURA_API_KEY: string,
     NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
     NEXT_PUBLIC_HOST: string,
-    NEXT_PUBLIC_SMART_WALLET: string
+    NEXT_PUBLIC_SMART_WALLET_API_KEY: string
     NEXT_PUBLIC_EXPLORER_KEY: string
   }
 }
@@ -31,7 +32,7 @@ export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
-export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET
+export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET_API_KEY
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
 
 export const THEME_INITIAL_COLOR = 'system'
@@ -81,9 +82,9 @@ export const CAROUSEL_PLAYLISTS = {
 }
 
 // BLOCKCHAIN LIST
-export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai]
-export const POLYGON_CHAINS = [polygon, polygonMumbai]
-export const MUMBAI_CHAIN = [polygonMumbai]
+export const ETH_CHAINS = [ Goerli]
+export const POLYGON_CHAINS = [Polygon]
+export const MUMBAI_CHAIN = [Mumbai]
 
 // Title text for the various transaction notifications.
 export const TRANSACTION_TITLES = {
@@ -114,11 +115,18 @@ export const FREE_LOCK_ADDRESS_GOERLI_TESTNET = {
 }
 
 // Account Factory (GOERLI)
-export const ACCOUNT_FACTORY_TESTNET = '0x75A2853a6a8D7C5AcD36c3187a8Ed5979dD9aEEf'
+export const ACCOUNT_FACTORY_TESTNET = '0xEA69aD73011E39E223873214a1F98aFF008A8ab6'
 
-// FACTORY CONTRACT (MUMBAI)
-export const ACCOUNT_FACTORY_MUMBAI = '0x86a72d44Bb24e7abad613b96C33726CBa6Ae3FB8'
+// FACTORY CONTRACT (POLYGON)
+export const ACCOUNT_FACTORY_MUMBAI = ''
 
+// Setup the Smart Wallet configuration
+export const SMART_WALLET_CONFIG= {
+  chain: Goerli, // the chain where your smart wallet will be or is deployed
+  factoryAddress: ACCOUNT_FACTORY_TESTNET, // your own deployed account factory address
+  thirdwebApiKey: SMART_WALLET_KEY, // obtained from the thirdweb dashboard
+  gasless: true, // enable or disable gasless transactions
+}
 
 // CREATIVE ADDRESS
 export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'

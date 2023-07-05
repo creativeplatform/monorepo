@@ -6,40 +6,53 @@ import { motion } from 'framer-motion';
 import { useAddress } from '@thirdweb-dev/react';
 import useDeployEditionDrop from 'hooks/useDeployDrop';
 import { EXPLORER_API_URL, EXPLORER_KEY } from 'utils/config';
+import { videoNftAbi } from './videoNftAbi';
+import { AssetData } from './CreateAndViewAsset';
 
-const WagmiNft = () => {
+export interface WagmiNftProps {
+  exportedAsset: AssetData;
+}
+
+const WagmiNft = ({ exportedAsset }: { exportedAsset: AssetData }) => {
   const deployEditionDrop = useDeployEditionDrop(); // Custom hook for deploying edition drop contract
   const address = useAddress();
   const router = useRouter();
   const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [
     router?.query,
   ]);
-  
-  const { data: asset, isError: assetError, isLoading: assetLoading } = useAsset({
-    assetId: assetId || '', // Provide a default value when assetId is undefined
-    enabled: assetId?.length === 36,
+
+  // Getting asset and refreshing for the status
+  const {
+    data: asset,
+    error,
+    status: assetStatus,
+  } = useAsset({
+    assetId,
     refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
   });
-  
 
-  const { mutate: updateAsset } = useUpdateAsset(
+  const { mutate: updateAsset, status: updateStatus } = useUpdateAsset(
     asset
       ? {
           name: asset.name,
           assetId: asset.id,
           storage: {
             ipfs: true,
+            metadata: {
+              description: exportedAsset.description, // Use exportedAsset data
+              image: null as any, // clear the default thumbnail
+            },
           },
         }
       : null
   );
 
-  if (assetLoading) {
+  if (assetStatus === 'loading') {
     // Render loading state
     return <Box>Loading asset data...</Box>;
   }
 
-  if (assetError) {
+  if (error) {
     // Render error state
     return <Box>Error fetching asset data</Box>;
   }
@@ -60,22 +73,24 @@ const WagmiNft = () => {
               as={motion.div}
               bgColor="#EC407A"
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 updateAsset?.(); // Function to upload asset to IPFS
               }}
             >
               Upload to IPFS
-            </Button>  
+            </Button>
           ) : null}
 
-          {asset?.storage?.status?.phase === 'ready' ? (
+          {asset?.storage?.ipfs?.cid ? (
             <Button
               className="mint-button"
               as={motion.div}
               bgColor="#EC407A"
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-              onClick={() => {
-                deployEditionDrop // Function to deploy edition drop contract
+              onClick={(e) => {
+                e.preventDefault();
+                deployEditionDrop; // Function to deploy edition drop contract
               }}
             >
               Mint NFT
@@ -88,4 +103,3 @@ const WagmiNft = () => {
 };
 
 export default WagmiNft;
-
