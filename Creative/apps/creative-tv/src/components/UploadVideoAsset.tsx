@@ -1,7 +1,7 @@
+import React, { ReactNode, useState } from 'react'
 import { Container, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import React, { ReactNode } from 'react'
-import CreateAndViewAsset from './CreateAndViewAsset'
+import CreateAndViewAsset, { AssetData } from './CreateAndViewAsset'
 import { LivepeerConfig } from '@livepeer/react'
 import { useLivepeerClient } from '../hooks/useLivepeerClient'
 
@@ -11,6 +11,11 @@ interface HeaderProps {
 
 const UploadVideoAsset = ({ children }: HeaderProps): JSX.Element => {
   const router = useRouter()
+  const [exportedAsset, setExportedAsset] = useState<AssetData | null>(null);
+
+  const handleAssetExport = (asset: AssetData) => {
+    setExportedAsset(asset);
+  };
   return (
     <Container>
       <Breadcrumb>
@@ -22,7 +27,7 @@ const UploadVideoAsset = ({ children }: HeaderProps): JSX.Element => {
         </BreadcrumbItem>
       </Breadcrumb>
       <LivepeerConfig client={useLivepeerClient}>
-        <CreateAndViewAsset />
+        <CreateAndViewAsset onAssetExport={handleAssetExport}/>
       </LivepeerConfig>
     </Container>
   )

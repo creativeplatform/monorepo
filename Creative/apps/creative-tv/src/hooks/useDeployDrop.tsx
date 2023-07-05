@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { AddressZero } from '@ethersproject/constants';
 import { useToast } from '@chakra-ui/react';
 import { useSDK, useSigner, useAddress } from '@thirdweb-dev/react';
-import { NFTMetadata, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { NFTMetadata, ThirdwebSDK } from '@thirdweb-dev/sdk';
 import { CREATIVE_ADDRESS } from 'utils/config';
+import { videoNftAbi } from '../components/videoNftAbi'
 
 // Custom hook for deploying edition drop contract
 const useDeployEditionDrop = () => {
@@ -37,7 +38,7 @@ const useDeployEditionDrop = () => {
           setEditionDropAddress(editionDropAddress);
   
           // Get the contract instance
-          const editionDrop = await sdk?.getContract(`${editionDropAddress}`, 'edition-drop');
+          const editionDrop = await sdk?.getContract(`${editionDropAddress}`, videoNftAbi);
   
           // Get the metadata of the contract
           const metadata = await editionDrop?.metadata.get();

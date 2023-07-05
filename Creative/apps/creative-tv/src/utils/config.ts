@@ -1,5 +1,5 @@
 import { ThemingProps } from '@chakra-ui/react'
-import { mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai } from '@wagmi/chains'
+import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains'
 import { extendTheme } from '@chakra-ui/react'
 import gql from 'graphql-tag'
 
@@ -82,9 +82,9 @@ export const CAROUSEL_PLAYLISTS = {
 }
 
 // BLOCKCHAIN LIST
-export const ETH_CHAINS = [mainnet, goerli, sepolia, polygon, optimism, arbitrum, polygonMumbai]
-export const POLYGON_CHAINS = [polygon, polygonMumbai]
-export const MUMBAI_CHAIN = [polygonMumbai]
+export const ETH_CHAINS = [ Goerli]
+export const POLYGON_CHAINS = [Polygon]
+export const MUMBAI_CHAIN = [Mumbai]
 
 // Title text for the various transaction notifications.
 export const TRANSACTION_TITLES = {
@@ -120,6 +120,13 @@ export const ACCOUNT_FACTORY_TESTNET = '0xEA69aD73011E39E223873214a1F98aFF008A8a
 // FACTORY CONTRACT (POLYGON)
 export const ACCOUNT_FACTORY_MUMBAI = ''
 
+// Setup the Smart Wallet configuration
+export const SMART_WALLET_CONFIG= {
+  chain: Goerli, // the chain where your smart wallet will be or is deployed
+  factoryAddress: ACCOUNT_FACTORY_TESTNET, // your own deployed account factory address
+  thirdwebApiKey: SMART_WALLET_KEY, // obtained from the thirdweb dashboard
+  gasless: true, // enable or disable gasless transactions
+}
 
 // CREATIVE ADDRESS
 export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
