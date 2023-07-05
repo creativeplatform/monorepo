@@ -6,7 +6,7 @@ import { Box, Text, Badge, Button, HStack, Progress } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
-interface AssetData {
+export interface AssetData {
   title: string;
   description: string;
   animation_url: string;

@@ -18,7 +18,7 @@ const UploadVideoAsset = ({ children }: HeaderProps): JSX.Element => {
   return (
     <>
       <LivepeerConfig client={useLivepeerClient}>
-        <CreateAndViewAsset onAssetExport={handleAssetExport}/>
+        <CreateAndViewAsset />
       </LivepeerConfig>
     </>
   )
