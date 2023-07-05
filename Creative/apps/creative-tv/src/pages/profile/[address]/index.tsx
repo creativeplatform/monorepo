@@ -43,6 +43,9 @@ export default function ProfilePage() {
 
     const { data: ownerBalance } = useNFTBalance(contract, address);
 
+    // Stringify the owners balance
+    const ownerBalanceString = ownerBalance?.toString();
+
     /******* READ FROM CONTRACT ******/
     //const { data: expiring, isLoading: loadingIsExpiring } = useContractRead(contract, "expirationDuration");
 
@@ -160,7 +163,7 @@ export default function ProfilePage() {
             <Box mt={5}>
                 <SimpleGrid columns={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (
-                        <Box key={nft.metadata.id.toString()}>
+                        <Box key={nft?.metadata.id.toString()}>
                         <Text fontWeight={'bold'}><Emoji symbol='🪪' label='identification'/> Membership:</Text>
                         <Card  overflow={"hidden"} p={2} mb={4}>
                             <Image 
@@ -170,7 +173,7 @@ export default function ProfilePage() {
                             />
                             <Flex justify={"space-between"} alignItems={"center"} direction={"row"} mb={4}>
                                 <Text ml={4} fontWeight={'bold'}>{nft.metadata.name}</Text>
-                                <Text mr={4}>Qty: {ownerBalance?.toString()}</Text>
+                                <Text mr={4}>Qty: {ownerBalanceString}</Text>
                             </Flex>
                             <Flex justifyContent={"center"} direction={"row"} p={2} mb={4}>
                                 <Text fontSize='xs'>{nft.metadata.description}</Text>

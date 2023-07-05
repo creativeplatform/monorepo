@@ -1,8 +1,7 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
-import { LivepeerConfig, Player, useAsset } from '@livepeer/react'
-import { useLivepeerClient } from 'hooks/useLivepeerClient'
+import { Player, useAsset } from '@livepeer/react'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 import {
     Box,
@@ -48,7 +47,7 @@ const VideoPage = () => {
 
     return (
         <>
-            <NextSeo title="" />
+            <NextSeo title="assetId" />
             <Container maxW={"1200px"} mt={10}>
                 <Button colorScheme={'blue'} onClick={() => router.push("/discover")}>Back</Button>
                 <Box mt={10}>

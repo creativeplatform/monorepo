@@ -1,126 +1,105 @@
-import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { useRouter } from 'next/router'
+import { useMemo } from 'react';
+import { useAsset, useUpdateAsset } from '@livepeer/react';
+import { useRouter } from 'next/router';
+import { Box, Button, useToast } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+import { useAddress } from '@thirdweb-dev/react';
+import useDeployEditionDrop from 'hooks/useDeployDrop';
+import { EXPLORER_API_URL, EXPLORER_KEY } from 'utils/config';
+import { videoNftAbi } from './videoNftAbi';
+import { AssetData } from './CreateAndViewAsset';
 
-import { useMemo } from 'react'
-import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi'
+export interface WagmiNftProps {
+  exportedAsset: AssetData;
+}
 
-// The demo NFT contract ABI (exported as `const`)
-// See: https://wagmi.sh/docs/typescript
-import videoNftAbi from './videoNftAbi'
+const WagmiNft = ({ exportedAsset }: { exportedAsset: AssetData }) => {
+  const deployEditionDrop = useDeployEditionDrop(); // Custom hook for deploying edition drop contract
+  const address = useAddress();
+  const router = useRouter();
+  const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [
+    router?.query,
+  ]);
 
-import { Box, Button } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
-
-const WagmiNft = () => {
-  // Retrieve the user's account address
-  const { address } = useAccount()
-
-  // Access the Next.js router
-  const router = useRouter()
-
-  // Extract the assetId from the router's query parameters
-  const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [router?.query])
-
-  // Fetch the asset data using the useAsset hook
-  const { data: asset, isError: assetError, isLoading: assetLoading } = useAsset({
+  // Getting asset and refreshing for the status
+  const {
+    data: asset,
+    error,
+    status: assetStatus,
+  } = useAsset({
     assetId,
-    enabled: assetId?.length === 36,
     refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
-  })
+  });
 
-  // Check if the asset data is still loading
-  if (assetLoading) {
-    // Render loading state
-    return <Box>Loading asset data...</Box>
-  }
-
-  // Check if there was an error fetching the asset data
-  if (assetError) {
-    // Render error state
-    return <Box>Error fetching asset data</Box>
-  }
-
-  // Retrieve the updateAsset function from the useUpdateAsset hook
-  const { mutate: updateAsset } = useUpdateAsset(
+  const { mutate: updateAsset, status: updateStatus } = useUpdateAsset(
     asset
       ? {
+          name: asset.name,
           assetId: asset.id,
           storage: {
             ipfs: true,
+            metadata: {
+              description: exportedAsset.description, // Use exportedAsset data
+              image: null as any, // clear the default thumbnail
+            },
           },
         }
       : null
-  )
+  );
 
-  // Prepare the contract write configuration using the usePrepareContractWrite hook
-  const { config } = usePrepareContractWrite({
-    // The demo NFT contract address on Polygon Mumbai
-    address: '0xdfcb0abE62911aC9eaB22D2E662F53CF4C7f90d4',
-    abi: videoNftAbi,
-    functionName: 'feed',
-    args: [
-      {
-        gasLimit: 1300000,
-      },
-    ],
-    enabled: Boolean(address && asset?.storage?.ipfs?.nftMetadata?.url),
-    onSettled(data, error) {
-      console.log('Settled', { data, error })
-    },
-  })
+  if (assetStatus === 'loading') {
+    // Render loading state
+    return <Box>Loading asset data...</Box>;
+  }
 
-  // Perform the contract write operation using the useContractWrite hook
-  const { data: contractWriteData, isSuccess, write, error: contractWriteError } = useContractWrite(config)
+  if (error) {
+    // Render error state
+    return <Box>Error fetching asset data</Box>;
+  }
 
   return (
     <Box className="address-mint">
       <Button className="card-mint-button" as={motion.div} _hover={{ transform: 'scale(1.1)' }}>
         {!address ? 'Sign In' : address}
       </Button>
+
       {address && assetId && (
         <>
           <p>{assetId}</p>
+
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
             <Button
               className="upload-button"
               as={motion.div}
-              bgColor={'#EC407A'}
+              bgColor="#EC407A"
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-              onClick={() => {
-                updateAsset?.()
-              }}>
+              onClick={(e) => {
+                e.preventDefault();
+                updateAsset?.(); // Function to upload asset to IPFS
+              }}
+            >
               Upload to IPFS
             </Button>
-          ) : contractWriteData?.hash && isSuccess ? (
-            <a target="_blank" href={`https://mumbai.polygonscan.com/tx/${contractWriteData.hash}`} rel="noreferrer">
-              <Button
-                className="tx-button"
-                as={motion.div}
-                bgColor={'gray'}
-                _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}>
-                View Mint Transaction
-              </Button>
-            </a>
-          ) : contractWriteError ? (
-            <p>{contractWriteError.message}</p>
-          ) : asset?.storage?.status?.phase === 'ready' && write ? (
+          ) : null}
+
+          {asset?.storage?.ipfs?.cid ? (
             <Button
               className="mint-button"
               as={motion.div}
-              bgColor={'#EC407A'}
+              bgColor="#EC407A"
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-              onClick={() => {
-                write()
-              }}>
+              onClick={(e) => {
+                e.preventDefault();
+                deployEditionDrop; // Function to deploy edition drop contract
+              }}
+            >
               Mint NFT
             </Button>
-          ) : (
-            <></>
-          )}
+          ) : null}
         </>
       )}
     </Box>
-  )
-}
+  );
+};
 
-export default WagmiNft
+export default WagmiNft;

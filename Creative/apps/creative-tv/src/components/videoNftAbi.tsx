@@ -1,6 +1,4 @@
-import { useContractRead } from 'wagmi'
-
-const data = [
+export const videoNftAbi = [
   {
     "type": "constructor",
     "name": "",
@@ -1447,5 +1445,4 @@ const data = [
     "outputs": [],
     "stateMutability": "payable"
   }
-]
-export default data
+] as const;
