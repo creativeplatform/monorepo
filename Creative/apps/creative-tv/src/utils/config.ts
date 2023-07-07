@@ -92,6 +92,11 @@ export const TRANSACTION_TITLES = {
   transactionSucceed: 'Local Transaction Completed',
 }
 
+// EPISODE DROP CONTRACT ADDRESS
+export const EPISODE_DROP_ADDRESS = {
+  testnet: '0xE675e85ccf7b8ADB2E466fc06662319628B75a9F',
+}
+
 // Unlock Contracts (Polygon)
 export const LOCK_ADDRESS_CREATIVE_TV = {
   creator: '0xb9c69af58109927cc2dcce8043f82158f7b96ca7',
