@@ -92,9 +92,9 @@ export const TRANSACTION_TITLES = {
   transactionSucceed: 'Local Transaction Completed',
 }
 
-// UUC CONTRACT ADDRESS
-export const UUC_ADDRESS = {
-  v1: '0xca17D20f1A3d14c6ea977333CdE6185eF9C759f3',
+// EPISODE DROP CONTRACT ADDRESS
+export const EPISODE_DROP_ADDRESS = {
+  testnet: '0xE675e85ccf7b8ADB2E466fc06662319628B75a9F',
 }
 
 // Unlock Contracts (Polygon)
