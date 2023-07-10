@@ -22,12 +22,18 @@ interface BasicHubInfo {
     // Add any other properties you expect in the response
 }
 
+interface CreateMeToken {
+    name: string;
+    symbol: string;
+}
+
 // Define constants for various contract addresses and token addresses
 export const meTokenRegistry = `${METOKENS_ADDRESS_GOERLI.metokensRegistryFactory}`
 export const meTokenFactory = `${METOKENS_ADDRESS_GOERLI.metokenFactory}`
 export const hubFacet = `${METOKENS_ADDRESS_GOERLI.hubFacet}`
 export const foundryFacet = `${METOKENS_ADDRESS_GOERLI.foundryFacet}`
 export const meTokenDiamond = `${METOKENS_ADDRESS_GOERLI.meTokenDiamond}`
+export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
 export const nullToken = `0x${'0'.repeat(40)}`
 export const daiAddress = `${DAI.goerli}`
 
@@ -72,6 +78,12 @@ const hubContract = await sdkSigner.getContract(hubFacet, HUB_FACET_ABI)
 const foundryContract = await sdkSigner.getContract(foundryFacet, FOUNDRY_FACET_ABI)
 
 const diamondContract = await sdkSigner.getContract(meTokenDiamond, METOKENS_DIAMOND_ABI)
+
+const meTokenRegistryFacetContract = await sdkSigner.getContract(meTokenRegistryFacet, METOKENS_REGISTRY_ABI)
+
+export const createMeToken = async () => {
+
+}
 
 // READ||WRITE CONTRACTS
 
