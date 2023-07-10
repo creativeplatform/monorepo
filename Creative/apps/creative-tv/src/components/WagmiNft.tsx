@@ -1,23 +1,25 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useAsset, useUpdateAsset } from '@livepeer/react';
 import { useRouter } from 'next/router';
 import { Box, Button, useToast } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { useAddress } from '@thirdweb-dev/react';
-import useDeployEditionDrop from 'hooks/useDeployDrop';
-import { EXPLORER_API_URL, EXPLORER_KEY } from 'utils/config';
+import { useAddress, useSigner } from '@thirdweb-dev/react';
+import { ThirdwebSDK } from '@thirdweb-dev/sdk';
+import { EXPLORER_API_URL, EXPLORER_KEY, CREATIVE_ADDRESS } from 'utils/config';
 import { videoNftAbi } from './videoNftAbi';
 import { AssetData } from './CreateAndViewAsset';
 
 interface WagmiNftProps {
   assetId: string;
+  assetName: string;
+  description: string;
   assetData: AssetData;
 }
 
-const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
-  const deployEditionDrop = useDeployEditionDrop({assetId, assetData}); // Custom hook for deploying edition drop contract
+const WagmiNft = ({ assetId, assetData, assetName, description }: WagmiNftProps): JSX.Element => {
   const address = useAddress();
   const router = useRouter();
+  const signer = useSigner();
   // const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [
   //   router?.query,
   // ]);
@@ -48,13 +50,7 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
           }
         : undefined
     );
-
-    // Lazy mint the NFT
-    // const lazyMintNft = async ()=> {
-    //   const { mutateAsync, isLoading, error, isSuccess } = useContractWrite(editionDrop, "lazyMint");
-    // };
-
-  if (updateStatus === 'loading') {
+    if (updateStatus === 'loading') {
     // Render loading state
     return <Box>Loading asset data...</Box>;
   }
@@ -63,6 +59,39 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
     // Render error state
     return <Box>Error fetching asset data</Box>;
   }
+  
+      useEffect(() => {
+        // Function to deploy the edition drop contract
+        async function deployNftCollection() {
+          // Is there an sdk found and is there a connect wallet address?
+          if (!signer || !address) return
+          const sdk = ThirdwebSDK.fromSigner(signer);
+      
+           // Is there an sdk found?
+          if (!sdk) return;
+          
+          // Is there a name and description?
+          if (!description || !assetName) return
+      
+          const deployed = await sdk.deployer.deployNFTCollection({
+            name: assetName,
+            primary_sale_recipient: address,
+            app_uri: "https://tv.creativeplatform.xyz", // Website of your contract dApp
+            symbol: 'EPISD', // Symbol of the edition drop
+            platform_fee_basis_points: 200,
+            platform_fee_recipient: CREATIVE_ADDRESS,
+            fee_recipient: address,
+            seller_fee_basis_points: 300,
+          })
+        }
+      });
+
+    // Lazy mint the NFT
+    // const lazyMintNft = async ()=> {
+    //   const { mutateAsync, isLoading, error, isSuccess } = useContractWrite(editionDrop, "lazyMint");
+    // };
+
+  
 
   return (
     <Box className="address-mint">
@@ -95,7 +124,7 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
               _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
               onClick={(e) => {
                 e.preventDefault();
-                deployEditionDrop; // Function to deploy edition drop contract
+                 // Function to deploy edition drop contract
               }}
             >
               Mint NFT
@@ -104,7 +133,8 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
         </>
       )}
     </Box>
-  );
-};
+    );
+}
+
 
 export default WagmiNft;

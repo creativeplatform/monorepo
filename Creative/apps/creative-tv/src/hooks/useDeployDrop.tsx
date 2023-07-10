@@ -57,6 +57,11 @@ const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
           // Get the metadata of the contract
           const metadata = await editionDrop?.metadata.get();
           console.log('✅ editionDrop metadata:', metadata);
+
+          // Lazy mint the NFT
+          const lazyMintNft = async ()=> {
+            const { mutateAsync, isLoading, error } = useContractWrite(editionDrop, "lazyMint");
+          };
   
           // Show toast notification for successful verification
           toast({
