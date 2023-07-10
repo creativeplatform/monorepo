@@ -12,7 +12,11 @@ interface HeaderProps {
 
 const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
   const router = useRouter();
-  const [exportedAsset, setExportedAsset] = useState<AssetData>({} as AssetData);
+  const assetId = router.query.assetId?.toString() ?? '';
+  const assetData = router.query.assetData?.toString();
+  const parsedAssetData = JSON.parse(assetData || '{}');
+  const description = parsedAssetData?.description;
+  const assetName = parsedAssetData?.name;
 
   return (
     <LivepeerConfig client={useLivepeerClient}>
@@ -25,7 +29,7 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
             <BreadcrumbLink href="#">Mint NFT Video</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-        <WagmiNft exportedAsset={exportedAsset} />
+        <WagmiNft assetId={assetId} description={description} assetName={assetName} assetData={parsedAssetData}/>
       </Box>
     </LivepeerConfig>
   );
