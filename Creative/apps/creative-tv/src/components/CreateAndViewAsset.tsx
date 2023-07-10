@@ -56,10 +56,7 @@ const CreateAndViewAsset = () => {
         }
       : null
   )
-  const { data: metrics } = useAssetMetrics({
-    assetId: createdAsset?.[0].id,
-    refetchInterval: 30000,
-  })
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
       setVideo(acceptedFiles[0]);
@@ -123,16 +120,16 @@ const CreateAndViewAsset = () => {
       return 'Waiting...';
     } else if (progress?.[0]?.phase === 'uploading') {
       return (
-        <Box>
+        <>
           {`Uploading:` && (
             <Progress
               hasStripe
               isAnimated
               colorScheme="#EC407A"
-              value={Math.round(progress?.[0]?.progress * 100)}
+              value={progress?.[0]?.progress * 100}
             />
           )}
-        </Box>
+        </>
       );
     } else if (progress?.[0]?.phase === 'processing') {
       return `Processing: ${Math.round(progress?.[0]?.progress * 100)}%`;
@@ -165,7 +162,6 @@ const CreateAndViewAsset = () => {
       {createdAsset?.[0]?.playbackId && <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />}
       <Box className="upload-button">
         <Box>
-          {metrics?.metrics?.[0] && <Badge className="views-video">Views: {metrics.metrics[0].startViews}</Badge>}
           {video ? <Badge className="video-name">{video.name}</Badge> : null}
           {progressFormatted && <Text className="processing-video">{progressFormatted}</Text>}
         </Box>

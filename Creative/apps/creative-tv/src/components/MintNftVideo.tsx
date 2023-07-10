@@ -14,7 +14,6 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
   const router = useRouter();
   const [exportedAsset, setExportedAsset] = useState<AssetData>({} as AssetData);
 
-
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <Box>
