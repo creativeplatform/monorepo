@@ -9,45 +9,52 @@ import { EXPLORER_API_URL, EXPLORER_KEY } from 'utils/config';
 import { videoNftAbi } from './videoNftAbi';
 import { AssetData } from './CreateAndViewAsset';
 
-export interface WagmiNftProps {
-  exportedAsset: AssetData;
+interface WagmiNftProps {
+  assetId: string;
+  assetData: AssetData;
 }
 
-const WagmiNft = ({ exportedAsset }: { exportedAsset: AssetData }) => {
-  const deployEditionDrop = useDeployEditionDrop(); // Custom hook for deploying edition drop contract
+const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
+  const deployEditionDrop = useDeployEditionDrop({assetId, assetData}); // Custom hook for deploying edition drop contract
   const address = useAddress();
   const router = useRouter();
-  const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [
-    router?.query,
-  ]);
+  // const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [
+  //   router?.query,
+  // ]);
 
-  // Getting asset and refreshing for the status
-  const {
-    data: asset,
-    error,
-    status: assetStatus,
-  } = useAsset({
-    assetId,
-    refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
-  });
-
-  const { mutate: updateAsset, status: updateStatus } = useUpdateAsset(
-    asset
-      ? {
-          name: asset.name,
-          assetId: asset.id,
-          storage: {
-            ipfs: true,
-            metadata: {
-              description: exportedAsset.description, // Use exportedAsset data
-              image: null as any, // clear the default thumbnail
+    // Getting asset and refreshing for the status
+    const {
+      data: asset,
+      error: assetError,
+      status: assetStatus,
+    } = useAsset({
+      assetId: assetId,
+      refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
+    });
+  
+    // Storing asset to IPFS with metadata by updating the asset
+    const { mutate: updateAsset, status: updateStatus, error } = useUpdateAsset(
+      asset
+        ? {
+            name: asset.name,
+            assetId: asset.id,
+            storage: {
+              ipfs: true,
+              metadata: {
+                description: assetData.description,
+                image: assetData.image_url, // clear the default thumbnail
+              },
             },
-          },
-        }
-      : null
-  );
+          }
+        : undefined
+    );
 
-  if (assetStatus === 'loading') {
+    // Lazy mint the NFT
+    // const lazyMintNft = async ()=> {
+    //   const { mutateAsync, isLoading, error, isSuccess } = useContractWrite(editionDrop, "lazyMint");
+    // };
+
+  if (updateStatus === 'loading') {
     // Render loading state
     return <Box>Loading asset data...</Box>;
   }
@@ -62,11 +69,9 @@ const WagmiNft = ({ exportedAsset }: { exportedAsset: AssetData }) => {
       <Button className="card-mint-button" as={motion.div} _hover={{ transform: 'scale(1.1)' }}>
         {!address ? 'Sign In' : address}
       </Button>
-
       {address && assetId && (
         <>
           <p>{assetId}</p>
-
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
             <Button
               className="upload-button"
