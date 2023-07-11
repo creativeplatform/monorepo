@@ -16,17 +16,6 @@ import { ThirdwebSDK, useAddress, useContract, useSigner, useContractRead } from
 import { Goerli } from '@thirdweb-dev/chains';
 import { Sign } from 'crypto';
 
-// Define an interface for BasicHubInfo
-interface BasicHubInfo {
-    asset: string;
-    // Add any other properties you expect in the response
-}
-
-interface CreateMeToken {
-    name: string;
-    symbol: string;
-}
-
 // Define constants for various contract addresses and token addresses
 export const meTokenRegistry = `${METOKENS_ADDRESS_GOERLI.metokensRegistryFactory}`
 export const meTokenFactory = `${METOKENS_ADDRESS_GOERLI.metokenFactory}`
@@ -36,6 +25,20 @@ export const meTokenDiamond = `${METOKENS_ADDRESS_GOERLI.meTokenDiamond}`
 export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
 export const nullToken = `0x${'0'.repeat(40)}`
 export const daiAddress = `${DAI.goerli}`
+
+// Define an interface for BasicHubInfo
+interface BasicHubInfo {
+    asset: string;
+    // Add any other properties you expect in the response
+}
+
+interface CreateMeToken {
+    name: string;
+    symbol: string;
+    hubId: number;
+    assetsDeposited: string;
+}
+
 
 // Define a function to get collateral data based on the collateral token address
 export const getCollateralData = async (collateralTokenAddress: string) => {
@@ -81,8 +84,13 @@ const diamondContract = await sdkSigner.getContract(meTokenDiamond, METOKENS_DIA
 
 const meTokenRegistryFacetContract = await sdkSigner.getContract(meTokenRegistryFacet, METOKENS_REGISTRY_ABI)
 
-export const createMeToken = async () => {
+export const createMeToken = async (createMeTokenData: CreateMeToken) => {
+    const { name, symbol, hubId, assetsDeposited } = createMeTokenData;
+    console.log(meTokenRegistryFacetContract, 'test')
+    return createMeTokenData;
+    /* const tx = await factoryContract.subscribe(name, symbol, hubId, assetsDeposited);
 
+    return tx; */
 }
 
 // READ||WRITE CONTRACTS
