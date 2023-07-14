@@ -28,7 +28,7 @@ import truncateEthAddress from 'truncate-eth-address'
 import { useRouter } from 'next/router'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdAutorenew, MdCancel } from 'react-icons/md'
-
+import MeTokenCreationForm from 'components/MeTokenCreationForm'
 
 export default function ProfilePage() {
     const router = useRouter();
@@ -244,6 +244,7 @@ export default function ProfilePage() {
                     </Box>
                 </SimpleGrid>
             </Box>
+            {address && <MeTokenCreationForm />}
         </Container>
     )
 }
