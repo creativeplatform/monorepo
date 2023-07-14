@@ -32,7 +32,6 @@ import {
   MenuDivider,
 } from '@chakra-ui/react'
 import truncateEthAddress from 'truncate-eth-address'
-import networks from '@unlock-protocol/networks'
 import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { HiOutlineClipboardCopy } from 'react-icons/hi';
