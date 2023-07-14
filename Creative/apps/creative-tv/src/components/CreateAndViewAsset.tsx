@@ -62,9 +62,9 @@ const CreateAndViewAsset = () => {
     },
   });
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm<AssetData>();
 
-  const onSubmit = (data: { [key: string]: string }) => {
+  const onSubmit = (data: AssetData) => {
     console.log(data);
   };
   
@@ -171,7 +171,7 @@ const CreateAndViewAsset = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl id="assetData" isRequired>
           <FormLabel>Episode Title</FormLabel>
-          <Input placeholder="Enter the name of the video" value={assetName} onChange={(e) => setAssetName(e.target.value)} />
+          <Input placeholder="Enter the name of the video" type='text' {...register('title', { required: true })} value={assetName} onChange={(e) => setAssetName(e.target.value)}/>
           {!isError ? (
             <FormHelperText>
               Enter the episode title you'd like to use for this video.
@@ -180,7 +180,7 @@ const CreateAndViewAsset = () => {
             <FormErrorMessage>Episode title is required.</FormErrorMessage>
           )}
           <FormLabel mt={4}>Description</FormLabel>
-          <Textarea placeholder="Enter a description for the episode video" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <Textarea placeholder="Enter a description for the episode video" {...register('description', { required: true })} value={description} onChange={(e) => setDescription(e.target.value)} />
           {!isError ? (
             <FormHelperText>
               Enter the episode description you'd like to use for this video.

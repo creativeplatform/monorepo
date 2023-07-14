@@ -14,10 +14,7 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
   const router = useRouter();
   const assetId = router.query.assetId?.toString() ?? '';
   const assetData = router.query.assetData?.toString();
-  const parsedAssetData = JSON.parse(assetData || '{}');
-  const description = parsedAssetData?.description;
-  const assetName = parsedAssetData?.name;
-
+  const parsedAssetData = JSON.parse(assetData || '{}') as AssetData;
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <Box>
@@ -29,7 +26,7 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
             <BreadcrumbLink href="#">Mint NFT Video</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-        <WagmiNft assetId={assetId} description={description} assetName={assetName} assetData={parsedAssetData}/>
+        <WagmiNft assetId={assetId} description={parsedAssetData.description} assetName={parsedAssetData.title} assetData={parsedAssetData}/>
       </Box>
     </LivepeerConfig>
   );
