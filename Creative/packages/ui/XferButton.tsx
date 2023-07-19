@@ -1,5 +1,5 @@
 import { Web3Button, useContract } from "@thirdweb-dev/react";
-import { TRANSFER_CONTRACT_ADDRESS } from "utils/config";
+import { TRANSFER_CONTRACT_ADDRESS } from "../../apps/creative-tv/src/utils/config";
 import { ethers } from "ethers";
 import { useToast } from "@chakra-ui/react";
 

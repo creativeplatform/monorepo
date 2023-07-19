@@ -1,6 +1,6 @@
 import { Container, Flex } from "@chakra-ui/react";
-import TransferCard from "../../../components/XferCard";
-import Events from "../../../components/Events";
+import TransferCard from "ui/XferCard";
+import Events from "ui/Events";
 
 export default function TransferPage() {
     return (

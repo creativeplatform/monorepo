@@ -1,6 +1,6 @@
 import { Box, Card, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
 import { useContract, useContractEvents } from "@thirdweb-dev/react";
-import { TRANSFER_CONTRACT_ADDRESS } from "utils/config";
+import { TRANSFER_CONTRACT_ADDRESS } from "../../apps/creative-tv/src/utils/config";
 import { ethers } from "ethers";
 
 export default function Events() {
