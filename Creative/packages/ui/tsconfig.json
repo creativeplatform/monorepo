@@ -1,5 +1,5 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": ["."],
+  "include": [".", "../../apps/creative-tv/src/components/TokenBalance.tsx", "../../apps/creative-tv/src/components/Events.tsx", "../../apps/creative-tv/src/components/FeatureCard.tsx", "../../apps/creative-tv/src/components/BalanceCard.tsx", "../../apps/creative-tv/src/components/TokenSelection.tsx", "../../apps/creative-tv/src/components/XferCard.tsx", "../../apps/creative-tv/src/components/XferButton.tsx"],
   "exclude": ["dist", "build", "node_modules"]
 }
