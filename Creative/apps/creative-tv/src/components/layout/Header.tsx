@@ -606,7 +606,6 @@ export function Header({ className }: Props) {
                       <MenuDivider />
                       <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => router.push(`/profile/${address}`)}>Profile</MenuItem>
                       <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push(`/profile/${address}/upload`)}>Upload</MenuItem>
-                      <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push(`/profile/${address}/transfer`)}>Xfer</MenuItem>
                       <MenuDivider />
                       <MenuItem
                         icon={<AiOutlineDisconnect />}
