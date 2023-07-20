@@ -136,6 +136,9 @@ export const SMART_WALLET_CONFIG= {
 // CREATIVE ADDRESS
 export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
 
+// CREATIVE TRANSFER (XFER)
+export const TRANSFER_CONTRACT_ADDRESS = '0xBd25C36811Df69d080735eC53Ea4A61C55FdccCd'
+
 export const UNLOCK_API_URL = 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
 export const UNLOCK_QUERY_HOLDS_KEY = gql`
   query keysForLock($lockAddresses: [String!]!, $walletAddress: String!) {
