@@ -281,7 +281,7 @@ export function Header({ className }: Props) {
   }
 
   const MobileNavContent = (
-    <Drawer isOpen={mobileNav.isOpen} placement="right" onClose={mobileNav.onClose} size={{ base: 'full', sm: 'full', md: 'xs' }}>
+    <Drawer isOpen={mobileNav.isOpen} placement="top" onClose={mobileNav.onClose} size={{ base: 'full', sm: 'full', md: 'xs' }}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader>
@@ -303,7 +303,7 @@ export function Header({ className }: Props) {
                     _focus={{ boxShadow: 'none' }}>
                     Free Channels
                   </Button>
-                  <AccordionIcon />
+                  <AccordionIcon display={{ base: 'none', sm: 'none', md: 'block' }} />
                 </AccordionButton>
                 <AccordionPanel>
                   <Button
@@ -367,7 +367,7 @@ export function Header({ className }: Props) {
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}>
                     Community
-                    <AccordionIcon />
+                    <AccordionIcon display={{ base: 'none', sm: 'none', md: 'block' }} />
                   </Button>
                 </AccordionButton>
                 <AccordionPanel>
@@ -469,7 +469,7 @@ export function Header({ className }: Props) {
                   color="black.900"
                   display="inline-flex"
                   alignItems="center"
-                  fontSize={{ base: '0.85rem', sm: '0.9', md: '16px' }}
+                  fontSize={{ base: '0.85rem', sm: '0.9rem', md: '16px' }}
                   _hover={{ color: 'black' }}
                   _focus={{ boxShadow: 'none', color: 'black.500' }}
                   onClick={() => router.push('/')}>
@@ -631,15 +631,19 @@ export function Header({ className }: Props) {
                 </Menu>
               )}
             </chakra.div>
-            <IconButton
-              display={{ base: 'flex', md: 'flex', lg: 'none' }}
-              variant="outline"
-              aria-label="Open menu"
-              fontSize="20px"
-              colorScheme="white"
-              icon={<AiOutlineMenu />}
-              onClick={mobileNav.onOpen}
-            />
+            <Flex gap="1.2rem" display={{ base: 'flex', md: 'flex', lg: 'none' }}>
+              <Center>
+                <ThemeSwitcher />
+              </Center>
+              <IconButton
+                variant="outline"
+                aria-label="Open menu"
+                fontSize="20px"
+                colorScheme="white"
+                icon={<AiOutlineMenu />}
+                onClick={mobileNav.onOpen}
+              />
+            </Flex>
           </Flex>
           {MobileNavContent}
         </chakra.div>
