@@ -40,7 +40,6 @@ export default function TransferCard() {
     return (
         <Card w={"50%"} p={20}>
             <Heading>Transfer:</Heading>
-
             <Text mt={4} fontWeight={"bold"}>Select Token:</Text>
             <Flex flexDirection={"row"} mt={4}>
                 {!isVerifiedTokensLoading && 
