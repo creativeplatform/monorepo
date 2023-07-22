@@ -4,6 +4,7 @@ import { Goerli } from '@thirdweb-dev/chains';
 import {
   METOKENS_ADDRESS_GOERLI,
   METOKENS_REGISTRY_ABI,
+  ERC20_ABI
 } from '../config'
 
 interface CreateMeToken {
@@ -12,8 +13,8 @@ interface CreateMeToken {
   hubId: number;
   assetsDeposited: number;
 }
-
-export const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
+export const foundryFacet = `${METOKENS_ADDRESS_GOERLI.foundryFacet}`
+export const daiAddress = '0x0c4f55df47b20c8fbb134494b45a7a01097849ff';
 export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
 
 export const getMeTokenContract = async (address: string) => {
@@ -61,17 +62,22 @@ export const createMeToken = async (createMeTokenData: CreateMeToken, contract: 
   );
   const approvalAmount = await erc20.allowance(owner, foundryFacet);
   return approvalAmount.gt(amount);
-};
+}; */
 
 export const approveTokens = async (
-  tokenAddress: string,
-  amount: BigNumber,
-  provider: JsonRpcProvider,
-): Promise<TransactionResponse> => {
-  const erc20 = await new Contract(
-    tokenAddress,
-    erc20ABI,
-    provider.getSigner(),
+  amount: string,
+  address: string,
+) => {
+  const provider = new ethers.providers.JsonRpcProvider('https://ethereum-goerli.publicnode.com')
+  const signer = provider.getSigner(address)
+  // Create an SDK signer using the Thirdweb SDK
+  const sdkSigner = await ThirdwebSDK.fromSigner(signer, Goerli)
+  const erc20 = await sdkSigner.getContractFromAbi(
+    daiAddress,
+    ERC20_ABI,
   );
-  return erc20.approve(foundryFacet, amount);
-}; */
+  console.log(erc20)
+  const tx = await erc20.call('approve', ['0xBdC97D61E8198880c966716df8613cb2fE073D90', ethers.utils.parseEther('100')]);
+  console.log(tx, 'tx')
+  return tx
+};

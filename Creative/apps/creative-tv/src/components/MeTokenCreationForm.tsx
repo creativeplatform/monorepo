@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAddress } from '@thirdweb-dev/react';
-import { createMeToken } from 'utils/fetchers/createMeToken';
+import { createMeToken, approveTokens } from 'utils/fetchers/createMeToken';
 import { getMeTokenContract } from 'utils/fetchers/createMeToken';
 import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, Stack } from '@chakra-ui/react';
 
@@ -11,6 +11,7 @@ export default function MeTokenCreationForm() {
   const [meTokenContract, setMeTokenContract] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isApproved, setApproved] = useState(false);
 
   useEffect(() => {
     const getContract = async () => {
@@ -22,9 +23,16 @@ export default function MeTokenCreationForm() {
 
   console.log(meTokenContract);
 
+  const approve = async () => {
+    if (!isApproved) {
+      await approveTokens('10000000000000000000000', '0x6De2066a73d52a74C2814384f53df41d1F147Be2');
+      setApproved(true);
+    }
+  }
+
   const onSubmit = async (data: any) => {
     setIsLoading(true);
-
+   
     try {
       const { name, symbol, hubId, assetsDeposited } = data;
       const tx = await createMeToken({ name, symbol, hubId, assetsDeposited }, meTokenContract);
@@ -106,7 +114,7 @@ export default function MeTokenCreationForm() {
               placeholder="Your Hub ID number"
               {...register('hubId', { required: true })}
             />
-            <FormErrorMessage>This field is required</FormErrorMessage>
+            <FormErrorMessage>This field is required (DAI)</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={!!errors.assetsDeposited}>
             <FormLabel color="#EDEDEE">Assets Deposited:</FormLabel>
@@ -118,7 +126,8 @@ export default function MeTokenCreationForm() {
             <FormErrorMessage>This field is required</FormErrorMessage>
           </FormControl>
         </Stack>
-        {isLoading ? (
+        {!isApproved && <Button onClick={approve}>Approve</Button>}
+        {isLoading && isApproved ? (
           <Button
             type="submit"
             disabled
