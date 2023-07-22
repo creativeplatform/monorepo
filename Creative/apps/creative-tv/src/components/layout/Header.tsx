@@ -59,10 +59,11 @@ interface Props {
   className?: string
   icon?: string
   title?: string
-  children?: React.ReactNode
+  children?: React.ReactNode;
+  handleLoading?: () => void;
 }
 
-export function Header({ className }: Props) {
+export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? ''
   const [navIsOpen, setNavIsOpen] = useState(false)
   const ref = useRef(null)
@@ -70,6 +71,12 @@ export function Header({ className }: Props) {
   const toast = useToast()
   const sdk = useSDK()
   const signer = useSigner()
+  
+  const handleButtonClick = () => {
+    if (handleLoading) {
+      handleLoading();
+    }
+  };
 
   const handleNavClick = (url: string, disabled: boolean, isNewTab: boolean, isPlugin: boolean) => {
     if (disabled) {
@@ -316,7 +323,8 @@ export function Header({ className }: Props) {
                     fontWeight={700}
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
+                    onClick={() =>{ mobileNav.onClose();
+                       router.push('https://kidz.creativeplatform.xyz')}}>
                     CREATIVE Kidz ⌐◨-◨
                   </Button>
                 </AccordionPanel>
@@ -334,7 +342,9 @@ export function Header({ className }: Props) {
               fontWeight={700}
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
-              onClick={() => router.push('/discover')}>
+              onClick={() => {handleButtonClick();
+                 mobileNav.onClose();
+               router.push('/discover')}}>
               Discover
             </Button>
           </chakra.p>
@@ -349,7 +359,9 @@ export function Header({ className }: Props) {
               fontWeight={700}
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
-              onClick={() => router.push('')}>
+              onClick={() =>{handleButtonClick();
+                 mobileNav.onClose();
+               router.push('/events')}}>
               Events
             </Button>
           </chakra.p>
@@ -384,7 +396,7 @@ export function Header({ className }: Props) {
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   <Avatar name="creative" src={PFP} />
                 </MenuButton>
-                {!subscribed ? (
+                {subscribed ? (
                   <MenuList>
                     <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
                       {truncateEthAddress(`${address}`)}
@@ -416,10 +428,14 @@ export function Header({ className }: Props) {
                       {truncateEthAddress(address)}
                     </MenuItem>
                     <MenuDivider />
-                    <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => router.push(`/profile/${address}`)}>
+                    <MenuItem icon={<MdOutlineAccountCircle />} onClick={() =>{handleButtonClick();
+                       mobileNav.onClose();
+                       router.push(`/profile/${address}`)}}>
                       Profile
                     </MenuItem>
-                    <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push(`/profile/${address}/upload`)}>
+                    <MenuItem icon={<RiVideoUploadFill />} onClick={() =>{handleButtonClick();
+                       mobileNav.onClose();
+                       router.push(`/profile/${address}/upload`)}}>
                       Upload
                     </MenuItem>
                     <MenuDivider />
@@ -448,7 +464,6 @@ export function Header({ className }: Props) {
     </Drawer>
   )
   return (
-    <>
       <chakra.header
         className={styleName}
         ref={ref}
@@ -458,7 +473,7 @@ export function Header({ className }: Props) {
         borderBottom="6px solid"
         borderBottomColor="brand.400"
         w="full"
-        overflowY="hidden">
+        overflow="hidden">
         <chakra.div h="84px" mx="auto" maxW="1770px" px="0.89rem">
           <Flex minWidth="max-content" h="full" alignItems="center" justifyContent="space-between">
             <Flex align="flex-start">
@@ -521,7 +536,8 @@ export function Header({ className }: Props) {
                   fontWeight={700}
                   _hover={{ color: cl }}
                   _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('/discover')}>
+                  onClick={() =>{handleButtonClick();
+                   router.push('/discover')}}>
                   Discover
                 </Button>
                 <Button
@@ -604,10 +620,12 @@ export function Header({ className }: Props) {
                         {truncateEthAddress(address)}
                       </MenuItem>
                       <MenuDivider />
-                      <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => router.push(`/profile/${address}`)}>
+                      <MenuItem icon={<MdOutlineAccountCircle />} onClick={() =>{handleButtonClick();
+                         router.push(`/profile/${address}`)}}>
                         Profile
                       </MenuItem>
-                      <MenuItem icon={<RiVideoUploadFill />} onClick={() => router.push(`/profile/${address}/upload`)}>
+                      <MenuItem icon={<RiVideoUploadFill />} onClick={() => {handleButtonClick();
+                        router.push(`/profile/${address}/upload`)}}>
                         Upload
                       </MenuItem>
                       <MenuDivider />
@@ -648,6 +666,5 @@ export function Header({ className }: Props) {
           {MobileNavContent}
         </chakra.div>
       </chakra.header>
-    </>
   )
 }
