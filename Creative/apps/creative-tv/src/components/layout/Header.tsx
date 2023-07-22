@@ -620,6 +620,7 @@ export function Header({ className, handleLoading }: Props) {
                         {truncateEthAddress(address)}
                       </MenuItem>
                       <MenuDivider />
+
                       <MenuItem icon={<MdOutlineAccountCircle />} onClick={() =>{handleButtonClick();
                          router.push(`/profile/${address}`)}}>
                         Profile
@@ -628,6 +629,7 @@ export function Header({ className, handleLoading }: Props) {
                         router.push(`/profile/${address}/upload`)}}>
                         Upload
                       </MenuItem>
+
                       <MenuDivider />
                       <MenuItem
                         icon={<AiOutlineDisconnect />}
