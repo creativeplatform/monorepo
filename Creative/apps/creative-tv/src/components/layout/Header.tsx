@@ -396,7 +396,7 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   <Avatar name="creative" src={PFP} />
                 </MenuButton>
-                {subscribed ? (
+                {!subscribed ? (
                   <MenuList>
                     <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
                       {truncateEthAddress(`${address}`)}
