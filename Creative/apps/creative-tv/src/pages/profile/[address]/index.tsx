@@ -154,10 +154,11 @@ export default function ProfilePage() {
         <Container maxW={"1200px"} mt={10}>
             <Button colorScheme={'blue'} onClick={() => router.push("/")}>Back</Button>
             <Heading mt={10}>Creative Profile</Heading>
+            { address && (
             <Box my={5} key={address}>
                 <Text fontSize={'2xl'} fontWeight={'bold'}>CRTV Account # &nbsp;</Text>
                 <ButtonGroup size='sm' isAttached variant='outline' marginRight={10}>
-                    <Button>{address}</Button>
+                    <Button>{truncateEthAddress(address)}</Button>
                     <IconButton aria-label='Add to clipboard' icon={<HiOutlineClipboardCopy />} onClick={() => { handleCopyAddress() }} />
                 </ButtonGroup>
                 <Box my={5}>
@@ -165,6 +166,7 @@ export default function ProfilePage() {
                     <Button leftIcon={<BiTransfer />} size={'md'} colorScheme='pink' onClick={() => router.push(`/profile/${address}/transfer`)}>Xfer Items</Button>
                 </Box>
             </Box>
+            )}
             <Box mt={5}>
                 <SimpleGrid columns={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (

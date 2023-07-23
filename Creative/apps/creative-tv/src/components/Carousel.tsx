@@ -175,7 +175,8 @@ export default function CarouselComponent() {
                             />
                         </Box>
                     </Carousel>
-                    <LeftButton
+                    {/* TODO: CREATE NEW SHARED SLIDER COMPONENTS */}
+                    {/* <LeftButton
                         bgColor="#EC407A"
                         customIcon={<ArrowLeftIcon />}
                         textColor={"white.500"}
@@ -186,8 +187,8 @@ export default function CarouselComponent() {
                         bgColor="#FACB80" 
                         customIcon={<ArrowRightIcon />} 
                         style={{ position: 'relative', left: '30rem', transform: 'translateY(-150%)' }}
-                        display={{ sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' }} 
-                    />
+                        display={{  sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' }} 
+                    /> */}
                 </Provider>
         </LivepeerConfig>
     );
