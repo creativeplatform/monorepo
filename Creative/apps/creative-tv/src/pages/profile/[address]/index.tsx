@@ -14,6 +14,10 @@ import {
     ButtonGroup,
     IconButton,
     Link,
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbSeparator,
 } from '@chakra-ui/react'
 import {
     useAddress,
@@ -139,7 +143,7 @@ export default function ProfilePage() {
       };
     
 
-// RENDER REMAINING TIME FOR COUNTDOWN TIMER
+// RENDER REMAINING MEMBERSHIP TIME FOR COUNTDOWN TIMER
     // const renderTime = ({ remainingTime }: { remainingTime: number }) => {
     //     const hours = Math.floor(remainingTime / 3600)
     //     const minutes = Math.floor((remainingTime % 3600) / 60)
@@ -152,102 +156,113 @@ export default function ProfilePage() {
     
     return (
         <Container maxW={"1200px"} mt={10}>
-            <Button colorScheme={'blue'} onClick={() => router.push("/")}>Back</Button>
+            <Breadcrumb>
+                <BreadcrumbItem>
+                    <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                    <BreadcrumbLink isCurrentPage>Profile</BreadcrumbLink>
+                </BreadcrumbItem>
+            </Breadcrumb>
             <Heading mt={10}>Creative Profile</Heading>
             { address && (
-            <Box my={5} key={address}>
-                <Text fontSize={'2xl'} fontWeight={'bold'}>CRTV Account # &nbsp;</Text>
-                <ButtonGroup size='sm' isAttached variant='outline' marginRight={10}>
-                    <Button>{truncateEthAddress(address)}</Button>
-                    <IconButton aria-label='Add to clipboard' icon={<HiOutlineClipboardCopy />} onClick={() => { handleCopyAddress() }} />
-                </ButtonGroup>
-                <Box my={5}>
-                    <Text fontSize={'2xl'} fontWeight={'bold'}>Transfer Items </Text>
-                    <Button leftIcon={<BiTransfer />} size={'md'} colorScheme='pink' onClick={() => router.push(`/profile/${address}/transfer`)}>Xfer Items</Button>
-                </Box>
-            </Box>
+                <SimpleGrid key={address} columns={2} spacing={5} my={5}>
+                    <Box w={'md'}>
+                        <Text fontSize={'2xl'} fontWeight={'bold'}>CRTV Account # &nbsp;</Text>
+                        <ButtonGroup size='sm' isAttached variant='outline' marginRight={2}>
+                            <Button>{truncateEthAddress(address)}</Button>
+                            <IconButton aria-label='Add to clipboard' icon={<HiOutlineClipboardCopy />} onClick={() => { handleCopyAddress() }} />
+                        </ButtonGroup>
+                    </Box>
+                    <Box w={'md'}>
+                        <Text fontSize={'2xl'} fontWeight={'bold'}>Transfer Items </Text>
+                        <Button leftIcon={<BiTransfer />} size={'md'} colorScheme='pink' onClick={() => router.push(`/profile/${address}/transfer`)}>Xfer Items</Button>
+                    </Box>
+                </SimpleGrid>
             )}
             <Box mt={5}>
-                <SimpleGrid columns={4} spacing={5} my={4}>
+                <SimpleGrid row={4} spacing={5} my={4}>
                     {!loadingOwnedNFTs && ownedNFTs?.map((nft) => (
-                        <Box key={nft?.metadata.id.toString()}>
-                        <Text fontWeight={'bold'}><Emoji symbol='🪪' label='identification'/> Membership:</Text>
-                        <Card  overflow={"hidden"} p={2} mb={4}>
-                            <Image 
-                                src={`${nft.metadata.image}`}
-                                height={250}
-                                width={200}
-                            />
-                            <Flex justify={"space-between"} alignItems={"center"} direction={"row"} mb={4}>
-                                <Text ml={4} fontWeight={'bold'}>{nft.metadata.name}</Text>
-                                <Text mr={4}>Qty: {ownerBalanceString}</Text>
-                            </Flex>
-                            <Flex justifyContent={"center"} direction={"row"} p={2} mb={4}>
-                                <Text fontSize='xs'>{nft.metadata.description}</Text>
-                            </Flex>
-                            {/* <Flex justifyContent={"center"} alignItems={"center"} direction={"column"} p={5}>
-                                <Text fontSize={'sm'}>Expires:</Text>
-                                {!loadingIsExpiring && (
-                                    <Box>
-                                        <CountdownCircleTimer
-                                            isPlaying
-                                            duration={expiring}
-                                            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                            colorsTime={[7, 5, 2, 0]}
-                                        >
-                                            {renderTime}
-                                        </CountdownCircleTimer>
-                                    </Box>
-                                )}
-                            </Flex> */}
-                            <ButtonGroup justifyContent={"center"}>
-                                <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => renew()} isLoading={renewMembershipForIsLoading}>RENEW</Button>
-                                <Button colorScheme={'red'} leftIcon={<MdCancel />} onClick={() => cancelMembership()} isLoading={cancelAndRefundIsLoading}>CANCEL</Button>
-                            </ButtonGroup>
-                        </Card>
-                            <Flex>
-                            <Text fontSize={"x-small"} ml={4}>Export to:</Text>
-                            <Input
-                                placeholder={"0x00000"}
-                                width={"90%"}
-                                mx={'auto'}
-                                value={transferAddress}
-                                onChange={(e) => setTransferAddress(e.target.value)}
-                                mb={4} 
-                            />
-                            </Flex>
-                            {transferAddress != "" && (
-                                <Box mb={4} mx={'auto'}>
-                                   <Button colorScheme='pink'>Transfer</Button>
-                                </Box>
-                            )}
-                            <Flex>
-                                <Text fontSize={"x-small"} ml={4}>Rent to:</Text>
-                                    <Input
-                                        placeholder={"0x00000"}
-                                        width={"90%"}
-                                        mx={'auto'}
-                                        value={lendingAddress}
-                                        onChange={(e) => setLendingAddress(e.target.value)}
-                                        mb={4} 
+                        <Box key={nft?.metadata.id.toString()} w={'md'}>
+                            <Text fontSize={'2xl'} fontWeight={'bold'}><Emoji symbol='🪪' label='identification'/> Membership:</Text>
+                                <Card overflow={'auto'} p={2} mb={4}>
+                                    <Image 
+                                        src={`${nft.metadata.image}`}
+                                        height={250}
+                                        width={'auto'}
                                     />
-                            </Flex>
-                                {lendingAddress != "" && (
+                                    <Flex justify={"space-between"} alignItems={"center"} direction={"row"} mb={4}>
+                                        <Text ml={4} fontWeight={'bold'}>{nft.metadata.name}</Text>
+                                        <Text mr={4}>Qty: {ownerBalanceString}</Text>
+                                    </Flex>
+                                    <Flex justifyContent={"center"} direction={"row"} p={2} mb={4}>
+                                        <Text fontSize='xs'>{nft.metadata.description}</Text>
+                                    </Flex>
+                                    {/* <Flex justifyContent={"center"} alignItems={"center"} direction={"column"} p={5}>
+                                        <Text fontSize={'sm'}>Expires:</Text>
+                                        {!loadingIsExpiring && (
+                                            <Box>
+                                                <CountdownCircleTimer
+                                                    isPlaying
+                                                    duration={expiring}
+                                                    colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                                                    colorsTime={[7, 5, 2, 0]}
+                                                >
+                                                    {renderTime}
+                                                </CountdownCircleTimer>
+                                            </Box>
+                                        )}
+                                    </Flex> */}
+                                    <ButtonGroup justifyContent={"center"}>
+                                        <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => renew()} isLoading={renewMembershipForIsLoading}>RENEW</Button>
+                                        <Button colorScheme={'red'} leftIcon={<MdCancel />} onClick={() => cancelMembership()} isLoading={cancelAndRefundIsLoading}>CANCEL</Button>
+                                    </ButtonGroup>
+                                </Card>
+                                
+                                <Flex>
+                                <Text fontSize={"x-small"} ml={4}>Export to:</Text>
+                                <Input
+                                    placeholder={"0x00000"}
+                                    width={"90%"}
+                                    mx={'auto'}
+                                    value={transferAddress}
+                                    onChange={(e) => setTransferAddress(e.target.value)}
+                                    mb={4} 
+                                />
+                                </Flex>
+                                {transferAddress != "" && (
                                     <Box mb={4} mx={'auto'}>
-                                    <Button colorScheme='pink' onClick={() => lend()}>Lend</Button>
+                                    <Button colorScheme='pink'>Transfer</Button>
                                     </Box>
                                 )}
-                        </Box>
+                                <Flex>
+                                    <Text fontSize={"x-small"} ml={4}>Rent to:</Text>
+                                        <Input
+                                            placeholder={"0x00000"}
+                                            width={"90%"}
+                                            mx={'auto'}
+                                            value={lendingAddress}
+                                            onChange={(e) => setLendingAddress(e.target.value)}
+                                            mb={4} 
+                                        />
+                                </Flex>
+                                    {lendingAddress != "" && (
+                                        <Box mb={4} mx={'auto'}>
+                                        <Button colorScheme='pink' onClick={() => lend()}>Lend</Button>
+                                        </Box>
+                                    )}
+                            </Box>
                         ))}
                     <Box>
-                        <Text fontWeight={'bold'}><Emoji symbol='🪙' label='coin'/> MeToken:</Text>
+                        <Text fontSize={'2xl'} fontWeight={'bold'}><Emoji symbol='🪙' label='coin'/> MeToken:</Text>
                         <Text fontSize={'small'}>To generate revenue on our platform, you need to create a <Link href='https://metokens.com' color='#EC407A'>MeToken</Link>. This token serves as your unique identity as a creator and provides a way to monetize your creative journey. With MeToken, viewers can tip you and buy your products within our platform's creative ecosystem. It offers a convenient and integrated method for transactions and supports your growth as a creator.</Text>
                     </Box>
                     <Box>
-                        <Text fontWeight={'bold'}><Emoji symbol='🎥' label='video camera'/> Video Uploads:</Text>
+                        <Text fontSize={'2xl'} fontWeight={'bold'}><Emoji symbol='🎥' label='video camera'/> Video Uploads:</Text>
                     </Box>
                     <Box>
-                        <Text fontWeight={'bold'}><Emoji symbol='💰' label='money bag'/> Earnings:</Text>
+                        <Text fontSize={'2xl'} fontWeight={'bold'}><Emoji symbol='💰' label='money bag'/> Earnings:</Text>
                     </Box>
                 </SimpleGrid>
             </Box>

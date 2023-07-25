@@ -40,7 +40,7 @@ export default function TransferCard() {
     return (
         <Card w={"50%"} p={5}>
             <CardHeader>
-                <Heading>Xfer</Heading>
+                <Heading>Creative Xfer</Heading>
                 <Text size={'sm'} fontStyle={'italic'}>Empowering Creative TV users to transfer collected tokens and NFTs seamlessly. Unlock new experiences by exchanging unique assets within the app's vibrant and diverse creative ecosystem.</Text>
             </CardHeader>
             <CardBody>
