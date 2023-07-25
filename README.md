@@ -45,7 +45,7 @@ To start your Turbo Repo project, follow these steps:
 
 6. Start the development server:
    ```bash
-   yarn turbo run --filter creative-tv
+   yarn turbo run dev --filter creative-tv
    ```
    This will start the development server and provide you with a local development environment for your dApp.
 
