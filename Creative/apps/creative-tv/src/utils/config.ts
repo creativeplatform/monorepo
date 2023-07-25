@@ -52,6 +52,8 @@ export const THEME_CONFIG = {
   initialColorMode: THEME_INITIAL_COLOR,
 }
 
+export const GOERLI_PROVIDER_URL = 'https://ethereum-goerli.publicnode.com'
+
 export const EXPLORER_API_URL = {
   GOERLI: 'https://api-goerli.etherscan.io/',
   POLYGON: 'https://api.polygonscan.com/',
@@ -1082,7 +1084,7 @@ export const METOKENS_REGISTRY_ABI = [
 ]
 
 export const METOKENS_DIAMOND_ABI = [
- 
+
   {
   "inputs": [
   {

@@ -4,7 +4,8 @@ import { Goerli } from '@thirdweb-dev/chains';
 import {
   METOKENS_ADDRESS_GOERLI,
   METOKENS_REGISTRY_ABI,
-  ERC20_ABI
+  ERC20_ABI,
+  GOERLI_PROVIDER_URL
 } from '../config'
 
 interface CreateMeToken {
@@ -27,7 +28,7 @@ export const getMeTokenContract = async (address: string) => {
 }
 
 export const createMeToken = async (createMeTokenData: CreateMeToken, contract: any) => {
-  
+
   try {
     const data = await contract.call(
         "subscribe", // Name of your function as it is on the smart contract
@@ -40,7 +41,7 @@ export const createMeToken = async (createMeTokenData: CreateMeToken, contract: 
         ],
       );
     console.log(data);
-    // do something with the form data  
+    // do something with the form data
   } catch (error) {
     console.log('Error:', error);
   }
@@ -67,17 +68,22 @@ export const createMeToken = async (createMeTokenData: CreateMeToken, contract: 
 export const approveTokens = async (
   amount: string,
   address: string,
+  tokenAddress: string,
 ) => {
-  const provider = new ethers.providers.JsonRpcProvider('https://ethereum-goerli.publicnode.com')
+  const provider = new ethers.providers.JsonRpcProvider(GOERLI_PROVIDER_URL)
   const signer = provider.getSigner(address)
   // Create an SDK signer using the Thirdweb SDK
-  const sdkSigner = await ThirdwebSDK.fromSigner(signer, Goerli)
+  const sdkSigner = ThirdwebSDK.fromSigner(signer, Goerli)
   const erc20 = await sdkSigner.getContractFromAbi(
     daiAddress,
     ERC20_ABI,
   );
   console.log(erc20)
-  const tx = await erc20.call('approve', ['0xBdC97D61E8198880c966716df8613cb2fE073D90', ethers.utils.parseEther('100')]);
+  const tx = await erc20.call(
+    'approve',
+    ['0xBdC97D61E8198880c966716df8613cb2fE073D90', ethers.utils.parseEther(amount)],
+    { gasLimit: 1000000}
+  );
   console.log(tx, 'tx')
   return tx
 };
