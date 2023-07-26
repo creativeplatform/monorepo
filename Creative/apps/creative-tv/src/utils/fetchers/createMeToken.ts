@@ -7,6 +7,7 @@ import {
   ERC20_ABI,
   GOERLI_PROVIDER_URL
 } from '../config'
+import { ExternalProvider, Web3Provider } from '@ethersproject/providers';
 
 interface CreateMeToken {
   name: string;
@@ -25,7 +26,7 @@ export const getMeTokenContract = async (signer: any) => {
   return meTokenRegistryFacetContract;
 }
 
-export const createMeToken = async (createMeTokenData: CreateMeToken, contract: any,signer: any) => {
+/* export const createMeToken = async (createMeTokenData: CreateMeToken, contract: any,signer: any) => {
   const sdkSigner = await ThirdwebSDK.fromSigner(signer, Goerli);
   const meTokenRegistryFacetContract = await sdkSigner.getContractFromAbi(
     meTokenDiamond, METOKENS_REGISTRY_ABI)
@@ -37,7 +38,7 @@ export const createMeToken = async (createMeTokenData: CreateMeToken, contract: 
           createMeTokenData.name, // e.g. Argument 1
           createMeTokenData.symbol, // e.g. Argument 2
           +createMeTokenData.hubId,
-          ethers.utils.parseEther('1'),
+          1,
         ],
       );
     console.log(data);
@@ -46,6 +47,16 @@ export const createMeToken = async (createMeTokenData: CreateMeToken, contract: 
   } catch (error) {
     console.log('Error:', error);
   }
+} */
+
+export const createMeToken = async (createMeTokenData: CreateMeToken, contract: any,signer: any) => {
+    const metoken = await new Contract(
+      meTokenDiamond, METOKENS_REGISTRY_ABI, signer
+    );
+  return metoken.subscribe(createMeTokenData.name, // e.g. Argument 1
+  createMeTokenData.symbol, // e.g. Argument 2
+  +createMeTokenData.hubId,
+  100)
 }
 
 export const isApprovedAmount = async (
@@ -59,26 +70,53 @@ export const isApprovedAmount = async (
     ERC20_ABI,
   );
   return await erc20.call(
-    'approval',
-    [foundryFacet, address],
+    'allowance',
+    [meTokenDiamond, address],
   );
 };
 
-export const approveTokens = async (
+/* export const approveTokens = async (
   amount: string,
   signer: any,
 ) => {
   // Create an SDK signer using the Thirdweb SDK
   console.log(signer, 'signer')
-  const sdkSigner = await ThirdwebSDK.fromSigner(signer, Goerli)
+  const sdkSigner = await ThirdwebSDK.fromSigner(signer, 'https://goerli.infura.io/v3/3ae6ab1335604210b1be2ddbeabc7eb9')
   console.log(sdkSigner, 'sdkSigner')
   const erc20 = await sdkSigner.getContractFromAbi(
     daiAddress,
     ERC20_ABI,
   );
   const bigNumberValue = ethers.BigNumber.from('1000')
-  return await erc20.call(
+  console.log('-1')
+  const tx = await erc20.prepare(
     'approve',
-    [foundryFacet, bigNumberValue],
+    [foundryFacet, '10000'],
   );
+  console.log('0')
+  console.log(tx, 'tx')
+  const gasCost = await tx.estimateGasCost(); // Estimate the gas cost
+  console.log('1')
+  console.log(gasCost, 'gasCost')
+  const simulatedTx = await tx.simulate(); // Simulate the transaction
+  console.log('2')
+  console.log(simulatedTx, 'simulatedTx')
+  const txReceipt = await tx.execute();
+  console.log('3')
+  console.log(txReceipt, 'txReceipt')
+  console.log('tx shit', gasCost, txReceipt, simulatedTx)
+  return txReceipt
+}; */
+
+export const approveTokens = async (
+  amount: any,
+  s: any,
+) => {
+  const erc20 = await new Contract(
+    daiAddress,
+    ERC20_ABI,
+    s,
+  );
+  return erc20.approve('0x47fF07BfD0cdFaD6650177f661E8cC977FA8Bf36', `${100 * 10 ** 18}`);
 };
+
