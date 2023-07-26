@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+<<<<<<< HEAD
 import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useSDK, useSigner } from '@thirdweb-dev/react'
 import { createMeToken, approveTokens, isApprovedAmount } from 'utils/fetchers/createMeToken'
+=======
+import { useAddress } from '@thirdweb-dev/react'
+import { createMeToken, approveTokens } from 'utils/fetchers/createMeToken'
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
 import { getMeTokenContract } from 'utils/fetchers/createMeToken'
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, Heading, Input, Stack } from '@chakra-ui/react'
 
@@ -9,7 +14,10 @@ export default function MeTokenCreationForm() {
   const {
     register,
     handleSubmit,
+<<<<<<< HEAD
     getValues,
+=======
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
     formState: { errors },
     reset,
   } = useForm()
@@ -18,17 +26,25 @@ export default function MeTokenCreationForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isApproved, setApproved] = useState(false)
+<<<<<<< HEAD
   const [approvalAmount, setApprovalAmount] = useState(0)
   const signer = useSigner()
 
   useEffect(() => {
     const getContract = async () => {
       const contract = await getMeTokenContract(signer)
+=======
+
+  useEffect(() => {
+    const getContract = async () => {
+      const contract = await getMeTokenContract(address || '')
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
       setMeTokenContract(contract)
     }
     getContract()
   }, [address])
 
+<<<<<<< HEAD
   useEffect(() => {
     if (address && signer) {
       const amount = isApprovedAmount(address, signer)
@@ -45,6 +61,17 @@ export default function MeTokenCreationForm() {
       setApproved(true)
     } else {
       console.log('Error approving tokens')
+=======
+  console.log({ meTokenContract })
+
+  const approve = async () => {
+    const meTokenAddress = meTokenContract.contractWrapper.readContract.address
+    console.log({ meTokenAddress, address })
+
+    if (!isApproved && address && meTokenAddress) {
+      await approveTokens('10000000000000000000000', address, meTokenAddress)
+      setApproved(true)
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
     }
   }
 
@@ -53,9 +80,16 @@ export default function MeTokenCreationForm() {
 
     try {
       const { name, symbol, hubId, assetsDeposited } = data
+<<<<<<< HEAD
       const tx = await createMeToken({ name, symbol, hubId, assetsDeposited }, meTokenContract, signer)
       console.log(tx)
       setIsSubmitted(true)
+=======
+      const tx = await createMeToken({ name, symbol, hubId, assetsDeposited }, meTokenContract)
+      console.log(tx)
+      setIsSubmitted(true)
+      reset()
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
     } catch (error) {
       console.log('Error:', error)
     } finally {
@@ -135,6 +169,7 @@ export default function MeTokenCreationForm() {
             padding:"10px"
           }
         }}>
+<<<<<<< HEAD
           <Button
             background="linear-gradient(to right, #E03C88, #E34335, #F6B138)"
             onClick={approve}
@@ -143,6 +178,11 @@ export default function MeTokenCreationForm() {
             >
               Approve
             </Button>
+=======
+          {!isApproved && <Button
+            background="linear-gradient(to right, #E03C88, #E34335, #F6B138)"
+            onClick={approve} variant="solid">Approve</Button>}
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
         {isLoading && isApproved ? (
           <Button
             type="submit"
@@ -155,7 +195,11 @@ export default function MeTokenCreationForm() {
             disabled={!isApproved || isLoading}
             type="submit"
             background="linear-gradient(to right, #E03C88, #E34335, #F6B138)"
+<<<<<<< HEAD
             >
+=======
+>
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
             {isSubmitted ? 'meToken Created!' : 'Submit'}
           </Button>
           )}
@@ -164,4 +208,8 @@ export default function MeTokenCreationForm() {
       <Box pos="absolute" inset="-1px" borderRadius="3xl" background="linear-gradient(to top, #E03C88, #E34335, #F6B138, transparent, transparent)" zIndex={0} />
     </Box>
   )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451

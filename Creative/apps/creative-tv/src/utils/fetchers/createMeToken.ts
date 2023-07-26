@@ -52,19 +52,16 @@ export const isApprovedAmount = async (
   address: string,
   signer: any,
 ) => {
-  // Create an SDK signer using the Thirdweb SDK
   const sdkSigner = await ThirdwebSDK.fromSigner(signer, Goerli)
+  console.log(sdkSigner, 'sdkSigner')
   const erc20 = await sdkSigner.getContractFromAbi(
     daiAddress,
     ERC20_ABI,
   );
-
-  const tx = erc20.call(
-    'allowance',
-    [address, foundryFacet],
-    { gasLimit: 1000000}
+  return await erc20.call(
+    'approval',
+    [foundryFacet, address],
   );
-  return tx
 };
 
 export const approveTokens = async (

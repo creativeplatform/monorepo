@@ -52,4 +52,8 @@ const MemberCard = (props: MemberCardProps) => {
   )
 }
 
+<<<<<<< HEAD
 export default MemberCard
+=======
+export default MemberCard
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451

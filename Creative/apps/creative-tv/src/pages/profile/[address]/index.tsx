@@ -326,4 +326,8 @@ export default function ProfilePage() {
       )}
     </Container>
   )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 556688f3d31157447f8adbf4eb7c5c33bff97451
