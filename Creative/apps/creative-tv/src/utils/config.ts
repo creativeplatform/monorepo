@@ -178,7 +178,7 @@ export const METOKENS_ADDRESS_MAINNET = {
   metokensRegistryFactory: '0x8b91FcF2230ab04A46e2D83aaF062EC1B5AAAa5c',
   meTokenDiamond: '0x0B4ec400e8D10218D0869a5b0036eA4BCf92d905',
 }
-
+export const GOERLI_PROVIDER_URL = 'https://ethereum-goerli.publicnode.com'
 // METOKENS CONTRACT ABI
 
 export const FOUNDRY_FACET_ABI = [

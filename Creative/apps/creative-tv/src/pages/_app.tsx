@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
               smartWallet({
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
                 thirdwebApiKey: SMART_WALLET_KEY,
-                gasless: true,
+                gasless: false,
                 personalWallets: [
                   metamaskWallet(),
                   coinbaseWallet(),
