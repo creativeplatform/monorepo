@@ -143,7 +143,7 @@ export default function MeTokenCreationForm() {
           <Stack spacing={4} width="100%">
             <Box>{meTokenInfo.meTokenAddress}</Box>
             <Box>{meTokenInfo.symbol}</Box>
-            <Image src={meTokenInfo.image} alt={''} style={{ height: '100px', width: '100px' }} />
+            <img src={meTokenInfo.profilePicture} alt={''} style={{ height: '100px', width: '100px' }} />
             <FormControl isInvalid={!!errors.name}>
               <FormLabel color="white">Amount to purchase (DAI):</FormLabel>
               <Input type="text" placeholder="Amount To Purchase" {...register('purchaseAmount', { required: true })} />
