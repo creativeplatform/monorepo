@@ -52,7 +52,7 @@ export const getMeTokenContract = async (signer: any) => {
   }
 } */
 
-export const createMeToken = async (createMeTokenData: CreateMeToken, contract: any,signer: any) => {
+export const createMeToken = async (createMeTokenData: CreateMeToken, signer: any) => {
     const metoken = await new Contract(
       meTokenDiamond, METOKENS_REGISTRY_ABI, signer
     );
@@ -63,18 +63,14 @@ export const createMeToken = async (createMeTokenData: CreateMeToken, contract: 
 }
 
 export const getMeTokenFor = async (ownerAddress: string, signer: any) => {
-  console.log(ownerAddress, 'ownerAddress')
   if (!ownerAddress) throw new Error('Owner required for `getMeTokenFor`.');
-  console.log('made it in')
   const registry = await new Contract(
     meTokenDiamond,
     METOKENS_REGISTRY_ABI,
     signer,
   );
-  const addressChecksummed = ethers.utils.getAddress(ownerAddress);
-  console.log(registry, 'registry')
+  const addressChecksummed = await ethers.utils.getAddress(ownerAddress);
   const token =  registry.getOwnerMeToken(addressChecksummed);
-  console.log(token, 'token')
   return token
 };
 
@@ -89,7 +85,7 @@ export const mint = (
     FOUNDRY_FACET_ABI,
     signer,
   );
-  return meTokenFoundry.mint(meToken, amount, recipient);
+  return meTokenFoundry.mint(meToken, ethers.utils.parseEther(amount), recipient);
 };
 
 export const getMeTokenInfo = async (tokenAddress: string, owner: string, signer: any) => {
@@ -133,39 +129,6 @@ export const isApprovedAmount = async (
   return approvalAmount.gt(amount);
 };
 
-/* export const approveTokens = async (
-  amount: string,
-  signer: any,
-) => {
-  // Create an SDK signer using the Thirdweb SDK
-  console.log(signer, 'signer')
-  const sdkSigner = await ThirdwebSDK.fromSigner(signer, 'https://goerli.infura.io/v3/3ae6ab1335604210b1be2ddbeabc7eb9')
-  console.log(sdkSigner, 'sdkSigner')
-  const erc20 = await sdkSigner.getContractFromAbi(
-    daiAddress,
-    ERC20_ABI,
-  );
-  const bigNumberValue = ethers.BigNumber.from('1000')
-  console.log('-1')
-  const tx = await erc20.prepare(
-    'approve',
-    [foundryFacet, '10000'],
-  );
-  console.log('0')
-  console.log(tx, 'tx')
-  const gasCost = await tx.estimateGasCost(); // Estimate the gas cost
-  console.log('1')
-  console.log(gasCost, 'gasCost')
-  const simulatedTx = await tx.simulate(); // Simulate the transaction
-  console.log('2')
-  console.log(simulatedTx, 'simulatedTx')
-  const txReceipt = await tx.execute();
-  console.log('3')
-  console.log(txReceipt, 'txReceipt')
-  console.log('tx shit', gasCost, txReceipt, simulatedTx)
-  return txReceipt
-}; */
-
 export const approveTokens = async (
   amount: any,
   s: any,
@@ -175,6 +138,6 @@ export const approveTokens = async (
     ERC20_ABI,
     s,
   );
-  return erc20.approve(meTokenApproval, ethers.utils.formatEther(amount));
+  return erc20.approve(meTokenApproval, ethers.utils.parseEther(amount));
 };
 

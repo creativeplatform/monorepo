@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { ConnectWallet, useAddress, useSigner } from '@thirdweb-dev/react'
-import { createMeToken, approveTokens, isApprovedAmount, getMeTokenInfo } from 'utils/fetchers/createMeToken'
+import { createMeToken, approveTokens, isApprovedAmount, getMeTokenInfo, mint } from 'utils/fetchers/createMeToken'
 import { getMeTokenContract } from 'utils/fetchers/createMeToken'
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, Heading, Input, Stack } from '@chakra-ui/react'
 import { getMeTokenFor } from 'utils/fetchers/createMeToken'
@@ -26,17 +26,13 @@ export default function MeTokenCreationForm() {
   const [meTokenInfo, setMeTokenInfo] = useState<any>(null)
   const signer = useSigner()
   const router = useRouter()
-  console.log(router.query, 'router.query')
 
   useEffect(() => {
     const addy = router.query.address || address
-    console.log(addy)
     if (!addy || !signer) return
     const getMeToken = async () => {
-      console.log(addy, signer)
-      
       getMeTokenFor((addy as string), signer).then((res) => {
-        console.log(res, 'res')
+        if (res === '0x0000000000000000000000000000000000000000') return
         setMeTokenAddress(res)
       })
     }
@@ -50,7 +46,7 @@ export default function MeTokenCreationForm() {
     }
     getData()
   }, [meTokenAddress, signer, address])
-  console.log(meTokenAddress)
+
   useEffect(() => {
     const getContract = async () => {
       const contract = await getMeTokenContract(signer)
@@ -108,14 +104,14 @@ export default function MeTokenCreationForm() {
   }, [isSubmitted])
 
   const approveBuy = async () => {
-    console.log('approving')
     const purchaseAmount = getValues('purchaseAmount')
     await approveTokens(purchaseAmount, signer)
     setApproved(true)
   }
 
   const buy = async () => {
-    console.log('buying')
+    const purchaseAmount = getValues('purchaseAmount')
+    await mint(meTokenAddress, purchaseAmount, address!, signer)
   }
 
   return (
@@ -143,7 +139,7 @@ export default function MeTokenCreationForm() {
           <Stack spacing={4} width="100%">
             <Box>{meTokenInfo.meTokenAddress}</Box>
             <Box>{meTokenInfo.symbol}</Box>
-            <img src={meTokenInfo.profilePicture} alt={''} style={{ height: '100px', width: '100px' }} />
+            <img src={meTokenInfo.profilePicture} alt={''} style={{ height: '100px', width: '100px', borderRadius: '12px' }} />
             <FormControl isInvalid={!!errors.name}>
               <FormLabel color="white">Amount to purchase (DAI):</FormLabel>
               <Input type="text" placeholder="Amount To Purchase" {...register('purchaseAmount', { required: true })} />
@@ -151,7 +147,7 @@ export default function MeTokenCreationForm() {
             </FormControl>
             <Button
             background="linear-gradient(to right, #E03C88, #E34335, #F6B138)"
-            onClick={approve}
+            onClick={approveBuy}
             variant="solid"
             disabled={isApproved}
             >
