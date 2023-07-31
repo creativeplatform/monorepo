@@ -6,6 +6,7 @@ import { getMeTokenContract } from 'utils/fetchers/createMeToken'
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, Heading, Input, Stack } from '@chakra-ui/react'
 import { getMeTokenFor } from 'utils/fetchers/createMeToken'
 import Image from 'next/image'
+import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 
 export default function MeTokenCreationForm() {
@@ -24,15 +25,22 @@ export default function MeTokenCreationForm() {
   const [approvalAmount, setApprovalAmount] = useState(0)
   const [meTokenAddress, setMeTokenAddress] = useState('')
   const [meTokenInfo, setMeTokenInfo] = useState<any>(null)
+  const [pageType, setPageType] = useState('create')
   const signer = useSigner()
   const router = useRouter()
 
   useEffect(() => {
-    const addy = router.query.address || address
+    if (ethers.utils.getAddress(router.query.address as string) !== address) {
+      setPageType('buy')
+    }
+  }, [address])
+  console.log(pageType)
+  useEffect(() => {
+    const addy = ethers.utils.getAddress(router.query.address as string) || address
     if (!addy || !signer) return
     const getMeToken = async () => {
       getMeTokenFor((addy as string), signer).then((res) => {
-        if (res === '0x0000000000000000000000000000000000000000') return
+        if (res === '0x0000000000000000000000000000000000000000' || !res) return
         setMeTokenAddress(res)
       })
     }
@@ -41,8 +49,9 @@ export default function MeTokenCreationForm() {
 
   useEffect(() => {
     if (!meTokenAddress || !address || !signer) return
+    const addy = ethers.utils.getAddress(router.query.address as string) || address
     const getData = async () => {
-      getMeTokenInfo(meTokenAddress, address, signer).then(setMeTokenInfo)
+      getMeTokenInfo(meTokenAddress, addy, signer).then(setMeTokenInfo)
     }
     getData()
   }, [meTokenAddress, signer, address])
@@ -78,7 +87,7 @@ export default function MeTokenCreationForm() {
 
     try {
       const { name, symbol, hubId, assetsDeposited } = data
-      const tx = await createMeToken({ name, symbol, hubId, assetsDeposited }, meTokenContract, signer)
+      const tx = await createMeToken({ name, symbol, hubId, assetsDeposited }, signer)
       console.log(tx)
       setIsSubmitted(true)
     } catch (error) {
@@ -130,6 +139,7 @@ export default function MeTokenCreationForm() {
       alignItems="center"
       mb="30px">
       {
+        pageType === 'create' && 
         meTokenInfo ? (
           <Box bg="#171923" position="relative" zIndex={2} p={8} overflow="hidden" width="100%" height="100%" borderRadius="3xl">
           <Heading mb={3} fontSize="2em" fontWeight="bold" color="#EDEDEE" textAlign="center">
@@ -163,7 +173,7 @@ export default function MeTokenCreationForm() {
             </Button>
           </Stack>
           </Box>
-        ) : (
+        )  : pageType === 'create'  ?  (
           <Box bg="#171923" position="relative" zIndex={2} p={8} overflow="hidden" width="100%" height="100%" borderRadius="3xl">
           <Heading mb={3} fontSize="2em" fontWeight="bold" color="#EDEDEE" textAlign="center">
             meToken Creation Form
@@ -223,6 +233,42 @@ export default function MeTokenCreationForm() {
             )}
           </Box>        
         </Box>
+        ) : ('')
+      }
+      {
+        pageType === 'buy' && meTokenInfo ? ( <Box bg="#171923" position="relative" zIndex={2} p={8} overflow="hidden" width="100%" height="100%" borderRadius="3xl">
+        <Heading mb={3} fontSize="2em" fontWeight="bold" color="#EDEDEE" textAlign="center">
+          meToken Info
+        </Heading>
+        <Divider width="75%" margin="0 auto" marginBottom="3em" border="none" borderBottom="1px solid #EDEDEE" />
+        <Stack spacing={4} width="100%">
+          <Box>{meTokenInfo.meTokenAddress}</Box>
+          <Box>{meTokenInfo.symbol}</Box>
+          <img src={meTokenInfo.profilePicture} alt={''} style={{ height: '100px', width: '100px', borderRadius: '12px' }} />
+          <FormControl isInvalid={!!errors.name}>
+            <FormLabel color="white">Amount to purchase (DAI):</FormLabel>
+            <Input type="text" placeholder="Amount To Purchase" {...register('purchaseAmount', { required: true })} />
+            <FormErrorMessage>This field is required</FormErrorMessage>
+          </FormControl>
+          <Button
+          background="linear-gradient(to right, #E03C88, #E34335, #F6B138)"
+          onClick={approveBuy}
+          variant="solid"
+          disabled={isApproved}
+          >
+            Approve
+          </Button>
+          <Button
+          background="linear-gradient(to right, #E03C88, #E34335, #F6B138)"
+          onClick={buy}
+          variant="solid"
+          disabled={isApproved}
+          >
+            Buy
+          </Button>
+        </Stack>
+        </Box>) : (
+          <> User does not own metoken </>
         )
       }
      
