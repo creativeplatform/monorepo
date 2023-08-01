@@ -32,6 +32,7 @@ import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdAutorenew, MdCancel, MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
+import { useState } from 'react'
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -204,7 +205,7 @@ export default function ProfilePage() {
                 </TabList>
                 <TabPanels>
                   <TabPanel>
-                    {!loadingOwnedNFTs && ownedNFTs?.length > 0 ? (
+                    {!loadingOwnedNFTs && ownedNFTs?.length ? (
                       ownedNFTs?.map((nft) => (
                         <Box key={nft?.metadata.id.toString()}>
                           <Text fontWeight={'bold'} srOnly>
@@ -216,7 +217,7 @@ export default function ProfilePage() {
                               <MemberCard
                                 member={address}
                                 nft={nft}
-                                balance={ownerBalanceString}
+                                balance={ownerBalanceString!}
                                 renewMembershipForIsLoading={renewMembershipForIsLoading}
                                 cancelAndRefundIsLoading={cancelAndRefundIsLoading}
                               />

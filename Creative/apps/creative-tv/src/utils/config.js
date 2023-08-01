@@ -8,6 +8,20 @@ export const SITE_IMAGE = '/creative-membership.gif';
 export const SITE_URL = 'https://creativeplatform.xyz';
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.';
 export const SITE_LOGO = '/grant-logo.png';
+/* declare var process: {
+  env: {
+    NEXT_PUBLIC_STUDIO_API_KEY: string,
+    NEXT_SESSION_PASSWORD: string,
+    NODE_ENV: string,
+    NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
+    NEXT_PUBLIC_ALCHEMY_API_KEY: string,
+    NEXT_PUBLIC_INFURA_API_KEY: string,
+    NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
+    NEXT_PUBLIC_HOST: string,
+    NEXT_PUBLIC_SMART_WALLET_API_KEY: string
+    NEXT_PUBLIC_EXPLORER_KEY: string
+  }
+} */
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY;
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD;
 export const NODE_ENV = process.env.NODE_ENV;
@@ -34,6 +48,7 @@ export const THEME_COLOR_SCHEME = 'brand';
 export const THEME_CONFIG = {
     initialColorMode: THEME_INITIAL_COLOR,
 };
+export const GOERLI_PROVIDER_URL = 'https://ethereum-goerli.publicnode.com';
 export const EXPLORER_API_URL = {
     GOERLI: 'https://api-goerli.etherscan.io/',
     POLYGON: 'https://api.polygonscan.com/',

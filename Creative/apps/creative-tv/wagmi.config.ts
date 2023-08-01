@@ -13,7 +13,7 @@ export default defineConfig({
     ], 
     plugins: [
         etherscan({
-            apiKey: POLYGONSCAN_API_KEY,
+            apiKey: POLYGONSCAN_API_KEY || '',
             chainId: 80001,
             cacheDuration: 300_000,
             contracts: [

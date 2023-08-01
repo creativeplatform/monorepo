@@ -41,10 +41,10 @@ const MemberCard = (props: MemberCardProps) => {
                                 )}
                             </Flex> */}
       <ButtonGroup justifyContent={'center'}>
-        <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => renew()} isLoading={renewMembershipForIsLoading}>
+        <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => {}} isLoading={renewMembershipForIsLoading}>
           RENEW
         </Button>
-        <Button colorScheme={'red'} leftIcon={<MdCancel />} onClick={() => cancelMembership()} isLoading={cancelAndRefundIsLoading}>
+        <Button colorScheme={'red'} leftIcon={<MdCancel />} onClick={() => {}} isLoading={cancelAndRefundIsLoading}>
           CANCEL
         </Button>
       </ButtonGroup>
