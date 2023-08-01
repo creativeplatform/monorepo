@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
 import { AddressZero } from '@ethersproject/constants';
 import { useToast } from '@chakra-ui/react';
-import { useSDK, useSigner, useAddress } from '@thirdweb-dev/react';
-import { NFTMetadata, ThirdwebSDK } from '@thirdweb-dev/sdk';
+import { useSDK, useSigner, useAddress, useContractWrite, DropContract } from '@thirdweb-dev/react';
+import { EditionDrop, NFTMetadata, ThirdwebSDK } from '@thirdweb-dev/sdk';
 import { CREATIVE_ADDRESS } from 'utils/config';
 import { videoNftAbi } from '../components/videoNftAbi'
+import { AssetData } from '../components/CreateAndViewAsset';
+
+interface WagmiNftProps {
+  assetId: string;
+  assetData: AssetData;
+}
 
 // Custom hook for deploying edition drop contract
-const useDeployEditionDrop = () => {
+const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
   const toast = useToast();
   const address = useAddress();
   const signer = useSigner();
-  const [editionDropAddress, setEditionDropAddress] = useState<string | null>(null);
 
   if (address && signer) {
     const sdk = ThirdwebSDK.fromSigner(signer)
@@ -21,30 +26,42 @@ const useDeployEditionDrop = () => {
       const deployEditionDrop = async () => {
         try {
           // Deploy the edition drop contract
-          const editionDropAddress = await sdk?.deployer.deployEditionDrop({
-            name: 'Creative Episode Drop', // Name of the contract
-            primary_sale_recipient: address, // Wallet address to receive funds from sales
-            // Optional Platform fee information
-            description: 'An episode of Creative TV', // Description of your contract
-            symbol: 'EPISD',
-            image: 'https://storage.unlock-protocol.com/b7ed38f5-1c6f-4747-af62-250dbc6afafc',
-            platform_fee_basis_points: 100,
+          const editionDropAddress = await sdk.deployer.deployBuiltInContract('editionDrop', {
+            name: 'CRTV Episode Drop', // Name of the edition drop
+            primary_sale_recipient: address, // Address of the primary sale recipient
+            app_uri: "https://tv.creativeplatform.xyz", // Website of your contract dApp
+            symbol: 'EPISD', // Symbol of the edition drop
+            tokenURI: `https://ipfs.io/ipfs/${assetData.properties.videoIpfs}`, // IPFS URI of the video
+            platform_fee_basis_points: 200,
             platform_fee_recipient: CREATIVE_ADDRESS,
             fee_recipient: address,
-            seller_fee_basis_points: 100,
+            seller_fee_basis_points: 300,
+            metadata: {
+              name: assetData.title, // Title of the video
+              description: assetData.description, // Description of the video
+              image: assetData.image_url, // Thumbnail of the video
+              properties: {
+                playbackId: assetData.properties.playbackId, // Playback ID of the video
+                videoIpfs: assetData.properties.videoIpfs, // IPFS URI of the video
+              },
+            },
           });
 
           // Update the editionDropAddress state in the parent component
-          setEditionDropAddress(editionDropAddress);
+          // setEditionDropAddress(editionDropAddress);
   
           // Get the contract instance
-          const editionDrop = await sdk?.getContract(`${editionDropAddress}`, videoNftAbi);
-  
+          const editionDrop = await sdk?.getContract(`${editionDropAddress}`);
+          console.log('✅ Successfully deployed editionDrop contract, address:', editionDropAddress);
+
           // Get the metadata of the contract
           const metadata = await editionDrop?.metadata.get();
-  
-          console.log('✅ Successfully deployed editionDrop contract, address:', editionDropAddress);
           console.log('✅ editionDrop metadata:', metadata);
+
+          // Lazy mint the NFT
+          const lazyMintNft = async ()=> {
+            const { mutateAsync, isLoading, error } = useContractWrite(editionDrop, "lazyMint");
+          };
   
           // Show toast notification for successful verification
           toast({
@@ -61,7 +78,7 @@ const useDeployEditionDrop = () => {
   
       // Call the deployEditionDrop function when the component mounts
       deployEditionDrop();
-    }, [sdk, toast, setEditionDropAddress]);
+    }, [sdk, toast]);
 
   } else {
     console.log('address not found')
@@ -73,9 +90,6 @@ const useDeployEditionDrop = () => {
       isClosable: true,
     });
   }
-
-  // Return any necessary values or functions here
-  return editionDropAddress
 };
 
 export default useDeployEditionDrop;

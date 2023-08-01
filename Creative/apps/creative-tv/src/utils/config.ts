@@ -72,14 +72,14 @@ export const CAROUSEL_PLAYLISTS = {
   0: {
     title: 'Trending 📊',
     description: 'The most popular content on Creative TV.',
-    playbackId_1: 'd82af4v0nip5tka7',
     name_1: 'The Wizards Hat ⌐◨-◨ Animated Short Film',
-    playbackId_2: 'c3c7u34h2y47jqpd',
-    name_2:'Scary Gary Chucks',
-    playbackId_3: '4d8b5ud89j96qkwt',
+    playbackId_1: 'd82af4v0nip5tka7',
+    name_2:'DAO Palace Documentary',
+    playbackId_2: 'a2b2fcgqx7ghfpxj',
     name_3: 'This is Nouns',
-    playbackId_4: '6461dsqs9qjr1dji',
+    playbackId_3: '4d8b5ud89j96qkwt',
     name_4: 'Episode 1 - Wait a minute, who are you?',
+    playbackId_4: '6461dsqs9qjr1dji',
   }
 }
 
@@ -92,6 +92,11 @@ export const MUMBAI_CHAIN = [Mumbai]
 export const TRANSACTION_TITLES = {
   transactionStarted: 'Local Transaction Started',
   transactionSucceed: 'Local Transaction Completed',
+}
+
+// EPISODE DROP CONTRACT ADDRESS
+export const EPISODE_DROP_ADDRESS = {
+  testnet: '0xE675e85ccf7b8ADB2E466fc06662319628B75a9F',
 }
 
 // Unlock Contracts (Polygon)
@@ -133,6 +138,9 @@ export const SMART_WALLET_CONFIG= {
 // CREATIVE ADDRESS
 export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
 
+// CREATIVE TRANSFER (XFER)
+export const TRANSFER_CONTRACT_ADDRESS = '0xBd25C36811Df69d080735eC53Ea4A61C55FdccCd'
+
 export const UNLOCK_API_URL = 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
 export const UNLOCK_QUERY_HOLDS_KEY = gql`
   query keysForLock($lockAddresses: [String!]!, $walletAddress: String!) {
@@ -147,7 +155,7 @@ export const UNLOCK_QUERY_HOLDS_KEY = gql`
 
 // Livepeer API
 export const LIVEPEER_API_URL = 'https://livepeer.com/api'
-export const LIVEPEER_HERO_PLAYBACK_ID = '3713lxes2gdtl77t' // Welcome To Creative Organization DAO
+export const LIVEPEER_HERO_PLAYBACK_ID = 'cbd1dw72qst9xmps' // Welcome To Creative Organization DAO
 export const LIVEPEER_FEATURED_PLAYBACK_ID = '5c2bzf537qbq0r7o'// The Creative Podcast Episode 03
 
 export const SERVER_SESSION_SETTINGS = {

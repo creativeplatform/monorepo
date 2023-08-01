@@ -34,7 +34,7 @@ export default function MeTokenCreationForm() {
       setPageType('buy')
     }
   }, [address])
-  console.log(pageType)
+
   useEffect(() => {
     const addy = ethers.utils.getAddress(router.query.address as string) || address
     if (!addy || !signer) return

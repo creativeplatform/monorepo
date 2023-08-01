@@ -7,30 +7,37 @@ import {
   Heading,
   Text,
   Button,
-  Image,
   Icon,
   IconButton,
   createIcon,
   IconProps,
   useColorModeValue,
 } from '@chakra-ui/react'
+import Image from "next/image"
 import { useRouter } from 'next/router'
-import { LIVEPEER_HERO_PLAYBACK_ID, NEXT_PUBLIC_STUDIO_API_KEY } from 'utils/config'
-import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS, HERO_IMAGE, FOOTER_LINKS } from 'utils/context'
-import { createReactClient, studioProvider, LivepeerConfig, Player } from '@livepeer/react'
-
-const client = createReactClient({
-  provider: studioProvider({ apiKey: NEXT_PUBLIC_STUDIO_API_KEY }),
-})
+import { LIVEPEER_HERO_PLAYBACK_ID } from 'utils/config'
+import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS, HERO_IMAGE } from 'utils/context'
+import { LivepeerConfig, Player } from '@livepeer/react'
+import { useLivepeerClient } from 'hooks/useLivepeerClient'
+import { CREATIVE_LOGO_BLK } from 'utils/context'
 
 const PosterImage = () => {
-  return <Image src={HERO_IMAGE} height={'100%'} objectFit="cover" alt="Creative Warrior" placeholder="blur" />
+  return (
+    <Image
+      src={ CREATIVE_LOGO_BLK }
+      style={{ objectFit: "contain" }}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      alt="Creative Logo"
+      fill
+      priority
+    />
+  )
 }
 
 export default function HeroSection() {
   const router = useRouter()
   return (
-    <LivepeerConfig client={client}>
+    <LivepeerConfig client={useLivepeerClient}>
       <Container maxW={'7xl'}>
         <Stack align={'center'} spacing={{ base: 8, md: 10 }} py={{ base: 20, md: 28 }} direction={{ base: 'column', md: 'row' }}>
           <Stack flex={1} spacing={{ base: 5, md: 10 }}>
