@@ -27,16 +27,17 @@ export default function App({ Component, pageProps }: AppProps) {
             <ThirdwebProvider
             activeChain={activeChain}
             supportedWallets={[
-              smartWallet({
+              metamaskWallet(),
+              /* smartWallet({
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
                 thirdwebApiKey: SMART_WALLET_KEY,
-                gasless: true,
+                gasless: false,
                 personalWallets: [
                   metamaskWallet(),
                   coinbaseWallet(),
                   localWallet({ persist: true })
                 ]
-              })
+              }) */
             ]}
           >
               <Layout>

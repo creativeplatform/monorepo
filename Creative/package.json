@@ -40,6 +40,7 @@
   },
   "packageManager": "yarn@1.22.19",
   "dependencies": {
-    "@orbisclub/orbis-sdk": "^0.4.70"
+    "@orbisclub/orbis-sdk": "^0.4.70",
+    "react-hook-form": "^7.45.2"
   }
 }
