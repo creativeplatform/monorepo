@@ -10,7 +10,7 @@ export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
 
-declare var process: {
+/* declare var process: {
   env: {
     NEXT_PUBLIC_STUDIO_API_KEY: string,
     NEXT_SESSION_PASSWORD: string,
@@ -23,7 +23,7 @@ declare var process: {
     NEXT_PUBLIC_SMART_WALLET_API_KEY: string
     NEXT_PUBLIC_EXPLORER_KEY: string
   }
-}
+} */
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
 export const NODE_ENV = process.env.NODE_ENV
@@ -51,6 +51,8 @@ export const THEME_COLOR_SCHEME: ThemingProps['colorScheme'] = 'brand'
 export const THEME_CONFIG = {
   initialColorMode: THEME_INITIAL_COLOR,
 }
+
+export const GOERLI_PROVIDER_URL = 'https://ethereum-goerli.publicnode.com'
 
 export const EXPLORER_API_URL = {
   GOERLI: 'https://api-goerli.etherscan.io/',
@@ -186,7 +188,6 @@ export const METOKENS_ADDRESS_MAINNET = {
   metokensRegistryFactory: '0x8b91FcF2230ab04A46e2D83aaF062EC1B5AAAa5c',
   meTokenDiamond: '0x0B4ec400e8D10218D0869a5b0036eA4BCf92d905',
 }
-
 // METOKENS CONTRACT ABI
 
 export const FOUNDRY_FACET_ABI = [
@@ -1090,7 +1091,7 @@ export const METOKENS_REGISTRY_ABI = [
 ]
 
 export const METOKENS_DIAMOND_ABI = [
- 
+
   {
   "inputs": [
   {
