@@ -41,6 +41,8 @@ import {
   AccordionIcon,
   AccordionPanel,
   DrawerHeader,
+  Tag,
+  TagLabel,
 } from '@chakra-ui/react'
 import truncateEthAddress from 'truncate-eth-address'
 import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
@@ -316,7 +318,7 @@ export function Header({ className, handleLoading }: Props) {
                   <Button
                     bg={bg}
                     color="black.700"
-                    px="0"
+                    px="2"
                     display="inline-flex"
                     alignItems="center"
                     fontSize="14px"
@@ -327,6 +329,16 @@ export function Header({ className, handleLoading }: Props) {
                        router.push('https://kidz.creativeplatform.xyz')}}>
                     CREATIVE Kidz ⌐◨-◨
                   </Button>
+                  <Tag size={'md'} bg={useColorModeValue('red.300', 'red.800')} borderRadius={'full'} ml={2} color={'white'}>
+                    <Avatar
+                      src='/7ee2e00167cad6ac24339f8246cfdb11.png' 
+                      size='xs'
+                      name='Creative Kidz'
+                      ml={-1}
+                      mr={2}
+                    />
+                    <TagLabel>Coming Soon</TagLabel>
+                  </Tag>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -513,9 +525,19 @@ export function Header({ className, handleLoading }: Props) {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
+                  <Tag size={'md'} bg={useColorModeValue('red.300', 'red.800')} borderRadius={'full'} color={'white'}>
+                    <Avatar
+                      src='/7ee2e00167cad6ac24339f8246cfdb11.png' 
+                      size='xs'
+                      name='Creative Kidz'
+                      ml={-1}
+                      mr={2}
+                    />
+                    <TagLabel>Coming Soon</TagLabel>
+                  </Tag>
                     <Button
                       color="black.700"
-                      px="0"
+                      px="2"
                       display="inline-flex"
                       alignItems="center"
                       fontSize="14px"
@@ -524,7 +546,7 @@ export function Header({ className, handleLoading }: Props) {
                       _focus={{ boxShadow: 'none' }}
                       onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
                       CREATIVE Kidz ⌐◨-◨
-                    </Button>
+                    </Button> 
                   </PopoverContent>
                 </Popover>
                 <Button
