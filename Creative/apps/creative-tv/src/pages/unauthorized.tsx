@@ -23,7 +23,7 @@ export default function Unauthorized() {
     redirectUri: `${ HOST }/discover`,
   }
   url.searchParams.append('paywallConfig', JSON.stringify(paywallConfig))
-  url.searchParams.append('redirectTo', HOST )
+  url.searchParams.append('redirectTo', HOST || '' )
 
   return (
     <>
