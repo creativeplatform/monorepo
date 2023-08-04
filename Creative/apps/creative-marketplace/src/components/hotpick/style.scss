@@ -1,0 +1,82 @@
+
+@use '../../scss/' as *;
+.react-tabs__tab-list {
+    @include flex(center,left);
+    margin-bottom: 39px;
+    @include desktop-1200 {
+        flex-wrap: wrap;
+        li {
+            margin-top: 10px;
+        }
+    }
+    li {
+        padding: 7.5px 16px;
+        margin-right: 14.5px;
+        border-radius: 100px;
+        border: 1px solid var(--primary-color36);
+        background-color: var(--primary-color22);
+        color: #565660;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 22px;
+        letter-spacing: 0.1em;
+        @include transition3;
+        cursor: pointer;
+
+        &.react-tabs__tab--selected,&:hover {
+            background-color: #EC407A;
+            border-color: #EC407A;
+            color: #fff;
+        }
+    }
+}
+
+.tf-center .react-tabs__tab-list {
+    justify-content: center;
+        li {
+            border-radius: 12px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+}
+.dropdown .dropdown-toggle {
+    background-color: var(--primary-color6);
+    border-color: var(--primary-color36);
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--primary-color5);
+    
+}
+
+.show > .btn-primary.dropdown-toggle{
+    background-color: var(--primary-color6);
+    border-color: var(--primary-color36);
+    box-shadow: none;
+    outline: none;
+    color: var(--primary-color5);
+}
+
+.dropdown-menu {
+    background-color: var(--primary-color6);
+    border-color: var(--primary-color36);
+    border-radius: 10px;
+    width: 100%;
+
+    .dropdown-item {
+        background: transparent;
+        padding: 0px 10px;
+    }
+}
+
+.sidebar-explore .dropdown .dropdown-toggle {
+    text-align: left;
+    width: 100%;
+    font-weight: 400;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 12px 16px;
+    border: 1px solid var(--primary-color47);
+}

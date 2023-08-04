@@ -1,0 +1,49 @@
+@use '../../scss/' as *;
+.tf-page-title {
+    padding: 24px 0 0;
+    &.style-2 {
+        padding: 24px 0 15px;
+    }
+    .breadcrumbs {
+        margin-bottom: 43px;
+        width: 100%;
+        @include flex(center,left);
+        li {
+            font-weight: 700;
+            display: inline-block;
+            padding: 0 0 0 33px;
+            color: var(--primary-color3);
+            position: relative;
+            a {
+                font-weight: 700;
+                position: relative;
+                color: var(--primary-color8);
+                
+            }
+            &::after {
+                content: "\f105";
+                font-family: 'Font Awesome 5 Pro';
+                position: absolute;
+                color: #8A8AA0;
+                left: 15px;
+                top: 0;
+              
+            }
+
+            &:first-child {
+                padding: 0;
+                &::after {
+                    display: none;
+                }
+            }
+        }
+    }
+    .page-title-heading {
+        color: var(--primary-color5) ;
+    }
+    &.style-2 {
+        .breadcrumbs {
+            margin-bottom: 0;
+        }
+    }
+}
