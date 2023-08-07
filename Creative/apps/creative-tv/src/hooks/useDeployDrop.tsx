@@ -26,7 +26,7 @@ const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
       const deployEditionDrop = async () => {
         try {
           // Deploy the edition drop contract
-          const editionDropAddress = await sdk.deployer.deployBuiltInContract('editionDrop', {
+          const editionDropAddress = await sdk.deployer.deployBuiltInContract('edition-drop', {
             name: 'CRTV Episode Drop', // Name of the edition drop
             primary_sale_recipient: address, // Address of the primary sale recipient
             app_uri: "https://tv.creativeplatform.xyz", // Website of your contract dApp
@@ -58,10 +58,10 @@ const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
           const metadata = await editionDrop?.metadata.get();
           console.log('✅ editionDrop metadata:', metadata);
 
-          // Lazy mint the NFT
-          const lazyMintNft = async ()=> {
-            const { mutateAsync, isLoading, error } = useContractWrite(editionDrop, "lazyMint");
-          };
+          // TODO: Lazy mint the NFT
+          // const lazyMintNft = async ()=> {
+          //   const { mutateAsync, isLoading, error } = useContractWrite(editionDrop, "lazyMint");
+          // };
   
           // Show toast notification for successful verification
           toast({
