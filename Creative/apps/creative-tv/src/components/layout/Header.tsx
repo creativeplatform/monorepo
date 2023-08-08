@@ -53,6 +53,8 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { ThemeSwitcher } from './ThemeSwitcher'
+import { Paywall } from '@unlock-protocol/paywall'
+import { Goerli } from '@thirdweb-dev/chains'
 import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useSDK, useSigner } from '@thirdweb-dev/react'
 import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
@@ -143,7 +145,7 @@ export function Header({ className, handleLoading }: Props) {
   const handlePaywallCheckout = async () => {
     const provider = 'goerli.rpc.thirdweb.com'
 
-    const paywall = new Paywall(networks)
+    const paywall = new Paywall()
       paywall.connect(provider) // provider from Thirdweb
       paywall.loadCheckoutModal({
         locks: {
