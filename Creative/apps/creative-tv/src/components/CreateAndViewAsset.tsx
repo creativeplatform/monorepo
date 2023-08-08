@@ -62,7 +62,7 @@ const CreateAndViewAsset = () => {
     },
   });
 
-  const { register, handleSubmit, formState: { errors } } = useForm<AssetData>();
+  const { register, handleSubmit, getValues, formState: { errors }, reset } = useForm<AssetData>();
 
   const onSubmit = (data: AssetData) => {
     console.log(data);
@@ -164,11 +164,12 @@ const CreateAndViewAsset = () => {
           </Flex>
         </Box>
       )}
-      {createdAsset?.[0]?.playbackId && <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />}
+      {createdAsset && createdAsset.length > 0 && 
+        <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
+      }      
       {/* Form for asset name and description */}
-      <Box my={4} maxWidth={400} mx={'auto'}>
+      <Box as='form' my={4} maxWidth={400} mx={'auto'} onSubmit={handleSubmit(onSubmit)}>
       {!createdAsset?.[0]?.id && (
-        <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl id="assetData" isRequired>
           <FormLabel>Episode Title</FormLabel>
           <Input placeholder="Enter the name of the video" type='text' {...register('title', { required: true })} value={assetName} onChange={(e) => setAssetName(e.target.value)}/>
@@ -189,23 +190,21 @@ const CreateAndViewAsset = () => {
             <FormErrorMessage>Episode description is required.</FormErrorMessage>
           )}
           </FormControl>
-        {video ? <Badge className="video-name">{assetName}</Badge> : null}
-        {progressFormatted && <Text className="processing-video">{progressFormatted}</Text>}
-          <Button
-            type='submit'
-            className="upload-button"
-            as={motion.div}
-            bgColor="#EC407A"
-            _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-            onClick={() => {
-              createAsset?.();
-            }}
-            disabled={!createAsset}
-          >
-            Upload Video
-          </Button>
-          </form>
         )}
+           <Button
+           type='submit'
+           className="upload-button"
+           mt={4}
+           as={motion.div}
+           bgColor="#EC407A"
+           _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+           onClick={() => {
+             createAsset?.();
+           }}
+           disabled={!createAsset}
+         >
+           Upload Video
+         </Button>
       </Box>
       {createdAsset && (
         <Box className="Proceed-button">

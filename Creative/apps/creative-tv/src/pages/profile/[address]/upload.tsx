@@ -17,7 +17,7 @@ export default function Upload() {
                 <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem isCurrentPage className="active-crumb">
-                <BreadcrumbLink>Upload Video Assets</BreadcrumbLink>
+                <BreadcrumbLink>Upload Video</BreadcrumbLink>
               </BreadcrumbItem>
             </Breadcrumb>
             <UploadVideoAsset>{''}</UploadVideoAsset>

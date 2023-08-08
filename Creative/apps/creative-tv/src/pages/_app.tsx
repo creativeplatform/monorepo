@@ -26,19 +26,16 @@ export default function App({ Component, pageProps }: AppProps) {
         {isMounted && (
             <ThirdwebProvider
             activeChain={activeChain}
+            autoSwitch={true}
             supportedWallets={[
-              metamaskWallet(),
-              /* smartWallet({
+              smartWallet({
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
-                thirdwebApiKey: SMART_WALLET_KEY,
-                gasless: false,
-                personalWallets: [
-                  metamaskWallet(),
-                  coinbaseWallet(),
-                  localWallet({ persist: true })
-                ]
-              }) */
+                gasless: true,
+                // this is the default
+                personalWallets: [metamaskWallet(), coinbaseWallet(), localWallet()]
+              }),
             ]}
+            clientId={SMART_WALLET_KEY}
           >
               <Layout>
                 <Component {...pageProps} />
