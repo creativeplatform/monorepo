@@ -15,6 +15,7 @@ export declare const POLYGONSCAN_API_KEY: string | undefined;
 export declare const HOST: string | undefined;
 export declare const SMART_WALLET_KEY: string | undefined;
 export declare const EXPLORER_KEY: string | undefined;
+export declare const PAPER_CLIENT_ID: string | undefined;
 export declare const THEME_INITIAL_COLOR = "system";
 export declare const THEME_COLOR_MODES: Record<string, any>;
 export declare const THEME_COLOR_SCHEME: ThemingProps['colorScheme'];

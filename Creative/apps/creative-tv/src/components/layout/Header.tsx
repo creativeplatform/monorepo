@@ -53,6 +53,8 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { ThemeSwitcher } from './ThemeSwitcher'
+import { Paywall } from '@unlock-protocol/paywall'
+import { Goerli } from '@thirdweb-dev/chains'
 import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useSDK, useSigner } from '@thirdweb-dev/react'
 import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
@@ -130,6 +132,52 @@ export function Header({ className, handleLoading }: Props) {
       duration: 5000,
       isClosable: true,
     })
+  }
+
+  // Configure networks to use
+  // You can also use @unlock-protocol/networks for convenience...
+
+  // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
+  // If no provider is set, the library uses window.ethereum
+  
+
+    // Loads the checkout UI
+  const handlePaywallCheckout = async () => {
+    const provider = 'goerli.rpc.thirdweb.com'
+
+    const paywall = new Paywall()
+      paywall.connect(provider) // provider from Thirdweb
+      paywall.loadCheckoutModal({
+        locks: {
+          [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
+            network: Goerli,
+          }
+        },
+        pessimistic: true,
+        recipient: address, // from new SmartWallet(config);
+      })
+    try {
+      const response = await paywall.loadCheckoutModal();
+      // Handle the response from the paywall modal
+      console.log(response);
+      toast({
+        title: 'Welcome Creative',
+        description: 'Successfully Subscribed 🎉',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
+    } catch (error) {
+      // Handle any errors that occur during the checkout process
+      console.error(error);
+      toast({
+        title: 'Error',
+        description: `${error}`,
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+      })
+    }
   }
 
   const [y, setY] = useState(0)
