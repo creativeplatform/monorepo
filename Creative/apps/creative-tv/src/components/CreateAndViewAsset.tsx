@@ -24,6 +24,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { VideoPreview } from './videoPreview'
+import { decimals } from 'utils/constant'
 
 export interface AssetData {
   title: string
@@ -38,9 +39,11 @@ export interface AssetData {
 }
 
 export interface MintDetail {
-  numToMint: number
+  nFTAmountToMint: number
   pricePerNFT: number
 }
+
+
 
 // Add MintDetails to AssetData
 export interface AssetData extends Partial<MintDetail> {}
@@ -53,6 +56,10 @@ const CreateAndViewAsset = () => {
   const [video, setVideo] = useState<File | null>(null) // Note: The `video` state variable stores the selected video file.
 
   const [assetName, setAssetName] = useState<string>('') // Note: The `assetName` state variable stores the name of the asset entered by the user.
+
+  const [nFTAmountToMint, setnFTAmountToMint] = useState(0) // Note: The `nFTAmountToMint` state variable stores the amount of nft to mint.
+
+  const [pricePerNFT, setPricePerNFT] = useState(0) // Note: The `pricePerNFT` state variable stores the price of an nft being minted.
 
   const [description, setDescription] = useState<string>('') // Note: The `description` state variable stores the description of the asset entered by the user.
 
@@ -181,32 +188,31 @@ const CreateAndViewAsset = () => {
     if (isError) {
       return
     }
-    createAsset && createAsset()
 
     setAssetData((prev) => ({
       ...prev,
       title: data.title,
       description: data.description,
     }))
+
+    createAsset && createAsset()
   }
 
-  const { handleSubmit: handleMintSubmit, control: handleMintControl, formState } = useForm<MintDetail>()
-  const isRequiredFields = formState.errors.numToMint?.type === 'required' || formState.errors.pricePerNFT?.type === 'required'
+  const { handleSubmit: handleMintSubmit, control: handleMintControl, formState: mintFormState } = useForm<MintDetail>()
+  const isRequiredFields = mintFormState.errors.nFTAmountToMint?.type === 'required' || mintFormState.errors.pricePerNFT?.type === 'required'
 
   const handleAssetMint: SubmitHandler<MintDetail> = (data) => {
     if (isRequiredFields) {
       return
     }
 
-    setAssetData((prev) => ({
-      ...prev,
-      numToMint: data.numToMint,
-      pricePerNFT: data.pricePerNFT,
-      properties: {
-        playbackId: String(createdAsset?.[0]?.playbackId),
-        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
+    router.push({
+      pathname: '/mint-nft-video',
+      query: {
+        assetId: createdAsset?.[0].id,
+        assetData: JSON.stringify(assetData),
       },
-    }))
+    })
   }
 
   return (
@@ -221,6 +227,8 @@ const CreateAndViewAsset = () => {
           </Box>
         </Box>
       )}
+
+      {createAssetError?.message && <Text> {createAssetError.message} </Text>}
 
       {isFileSelected && (
         <>
@@ -304,7 +312,7 @@ const CreateAndViewAsset = () => {
                     transform: isError && 'scale(1.015)',
                     cursor: progress?.[0]?.phase === 'uploading' ? 'pointer' : 'disabled',
                   }}
-                  disabled={createAssetStatus == 'loading' || !createAsset}>
+                  disabled={createAssetStatus == 'loading' || !createAsset} mb={20}>
                   Upload Video
                 </Button>
               </form>
@@ -319,41 +327,50 @@ const CreateAndViewAsset = () => {
             <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
           </div>
 
-          <Box className="Proceed-button">
-            <Stack spacing="20px" my={12}>
-              {JSON.stringify(createdAsset)}
+          <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} >
+            <Text as={'h3'} style={{ fontWeight: '600', fontSize: 24, marginBottom: 24 }}>
+              Asset uploaded successfully.
+            </Text>
+
+            <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
+            <div style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
               <p>Asset Name: {createdAsset?.[0]?.name}</p>
               <p>Playback URL: {createdAsset?.[0]?.playbackUrl}</p>
               <p>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</p>
-            </Stack>
-
+            </div>
+          </Stack>
+          <Box className="Proceed-button">
             <Box my={12} maxWidth={400} mx={'auto'}>
               <form onSubmit={handleMintSubmit(handleAssetMint)}>
                 <FormControl id="assetMintDetail" mb={8}>
                   <FormLabel>Number of NFTs to mint?</FormLabel>
                   <Controller
-                    name="numToMint"
+                    name="nFTAmountToMint"
                     control={handleMintControl}
                     rules={{ required: true, min: 1, max: 100 }}
                     render={({ field }) => (
                       <Input
-                        type="number"
                         size={'lg'}
-                        {...field}
-                        mb={formState.errors.numToMint ? 0 : 4}
-                        disabled={formState.isLoading}
+                        type="number"
+                        onChange={(e) => {
+                          setnFTAmountToMint(+e.target.value * decimals)
+                          field.onChange(e)
+                        }}
+                        value={field.value}
+                        mb={formErrors.nFTAmountToMint ? 0 : 4}
+                        disabled={mintFormState.isLoading}
                         placeholder="Enter number of nft(s) to mint"
-                        aria-invalid={formState.errors.numToMint ? 'true' : 'false'}
+                        aria-invalid={formErrors.nFTAmountToMint ? 'true' : 'false'}
                       />
                     )}
                   />
-                  {formState.errors.numToMint && formState.errors.numToMint.type === 'required' && (
+                  {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'required' && (
                     <FormHelperText mb="32px">Numbers of NFT to mint is required.</FormHelperText>
                   )}
-                  {formState.errors.numToMint && formState.errors.numToMint.type === 'min' && (
+                  {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'min' && (
                     <FormHelperText mb="32px">You can't mint 0 nft. Try 1 - 100.</FormHelperText>
                   )}
-                  {formState.errors.numToMint && formState.errors.numToMint.type === 'max' && (
+                  {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'max' && (
                     <FormHelperText mb="32px">You can't mint more than 100 nfts.</FormHelperText>
                   )}
                   <FormLabel mt={4}>Price per NFT</FormLabel>
@@ -365,18 +382,22 @@ const CreateAndViewAsset = () => {
                       <Input
                         type="number"
                         size={'lg'}
-                        {...field}
-                        disabled={formState.isLoading}
-                        mb={formState.errors.pricePerNFT ? 0 : 4}
+                        onChange={(e: any) => {
+                          setPricePerNFT(e.target.value)
+                          field.onChange(e)
+                        }}
+                        value={field.value}
+                        mb={mintFormState.errors.pricePerNFT ? 0 : 4}
+                        disabled={mintFormState.isLoading}
                         placeholder="Enter price per NFT"
-                        aria-invalid={formState.errors.numToMint ? 'true' : 'false'}
+                        aria-invalid={formErrors.nFTAmountToMint ? 'true' : 'false'}
                       />
                     )}
                   />
-                  {formState.errors.pricePerNFT && formState.errors.pricePerNFT.type == 'required' && (
+                  {mintFormState.errors.pricePerNFT && mintFormState.errors.pricePerNFT.type == 'required' && (
                     <FormHelperText mb={4}>Price per NFT is required.</FormHelperText>
                   )}
-                  {formState.errors.pricePerNFT && formState.errors.pricePerNFT.type === 'min' && (
+                  {mintFormState.errors.pricePerNFT && mintFormState.errors.pricePerNFT.type === 'min' && (
                     <FormHelperText mb={4}>The price can't be a negative value.</FormHelperText>
                   )}
                 </FormControl>
@@ -385,17 +406,19 @@ const CreateAndViewAsset = () => {
                   type="submit"
                   className="mint-button"
                   bgColor="#EC407A"
-                  disabled={formState.isLoading}
+                  disabled={mintFormState.isLoading}
                   _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
                   // as={motion.div}
                   onClick={() => {
-                    router.push({
-                      pathname: '/mint-nft-video',
-                      query: {
-                        assetId: createdAsset?.[0].id,
-                        assetData: JSON.stringify(assetData),
+                    setAssetData((prev) => ({
+                      ...prev,
+                      nFTAmountToMint: nFTAmountToMint,
+                      pricePerNFT: pricePerNFT,
+                      properties: {
+                        playbackId: String(createdAsset?.[0]?.playbackId),
+                        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
                       },
-                    })
+                    }))
                   }}>
                   Proceed to Mint NFT
                 </Button>
