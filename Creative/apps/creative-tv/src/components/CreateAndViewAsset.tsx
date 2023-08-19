@@ -24,7 +24,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { VideoPreview } from './videoPreview'
-import { decimals } from 'utils/constant'
 
 export interface AssetData {
   title: string
@@ -42,8 +41,6 @@ export interface MintDetail {
   nFTAmountToMint: number
   pricePerNFT: number
 }
-
-
 
 // Add MintDetails to AssetData
 export interface AssetData extends Partial<MintDetail> {}
@@ -310,9 +307,10 @@ const CreateAndViewAsset = () => {
                   _hover={{
                     color: 'gray.800',
                     transform: isError && 'scale(1.015)',
-                    cursor: progress?.[0]?.phase === 'uploading' ? 'pointer' : 'disabled',
+                    cursor: progress?.[0]?.phase === 'uploading' ? 'progress' : 'pointer',
                   }}
-                  disabled={createAssetStatus == 'loading' || !createAsset} mb={20}>
+                  disabled={createAssetStatus == 'loading' || !createAsset}
+                  mb={20}>
                   Upload Video
                 </Button>
               </form>
@@ -327,7 +325,7 @@ const CreateAndViewAsset = () => {
             <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
           </div>
 
-          <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} >
+          <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }}>
             <Text as={'h3'} style={{ fontWeight: '600', fontSize: 24, marginBottom: 24 }}>
               Asset uploaded successfully.
             </Text>
@@ -353,7 +351,7 @@ const CreateAndViewAsset = () => {
                         size={'lg'}
                         type="number"
                         onChange={(e) => {
-                          setnFTAmountToMint(+e.target.value * decimals)
+                          setnFTAmountToMint(+e.target.value)
                           field.onChange(e)
                         }}
                         value={field.value}

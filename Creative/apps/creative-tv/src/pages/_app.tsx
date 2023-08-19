@@ -1,17 +1,17 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { Goerli } from '@thirdweb-dev/chains'
 import { ThirdwebProvider, metamaskWallet } from '@thirdweb-dev/react'
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from 'providers/Chakra'
+import { ETH_CHAINS, NEXT_PUBLIC_THIRDWEB_API_KEY } from '../utils/config'
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-const activeChain = Goerli
+const activeChain = ETH_CHAINS[0]
 
 export default function App({ Component, pageProps }: AppProps) {
   const isMounted = useIsMounted()
@@ -24,7 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         {isMounted && (
           <ThirdwebProvider
-        
+            clientId={NEXT_PUBLIC_THIRDWEB_API_KEY}
             activeChain={activeChain}
             supportedWallets={[
               metamaskWallet(),

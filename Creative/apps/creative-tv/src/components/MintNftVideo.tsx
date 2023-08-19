@@ -1,11 +1,10 @@
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
-import { useLivepeerClient } from 'hooks/useLivepeerClient'
+import {useLivepeerClient} from '../hooks/useLivepeerClient';
 import { useRouter } from 'next/router'
 import { ReactNode, useMemo } from 'react'
 import { AssetData } from './CreateAndViewAsset'
 import WagmiNft from './WagmiNft'
-import { MediaRenderer } from '@thirdweb-dev/react'
 
 interface HeaderProps {
   children: ReactNode
@@ -17,7 +16,6 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
   const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : ''), [router?.query])
 
   const assetData = useMemo<AssetData>(() => (router?.query?.assetData ? JSON.parse(router?.query?.assetData as any) : {}), [router?.query])
-
 
   return (
     <LivepeerConfig client={useLivepeerClient}>
