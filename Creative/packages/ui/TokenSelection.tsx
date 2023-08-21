@@ -26,7 +26,7 @@ export default function TokenSelection({ tokenAddress, isSelected }: Props) {
         <Card p={4} mr={2} border={"2px solid"} borderColor={coinBorderColor}>
             {!isTokenMetadataLoading ? (
                 <Box>
-                    <Text>{tokenMetadata.symbol}</Text>
+                    <Text>{tokenMetadata?.symbol}</Text>
                 </Box>
             ) : (
                 <Spinner />
