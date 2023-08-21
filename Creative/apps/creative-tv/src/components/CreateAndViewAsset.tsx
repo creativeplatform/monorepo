@@ -4,8 +4,6 @@ import {
   AlertIcon,
   Box,
   Button,
-  CircularProgress,
-  CircularProgressLabel,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -156,15 +154,11 @@ const CreateAndViewAsset = () => {
     if (progress?.[0]?.phase === 'failed') {
       return <p>Failed to process video.</p>
     } else if (progress?.[0]?.phase === 'waiting') {
-      return <Spinner thickness="4px" color="#EC407A" size={'lg'} emptyColor="gray.200" />
+      return <Spinner thickness="4px" color="#EC407A" size={'md'} emptyColor="gray.200" />
     } else if (progress?.[0]?.phase === 'uploading') {
-      return <Progress value={uploadProgressPercent} colorScheme="cyan" hasStripe size="lg" />
+      return <Progress value={uploadProgressPercent} colorScheme="pink" hasStripe size="md" />
     } else if (progress?.[0]?.phase === 'processing') {
-      return (
-        <CircularProgress value={uploadProgressPercent} color="#EC407A">
-          <CircularProgressLabel>{uploadProgressPercent}%</CircularProgressLabel>
-        </CircularProgress>
-      )
+      return <Progress size="md" isIndeterminate colorScheme="pink" />
     } else {
       return null
     }
@@ -307,7 +301,7 @@ const CreateAndViewAsset = () => {
                   _hover={{
                     color: 'gray.800',
                     transform: isError && 'scale(1.015)',
-                    cursor: progress?.[0]?.phase === 'uploading' ? 'progress' : 'pointer',
+                    cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
                   }}
                   disabled={createAssetStatus == 'loading' || !createAsset}
                   mb={20}>

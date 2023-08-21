@@ -20,7 +20,7 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <Box>
-        <Breadcrumb>
+        <Breadcrumb mt={10}>
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
           </BreadcrumbItem>

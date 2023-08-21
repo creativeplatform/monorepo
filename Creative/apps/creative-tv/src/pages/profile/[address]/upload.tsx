@@ -11,8 +11,8 @@ export default function Upload() {
   return (
     <>
       <NextSeo title="Video Upload" />
-      <Container maxW={'1200px'} mt={10}>
-        <Breadcrumb>
+      <Container maxW={'1200px'}>
+        <Breadcrumb mt={10}>
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
           </BreadcrumbItem>
