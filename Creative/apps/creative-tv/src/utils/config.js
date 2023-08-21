@@ -32,6 +32,7 @@ export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY;
 export const HOST = process.env.NEXT_PUBLIC_HOST;
 export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET_API_KEY;
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY;
+export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID;
 export const THEME_INITIAL_COLOR = 'system';
 export const THEME_COLOR_MODES = extendTheme({
     colors: {
