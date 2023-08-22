@@ -463,7 +463,7 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
-                      Subscribe for ${price?.toString()}
+                    Embark on the Adventure
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem
