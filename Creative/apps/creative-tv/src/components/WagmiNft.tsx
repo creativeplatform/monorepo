@@ -1,6 +1,6 @@
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, ThirdwebSDK, Web3Button, useAddress, useContract, useSigner } from '@thirdweb-dev/react'
+import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
@@ -23,7 +23,10 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const toast = useToast()
   const [deployError, setDeployError] = useState('')
   const [isDeploying, setIsDeploying] = useState(false)
+  const [isMinting, setIsMinting] = useState(false)
+  const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+
 
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
   const { contract } = useContract(deployedContractAddress)
@@ -131,6 +134,44 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     }
   }
 
+  // mint nft
+  const mintNFT = async () => {
+    try {
+      setIsMinting(true)
+
+      const txn = await contract?.call('lazyMint', [props.assetData.nFTAmountToMint, asset?.storage?.ipfs?.cid, []])
+
+      if (!txn.receipt) {
+        setIsMinting(false)
+      }
+
+      console.log('[Minted] ', txn.receipt)
+
+      toast({
+        title: 'NFT Minted',
+        description: 'Successfully minted',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      const timeout = setTimeout(() => {
+        router.replace(`/profile/${address}`)
+        clearTimeout(timeout)
+      }, 1000)
+
+    } catch (err: any) {
+      setIsMinting(false)
+      setError(err.message)
+      toast({
+        status: 'error',
+        title: 'NFT not minted',
+        description: err.message,
+        duration: 5000,
+        isClosable: true,
+      })
+    }
+  }
+
   return (
     <Box className="address-mint" minH={'600'}>
       {!address && (
@@ -160,7 +201,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   Your asset is ready to be uploaded to IPFS.
                 </Text>
                 <Button
-                my={8}
+                  my={8}
                   w={'160px'}
                   className="upload-button"
                   bgColor="#EC407A"
@@ -180,7 +221,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
           {!contract?.getAddress() && asset?.storage?.ipfs?.cid ? (
             <>
-          
               <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
                 {/* <MediaRenderer
                   width="100%"
@@ -277,38 +317,13 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   Time to mint your NFTs!
                 </Text>
 
-                <Web3Button
-                  style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}
-                  contractAddress={contract?.getAddress()!}
-                  action={async (contract) => {
-                    // const ext = getAllDetectedExtensionNames(contract.abi)
-                    await contract.call('lazyMint', [props.assetData.nFTAmountToMint, asset?.storage?.ipfs?.cid, []])
-                  }}
-                  onSubmit={() => console.log('Txn submitted')}
-                  onSuccess={() => {
-                    toast({
-                      title: 'NFT Minted',
-                      description: 'Successfully minted',
-                      status: 'success',
-                      duration: 5000,
-                      isClosable: true,
-                    })
-                    const timeout = setTimeout(() => {
-                      router.replace(`/profile/${address}`)
-                      clearTimeout(timeout)
-                    }, 2000)
-                  }}
-                  onError={(err) => {
-                    toast({
-                      status: 'error',
-                      title: 'NFT not minted',
-                      description: err.message,
-                      duration: 5000,
-                      isClosable: true,
-                    })
-                  }}>
-                  Mint NFT
-                </Web3Button>
+                <Button
+                  onClick={mintNFT}
+                  disabled={isMinting}
+                  _hover={{ cursor: isMinting ? 'progress' : 'pointer' }}
+                  style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}>
+                  {isMinting ? 'Minting...' : 'Mint NFT'}
+                </Button>
               </Stack>
             </>
           )}
