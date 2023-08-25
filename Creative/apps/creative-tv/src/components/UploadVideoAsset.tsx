@@ -1,20 +1,15 @@
-import React, { ReactNode, useState } from 'react'
-import { useRouter } from 'next/router'
-import CreateAndViewAsset, { AssetData } from './CreateAndViewAsset'
 import { LivepeerConfig } from '@livepeer/react'
+import { useState } from 'react'
 import { useLivepeerClient } from '../hooks/useLivepeerClient'
+import CreateAndViewAsset, { AssetData } from './CreateAndViewAsset'
 
-interface HeaderProps {
-  children: ReactNode
-}
-
-const UploadVideoAsset = ({ children }: HeaderProps): JSX.Element => {
-  const router = useRouter()
-  const [exportedAsset, setExportedAsset] = useState<AssetData | null>(null);
+const UploadVideoAsset = (): JSX.Element => {
+  const [exportedAsset, setExportedAsset] = useState<AssetData | null>(null)
 
   const handleAssetExport = (asset: AssetData) => {
-    setExportedAsset(asset);
-  };
+    setExportedAsset(asset)
+  }
+
   return (
     <>
       <LivepeerConfig client={useLivepeerClient}>
