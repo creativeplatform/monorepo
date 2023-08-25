@@ -8,6 +8,6 @@ export default function TokenSelection({ tokenAddress, isSelected }) {
     if (isSelected) {
         coinBorderColor = "green.100";
     }
-    return (_jsx(Card, Object.assign({ p: 4, mr: 2, border: "2px solid", borderColor: coinBorderColor }, { children: !isTokenMetadataLoading ? (_jsx(Box, { children: _jsx(Text, { children: tokenMetadata.symbol }) })) : (_jsx(Spinner, {})) })));
+    return (_jsx(Card, Object.assign({ p: 4, mr: 2, border: "2px solid", borderColor: coinBorderColor }, { children: !isTokenMetadataLoading ? (_jsx(Box, { children: _jsx(Text, { children: tokenMetadata === null || tokenMetadata === void 0 ? void 0 : tokenMetadata.symbol }) })) : (_jsx(Spinner, {})) })));
 }
 ;

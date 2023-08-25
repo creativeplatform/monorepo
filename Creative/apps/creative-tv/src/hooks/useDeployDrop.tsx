@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AddressZero } from '@ethersproject/constants';
 import { useToast } from '@chakra-ui/react';
-import { useSDK, useSigner, useAddress, useContractWrite, DropContract } from '@thirdweb-dev/react';
-import { EditionDrop, NFTMetadata, ThirdwebSDK } from '@thirdweb-dev/sdk';
+import { useSigner, useAddress } from '@thirdweb-dev/react';
+import { ThirdwebSDK } from '@thirdweb-dev/sdk';
 import { CREATIVE_ADDRESS } from 'utils/config';
 import { videoNftAbi } from '../components/videoNftAbi'
 import { AssetData } from '../components/CreateAndViewAsset';
@@ -17,6 +17,7 @@ const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
   const toast = useToast();
   const address = useAddress();
   const signer = useSigner();
+  const [ deployedContract, setDeployedContract ] = useState('');
 
   if (address && signer) {
     const sdk = ThirdwebSDK.fromSigner(signer)
@@ -26,7 +27,7 @@ const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
       const deployEditionDrop = async () => {
         try {
           // Deploy the edition drop contract
-          const editionDropAddress = await sdk.deployer.deployBuiltInContract('editionDrop', {
+          const editionDropAddress = await sdk.deployer.deployBuiltInContract('edition-drop', {
             name: 'CRTV Episode Drop', // Name of the edition drop
             primary_sale_recipient: address, // Address of the primary sale recipient
             app_uri: "https://tv.creativeplatform.xyz", // Website of your contract dApp
@@ -48,20 +49,20 @@ const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
           });
 
           // Update the editionDropAddress state in the parent component
-          // setEditionDropAddress(editionDropAddress);
+          setDeployedContract(editionDropAddress);
   
           // Get the contract instance
-          const editionDrop = await sdk?.getContract(`${editionDropAddress}`);
-          console.log('✅ Successfully deployed editionDrop contract, address:', editionDropAddress);
+          const editionDrop = await sdk?.getContract(deployedContract);
+          console.log('✅ Successfully deployed editionDrop contract, address:', editionDrop);
 
           // Get the metadata of the contract
           const metadata = await editionDrop?.metadata.get();
           console.log('✅ editionDrop metadata:', metadata);
 
-          // Lazy mint the NFT
-          const lazyMintNft = async ()=> {
-            const { mutateAsync, isLoading, error } = useContractWrite(editionDrop, "lazyMint");
-          };
+          // TODO: Lazy mint the NFT
+          // const lazyMintNft = async ()=> {
+          //   const { mutateAsync, isLoading, error } = useContractWrite(editionDrop, "lazyMint");
+          // };
   
           // Show toast notification for successful verification
           toast({

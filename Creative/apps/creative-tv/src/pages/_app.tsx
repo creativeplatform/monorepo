@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThirdwebProvider, metamaskWallet } from '@thirdweb-dev/react'
+import { ThirdwebProvider, metamaskWallet, smartWallet, localWallet, coinbaseWallet } from '@thirdweb-dev/react'
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
@@ -26,9 +26,9 @@ export default function App({ Component, pageProps }: AppProps) {
           <ThirdwebProvider
             clientId={NEXT_PUBLIC_THIRDWEB_API_KEY}
             activeChain={activeChain}
+            autoSwitch={true}
             supportedWallets={[
-              metamaskWallet(),
-              /* smartWallet({
+              smartWallet({
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
                 thirdwebApiKey: SMART_WALLET_KEY,
                 gasless: false,
