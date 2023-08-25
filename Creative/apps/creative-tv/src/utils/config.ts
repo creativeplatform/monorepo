@@ -9,20 +9,6 @@ export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
 
-/* declare var process: {
-  env: {
-    NEXT_PUBLIC_STUDIO_API_KEY: string,
-    NEXT_SESSION_PASSWORD: string,
-    NODE_ENV: string,
-    NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
-    NEXT_PUBLIC_ALCHEMY_API_KEY: string,
-    NEXT_PUBLIC_INFURA_API_KEY: string,
-    NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
-    NEXT_PUBLIC_HOST: string,
-    NEXT_PUBLIC_SMART_WALLET_API_KEY: string
-    NEXT_PUBLIC_EXPLORER_KEY: string
-  }
-} */
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
@@ -32,7 +18,6 @@ export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
-export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET_API_KEY
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
 export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 
@@ -132,7 +117,7 @@ export const ACCOUNT_FACTORY_MUMBAI = ''
 export const SMART_WALLET_CONFIG = {
   chain: Goerli, // the chain where your smart wallet will be or is deployed
   factoryAddress: ACCOUNT_FACTORY_TESTNET, // your own deployed account factory address
-  thirdwebApiKey: SMART_WALLET_KEY, // obtained from the thirdweb dashboard
+  thirdwebApiKey: NEXT_PUBLIC_THIRDWEB_API_KEY, // obtained from the thirdweb dashboard
   gasless: true, // enable or disable gasless transactions
 }
 

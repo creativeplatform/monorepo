@@ -6,7 +6,7 @@ import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from 'providers/Chakra'
-import { ETH_CHAINS, NEXT_PUBLIC_THIRDWEB_API_KEY } from '../utils/config'
+import { ETH_CHAINS, NEXT_PUBLIC_THIRDWEB_API_KEY, ACCOUNT_FACTORY_TESTNET } from '../utils/config'
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
@@ -30,14 +30,13 @@ export default function App({ Component, pageProps }: AppProps) {
             supportedWallets={[
               smartWallet({
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
-                thirdwebApiKey: SMART_WALLET_KEY,
                 gasless: false,
                 personalWallets: [
                   metamaskWallet(),
                   coinbaseWallet(),
                   localWallet({ persist: true })
                 ]
-              }) */
+              })
             ]}>
             <Layout>
               <Component {...pageProps} />
