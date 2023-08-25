@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThirdwebProvider, coinbaseWallet, localWallet, metamaskWallet, smartWallet } from "@thirdweb-dev/react";
+import { ThirdwebProvider, coinbaseWallet, localWallet, metamaskWallet, smartWallet, walletConnect } from "@thirdweb-dev/react";
 import { Goerli } from '@thirdweb-dev/chains'
 import { Layout } from 'components/layout'
 import { ChakraProvider } from 'providers/Chakra'
@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
                 gasless: true,
                 // this is the default
-                personalWallets: [metamaskWallet(), coinbaseWallet(), localWallet()]
+                personalWallets: [metamaskWallet(), coinbaseWallet(), localWallet(), walletConnect()]
               }),
             ]}
             clientId={SMART_WALLET_KEY}
