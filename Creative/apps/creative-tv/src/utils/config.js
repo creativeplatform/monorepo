@@ -1,6 +1,6 @@
 var _a;
-import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains';
 import { extendTheme } from '@chakra-ui/react';
+import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains';
 import gql from 'graphql-tag';
 export const SITE_NAME = 'CREATIVE TV';
 export const SITE_DESCRIPTION = 'The way your content should be.';
@@ -8,21 +8,8 @@ export const SITE_IMAGE = '/creative-membership.gif';
 export const SITE_URL = 'https://creativeplatform.xyz';
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.';
 export const SITE_LOGO = '/grant-logo.png';
-/* declare var process: {
-  env: {
-    NEXT_PUBLIC_STUDIO_API_KEY: string,
-    NEXT_SESSION_PASSWORD: string,
-    NODE_ENV: string,
-    NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
-    NEXT_PUBLIC_ALCHEMY_API_KEY: string,
-    NEXT_PUBLIC_INFURA_API_KEY: string,
-    NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
-    NEXT_PUBLIC_HOST: string,
-    NEXT_PUBLIC_SMART_WALLET_API_KEY: string
-    NEXT_PUBLIC_EXPLORER_KEY: string
-  }
-} */
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY;
+export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY;
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD;
 export const NODE_ENV = process.env.NODE_ENV;
 export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET;
@@ -30,7 +17,6 @@ export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY;
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY;
 export const HOST = process.env.NEXT_PUBLIC_HOST;
-export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET_API_KEY;
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY;
 export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID;
 export const THEME_INITIAL_COLOR = 'system';
@@ -74,7 +60,7 @@ export const CAROUSEL_PLAYLISTS = {
         playbackId_3: '4d8b5ud89j96qkwt',
         name_4: 'Episode 1 - Wait a minute, who are you?',
         playbackId_4: '6461dsqs9qjr1dji',
-    }
+    },
 };
 // BLOCKCHAIN LIST
 export const ETH_CHAINS = [Goerli];
@@ -117,7 +103,7 @@ export const ACCOUNT_FACTORY_MUMBAI = '';
 export const SMART_WALLET_CONFIG = {
     chain: Goerli,
     factoryAddress: ACCOUNT_FACTORY_TESTNET,
-    thirdwebApiKey: SMART_WALLET_KEY,
+    thirdwebApiKey: NEXT_PUBLIC_THIRDWEB_API_KEY,
     gasless: true, // enable or disable gasless transactions
 };
 // CREATIVE ADDRESS
@@ -292,9 +278,7 @@ export const FOUNDRY_FACET_ABI = [
             { internalType: 'address', name: 'recipient', type: 'address' },
         ],
         name: 'burn',
-        outputs: [
-            { internalType: 'uint256', name: 'assetsReturned', type: 'uint256' },
-        ],
+        outputs: [{ internalType: 'uint256', name: 'assetsReturned', type: 'uint256' }],
         stateMutability: 'nonpayable',
         type: 'function',
     },
@@ -305,9 +289,7 @@ export const FOUNDRY_FACET_ABI = [
             { internalType: 'address', name: 'sender', type: 'address' },
         ],
         name: 'calculateAssetsReturned',
-        outputs: [
-            { internalType: 'uint256', name: 'assetsReturned', type: 'uint256' },
-        ],
+        outputs: [{ internalType: 'uint256', name: 'assetsReturned', type: 'uint256' }],
         stateMutability: 'view',
         type: 'function',
     },
@@ -317,9 +299,7 @@ export const FOUNDRY_FACET_ABI = [
             { internalType: 'uint256', name: 'assetsDeposited', type: 'uint256' },
         ],
         name: 'calculateMeTokensMinted',
-        outputs: [
-            { internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' },
-        ],
+        outputs: [{ internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' }],
         stateMutability: 'view',
         type: 'function',
     },
@@ -340,9 +320,7 @@ export const FOUNDRY_FACET_ABI = [
             { internalType: 'address', name: 'recipient', type: 'address' },
         ],
         name: 'mint',
-        outputs: [
-            { internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' },
-        ],
+        outputs: [{ internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' }],
         stateMutability: 'nonpayable',
         type: 'function',
     },
@@ -357,9 +335,7 @@ export const FOUNDRY_FACET_ABI = [
             { internalType: 'bytes32', name: 'sSig', type: 'bytes32' },
         ],
         name: 'mintWithPermit',
-        outputs: [
-            { internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' },
-        ],
+        outputs: [{ internalType: 'uint256', name: 'meTokensMinted', type: 'uint256' }],
         stateMutability: 'nonpayable',
         type: 'function',
     },
@@ -367,25 +343,19 @@ export const FOUNDRY_FACET_ABI = [
 export const HUB_FACET_ABI = [
     {
         anonymous: false,
-        inputs: [
-            { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
-        ],
+        inputs: [{ indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' }],
         name: 'CancelUpdate',
         type: 'event',
     },
     {
         anonymous: false,
-        inputs: [
-            { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
-        ],
+        inputs: [{ indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' }],
         name: 'Deactivate',
         type: 'event',
     },
     {
         anonymous: false,
-        inputs: [
-            { indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' },
-        ],
+        inputs: [{ indexed: false, internalType: 'uint256', name: 'id', type: 'uint256' }],
         name: 'FinishUpdate',
         type: 'event',
     },
@@ -1065,2024 +1035,2024 @@ export const METOKENS_REGISTRY_ABI = [
 ];
 export const METOKENS_DIAMOND_ABI = [
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "hubId",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'hubId',
+                type: 'uint256',
+            },
         ],
-        "name": "getCurveInfo",
-        "outputs": [
+        name: 'getCurveInfo',
+        outputs: [
             {
-                "components": [
+                components: [
                     {
-                        "internalType": "uint256",
-                        "name": "baseY",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'baseY',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "targetBaseY",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'targetBaseY',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint32",
-                        "name": "reserveWeight",
-                        "type": "uint32"
+                        internalType: 'uint32',
+                        name: 'reserveWeight',
+                        type: 'uint32',
                     },
                     {
-                        "internalType": "uint32",
-                        "name": "targetReserveWeight",
-                        "type": "uint32"
-                    }
+                        internalType: 'uint32',
+                        name: 'targetReserveWeight',
+                        type: 'uint32',
+                    },
                 ],
-                "internalType": "struct LibCurve.CurveInfo",
-                "name": "",
-                "type": "tuple"
-            }
+                internalType: 'struct LibCurve.CurveInfo',
+                name: '',
+                type: 'tuple',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "meTokensBurned",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'meTokensBurned',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "hubId",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'hubId',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "supply",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'supply',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "balancePooled",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'balancePooled',
+                type: 'uint256',
+            },
         ],
-        "name": "viewAssetsReturned",
-        "outputs": [
+        name: 'viewAssetsReturned',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "hubId",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'hubId',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "supply",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'supply',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "balancePooled",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'balancePooled',
+                type: 'uint256',
+            },
         ],
-        "name": "viewMeTokensMinted",
-        "outputs": [
+        name: 'viewMeTokensMinted',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "meTokensBurned",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'meTokensBurned',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "hubId",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'hubId',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "supply",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'supply',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "balancePooled",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'balancePooled',
+                type: 'uint256',
+            },
         ],
-        "name": "viewTargetAssetsReturned",
-        "outputs": [
+        name: 'viewTargetAssetsReturned',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "hubId",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'hubId',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "supply",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'supply',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "balancePooled",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'balancePooled',
+                type: 'uint256',
+            },
         ],
-        "name": "viewTargetMeTokensMinted",
-        "outputs": [
+        name: 'viewTargetMeTokensMinted',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "components": [
+                components: [
                     {
-                        "internalType": "bytes4[]",
-                        "name": "functionSelectors",
-                        "type": "bytes4[]"
+                        internalType: 'bytes4[]',
+                        name: 'functionSelectors',
+                        type: 'bytes4[]',
                     },
                     {
-                        "internalType": "address",
-                        "name": "facetAddress",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'facetAddress',
+                        type: 'address',
                     },
                     {
-                        "internalType": "enum IDiamondCut.FacetCutAction",
-                        "name": "action",
-                        "type": "uint8"
-                    }
+                        internalType: 'enum IDiamondCut.FacetCutAction',
+                        name: 'action',
+                        type: 'uint8',
+                    },
                 ],
-                "indexed": false,
-                "internalType": "struct IDiamondCut.FacetCut[]",
-                "name": "diamondCut",
-                "type": "tuple[]"
+                indexed: false,
+                internalType: 'struct IDiamondCut.FacetCut[]',
+                name: 'diamondCut',
+                type: 'tuple[]',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "init",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'init',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "bytes",
-                "name": "data",
-                "type": "bytes"
-            }
+                indexed: false,
+                internalType: 'bytes',
+                name: 'data',
+                type: 'bytes',
+            },
         ],
-        "name": "DiamondCut",
-        "type": "event"
+        name: 'DiamondCut',
+        type: 'event',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "components": [
+                components: [
                     {
-                        "internalType": "bytes4[]",
-                        "name": "functionSelectors",
-                        "type": "bytes4[]"
+                        internalType: 'bytes4[]',
+                        name: 'functionSelectors',
+                        type: 'bytes4[]',
                     },
                     {
-                        "internalType": "address",
-                        "name": "facetAddress",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'facetAddress',
+                        type: 'address',
                     },
                     {
-                        "internalType": "enum IDiamondCut.FacetCutAction",
-                        "name": "action",
-                        "type": "uint8"
-                    }
+                        internalType: 'enum IDiamondCut.FacetCutAction',
+                        name: 'action',
+                        type: 'uint8',
+                    },
                 ],
-                "internalType": "struct IDiamondCut.FacetCut[]",
-                "name": "cut",
-                "type": "tuple[]"
+                internalType: 'struct IDiamondCut.FacetCut[]',
+                name: 'cut',
+                type: 'tuple[]',
             },
             {
-                "internalType": "address",
-                "name": "init",
-                "type": "address"
+                internalType: 'address',
+                name: 'init',
+                type: 'address',
             },
             {
-                "internalType": "bytes",
-                "name": "data",
-                "type": "bytes"
-            }
+                internalType: 'bytes',
+                name: 'data',
+                type: 'bytes',
+            },
         ],
-        "name": "diamondCut",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'diamondCut',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "bytes4",
-                "name": "functionSelector",
-                "type": "bytes4"
-            }
+                internalType: 'bytes4',
+                name: 'functionSelector',
+                type: 'bytes4',
+            },
         ],
-        "name": "facetAddress",
-        "outputs": [
+        name: 'facetAddress',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "facetAddress_",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'facetAddress_',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "facetAddresses",
-        "outputs": [
+        inputs: [],
+        name: 'facetAddresses',
+        outputs: [
             {
-                "internalType": "address[]",
-                "name": "facetAddresses_",
-                "type": "address[]"
-            }
+                internalType: 'address[]',
+                name: 'facetAddresses_',
+                type: 'address[]',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "facet",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'facet',
+                type: 'address',
+            },
         ],
-        "name": "facetFunctionSelectors",
-        "outputs": [
+        name: 'facetFunctionSelectors',
+        outputs: [
             {
-                "internalType": "bytes4[]",
-                "name": "facetFunctionSelectors_",
-                "type": "bytes4[]"
-            }
+                internalType: 'bytes4[]',
+                name: 'facetFunctionSelectors_',
+                type: 'bytes4[]',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "facets",
-        "outputs": [
+        inputs: [],
+        name: 'facets',
+        outputs: [
             {
-                "components": [
+                components: [
                     {
-                        "internalType": "address",
-                        "name": "facetAddress",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'facetAddress',
+                        type: 'address',
                     },
                     {
-                        "internalType": "bytes4[]",
-                        "name": "functionSelectors",
-                        "type": "bytes4[]"
-                    }
+                        internalType: 'bytes4[]',
+                        name: 'functionSelectors',
+                        type: 'bytes4[]',
+                    },
                 ],
-                "internalType": "struct IDiamondLoupeFacet.Facet[]",
-                "name": "facets_",
-                "type": "tuple[]"
-            }
+                internalType: 'struct IDiamondLoupeFacet.Facet[]',
+                name: 'facets_',
+                type: 'tuple[]',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "bytes4",
-                "name": "interfaceId",
-                "type": "bytes4"
-            }
+                internalType: 'bytes4',
+                name: 'interfaceId',
+                type: 'bytes4',
+            },
         ],
-        "name": "supportsInterface",
-        "outputs": [
+        name: 'supportsInterface',
+        outputs: [
             {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'rate',
+                type: 'uint256',
+            },
         ],
-        "name": "SetBurnBuyerFee",
-        "type": "event"
+        name: 'SetBurnBuyerFee',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'rate',
+                type: 'uint256',
+            },
         ],
-        "name": "SetBurnOwnerFee",
-        "type": "event"
+        name: 'SetBurnOwnerFee',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'rate',
+                type: 'uint256',
+            },
         ],
-        "name": "SetMintFee",
-        "type": "event"
+        name: 'SetMintFee',
+        type: 'event',
     },
     {
-        "inputs": [],
-        "name": "burnBuyerFee",
-        "outputs": [
+        inputs: [],
+        name: 'burnBuyerFee',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "burnOwnerFee",
-        "outputs": [
+        inputs: [],
+        name: 'burnOwnerFee',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "mintFee",
-        "outputs": [
+        inputs: [],
+        name: 'mintFee',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'rate',
+                type: 'uint256',
+            },
         ],
-        "name": "setBurnBuyerFee",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setBurnBuyerFee',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'rate',
+                type: 'uint256',
+            },
         ],
-        "name": "setBurnOwnerFee",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setBurnOwnerFee',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'rate',
+                type: 'uint256',
+            },
         ],
-        "name": "setMintFee",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setMintFee',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "asset",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'asset',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "burner",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'burner',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "recipient",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'recipient',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "meTokensBurned",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'meTokensBurned',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "assetsReturned",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'assetsReturned',
+                type: 'uint256',
+            },
         ],
-        "name": "Burn",
-        "type": "event"
+        name: 'Burn',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "asset",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'asset',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "donor",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'donor',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
+            },
         ],
-        "name": "Donate",
-        "type": "event"
+        name: 'Donate',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "asset",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'asset',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "depositor",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'depositor',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "recipient",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'recipient',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "meTokensMinted",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'meTokensMinted',
+                type: 'uint256',
+            },
         ],
-        "name": "Mint",
-        "type": "event"
+        name: 'Mint',
+        type: 'event',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "meTokensBurned",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'meTokensBurned',
+                type: 'uint256',
             },
             {
-                "internalType": "address",
-                "name": "recipient",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'recipient',
+                type: 'address',
+            },
         ],
-        "name": "burn",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'burn',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "meTokensBurned",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'meTokensBurned',
+                type: 'uint256',
             },
             {
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'sender',
+                type: 'address',
+            },
         ],
-        "name": "calculateAssetsReturned",
-        "outputs": [
+        name: 'calculateAssetsReturned',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "assetsReturned",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'assetsReturned',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
+            },
         ],
-        "name": "calculateMeTokensMinted",
-        "outputs": [
+        name: 'calculateMeTokensMinted',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "meTokensMinted",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'meTokensMinted',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
+            },
         ],
-        "name": "donate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'donate',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
             },
             {
-                "internalType": "address",
-                "name": "recipient",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'recipient',
+                type: 'address',
+            },
         ],
-        "name": "mint",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'mint',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
             },
             {
-                "internalType": "address",
-                "name": "recipient",
-                "type": "address"
+                internalType: 'address',
+                name: 'recipient',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "deadline",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'deadline',
+                type: 'uint256',
             },
             {
-                "internalType": "uint8",
-                "name": "vSig",
-                "type": "uint8"
+                internalType: 'uint8',
+                name: 'vSig',
+                type: 'uint8',
             },
             {
-                "internalType": "bytes32",
-                "name": "rSig",
-                "type": "bytes32"
+                internalType: 'bytes32',
+                name: 'rSig',
+                type: 'bytes32',
             },
             {
-                "internalType": "bytes32",
-                "name": "sSig",
-                "type": "bytes32"
-            }
+                internalType: 'bytes32',
+                name: 'sSig',
+                type: 'bytes32',
+            },
         ],
-        "name": "mintWithPermit",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'mintWithPermit',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
+            },
         ],
-        "name": "CancelUpdate",
-        "type": "event"
+        name: 'CancelUpdate',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
+            },
         ],
-        "name": "Deactivate",
-        "type": "event"
+        name: 'Deactivate',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
+            },
         ],
-        "name": "FinishUpdate",
-        "type": "event"
+        name: 'FinishUpdate',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "targetRefundRatio",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'targetRefundRatio',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint32",
-                "name": "targetReserveWeight",
-                "type": "uint32"
+                indexed: false,
+                internalType: 'uint32',
+                name: 'targetReserveWeight',
+                type: 'uint32',
             },
             {
-                "indexed": false,
-                "internalType": "bool",
-                "name": "reconfigure",
-                "type": "bool"
+                indexed: false,
+                internalType: 'bool',
+                name: 'reconfigure',
+                type: 'bool',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "startTime",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'startTime',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "endTime",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'endTime',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "endCooldown",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'endCooldown',
+                type: 'uint256',
+            },
         ],
-        "name": "InitUpdate",
-        "type": "event"
+        name: 'InitUpdate',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "asset",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'asset',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "vault",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'vault',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "refundRatio",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'refundRatio',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "baseY",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'baseY',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "uint32",
-                "name": "reserveWeight",
-                "type": "uint32"
+                indexed: false,
+                internalType: 'uint32',
+                name: 'reserveWeight',
+                type: 'uint32',
             },
             {
-                "indexed": false,
-                "internalType": "bytes",
-                "name": "encodedVaultArgs",
-                "type": "bytes"
-            }
+                indexed: false,
+                internalType: 'bytes',
+                name: 'encodedVaultArgs',
+                type: 'bytes',
+            },
         ],
-        "name": "Register",
-        "type": "event"
+        name: 'Register',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
+                indexed: false,
+                internalType: 'address',
+                name: 'newOwner',
+                type: 'address',
+            },
         ],
-        "name": "TransferHubOwnership",
-        "type": "event"
+        name: 'TransferHubOwnership',
+        type: 'event',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
+            },
         ],
-        "name": "cancelUpdate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'cancelUpdate',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "count",
-        "outputs": [
+        inputs: [],
+        name: 'count',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
+            },
         ],
-        "name": "deactivate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'deactivate',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
+            },
         ],
-        "name": "finishUpdate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'finishUpdate',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
+            },
         ],
-        "name": "getHubInfo",
-        "outputs": [
+        name: 'getHubInfo',
+        outputs: [
             {
-                "components": [
+                components: [
                     {
-                        "internalType": "uint256",
-                        "name": "startTime",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'startTime',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "endTime",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'endTime',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "endCooldown",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'endCooldown',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "refundRatio",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'refundRatio',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "targetRefundRatio",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'targetRefundRatio',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "address",
-                        "name": "owner",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'owner',
+                        type: 'address',
                     },
                     {
-                        "internalType": "address",
-                        "name": "vault",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'vault',
+                        type: 'address',
                     },
                     {
-                        "internalType": "address",
-                        "name": "asset",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'asset',
+                        type: 'address',
                     },
                     {
-                        "internalType": "bool",
-                        "name": "updating",
-                        "type": "bool"
+                        internalType: 'bool',
+                        name: 'updating',
+                        type: 'bool',
                     },
                     {
-                        "internalType": "bool",
-                        "name": "reconfigure",
-                        "type": "bool"
+                        internalType: 'bool',
+                        name: 'reconfigure',
+                        type: 'bool',
                     },
                     {
-                        "internalType": "bool",
-                        "name": "active",
-                        "type": "bool"
-                    }
+                        internalType: 'bool',
+                        name: 'active',
+                        type: 'bool',
+                    },
                 ],
-                "internalType": "struct HubInfo",
-                "name": "",
-                "type": "tuple"
-            }
+                internalType: 'struct HubInfo',
+                name: '',
+                type: 'tuple',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "hubCooldown",
-        "outputs": [
+        inputs: [],
+        name: 'hubCooldown',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "hubDuration",
-        "outputs": [
+        inputs: [],
+        name: 'hubDuration',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "hubWarmup",
-        "outputs": [
+        inputs: [],
+        name: 'hubWarmup',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "targetRefundRatio",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'targetRefundRatio',
+                type: 'uint256',
             },
             {
-                "internalType": "uint32",
-                "name": "targetReserveWeight",
-                "type": "uint32"
-            }
+                internalType: 'uint32',
+                name: 'targetReserveWeight',
+                type: 'uint32',
+            },
         ],
-        "name": "initUpdate",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'initUpdate',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
             },
             {
-                "internalType": "address",
-                "name": "asset",
-                "type": "address"
+                internalType: 'address',
+                name: 'asset',
+                type: 'address',
             },
             {
-                "internalType": "contract IVault",
-                "name": "vault",
-                "type": "address"
+                internalType: 'contract IVault',
+                name: 'vault',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "refundRatio",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'refundRatio',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "baseY",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'baseY',
+                type: 'uint256',
             },
             {
-                "internalType": "uint32",
-                "name": "reserveWeight",
-                "type": "uint32"
+                internalType: 'uint32',
+                name: 'reserveWeight',
+                type: 'uint32',
             },
             {
-                "internalType": "bytes",
-                "name": "encodedVaultArgs",
-                "type": "bytes"
-            }
+                internalType: 'bytes',
+                name: 'encodedVaultArgs',
+                type: 'bytes',
+            },
         ],
-        "name": "register",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'register',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "cooldown",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'cooldown',
+                type: 'uint256',
+            },
         ],
-        "name": "setHubCooldown",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setHubCooldown',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "duration",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'duration',
+                type: 'uint256',
+            },
         ],
-        "name": "setHubDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setHubDuration',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "warmup",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'warmup',
+                type: 'uint256',
+            },
         ],
-        "name": "setHubWarmup",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setHubWarmup',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "id",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'id',
+                type: 'uint256',
             },
             {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newOwner',
+                type: 'address',
+            },
         ],
-        "name": "transferHubOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'transferHubOwnership',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": true,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                indexed: true,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "CancelResubscribe",
-        "type": "event"
+        name: 'CancelResubscribe',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'from',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "CancelTransferMeTokenOwnership",
-        "type": "event"
+        name: 'CancelTransferMeTokenOwnership',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'from',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'to',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "ClaimMeTokenOwnership",
-        "type": "event"
+        name: 'ClaimMeTokenOwnership',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": true,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                indexed: true,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "FinishResubscribe",
-        "type": "event"
+        name: 'FinishResubscribe',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": true,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: true,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "targetHubId",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'targetHubId',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "migration",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'migration',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "bytes",
-                "name": "encodedMigrationArgs",
-                "type": "bytes"
-            }
+                indexed: false,
+                internalType: 'bytes',
+                name: 'encodedMigrationArgs',
+                type: 'bytes',
+            },
         ],
-        "name": "InitResubscribe",
-        "type": "event"
+        name: 'InitResubscribe',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": true,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: true,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": true,
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
+                indexed: true,
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "minted",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'minted',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "asset",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'asset',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
+                indexed: false,
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
             },
             {
-                "indexed": false,
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
+                indexed: false,
+                internalType: 'string',
+                name: 'name',
+                type: 'string',
             },
             {
-                "indexed": false,
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
+                indexed: false,
+                internalType: 'string',
+                name: 'symbol',
+                type: 'string',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "hubId",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'hubId',
+                type: 'uint256',
+            },
         ],
-        "name": "Subscribe",
-        "type": "event"
+        name: 'Subscribe',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "from",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'from',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "to",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'to',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "TransferMeTokenOwnership",
-        "type": "event"
+        name: 'TransferMeTokenOwnership',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "bool",
-                "name": "add",
-                "type": "bool"
+                indexed: false,
+                internalType: 'bool',
+                name: 'add',
+                type: 'bool',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'amount',
+                type: 'uint256',
+            },
         ],
-        "name": "UpdateBalanceLocked",
-        "type": "event"
+        name: 'UpdateBalanceLocked',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "bool",
-                "name": "add",
-                "type": "bool"
+                indexed: false,
+                internalType: 'bool',
+                name: 'add',
+                type: 'bool',
             },
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'amount',
+                type: 'uint256',
+            },
         ],
-        "name": "UpdateBalancePooled",
-        "type": "event"
+        name: 'UpdateBalancePooled',
+        type: 'event',
     },
     {
-        "anonymous": false,
-        "inputs": [
+        anonymous: false,
+        inputs: [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                indexed: false,
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "newBalance",
-                "type": "uint256"
-            }
+                indexed: false,
+                internalType: 'uint256',
+                name: 'newBalance',
+                type: 'uint256',
+            },
         ],
-        "name": "UpdateBalances",
-        "type": "event"
+        name: 'UpdateBalances',
+        type: 'event',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "cancelResubscribe",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'cancelResubscribe',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "cancelTransferMeTokenOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        inputs: [],
+        name: 'cancelTransferMeTokenOwnership',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "oldOwner",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'oldOwner',
+                type: 'address',
+            },
         ],
-        "name": "claimMeTokenOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'claimMeTokenOwnership',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "finishResubscribe",
-        "outputs": [
+        name: 'finishResubscribe',
+        outputs: [
             {
-                "components": [
+                components: [
                     {
-                        "internalType": "address",
-                        "name": "owner",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'owner',
+                        type: 'address',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "hubId",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'hubId',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "balancePooled",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'balancePooled',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "balanceLocked",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'balanceLocked',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "startTime",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'startTime',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "endTime",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'endTime',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "endCooldown",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'endCooldown',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "targetHubId",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'targetHubId',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "address",
-                        "name": "migration",
-                        "type": "address"
-                    }
+                        internalType: 'address',
+                        name: 'migration',
+                        type: 'address',
+                    },
                 ],
-                "internalType": "struct MeTokenInfo",
-                "name": "",
-                "type": "tuple"
-            }
+                internalType: 'struct MeTokenInfo',
+                name: '',
+                type: 'tuple',
+            },
         ],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
+            },
         ],
-        "name": "getMeTokenInfo",
-        "outputs": [
+        name: 'getMeTokenInfo',
+        outputs: [
             {
-                "components": [
+                components: [
                     {
-                        "internalType": "address",
-                        "name": "owner",
-                        "type": "address"
+                        internalType: 'address',
+                        name: 'owner',
+                        type: 'address',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "hubId",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'hubId',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "balancePooled",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'balancePooled',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "balanceLocked",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'balanceLocked',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "startTime",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'startTime',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "endTime",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'endTime',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "endCooldown",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'endCooldown',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "uint256",
-                        "name": "targetHubId",
-                        "type": "uint256"
+                        internalType: 'uint256',
+                        name: 'targetHubId',
+                        type: 'uint256',
                     },
                     {
-                        "internalType": "address",
-                        "name": "migration",
-                        "type": "address"
-                    }
+                        internalType: 'address',
+                        name: 'migration',
+                        type: 'address',
+                    },
                 ],
-                "internalType": "struct MeTokenInfo",
-                "name": "",
-                "type": "tuple"
-            }
+                internalType: 'struct MeTokenInfo',
+                name: '',
+                type: 'tuple',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
         ],
-        "name": "getOwnerMeToken",
-        "outputs": [
+        name: 'getOwnerMeToken',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "oldOwner",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'oldOwner',
+                type: 'address',
+            },
         ],
-        "name": "getPendingOwner",
-        "outputs": [
+        name: 'getPendingOwner',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "targetHubId",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'targetHubId',
+                type: 'uint256',
             },
             {
-                "internalType": "address",
-                "name": "migration",
-                "type": "address"
+                internalType: 'address',
+                name: 'migration',
+                type: 'address',
             },
             {
-                "internalType": "bytes",
-                "name": "encodedMigrationArgs",
-                "type": "bytes"
-            }
+                internalType: 'bytes',
+                name: 'encodedMigrationArgs',
+                type: 'bytes',
+            },
         ],
-        "name": "initResubscribe",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'initResubscribe',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'owner',
+                type: 'address',
+            },
         ],
-        "name": "isOwner",
-        "outputs": [
+        name: 'isOwner',
+        outputs: [
             {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
+                internalType: 'bool',
+                name: '',
+                type: 'bool',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "meTokenCooldown",
-        "outputs": [
+        inputs: [],
+        name: 'meTokenCooldown',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "meTokenDuration",
-        "outputs": [
+        inputs: [],
+        name: 'meTokenDuration',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "meTokenWarmup",
-        "outputs": [
+        inputs: [],
+        name: 'meTokenWarmup',
+        outputs: [
             {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: '',
+                type: 'uint256',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "cooldown",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'cooldown',
+                type: 'uint256',
+            },
         ],
-        "name": "setMeTokenCooldown",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setMeTokenCooldown',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "duration",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'duration',
+                type: 'uint256',
+            },
         ],
-        "name": "setMeTokenDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setMeTokenDuration',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "uint256",
-                "name": "warmup",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'warmup',
+                type: 'uint256',
+            },
         ],
-        "name": "setMeTokenWarmup",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setMeTokenWarmup',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "string",
-                "name": "name",
-                "type": "string"
+                internalType: 'string',
+                name: 'name',
+                type: 'string',
             },
             {
-                "internalType": "string",
-                "name": "symbol",
-                "type": "string"
+                internalType: 'string',
+                name: 'symbol',
+                type: 'string',
             },
             {
-                "internalType": "uint256",
-                "name": "hubId",
-                "type": "uint256"
+                internalType: 'uint256',
+                name: 'hubId',
+                type: 'uint256',
             },
             {
-                "internalType": "uint256",
-                "name": "assetsDeposited",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'assetsDeposited',
+                type: 'uint256',
+            },
         ],
-        "name": "subscribe",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'subscribe',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newOwner',
+                type: 'address',
+            },
         ],
-        "name": "transferMeTokenOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'transferMeTokenOwnership',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "meToken",
-                "type": "address"
+                internalType: 'address',
+                name: 'meToken',
+                type: 'address',
             },
             {
-                "internalType": "uint256",
-                "name": "newBalance",
-                "type": "uint256"
-            }
+                internalType: 'uint256',
+                name: 'newBalance',
+                type: 'uint256',
+            },
         ],
-        "name": "updateBalances",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'updateBalances',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "deactivateController",
-        "outputs": [
+        inputs: [],
+        name: 'deactivateController',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "diamondController",
-        "outputs": [
+        inputs: [],
+        name: 'diamondController',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "durationsController",
-        "outputs": [
+        inputs: [],
+        name: 'durationsController',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "feesController",
-        "outputs": [
+        inputs: [],
+        name: 'feesController',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "meTokenRegistryController",
-        "outputs": [
+        inputs: [],
+        name: 'meTokenRegistryController',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "registerController",
-        "outputs": [
+        inputs: [],
+        name: 'registerController',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
+        stateMutability: 'view',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "newController",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newController',
+                type: 'address',
+            },
         ],
-        "name": "setDeactivateController",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setDeactivateController',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "newController",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newController',
+                type: 'address',
+            },
         ],
-        "name": "setDiamondController",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setDiamondController',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "newController",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newController',
+                type: 'address',
+            },
         ],
-        "name": "setDurationsController",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setDurationsController',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "newController",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newController',
+                type: 'address',
+            },
         ],
-        "name": "setFeesController",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setFeesController',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "newController",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newController',
+                type: 'address',
+            },
         ],
-        "name": "setMeTokenRegistryController",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setMeTokenRegistryController',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "newController",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'newController',
+                type: 'address',
+            },
         ],
-        "name": "setRegisterController",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setRegisterController',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [
+        inputs: [
             {
-                "internalType": "address",
-                "name": "forwarder",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: 'forwarder',
+                type: 'address',
+            },
         ],
-        "name": "setTrustedForwarder",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
+        name: 'setTrustedForwarder',
+        outputs: [],
+        stateMutability: 'nonpayable',
+        type: 'function',
     },
     {
-        "inputs": [],
-        "name": "trustedForwarder",
-        "outputs": [
+        inputs: [],
+        name: 'trustedForwarder',
+        outputs: [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
+                internalType: 'address',
+                name: '',
+                type: 'address',
+            },
         ],
-        "stateMutability": "view",
-        "type": "function"
-    }
+        stateMutability: 'view',
+        type: 'function',
+    },
 ];
 // DAI ADDRESS
 export const DAI = {
