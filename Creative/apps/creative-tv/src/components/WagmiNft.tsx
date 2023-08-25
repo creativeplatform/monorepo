@@ -1,8 +1,9 @@
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useSigner } from '@thirdweb-dev/react'
+import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { formatString } from 'utils'
 import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
@@ -15,7 +16,17 @@ interface WagmiNftProps {
 interface NFTCollection {
   image_url: string
 }
-
+type ContractMetaData = {
+  name: string
+  description: string
+  image: string
+  app_uri: string
+  seller_fee_basis_points: number
+  fee_recipient: string
+  merkle: Record<any, any>
+  symbol: string
+  [idx: string]: any
+}
 const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const address = useAddress()
   const router = useRouter()
@@ -27,9 +38,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
 
-
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
   const { contract } = useContract(deployedContractAddress)
+  const { data: metadata, isLoading } = useMetadata(contract)
 
   // Getting asset and refreshing for the status
   const {
@@ -124,13 +135,33 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         fee_recipient: address,
         seller_fee_basis_points: 300,
         image: image_url,
+        description: props.assetData.description,
       })
 
       console.log('Contract deployed', contractAddress)
+
       setDeployedContractAddress(contractAddress)
     } catch (err: any) {
       setIsDeploying(false)
       setDeployError(err.message)
+    }
+  }
+
+  const getContractMetaData = () => {
+    const data: ContractMetaData = metadata as unknown as any
+    let keys: string[], values: string[]
+
+    if (data?.name) {
+      keys = Object.keys(data)
+      values = Object.values(data)
+
+      return keys.map((k, i) => (
+        <div key={i}>
+          <p>
+            {formatString(k)}: <span style={{ fontWeight: '700' }}>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}</span>
+          </p>
+        </div>
+      ))
     }
   }
 
@@ -158,7 +189,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         router.replace(`/profile/${address}`)
         clearTimeout(timeout)
       }, 1000)
-
     } catch (err: any) {
       setIsMinting(false)
       setError(err.message)
@@ -295,7 +325,10 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   width={160}
                   className="show-details-button"
                   my={4}
-                  onClick={() => setShowDetails(!showDetails)}
+                  onClick={() => {
+                    setShowDetails(!showDetails)
+                    // getContractMetaData()
+                  }}
                   style={{ backgroundColor: '#EC407A' }}>
                   {showDetails ? 'Hide ' : 'Show '}Details
                 </Button>
@@ -303,11 +336,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
                   <div style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
                     <p>
-                      Contract Name: <span style={{ fontWeight: '700' }}>{asset.name}</span>{' '}
+                      Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
                     </p>
-                    <p>
-                      Contract Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
-                    </p>
+                    {getContractMetaData()}
                   </div>
                 </Box>
               </Stack>

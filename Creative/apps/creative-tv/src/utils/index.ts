@@ -13,3 +13,11 @@ export const handleCopyAddress = (address: string, toasta: CreateToastFnReturn) 
     isClosable: true,
   })
 }
+
+export const formatString = (str: string) => {
+  if (!str.includes('_')) {
+    return str.toUpperCase()
+  } else {
+    return str.split('_').join(' ').toUpperCase()
+  }
+}
