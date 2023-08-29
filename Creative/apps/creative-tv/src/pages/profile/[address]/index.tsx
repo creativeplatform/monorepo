@@ -22,9 +22,12 @@ import {
   FormLabel,
   FormHelperText,
   Spinner,
+  BreadcrumbItem, 
+  BreadcrumbLink, 
+  Breadcrumb
 } from '@chakra-ui/react'
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, ConnectWallet } from '@thirdweb-dev/react'
-import { Emoji } from 'ui'
+import { Emoji } from '../../../../../../packages/ui'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { useRouter } from 'next/router'
@@ -154,10 +157,15 @@ export default function ProfilePage() {
 
   return (
     <Container maxW="7xl" my={10}>
-      <Button colorScheme={'blue'} onClick={() => router.push('/')}>
-        Back
-      </Button>
-      <Heading mt={10}>Creative Profile</Heading>
+      <Breadcrumb>
+          <BreadcrumbItem>
+            <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage className="active-crumb">
+            <BreadcrumbLink>Profile</BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+      <Heading mt={10}>My Creative Profile</Heading>
       {!address ? (
         <Flex flexDirection="column" my={10} gap={5} maxW="md">
           <Text>Sign in to see your profile or create a new account</Text>
@@ -272,18 +280,18 @@ export default function ProfilePage() {
                           </Box>
                         </Box>
                       )
-                      )) : (
-                                                  <Box display="flex" alignItems="center" gap={3}>
-                                                      {ownedNFTs?.length === 0 ? (
-                                                          <Text>You need to obtain a membership NFT.</Text>
-                                                      ) : (
-                                                              <>
-                                                      <Text>Loading memberships </Text>
-                                                      <Spinner />
-                                                                  </>
-                                                      )}
+                    )) : (
+                        <Box display="flex" alignItems="center" gap={3}>
+                            {ownedNFTs?.length === 0 ? (
+                                <Text>You need to obtain a membership NFT.</Text>
+                            ) : (
+                                  <>
+                                  <Text>Loading membership </Text>
+                                  <Spinner />
+                                </>
+                            )}
                         </Box>
-                      )}
+                    )}
                   </TabPanel>
                   <TabPanel>
                     <Box mb={5}>

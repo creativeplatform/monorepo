@@ -1,0 +1,59 @@
+@use '../../scss/' as *;
+
+.tf-product-category {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    img {
+        width: 100%;
+        @include transition5;
+        
+    }
+    .category {
+        position: absolute;
+        bottom: 0;
+        left: 0%;
+        text-align: center;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.08);
+        padding: 15px 0;
+        z-index: 2;
+        @include transition5;
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(20px);
+            left: 0;
+            bottom: 0;
+            z-index: 1;
+            @include transition5;
+        }
+
+        a {
+            font-size: 20px;
+            line-height: 26px;
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            z-index: 2;
+        }
+    }
+    &:hover {
+        cursor: pointer;
+
+        img {
+            transform: scale(1.1);
+        }
+        .category {
+
+
+
+        &::after {
+
+
+        }
+        }
+    }
+}

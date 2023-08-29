@@ -15,7 +15,7 @@ export default function Discover() {
             <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage className="active-crumb">
-            <BreadcrumbLink onClick={() => router.push('/discover')}>All Assets</BreadcrumbLink>
+            <BreadcrumbLink>Explore</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
       </Box>

@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThirdwebProvider, metamaskWallet } from '@thirdweb-dev/react'
+import { ThirdwebProvider, metamaskWallet, smartWallet, coinbaseWallet, localWallet } from '@thirdweb-dev/react'
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import type { AppProps } from 'next/app'
 import { ChakraProvider } from 'providers/Chakra'
-import { ETH_CHAINS, NEXT_PUBLIC_THIRDWEB_API_KEY } from '../utils/config'
+import { ACCOUNT_FACTORY_TESTNET, ETH_CHAINS, SMART_WALLET_KEY } from '../utils/config'
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
@@ -24,25 +24,21 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         {isMounted && (
           <ThirdwebProvider
-            clientId={NEXT_PUBLIC_THIRDWEB_API_KEY}
             activeChain={activeChain}
+            autoSwitch={true}
             supportedWallets={[
-              metamaskWallet(),
-              /* smartWallet({
+              smartWallet({
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
-                thirdwebApiKey: SMART_WALLET_KEY,
-                gasless: false,
-                personalWallets: [
-                  metamaskWallet(),
-                  coinbaseWallet(),
-                  localWallet({ persist: true })
-                ]
-              }) */
-            ]}>
+                gasless: true,
+                // this is the default
+                personalWallets: [metamaskWallet(), coinbaseWallet(), localWallet()],
+              }),
+            ]}
+            clientId={SMART_WALLET_KEY}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
-            {process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
+            <ReactQueryDevtools initialIsOpen={false} />
           </ThirdwebProvider>
         )}
       </QueryClientProvider>
