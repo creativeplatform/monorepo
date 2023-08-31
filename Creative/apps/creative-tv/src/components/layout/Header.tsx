@@ -1,70 +1,68 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/router'
+import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
 import {
-  Flex,
-  useColorModeValue,
-  Heading,
-  Box,
-  useToast,
-  useDisclosure,
-  VStack,
-  HStack,
-  Button,
-  CloseButton,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  IconButton,
-  chakra,
-  LinkBox,
-  LinkOverlay,
-  Text,
-  SimpleGrid,
-  Stack,
-  Center,
-  Divider,
-  Image,
-  Menu,
-  MenuButton,
-  Avatar,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerBody,
   Accordion,
-  AccordionItem,
   AccordionButton,
   AccordionIcon,
+  AccordionItem,
   AccordionPanel,
+  Avatar,
+  Box,
+  Button,
+  Center,
+  Divider,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
   DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  HStack,
+  Heading,
+  IconButton,
+  Image,
+  LinkBox,
+  LinkOverlay,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuList,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  SimpleGrid,
+  Stack,
   Tag,
   TagLabel,
+  Text,
+  chakra,
+  useColorModeValue,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
-import truncateEthAddress from 'truncate-eth-address'
-import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
-import { RiVideoUploadFill } from 'react-icons/ri'
-import { HiOutlineClipboardCopy } from 'react-icons/hi'
-import { useScroll } from 'framer-motion'
-import { IoIosArrowDown } from 'react-icons/io'
-import { AiOutlineMenu, AiOutlineDisconnect } from 'react-icons/ai'
-import { MdOutlineAccountCircle } from 'react-icons/md'
-import { ThemeSwitcher } from './ThemeSwitcher'
-import { Paywall } from '@unlock-protocol/paywall'
 import { Goerli } from '@thirdweb-dev/chains'
-import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useSDK, useSigner } from '@thirdweb-dev/react'
-import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
+import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner } from '@thirdweb-dev/react'
+import { Paywall } from '@unlock-protocol/paywall'
+import { useScroll } from 'framer-motion'
+import { useRouter } from 'next/router'
+import React, { useEffect, useRef, useState } from 'react'
+import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
+import { HiOutlineClipboardCopy } from 'react-icons/hi'
+import { IoIosArrowDown } from 'react-icons/io'
+import { MdOutlineAccountCircle } from 'react-icons/md'
+import { RiVideoUploadFill } from 'react-icons/ri'
+import truncateEthAddress from 'truncate-eth-address'
 import { PFP } from 'utils/context'
+import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME } from '../../utils/config'
+import { ThemeSwitcher } from './ThemeSwitcher'
 
 interface Props {
   className?: string
   icon?: string
   title?: string
-  children?: React.ReactNode;
-  handleLoading?: () => void;
+  children?: React.ReactNode
+  handleLoading?: () => void
 }
 
 export function Header({ className, handleLoading }: Props) {
@@ -73,14 +71,14 @@ export function Header({ className, handleLoading }: Props) {
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
-  const sdk = useSDK()
+  // const sdk = useSDK()
   const signer = useSigner()
-  
+
   const handleButtonClick = () => {
     if (handleLoading) {
-      handleLoading();
+      handleLoading()
     }
-  };
+  }
 
   const handleNavClick = (url: string, disabled: boolean, isNewTab: boolean, isPlugin: boolean) => {
     if (disabled) {
@@ -110,13 +108,15 @@ export function Header({ className, handleLoading }: Props) {
 
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
-
   // Get the Membership Price
   const { data: price, isLoading: priceLoading } = useContractRead(contract, 'keyPrice')
+  console.log('address: ', FREE_LOCK_ADDRESS_GOERLI_TESTNET.address == contract?.getAddress())
 
   /*******  CONTRACT READING ********/
   // Determine whether the connected wallet address has a valid subscription
   const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [address])
+
+  console.log('isSubcribed: ', subscribed)
 
   // Native Token
   // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
@@ -139,27 +139,27 @@ export function Header({ className, handleLoading }: Props) {
 
   // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
   // If no provider is set, the library uses window.ethereum
-  
 
-    // Loads the checkout UI
+  // Loads the checkout UI
   const handlePaywallCheckout = async () => {
     const provider = 'goerli.rpc.thirdweb.com'
 
     const paywall = new Paywall()
-      paywall.connect(provider) // provider from Thirdweb
-      paywall.loadCheckoutModal({
-        locks: {
-          [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
-            network: Goerli,
-          }
+    paywall.connect(provider) // provider from Thirdweb
+    paywall.loadCheckoutModal({
+      locks: {
+        [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
+          network: Goerli,
         },
-        pessimistic: true,
-        recipient: address, // from new SmartWallet(config);
-      })
+      },
+      pessimistic: true,
+      recipient: address, // from new SmartWallet(config);
+    })
+
     try {
-      const response = await paywall.loadCheckoutModal();
+      const response = await paywall.loadCheckoutModal()
       // Handle the response from the paywall modal
-      console.log(response);
+      console.log(response)
       toast({
         title: 'Welcome Creative',
         description: 'Successfully Subscribed 🎉',
@@ -169,7 +169,7 @@ export function Header({ className, handleLoading }: Props) {
       })
     } catch (error) {
       // Handle any errors that occur during the checkout process
-      console.error(error);
+      console.error(error)
       toast({
         title: 'Error',
         description: `${error}`,
@@ -373,18 +373,14 @@ export function Header({ className, handleLoading }: Props) {
                     fontWeight={700}
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
-                    onClick={() =>{ mobileNav.onClose();
-                       router.push('https://kidz.creativeplatform.xyz')}}>
+                    onClick={() => {
+                      mobileNav.onClose()
+                      router.push('https://kidz.creativeplatform.xyz')
+                    }}>
                     CREATIVE Kidz ⌐◨-◨
                   </Button>
                   <Tag size={'md'} bg={useColorModeValue('red.300', 'red.800')} borderRadius={'full'} ml={2} color={'white'}>
-                    <Avatar
-                      src='/7ee2e00167cad6ac24339f8246cfdb11.png' 
-                      size='xs'
-                      name='Creative Kidz'
-                      ml={-1}
-                      mr={2}
-                    />
+                    <Avatar src="/7ee2e00167cad6ac24339f8246cfdb11.png" size="xs" name="Creative Kidz" ml={-1} mr={2} />
                     <TagLabel>Coming Soon</TagLabel>
                   </Tag>
                 </AccordionPanel>
@@ -402,9 +398,11 @@ export function Header({ className, handleLoading }: Props) {
               fontWeight={700}
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
-              onClick={() => {handleButtonClick();
-                 mobileNav.onClose();
-               router.push('/discover')}}>
+              onClick={() => {
+                handleButtonClick()
+                mobileNav.onClose()
+                router.push('/discover')
+              }}>
               Discover
             </Button>
           </chakra.p>
@@ -419,9 +417,11 @@ export function Header({ className, handleLoading }: Props) {
               fontWeight={700}
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
-              onClick={() =>{handleButtonClick();
-                 mobileNav.onClose();
-               router.push('/events')}}>
+              onClick={() => {
+                handleButtonClick()
+                mobileNav.onClose()
+                router.push('/events')
+              }}>
               Events
             </Button>
           </chakra.p>
@@ -458,7 +458,7 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
                 {!subscribed ? (
                   <MenuList>
-                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
+                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
                       {truncateEthAddress(`${address}`)}
                     </MenuItem>
                     <MenuDivider />
@@ -484,18 +484,26 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuList>
                 ) : (
                   <MenuList>
-                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
+                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
                       {truncateEthAddress(address)}
                     </MenuItem>
                     <MenuDivider />
-                    <MenuItem icon={<MdOutlineAccountCircle />} onClick={() =>{handleButtonClick();
-                       mobileNav.onClose();
-                       router.push(`/profile/${address}`)}}>
+                    <MenuItem
+                      icon={<MdOutlineAccountCircle />}
+                      onClick={() => {
+                        handleButtonClick()
+                        mobileNav.onClose()
+                        router.push(`/profile/${address}`)
+                      }}>
                       Profile
                     </MenuItem>
-                    <MenuItem icon={<RiVideoUploadFill />} onClick={() =>{handleButtonClick();
-                       mobileNav.onClose();
-                       router.push(`/profile/${address}/upload`)}}>
+                    <MenuItem
+                      icon={<RiVideoUploadFill />}
+                      onClick={() => {
+                        handleButtonClick()
+                        mobileNav.onClose()
+                        router.push(`/profile/${address}/upload`)
+                      }}>
                       Upload
                     </MenuItem>
                     <MenuDivider />
@@ -516,6 +524,48 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuItem>
                   </MenuList>
                 )}
+
+                {/* TODO: remove this after testing */}
+                {/* <MenuList>
+                  <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
+                    {truncateEthAddress(address)}
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    icon={<MdOutlineAccountCircle />}
+                    onClick={() => {
+                      handleButtonClick()
+                      mobileNav.onClose()
+                      router.push(`/profile/${address}`)
+                    }}>
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    icon={<RiVideoUploadFill />}
+                    onClick={() => {
+                      handleButtonClick()
+                      mobileNav.onClose()
+                      router.push(`/profile/${address}/upload`)
+                    }}>
+                    Upload
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    icon={<AiOutlineDisconnect />}
+                    onClick={() => {
+                      disconnect()
+                      router.push('/')
+                      toast({
+                        title: 'Sign Out',
+                        description: 'Successfully signed out.',
+                        status: 'info',
+                        duration: 5000,
+                        isClosable: true,
+                      })
+                    }}>
+                    Sign Out
+                  </MenuItem>
+                </MenuList> */}
               </Menu>
             )}
           </chakra.p>
@@ -524,219 +574,270 @@ export function Header({ className, handleLoading }: Props) {
     </Drawer>
   )
   return (
-      <chakra.header
-        className={styleName}
-        ref={ref}
-        shadow={y > height ? 'sm' : undefined}
-        transition="box-shadow 0.2s"
-        bg={bg}
-        borderBottom="6px solid"
-        borderBottomColor="brand.400"
-        w="full"
-        overflow="hidden">
-        <chakra.div h="84px" mx="auto" maxW="1770px" px="0.89rem">
-          <Flex minWidth="max-content" h="full" alignItems="center" justifyContent="space-between">
-            <Flex align="flex-start">
-              <HStack p={2}>
-                <Button
-                  bg={bg}
-                  px="0px"
-                  color="black.900"
-                  display="inline-flex"
-                  alignItems="center"
-                  fontSize={{ base: '0.85rem', sm: '0.9rem', md: '16px' }}
-                  _hover={{ color: 'black' }}
-                  _focus={{ boxShadow: 'none', color: 'black.500' }}
-                  onClick={() => router.push('/')}>
-                  <Image src={SITE_LOGO} alt="Creative Logo" boxSize={'4rem'} objectFit="contain" />
-                  <Heading color={useColorModeValue('black.900', 'white')} as="h1" size="16px" fontWeight={900} gap={5}>
-                    {SITE_NAME}
-                  </Heading>
-                </Button>
-              </HStack>
-            </Flex>
-            <Flex>
-              <HStack spacing="1" gap={10} display={{ base: 'none', md: 'none', lg: 'flex' }}>
-                <Popover>
-                  <PopoverTrigger>
-                    <Button
-                      color="black.700"
-                      display="inline-flex"
-                      alignItems="center"
-                      px="0"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      rightIcon={<IoIosArrowDown />}>
-                      Free Channels
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
-                  <Tag size={'md'} bg={useColorModeValue('red.300', 'red.800')} borderRadius={'full'} color={'white'}>
-                    <Avatar
-                      src='/7ee2e00167cad6ac24339f8246cfdb11.png' 
-                      size='xs'
-                      name='Creative Kidz'
-                      ml={-1}
-                      mr={2}
-                    />
-                    <TagLabel>Coming Soon</TagLabel>
-                  </Tag>
-                    <Button
-                      color="black.700"
-                      px="2"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
-                      CREATIVE Kidz ⌐◨-◨
-                    </Button> 
-                  </PopoverContent>
-                </Popover>
-                <Button
-                  color="black.700"
-                  display="inline-flex"
-                  alignItems="center"
-                  fontSize="14px"
-                  px="0"
-                  fontWeight={700}
-                  _hover={{ color: cl }}
-                  _focus={{ boxShadow: 'none' }}
-                  onClick={() =>{handleButtonClick();
-                   router.push('/discover')}}>
-                  Discover
-                </Button>
-                <Button
-                  color="black.700"
-                  display="inline-flex"
-                  alignItems="center"
-                  fontSize="14px"
-                  px="0"
-                  fontWeight={700}
-                  _hover={{ color: cl }}
-                  _focus={{ boxShadow: 'none' }}
-                  onClick={() => router.push('https://vote.creativeplatform.xyz')}>
-                  Vote
-                </Button>
-                <Center height="50px">
-                  <Divider orientation="vertical" />
-                </Center>
-                <Popover>
-                  <PopoverTrigger>
-                    <Button
-                      color="black.700"
-                      display="inline-flex"
-                      alignItems="center"
-                      fontSize="14px"
-                      px="0"
-                      fontWeight={700}
-                      _hover={{ color: cl }}
-                      _focus={{ boxShadow: 'none' }}
-                      rightIcon={<IoIosArrowDown />}>
-                      Community
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent w="22vw" maxW="md" _focus={{ boxShadow: 'md' }}>
-                    <Features />
-                  </PopoverContent>
-                </Popover>
-                <Center height="50px">
-                  <Divider orientation="vertical" />
-                </Center>
-                <ThemeSwitcher />
-              </HStack>
-            </Flex>
-            <chakra.div display={{ base: 'none', md: 'none', lg: 'block' }}>
-              {!address ? (
-                <ConnectWallet btnTitle={'Sign In'} />
-              ) : (
-                <Menu>
-                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                    <Avatar name="creative" src={PFP} />
-                  </MenuButton>
+    <chakra.header
+      className={styleName}
+      ref={ref}
+      shadow={y > height ? 'sm' : undefined}
+      transition="box-shadow 0.2s"
+      bg={bg}
+      borderBottom="6px solid"
+      borderBottomColor="brand.400"
+      w="full"
+      overflow="hidden">
+      <chakra.div h="84px" mx="auto" maxW="1770px" px="0.89rem">
+        <Flex minWidth="max-content" h="full" alignItems="center" justifyContent="space-between">
+          <Flex align="flex-start">
+            <HStack p={2}>
+              <Button
+                bg={bg}
+                px="0px"
+                color="black.900"
+                display="inline-flex"
+                alignItems="center"
+                fontSize={{ base: '0.85rem', sm: '0.9rem', md: '16px' }}
+                _hover={{ color: 'black' }}
+                _focus={{ boxShadow: 'none', color: 'black.500' }}
+                onClick={() => router.push('/')}>
+                <Image src={SITE_LOGO} alt="Creative Logo" boxSize={'4rem'} objectFit="contain" />
+                <Heading color={useColorModeValue('black.900', 'white')} as="h1" size="16px" fontWeight={900} gap={5}>
+                  {SITE_NAME}
+                </Heading>
+              </Button>
+            </HStack>
+          </Flex>
+          <Flex>
+            <HStack spacing="1" gap={10} display={{ base: 'none', md: 'none', lg: 'flex' }}>
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    color="black.700"
+                    display="inline-flex"
+                    alignItems="center"
+                    px="0"
+                    fontSize="14px"
+                    fontWeight={700}
+                    _hover={{ color: cl }}
+                    _focus={{ boxShadow: 'none' }}
+                    rightIcon={<IoIosArrowDown />}>
+                    Free Channels
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
+                  <Button
+                    color="black.700"
+                    px="0"
+                    display="inline-flex"
+                    alignItems="center"
+                    fontSize="14px"
+                    fontWeight={700}
+                    _hover={{ color: cl }}
+                    _focus={{ boxShadow: 'none' }}
+                    onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
+                    CREATIVE Kidz ⌐◨-◨
+                  </Button>
+                </PopoverContent>
+              </Popover>
+              <Button
+                color="black.700"
+                display="inline-flex"
+                alignItems="center"
+                fontSize="14px"
+                px="0"
+                fontWeight={700}
+                _hover={{ color: cl }}
+                _focus={{ boxShadow: 'none' }}
+                onClick={() => {
+                  handleButtonClick()
+                  router.push('/discover')
+                }}>
+                Discover
+              </Button>
+              <Button
+                color="black.700"
+                display="inline-flex"
+                alignItems="center"
+                fontSize="14px"
+                px="0"
+                fontWeight={700}
+                _hover={{ color: cl }}
+                _focus={{ boxShadow: 'none' }}
+                onClick={() => router.push('https://vote.creativeplatform.xyz')}>
+                Vote
+              </Button>
+              <Center height="50px">
+                <Divider orientation="vertical" />
+              </Center>
+              <Popover>
+                <PopoverTrigger>
+                  <Button
+                    color="black.700"
+                    display="inline-flex"
+                    alignItems="center"
+                    fontSize="14px"
+                    px="0"
+                    fontWeight={700}
+                    _hover={{ color: cl }}
+                    _focus={{ boxShadow: 'none' }}
+                    rightIcon={<IoIosArrowDown />}>
+                    Community
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent w="22vw" maxW="md" _focus={{ boxShadow: 'md' }}>
+                  <Features />
+                </PopoverContent>
+              </Popover>
+              <Center height="50px">
+                <Divider orientation="vertical" />
+              </Center>
+              <ThemeSwitcher />
+            </HStack>
+          </Flex>
+          <chakra.div display={{ base: 'none', md: 'none', lg: 'block' }}>
+            {!address ? (
+              <ConnectWallet btnTitle={'Sign In'} />
+            ) : (
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                  <Avatar name="creative" src={PFP} />
+                </MenuButton>
+
+                <MenuList>
+                  <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
+                    {truncateEthAddress(`${address}`)}
+                  </MenuItem>
+                  <MenuDivider />
+
                   {!subscribed ? (
-                    <MenuList>
-                      <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
-                        {truncateEthAddress(`${address}`)}
-                      </MenuItem>
-                      <MenuDivider />
+                    <>
                       <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
                         Subscribe for ${price?.toString()}
                       </MenuItem>
                       <MenuDivider />
-                      <MenuItem
-                        icon={<AiOutlineDisconnect />}
-                        onClick={() => {
-                          disconnect()
-                          router.push('/')
-                          toast({
-                            title: 'Sign Out',
-                            description: 'Successfully signed out.',
-                            status: 'info',
-                            duration: 5000,
-                            isClosable: true,
-                          })
-                        }}>
-                        Sign Out
-                      </MenuItem>
-                    </MenuList>
+                    </>
                   ) : (
-                    <MenuList>
-                      <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
-                        {truncateEthAddress(address)}
-                      </MenuItem>
-                      <MenuDivider />
-
-                      <MenuItem icon={<MdOutlineAccountCircle />} onClick={() =>{handleButtonClick();
-                         router.push(`/profile/${address}`)}}>
+                    <>
+                      <MenuItem
+                        icon={<MdOutlineAccountCircle />}
+                        onClick={() => {
+                          handleButtonClick()
+                          router.push(`/profile/${address}`)
+                        }}>
                         Profile
                       </MenuItem>
-                      <MenuItem icon={<RiVideoUploadFill />} onClick={() => {handleButtonClick();
-                        router.push(`/profile/${address}/upload`)}}>
+                      <MenuItem
+                        icon={<RiVideoUploadFill />}
+                        onClick={() => {
+                          handleButtonClick()
+                          router.push(`/profile/${address}/upload`)
+                        }}>
                         Upload
                       </MenuItem>
-
                       <MenuDivider />
-                      <MenuItem
-                        icon={<AiOutlineDisconnect />}
-                        onClick={() => {
-                          disconnect()
-                          router.push('/')
-                          toast({
-                            title: 'Sign Out',
-                            description: 'Successfully signed out.',
-                            status: 'info',
-                            duration: 5000,
-                            isClosable: true,
-                          })
-                        }}>
-                        Sign Out
-                      </MenuItem>
-                    </MenuList>
+                    </>
                   )}
-                </Menu>
-              )}
-            </chakra.div>
-            <Flex gap="1.2rem" display={{ base: 'flex', md: 'flex', lg: 'none' }}>
-              <Center>
-                <ThemeSwitcher />
-              </Center>
-              <IconButton
-                variant="outline"
-                aria-label="Open menu"
-                fontSize="20px"
-                colorScheme="white"
-                icon={<AiOutlineMenu />}
-                onClick={mobileNav.onOpen}
-              />
-            </Flex>
+                  <MenuItem
+                    icon={<AiOutlineDisconnect />}
+                    onClick={() => {
+                      disconnect()
+                      router.push('/')
+                      toast({
+                        title: 'Sign Out',
+                        description: 'Successfully signed out.',
+                        status: 'info',
+                        duration: 5000,
+                        isClosable: true,
+                      })
+                    }}>
+                    Sign Out
+                  </MenuItem>
+                </MenuList>
+                {/* {!subscribed ? (
+                  <MenuList>
+                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
+                      {truncateEthAddress(`${address}`)}
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
+                      Subscribe for ${price?.toString()}
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem
+                      icon={<AiOutlineDisconnect />}
+                      onClick={() => {
+                        disconnect()
+                        router.push('/')
+                        toast({
+                          title: 'Sign Out',
+                          description: 'Successfully signed out.',
+                          status: 'info',
+                          duration: 5000,
+                          isClosable: true,
+                        })
+                      }}>
+                      Sign Out
+                    </MenuItem>
+                  </MenuList>
+                ) : (
+                  <MenuList>
+                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
+                      {truncateEthAddress(address)}
+                    </MenuItem>
+                    <MenuDivider />
+
+                    <MenuItem
+                      icon={<MdOutlineAccountCircle />}
+                      onClick={() => {
+                        handleButtonClick()
+                        router.push(`/profile/${address}`)
+                      }}>
+                      Profile
+                    </MenuItem>
+                    <MenuItem
+                      icon={<RiVideoUploadFill />}
+                      onClick={() => {
+                        handleButtonClick()
+                        router.push(`/profile/${address}/upload`)
+                      }}>
+                      Upload
+                    </MenuItem>
+
+                    <MenuDivider />
+                    <MenuItem
+                      icon={<AiOutlineDisconnect />}
+                      onClick={() => {
+                        disconnect()
+                        router.push('/')
+                        toast({
+                          title: 'Sign Out',
+                          description: 'Successfully signed out.',
+                          status: 'info',
+                          duration: 5000,
+                          isClosable: true,
+                        })
+                      }}>
+                      Sign Out
+                    </MenuItem>
+                  </MenuList>
+                )} */}
+              </Menu>
+            )}
+          </chakra.div>
+          <Flex gap="1.2rem" display={{ base: 'flex', md: 'flex', lg: 'none' }}>
+            <Center>
+              <ThemeSwitcher />
+            </Center>
+            <IconButton
+              variant="outline"
+              aria-label="Open menu"
+              fontSize="20px"
+              colorScheme="white"
+              icon={<AiOutlineMenu />}
+              onClick={mobileNav.onOpen}
+            />
           </Flex>
-          {MobileNavContent}
-        </chakra.div>
-      </chakra.header>
+        </Flex>
+        {MobileNavContent}
+      </chakra.div>
+    </chakra.header>
   )
 }
