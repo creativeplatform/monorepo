@@ -222,78 +222,202 @@ const CreateAndViewAsset = () => {
       {createAssetError?.message && <Text> {createAssetError.message} </Text>}
 
       {isFileSelected && (
-        <Box mt={4}>
-          <Text fontSize="lg" fontWeight="bold">
-            Video Preview:
-          </Text>
-          <Flex minWidth='max-content' alignItems='center'>
-          {video && (
-            <video src={URL.createObjectURL(video)} controls style={{ maxWidth: '1000px', maxHeight:'400px', marginTop: '8px' }} />
-          )}
-          </Flex>
-        </Box>
+        <>
+          {/* The preview of uploaded video */}
+          {!createdAsset?.[0]?.id && renderVideoPreview}
+
+          {/* Form for asset name and description */}
+          <Box my={12} maxWidth={400} mx={'auto'}>
+            {!createdAsset?.[0]?.id && (
+              /* "handleSubmit" will validate form inputs before invoking "onSubmit" */
+              <form onSubmit={handleSubmit(handleAssetUpload)}>
+                <FormControl id="assetData" mb={8}>
+                  <FormLabel>Episode Title</FormLabel>
+                  <Controller
+                    name="title"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Input
+                        size={'lg'}
+                        onChange={(e) => {
+                          setAssetName(e.target.value as any)
+                          field.onChange(e)
+                        }}
+                        value={field.value}
+                        mb={formErrors.description ? 0 : 4}
+                        disabled={createAssetStatus === 'loading'}
+                        placeholder="Enter the name of the video"
+                        aria-invalid={formErrors.title ? 'true' : 'false'}
+                      />
+                    )}
+                  />
+                  {formErrors.title && formErrors.title.type === 'required' && (
+                    <FormHelperText mb="32px">Enter the episode title you'd like to use for this video.</FormHelperText>
+                  )}
+
+                  <FormLabel mt={4}>Description</FormLabel>
+                  <Controller
+                    name="description"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Textarea
+                        onChange={(e) => {
+                          setDescription(e.target.value as any)
+                          field.onChange(e)
+                        }}
+                        value={field.value}
+                        disabled={createAssetStatus === 'loading'}
+                        mb={formErrors.description ? 0 : 4}
+                        placeholder="Enter a description for the episode video"
+                      />
+                    )}
+                  />
+                  {formErrors.description && formErrors.description.type == 'required' && (
+                    <FormHelperText mb={4}>Enter the episode description you'd like to use for this video.</FormHelperText>
+                  )}
+                </FormControl>
+
+                {createAssetError?.message ? (
+                  <Box className="processing-video" my={8}>
+                    <Alert status="error">
+                      <AlertIcon />
+                      <AlertDescription ml={2}>{createAssetError.message}!</AlertDescription>
+                    </Alert>
+                  </Box>
+                ) : (
+                  progressFormatted && (
+                    <Box className="processing-video" my={12}>
+                      {progressFormatted}
+                    </Box>
+                  )
+                )}
+                <Button
+                  type="submit"
+                  className="upload-button"
+                  //  as={motion.div}
+                  style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
+                  _hover={{
+                    color: 'gray.800',
+                    transform: isError && 'scale(1.015)',
+                    cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
+                  }}
+                  disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
+                  mb={20}>
+                  Upload Video
+                </Button>
+              </form>
+            )}
+          </Box>
+        </>
       )}
-      {createdAsset?.[0]?.playbackId && <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />}
-      {/* Form for asset name and description */}
-      <Box my={4} maxWidth={400} mx={'auto'}>
-      {!createdAsset?.[0]?.id && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl id="assetData" isRequired>
-          <FormLabel>Episode Title</FormLabel>
-          <Input placeholder="Enter the name of the video" type='text' {...register('title', { required: true })} value={assetName} onChange={(e) => setAssetName(e.target.value)}/>
-          {!isError ? (
-            <FormHelperText>
-              Enter the episode title you'd like to use for this video.
-            </FormHelperText>
-          ) : (
-            <FormErrorMessage>Episode title is required.</FormErrorMessage>
-          )}
-          <FormLabel mt={4}>Description</FormLabel>
-          <Textarea placeholder="Enter a description for the episode video" {...register('description', { required: true })} value={description} onChange={(e) => setDescription(e.target.value)} />
-          {!isError ? (
-            <FormHelperText>
-              Enter the episode description you'd like to use for this video.
-            </FormHelperText>
-          ) : (
-            <FormErrorMessage>Episode description is required.</FormErrorMessage>
-          )}
-          </FormControl>
-        {video ? <Badge className="video-name">{assetName}</Badge> : null}
-        {progressFormatted && <Text className="processing-video">{progressFormatted}</Text>}
-          <Button
-            type='submit'
-            className="upload-button"
-            as={motion.div}
-            bgColor="#EC407A"
-            _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-            onClick={() => {
-              createAsset?.();
-            }}
-            disabled={!createAsset}
-          >
-            Upload Video
-          </Button>
-          </form>
-        )}
-      </Box>
-      {createdAsset && (
-        <Box className="Proceed-button">
-          <Button
-            onClick={() => router.push({
-              pathname: '/mint-nft-video',
-              query: { 
-                assetId: createdAsset[0].id,
-                assetData: JSON.stringify(assetData),
-              },
-            })}
-            className="mint-button"
-            bgColor="#EC407A"
-            as={motion.div}
-            _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-          >
-            Proceed to Mint NFT
-          </Button>
-        </Box>
+
+      {createdAsset?.[0]?.playbackId && (
+        <>
+          <div style={{ marginBottom: '32px' }}>
+            <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
+          </div>
+
+          <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }}>
+            <Text as={'h3'} style={{ fontWeight: '600', fontSize: 24, marginBottom: 24 }}>
+              Asset uploaded successfully.
+            </Text>
+
+            <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
+            <div style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
+              <p>Asset Name: {createdAsset?.[0]?.name}</p>
+              <p>Playback URL: {createdAsset?.[0]?.playbackUrl}</p>
+              <p>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</p>
+            </div>
+          </Stack>
+          <Box className="Proceed-button">
+            <Box my={12} maxWidth={400} mx={'auto'}>
+              <form onSubmit={handleMintSubmit(handleAssetMint)}>
+                <FormControl id="assetMintDetail" mb={8}>
+                  <FormLabel>Number of NFTs to mint?</FormLabel>
+                  <Controller
+                    name="nFTAmountToMint"
+                    control={handleMintControl}
+                    rules={{ required: true, min: 1, max: 100 }}
+                    render={({ field }) => (
+                      <Input
+                        size={'lg'}
+                        type="number"
+                        onChange={(e) => {
+                          setnFTAmountToMint(+e.target.value)
+                          field.onChange(e)
+                        }}
+                        value={field.value}
+                        mb={formErrors.nFTAmountToMint ? 0 : 4}
+                        disabled={mintFormState.isLoading}
+                        placeholder="Enter number of nft(s) to mint"
+                        aria-invalid={formErrors.nFTAmountToMint ? 'true' : 'false'}
+                      />
+                    )}
+                  />
+                  {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'required' && (
+                    <FormHelperText mb="32px">Numbers of NFT to mint is required.</FormHelperText>
+                  )}
+                  {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'min' && (
+                    <FormHelperText mb="32px">You can't mint 0 nft. Try 1 - 100.</FormHelperText>
+                  )}
+                  {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'max' && (
+                    <FormHelperText mb="32px">You can't mint more than 100 nfts.</FormHelperText>
+                  )}
+                  <FormLabel mt={4}>Price per NFT</FormLabel>
+                  <Controller
+                    name="pricePerNFT"
+                    control={handleMintControl}
+                    rules={{ required: true, min: 0 }}
+                    render={({ field }) => (
+                      <Input
+                        type="number"
+                        size={'lg'}
+                        onChange={(e: any) => {
+                          setPricePerNFT(e.target.value)
+                          field.onChange(e)
+                        }}
+                        value={field.value}
+                        mb={mintFormState.errors.pricePerNFT ? 0 : 4}
+                        disabled={mintFormState.isLoading}
+                        placeholder="Enter price per NFT"
+                        aria-invalid={formErrors.nFTAmountToMint ? 'true' : 'false'}
+                      />
+                    )}
+                  />
+                  {mintFormState.errors.pricePerNFT && mintFormState.errors.pricePerNFT.type == 'required' && (
+                    <FormHelperText mb={4}>Price per NFT is required.</FormHelperText>
+                  )}
+                  {mintFormState.errors.pricePerNFT && mintFormState.errors.pricePerNFT.type === 'min' && (
+                    <FormHelperText mb={4}>The price can't be a negative value.</FormHelperText>
+                  )}
+                </FormControl>
+
+                <Button
+                  type="submit"
+                  className="mint-button"
+                  bgColor="#EC407A"
+                  disabled={mintFormState.isLoading}
+                  _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
+                  // as={motion.div}
+                  onClick={() => {
+                    setAssetData((prev) => ({
+                      ...prev,
+                      nFTAmountToMint: nFTAmountToMint,
+                      pricePerNFT: pricePerNFT,
+                      properties: {
+                        playbackId: String(createdAsset?.[0]?.playbackId),
+                        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
+                      },
+                    }))
+                  }}>
+                  Proceed to Mint NFT
+                </Button>
+              </form>
+            </Box>
+          </Box>
+        </>
       )}
     </Box>
   )

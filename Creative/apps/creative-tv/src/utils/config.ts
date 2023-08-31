@@ -32,7 +32,7 @@ export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
-export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET_API_KEY
+export const SMART_WALLET_KEY = process.env.NEXT_PUBLIC_SMART_WALLET
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
 export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 
@@ -132,7 +132,7 @@ export const ACCOUNT_FACTORY_MUMBAI = ''
 export const SMART_WALLET_CONFIG = {
   chain: Goerli, // the chain where your smart wallet will be or is deployed
   factoryAddress: ACCOUNT_FACTORY_TESTNET, // your own deployed account factory address
-  thirdwebApiKey: SMART_WALLET_KEY, // obtained from the thirdweb dashboard
+  clientId: SMART_WALLET_KEY, // obtained from the thirdweb dashboard
   gasless: true, // enable or disable gasless transactions
 }
 

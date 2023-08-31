@@ -1,4 +1,4 @@
-export const formatString = (str: string) => {
+export const removeUnderScore = (str: string) => {
   if (!str.includes('_')) {
     return str.toUpperCase()
   } else {

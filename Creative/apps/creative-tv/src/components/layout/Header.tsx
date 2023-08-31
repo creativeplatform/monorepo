@@ -41,7 +41,9 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { Goerli } from '@thirdweb-dev/chains'
 import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner } from '@thirdweb-dev/react'
+import { Paywall } from '@unlock-protocol/paywall'
 import { useScroll } from 'framer-motion'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
@@ -51,11 +53,9 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import truncateEthAddress from 'truncate-eth-address'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME } from 'utils/config'
 import { PFP } from 'utils/context'
+import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import { Paywall } from '@unlock-protocol/paywall'
-import { Goerli } from '@thirdweb-dev/chains'
 
 interface Props {
   className?: string
@@ -108,13 +108,15 @@ export function Header({ className, handleLoading }: Props) {
 
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
-
   // Get the Membership Price
   const { data: price, isLoading: priceLoading } = useContractRead(contract, 'keyPrice')
+  console.log('address: ', FREE_LOCK_ADDRESS_GOERLI_TESTNET.address == contract?.getAddress())
 
   /*******  CONTRACT READING ********/
   // Determine whether the connected wallet address has a valid subscription
   const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [address])
+
+  console.log('isSubcribed: ', subscribed)
 
   // Native Token
   // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
@@ -153,6 +155,7 @@ export function Header({ className, handleLoading }: Props) {
       pessimistic: true,
       recipient: address, // from new SmartWallet(config);
     })
+
     try {
       const response = await paywall.loadCheckoutModal()
       // Handle the response from the paywall modal
@@ -521,6 +524,48 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuItem>
                   </MenuList>
                 )}
+
+                {/* TODO: remove this after testing */}
+                {/* <MenuList>
+                  <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
+                    {truncateEthAddress(address)}
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    icon={<MdOutlineAccountCircle />}
+                    onClick={() => {
+                      handleButtonClick()
+                      mobileNav.onClose()
+                      router.push(`/profile/${address}`)
+                    }}>
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    icon={<RiVideoUploadFill />}
+                    onClick={() => {
+                      handleButtonClick()
+                      mobileNav.onClose()
+                      router.push(`/profile/${address}/upload`)
+                    }}>
+                    Upload
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem
+                    icon={<AiOutlineDisconnect />}
+                    onClick={() => {
+                      disconnect()
+                      router.push('/')
+                      toast({
+                        title: 'Sign Out',
+                        description: 'Successfully signed out.',
+                        status: 'info',
+                        duration: 5000,
+                        isClosable: true,
+                      })
+                    }}>
+                    Sign Out
+                  </MenuItem>
+                </MenuList> */}
               </Menu>
             )}
           </chakra.p>
@@ -655,7 +700,58 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   <Avatar name="creative" src={PFP} />
                 </MenuButton>
-                {!subscribed ? (
+
+                <MenuList>
+                  <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
+                    {truncateEthAddress(`${address}`)}
+                  </MenuItem>
+                  <MenuDivider />
+
+                  {!subscribed ? (
+                    <>
+                      <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
+                        Subscribe for ${price?.toString()}
+                      </MenuItem>
+                      <MenuDivider />
+                    </>
+                  ) : (
+                    <>
+                      <MenuItem
+                        icon={<MdOutlineAccountCircle />}
+                        onClick={() => {
+                          handleButtonClick()
+                          router.push(`/profile/${address}`)
+                        }}>
+                        Profile
+                      </MenuItem>
+                      <MenuItem
+                        icon={<RiVideoUploadFill />}
+                        onClick={() => {
+                          handleButtonClick()
+                          router.push(`/profile/${address}/upload`)
+                        }}>
+                        Upload
+                      </MenuItem>
+                      <MenuDivider />
+                    </>
+                  )}
+                  <MenuItem
+                    icon={<AiOutlineDisconnect />}
+                    onClick={() => {
+                      disconnect()
+                      router.push('/')
+                      toast({
+                        title: 'Sign Out',
+                        description: 'Successfully signed out.',
+                        status: 'info',
+                        duration: 5000,
+                        isClosable: true,
+                      })
+                    }}>
+                    Sign Out
+                  </MenuItem>
+                </MenuList>
+                {/* {!subscribed ? (
                   <MenuList>
                     <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
                       {truncateEthAddress(`${address}`)}
@@ -722,7 +818,7 @@ export function Header({ className, handleLoading }: Props) {
                       Sign Out
                     </MenuItem>
                   </MenuList>
-                )}
+                )} */}
               </Menu>
             )}
           </chakra.div>
