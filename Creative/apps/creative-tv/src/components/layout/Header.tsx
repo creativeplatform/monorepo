@@ -58,7 +58,6 @@ import { Goerli } from '@thirdweb-dev/chains'
 import { ConnectWallet, useAddress, useContract, useContractRead, useContractWrite, useDisconnect, useSDK, useSigner } from '@thirdweb-dev/react'
 import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
-import { networks } from '@unlock-protocol/networks'
 
 interface Props {
   className?: string
@@ -148,7 +147,7 @@ export function Header({ className, handleLoading }: Props) {
     const provider = 'https://goerli.rpc.thirdweb.com'
 
     const paywallConfig = {
-    pessimistic: true,
+      pessimistic: true,
       locks: {
         [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
           network: Goerli.chainId,
@@ -158,11 +157,11 @@ export function Header({ className, handleLoading }: Props) {
     }
     // provider from Thirdweb
     const paywall = new Paywall(provider);
-    
+
     try {
       // Handle the response from the paywall modal
-     const res = await paywall.loadCheckoutModal(paywallConfig);
-     console.log(res)
+      const res = await paywall.loadCheckoutModal(paywallConfig);
+      console.log(res)
       toast({
         title: 'Welcome Creative',
         description: 'Successfully Subscribed 🎉',
