@@ -71,7 +71,7 @@ interface Props {
 export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? ''
   const [navIsOpen, setNavIsOpen] = useState(false)
-  
+
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
@@ -101,7 +101,7 @@ export function Header({ className, handleLoading }: Props) {
   }
 
   const handleOpenUnlock = () => {
-    window?.unlockProtocol  && window?.unlockProtocol.loadCheckoutModal()
+    window?.unlockProtocol && window?.unlockProtocol.loadCheckoutModal()
     setNavIsOpen(false)
   }
 
@@ -109,7 +109,7 @@ export function Header({ className, handleLoading }: Props) {
   const address = useAddress()
   const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
-  
+
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
 
@@ -123,8 +123,6 @@ export function Header({ className, handleLoading }: Props) {
   // Native Token
   // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
 
-  console.log(subscribed)
- 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(address ?? '')
     // Optionally, you can show a success message or perform any other actions
@@ -147,21 +145,24 @@ export function Header({ className, handleLoading }: Props) {
 
   // Loads the checkout UI
   const handlePaywallCheckout = async () => {
-    const provider = 'goerli.rpc.thirdweb.com'
-    const paywall = new Paywall(networks)
-    paywall.connect(provider) // provider from Thirdweb
-    const response = await paywall.loadCheckoutModal({
-        pessimistic: true,
-        locks: {
-          [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
-              network: Goerli.chainId,
-            }    
+    const provider = 'https://goerli.rpc.thirdweb.com'
+
+    const paywallConfig = {
+    pessimistic: true,
+      locks: {
+        [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
+          network: Goerli.chainId,
         },
-        recipient: address, // from new SmartWallet(config);
-      })
+      },
+      recipient: address// from new SmartWallet(config);
+    }
+    // provider from Thirdweb
+    const paywall = new Paywall(provider);
+    
     try {
       // Handle the response from the paywall modal
-      console.log(response);
+     const res = await paywall.loadCheckoutModal(paywallConfig);
+     console.log(res)
       toast({
         title: 'Welcome Creative',
         description: 'Successfully Subscribed 🎉',
@@ -195,7 +196,7 @@ export function Header({ className, handleLoading }: Props) {
     const unsubscribeY = scrollY.on('change', updateScrollY)
     return unsubscribeY
   }, [scrollY])
- 
+
 
   const { height } = ref.current ? ref.current : { height: 0 }
 
