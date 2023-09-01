@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { polygon } from '@wagmi/chains'
+import { Polygon } from '@thirdweb-dev/chains'
 import request from 'graphql-request'
 import gql from 'graphql-tag'
 
@@ -41,7 +41,7 @@ const useLock = ({ lockAddress, walletAddress = '', redirectTo }: Props) => {
   useEffect(() => {
     const url = new URL('https://app.unlock-protocol.com/checkout')
     const paywallConfig = {
-      locks: { [lockAddress]: { network: polygon.id } },
+      locks: { [lockAddress]: { network: Polygon } },
       skipRecipient: true,
       pessimistic: true,
     }
