@@ -1,9 +1,11 @@
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useSigner } from '@thirdweb-dev/react'
+import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
+// import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
+import { removeUnderScore } from 'utils/formatString'
+import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
 
@@ -15,7 +17,17 @@ interface WagmiNftProps {
 interface NFTCollection {
   image_url: string
 }
-
+type ContractMetaData = {
+  name: string
+  description: string
+  image: string
+  app_uri: string
+  seller_fee_basis_points: number
+  fee_recipient: string
+  merkle: Record<any, any>
+  symbol: string
+  [idx: string]: any
+}
 const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const address = useAddress()
   const router = useRouter()
@@ -27,9 +39,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
 
-
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
   const { contract } = useContract(deployedContractAddress)
+  const { data: contractMetadata, isLoading } = useMetadata(contract)
 
   // Getting asset and refreshing for the status
   const {
@@ -99,10 +111,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const deployNftCollection = async ({ image_url }: NFTCollection) => {
     // Is there an sdk found and is there a connect wallet address?
     if (!signer || !address) return
-    // const sdk = ThirdwebSDK.fromSigner(signer)
 
     const sdk = new ThirdwebSDK(signer, {
-      clientId: NEXT_PUBLIC_THIRDWEB_API_KEY,
+       clientId: THIRDWEB_API_KEY,
     })
 
     // Is there an sdk found?
@@ -123,14 +134,38 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         platform_fee_recipient: CREATIVE_ADDRESS,
         fee_recipient: address,
         seller_fee_basis_points: 300,
-        image: image_url,
+        image: asset?.storage?.ipfs?.nftMetadata?.url,
+        description: props.assetData.description,
+        trusted_forwarders: [CREATIVE_ADDRESS],
       })
 
       console.log('Contract deployed', contractAddress)
+
       setDeployedContractAddress(contractAddress)
     } catch (err: any) {
       setIsDeploying(false)
-      setDeployError(err.message)
+
+      // TODO: send err to ErrorService
+      console.log(err)
+      setDeployError('Contract deployment failed!')
+    }
+  }
+
+  const getContractMetaData = () => {
+    const data: ContractMetaData = contractMetadata as unknown as any
+    let keys: string[], values: string[]
+
+    if (data?.name) {
+      keys = Object.keys(data)
+      values = Object.values(data)
+
+      return keys.map((k, i) => (
+        <div key={i}>
+          <p>
+            {removeUnderScore(k)}: <span style={{ fontWeight: '700' }}>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}</span>
+          </p>
+        </div>
+      ))
     }
   }
 
@@ -158,7 +193,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         router.replace(`/profile/${address}`)
         clearTimeout(timeout)
       }, 1000)
-
     } catch (err: any) {
       setIsMinting(false)
       setError(err.message)
@@ -262,7 +296,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Box>
               </Stack>
 
-              <ErrorBoundary fallback={<p>{deployError}</p>}>
+              <ErrorBoundary fallback={<p>Failed to load...</p>}>
                 <Box my={16} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
                   <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
                   <br />
@@ -279,6 +313,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                     disabled={isDeploying}>
                     {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                   </Button>
+                  <div>{!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>}</div>
                 </Box>
               </ErrorBoundary>
             </>
@@ -295,7 +330,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   width={160}
                   className="show-details-button"
                   my={4}
-                  onClick={() => setShowDetails(!showDetails)}
+                  onClick={() => {
+                    setShowDetails(!showDetails)
+                  }}
                   style={{ backgroundColor: '#EC407A' }}>
                   {showDetails ? 'Hide ' : 'Show '}Details
                 </Button>
@@ -303,11 +340,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
                   <div style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
                     <p>
-                      Contract Name: <span style={{ fontWeight: '700' }}>{asset.name}</span>{' '}
+                      Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
                     </p>
-                    <p>
-                      Contract Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
-                    </p>
+                    {getContractMetaData()}
                   </div>
                 </Box>
               </Stack>

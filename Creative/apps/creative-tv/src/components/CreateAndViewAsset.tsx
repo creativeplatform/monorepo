@@ -303,7 +303,7 @@ const CreateAndViewAsset = () => {
                     transform: isError && 'scale(1.015)',
                     cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
                   }}
-                  disabled={createAssetStatus == 'loading' || !createAsset}
+                  disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
                   mb={20}>
                   Upload Video
                 </Button>
