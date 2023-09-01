@@ -1,11 +1,11 @@
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, useAddress, useContract, useMetadata, useSDK, useSigner } from '@thirdweb-dev/react'
+import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
 import { removeUnderScore } from 'utils/formatString'
-import { CREATIVE_ADDRESS } from '../utils/config'
+import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
 
@@ -38,7 +38,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const [isMinting, setIsMinting] = useState(false)
   const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
-  const sdk = useSDK()
 
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
   const { contract } = useContract(deployedContractAddress)
@@ -113,9 +112,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     // Is there an sdk found and is there a connect wallet address?
     if (!signer || !address) return
 
-    // const sdk = new ThirdwebSDK(signer, {
-    //   clientId: NEXT_PUBLIC_THIRDWEB_API_KEY,
-    // })
+    const sdk = new ThirdwebSDK(signer, {
+       clientId: THIRDWEB_API_KEY,
+    })
 
     // Is there an sdk found?
     if (!sdk) return
@@ -135,8 +134,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         platform_fee_recipient: CREATIVE_ADDRESS,
         fee_recipient: address,
         seller_fee_basis_points: 300,
-        image: image_url,
+        image: asset?.storage?.ipfs?.nftMetadata?.url,
         description: props.assetData.description,
+        trusted_forwarders: [CREATIVE_ADDRESS],
       })
 
       console.log('Contract deployed', contractAddress)
