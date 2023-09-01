@@ -524,48 +524,6 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuItem>
                   </MenuList>
                 )}
-
-                {/* TODO: remove this after testing */}
-                {/* <MenuList>
-                  <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
-                    {truncateEthAddress(address)}
-                  </MenuItem>
-                  <MenuDivider />
-                  <MenuItem
-                    icon={<MdOutlineAccountCircle />}
-                    onClick={() => {
-                      handleButtonClick()
-                      mobileNav.onClose()
-                      router.push(`/profile/${address}`)
-                    }}>
-                    Profile
-                  </MenuItem>
-                  <MenuItem
-                    icon={<RiVideoUploadFill />}
-                    onClick={() => {
-                      handleButtonClick()
-                      mobileNav.onClose()
-                      router.push(`/profile/${address}/upload`)
-                    }}>
-                    Upload
-                  </MenuItem>
-                  <MenuDivider />
-                  <MenuItem
-                    icon={<AiOutlineDisconnect />}
-                    onClick={() => {
-                      disconnect()
-                      router.push('/')
-                      toast({
-                        title: 'Sign Out',
-                        description: 'Successfully signed out.',
-                        status: 'info',
-                        duration: 5000,
-                        isClosable: true,
-                      })
-                    }}>
-                    Sign Out
-                  </MenuItem>
-                </MenuList> */}
               </Menu>
             )}
           </chakra.p>
@@ -751,74 +709,6 @@ export function Header({ className, handleLoading }: Props) {
                     Sign Out
                   </MenuItem>
                 </MenuList>
-                {/* {!subscribed ? (
-                  <MenuList>
-                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
-                      {truncateEthAddress(`${address}`)}
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
-                      Subscribe for ${price?.toString()}
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuItem
-                      icon={<AiOutlineDisconnect />}
-                      onClick={() => {
-                        disconnect()
-                        router.push('/')
-                        toast({
-                          title: 'Sign Out',
-                          description: 'Successfully signed out.',
-                          status: 'info',
-                          duration: 5000,
-                          isClosable: true,
-                        })
-                      }}>
-                      Sign Out
-                    </MenuItem>
-                  </MenuList>
-                ) : (
-                  <MenuList>
-                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
-                      {truncateEthAddress(address)}
-                    </MenuItem>
-                    <MenuDivider />
-
-                    <MenuItem
-                      icon={<MdOutlineAccountCircle />}
-                      onClick={() => {
-                        handleButtonClick()
-                        router.push(`/profile/${address}`)
-                      }}>
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      icon={<RiVideoUploadFill />}
-                      onClick={() => {
-                        handleButtonClick()
-                        router.push(`/profile/${address}/upload`)
-                      }}>
-                      Upload
-                    </MenuItem>
-
-                    <MenuDivider />
-                    <MenuItem
-                      icon={<AiOutlineDisconnect />}
-                      onClick={() => {
-                        disconnect()
-                        router.push('/')
-                        toast({
-                          title: 'Sign Out',
-                          description: 'Successfully signed out.',
-                          status: 'info',
-                          duration: 5000,
-                          isClosable: true,
-                        })
-                      }}>
-                      Sign Out
-                    </MenuItem>
-                  </MenuList>
-                )} */}
               </Menu>
             )}
           </chakra.div>
