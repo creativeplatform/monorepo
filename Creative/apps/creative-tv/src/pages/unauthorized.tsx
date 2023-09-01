@@ -8,7 +8,7 @@ export default function Unauthorized() {
   const url = new URL('https://app.unlock-protocol.com/checkout')
   const paywallConfig = {
     locks: {
-      '0xe174caa294999ec622988242641a27c11e6c22d8': { network: 137, name: 'CRTV+FAN', skipRecipient: true },
+      '0xe174caa294999ec622988242641a27c11e6c22d8': { network: 137, name: 'CRTV+FAN' },
       '0xb9c69af58109927cc2dcce8043f82158f7b96ca7': { network: 137, name: 'CRTV+CREATOR' },
       '0xb311afe316b004dbf569381ae174eaa897b757f6': { network: 137, name: 'CRTV+BRAND' },
     },

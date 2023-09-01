@@ -12,7 +12,7 @@ const UpdateVideoAsset = ({ children }: HeaderProps): JSX.Element => {
   const router = useRouter()
   return (
     <Box>
-      <Breadcrumb>
+      <Breadcrumb mt={10}>
         <BreadcrumbItem>
           <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
         </BreadcrumbItem>

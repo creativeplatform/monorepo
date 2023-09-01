@@ -6,6 +6,7 @@ export declare const SITE_URL = "https://creativeplatform.xyz";
 export declare const SITE_COPYRIGHT = "\u00A9 2023 Creative Organization DAO, LLC. All rights reserved.";
 export declare const SITE_LOGO = "/grant-logo.png";
 export declare const NEXT_PUBLIC_STUDIO_API_KEY: string | undefined;
+export declare const NEXT_PUBLIC_THIRDWEB_API_KEY: string | undefined;
 export declare const SESSION_PASSWORD: string | undefined;
 export declare const NODE_ENV: string | undefined;
 export declare const SIWE_SESSION_SECRET: string | undefined;
@@ -13,9 +14,10 @@ export declare const ALCHEMY_API_KEY: string | undefined;
 export declare const INFURA_API_KEY: string | undefined;
 export declare const POLYGONSCAN_API_KEY: string | undefined;
 export declare const HOST: string | undefined;
-export declare const SMART_WALLET_KEY: string | undefined;
+export declare const THIRDWEB_API_KEY: string | undefined;
 export declare const EXPLORER_KEY: string | undefined;
 export declare const PAPER_CLIENT_ID: string | undefined;
+export declare const WALLET_CONNECT: string | undefined;
 export declare const THEME_INITIAL_COLOR = "system";
 export declare const THEME_COLOR_MODES: Record<string, any>;
 export declare const THEME_COLOR_SCHEME: ThemingProps['colorScheme'];
@@ -51,7 +53,7 @@ export declare const ETH_CHAINS: {
     readonly name: "Goerli";
     readonly title: "Ethereum Testnet Goerli";
     readonly chain: "ETH";
-    readonly rpc: readonly ["https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://goerli.infura.io/v3/${INFURA_API_KEY}", "wss://goerli.infura.io/v3/${INFURA_API_KEY}", "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://rpc.goerli.mudit.blog/", "https://ethereum-goerli.publicnode.com"];
+    readonly rpc: readonly ["https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://goerli.infura.io/v3/${INFURA_API_KEY}", "wss://goerli.infura.io/v3/${INFURA_API_KEY}", "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://rpc.goerli.mudit.blog/", "https://ethereum-goerli.publicnode.com", "https://goerli.gateway.tenderly.co", "wss://goerli.gateway.tenderly.co"];
     readonly faucets: readonly ["https://faucet.paradigm.xyz/", "http://fauceth.komputing.org?chain=5&address=${ADDRESS}", "https://goerli-faucet.slock.it?address=${ADDRESS}", "https://faucet.goerli.mudit.blog"];
     readonly nativeCurrency: {
         readonly name: "Goerli Ether";
@@ -98,7 +100,7 @@ export declare const POLYGON_CHAINS: {
         readonly width: 512;
         readonly format: "png";
     };
-    readonly rpc: readonly ["https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}", "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://polygon-rpc.com/", "https://rpc-mainnet.matic.network", "https://matic-mainnet.chainstacklabs.com", "https://rpc-mainnet.maticvigil.com", "https://rpc-mainnet.matic.quiknode.pro", "https://matic-mainnet-full-rpc.bwarelabs.com", "https://polygon-bor.publicnode.com"];
+    readonly rpc: readonly ["https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}", "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://polygon-rpc.com/", "https://rpc-mainnet.matic.network", "https://matic-mainnet.chainstacklabs.com", "https://rpc-mainnet.maticvigil.com", "https://rpc-mainnet.matic.quiknode.pro", "https://matic-mainnet-full-rpc.bwarelabs.com", "https://polygon-bor.publicnode.com", "https://polygon.gateway.tenderly.co", "wss://polygon.gateway.tenderly.co"];
     readonly faucets: readonly [];
     readonly nativeCurrency: {
         readonly name: "MATIC";
@@ -128,7 +130,7 @@ export declare const MUMBAI_CHAIN: {
         readonly width: 512;
         readonly format: "png";
     };
-    readonly rpc: readonly ["https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}", "https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://matic-mumbai.chainstacklabs.com", "https://rpc-mumbai.maticvigil.com", "https://matic-testnet-archive-rpc.bwarelabs.com", "https://polygon-mumbai-bor.publicnode.com"];
+    readonly rpc: readonly ["https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}", "https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://matic-mumbai.chainstacklabs.com", "https://rpc-mumbai.maticvigil.com", "https://matic-testnet-archive-rpc.bwarelabs.com", "https://polygon-mumbai-bor.publicnode.com", "https://polygon-mumbai.gateway.tenderly.co", "wss://polygon-mumbai.gateway.tenderly.co"];
     readonly faucets: readonly ["https://faucet.polygon.technology/"];
     readonly nativeCurrency: {
         readonly name: "MATIC";
@@ -179,7 +181,7 @@ export declare const SMART_WALLET_CONFIG: {
         readonly name: "Goerli";
         readonly title: "Ethereum Testnet Goerli";
         readonly chain: "ETH";
-        readonly rpc: readonly ["https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://goerli.infura.io/v3/${INFURA_API_KEY}", "wss://goerli.infura.io/v3/${INFURA_API_KEY}", "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://rpc.goerli.mudit.blog/", "https://ethereum-goerli.publicnode.com"];
+        readonly rpc: readonly ["https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://goerli.infura.io/v3/${INFURA_API_KEY}", "wss://goerli.infura.io/v3/${INFURA_API_KEY}", "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://rpc.goerli.mudit.blog/", "https://ethereum-goerli.publicnode.com", "https://goerli.gateway.tenderly.co", "wss://goerli.gateway.tenderly.co"];
         readonly faucets: readonly ["https://faucet.paradigm.xyz/", "http://fauceth.komputing.org?chain=5&address=${ADDRESS}", "https://goerli-faucet.slock.it?address=${ADDRESS}", "https://faucet.goerli.mudit.blog"];
         readonly nativeCurrency: {
             readonly name: "Goerli Ether";
@@ -218,7 +220,7 @@ export declare const SMART_WALLET_CONFIG: {
         readonly slug: "goerli";
     };
     factoryAddress: string;
-    thirdwebApiKey: string | undefined;
+    clientId: string | undefined;
     gasless: boolean;
 };
 export declare const CREATIVE_ADDRESS = "0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260";
