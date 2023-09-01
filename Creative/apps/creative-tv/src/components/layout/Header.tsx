@@ -59,7 +59,6 @@ import { ConnectWallet, useAddress, useContract, useContractRead, useContractWri
 import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
 
-
 interface Props {
   className?: string
   icon?: string
@@ -104,7 +103,6 @@ export function Header({ className, handleLoading }: Props) {
     window?.unlockProtocol && window?.unlockProtocol.loadCheckoutModal()
     setNavIsOpen(false)
   }
-
   // Currently connected wallet address
   const address = useAddress()
   const [content, setContent] = useState<string | undefined>('')
@@ -204,7 +202,6 @@ export function Header({ className, handleLoading }: Props) {
     return unsubscribeY
   }, [scrollY])
 
-
   const { height } = ref.current ? ref.current : { height: 0 }
 
   const Section = ({ icon, title, children }: Props) => {
@@ -269,7 +266,6 @@ export function Header({ className, handleLoading }: Props) {
               </LinkOverlay>
             </Section>
           </LinkBox>
-
           <LinkBox color={tcl}>
             <Section title="DAO Proposals">
               <LinkOverlay href="https://dao.creativeplatform.xyz" target={'_blank'}>
@@ -281,7 +277,6 @@ export function Header({ className, handleLoading }: Props) {
               </LinkOverlay>
             </Section>
           </LinkBox>
-
           <LinkBox color={tcl}>
             <Section title="Bugs/Feature Suggestions">
               <LinkOverlay href="https://feedback.creativeplatform.xyz" target={'_blank'}>
@@ -317,7 +312,6 @@ export function Header({ className, handleLoading }: Props) {
                 </LinkOverlay>
               </LinkBox>
             </Box>
-
             <Box display="flow-root">
               <LinkBox m={-3} p={3} display="flex" alignItems="center" rounded="md" fontSize="md" color={tcl} _hover={{ bg: hbgh }}>
                 <chakra.svg
@@ -713,7 +707,6 @@ export function Header({ className, handleLoading }: Props) {
                       {truncateEthAddress(address)}
                     </MenuItem>
                     <MenuDivider />
-
                     <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => {
                       handleButtonClick();
                       router.push(`/profile/${address}`)
@@ -726,7 +719,6 @@ export function Header({ className, handleLoading }: Props) {
                     }}>
                       Upload
                     </MenuItem>
-
                     <MenuDivider />
                     <MenuItem
                       icon={<AiOutlineDisconnect />}
