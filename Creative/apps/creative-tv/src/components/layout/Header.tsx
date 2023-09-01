@@ -57,6 +57,7 @@ import { PFP } from 'utils/context'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
+
 interface Props {
   className?: string
   icon?: string
@@ -68,9 +69,12 @@ interface Props {
 export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? ''
   const [navIsOpen, setNavIsOpen] = useState(false)
+  const [addr, setAddr] = useState('')
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
+  const sdk = useSDK()
+  const signers = useSigner()
   // const sdk = useSDK()
   const signer = useSigner()
 
@@ -88,7 +92,7 @@ export function Header({ className, handleLoading }: Props) {
     if (isNewTab) {
       window.open(url, '_blank')
       if (isPlugin) {
-        handleOpenUnlock()
+        handlePaywallCheckout()
       } else {
         router.push(url)
         setNavIsOpen(false)
@@ -106,6 +110,14 @@ export function Header({ className, handleLoading }: Props) {
   const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
 
+  useEffect(() => {
+    if (address != undefined && addr === '') {
+      setAddr(address)
+    } else if (address === undefined) {
+      setAddr('')
+    }
+  }, [address])
+
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
   // Get the Membership Price
@@ -114,7 +126,7 @@ export function Header({ className, handleLoading }: Props) {
 
   /*******  CONTRACT READING ********/
   // Determine whether the connected wallet address has a valid subscription
-  const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [address])
+  const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [addr])
 
   console.log('isSubcribed: ', subscribed)
 
@@ -142,11 +154,27 @@ export function Header({ className, handleLoading }: Props) {
 
   // Loads the checkout UI
   const handlePaywallCheckout = async () => {
-    const provider = 'goerli.rpc.thirdweb.com'
+    const provider = 'https://goerli.rpc.thirdweb.com'
 
-    const paywall = new Paywall()
-    paywall.connect(provider) // provider from Thirdweb
-    paywall.loadCheckoutModal({
+    const paywallConfig = {
+      pessimistic: true,
+      locks: {
+        [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
+          network: Goerli.chainId,
+        },
+      },
+      recipient: address// from new SmartWallet(config);
+    }
+    // provider from Thirdweb
+    const paywall = new Paywall(provider);
+
+    try {
+      // Handle the response from the paywall modal
+      const res = await paywall.loadCheckoutModal(paywallConfig);
+      console.log(res)
+      const paywall = new Paywall()
+      paywall.connect(provider) // provider from Thirdweb
+      paywall.loadCheckoutModal({
       locks: {
         [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
           network: Goerli,
@@ -193,6 +221,7 @@ export function Header({ className, handleLoading }: Props) {
     const unsubscribeY = scrollY.on('change', updateScrollY)
     return unsubscribeY
   }, [scrollY])
+
 
   const { height } = ref.current ? ref.current : { height: 0 }
 
@@ -258,7 +287,6 @@ export function Header({ className, handleLoading }: Props) {
               </LinkOverlay>
             </Section>
           </LinkBox>
-
           <LinkBox color={tcl}>
             <Section title="DAO Proposals">
               <LinkOverlay href="https://dao.creativeplatform.xyz" target={'_blank'}>
@@ -374,12 +402,20 @@ export function Header({ className, handleLoading }: Props) {
                     _hover={{ color: cl }}
                     _focus={{ boxShadow: 'none' }}
                     onClick={() => {
+                      mobileNav.onClose();
                       mobileNav.onClose()
                       router.push('https://kidz.creativeplatform.xyz')
                     }}>
                     CREATIVE Kidz ⌐◨-◨
                   </Button>
                   <Tag size={'md'} bg={useColorModeValue('red.300', 'red.800')} borderRadius={'full'} ml={2} color={'white'}>
+                    <Avatar
+                      src='/7ee2e00167cad6ac24339f8246cfdb11.png'
+                      size='xs'
+                      name='Creative Kidz'
+                      ml={-1}
+                      mr={2}
+                    />
                     <Avatar src="/7ee2e00167cad6ac24339f8246cfdb11.png" size="xs" name="Creative Kidz" ml={-1} mr={2} />
                     <TagLabel>Coming Soon</TagLabel>
                   </Tag>
@@ -399,6 +435,8 @@ export function Header({ className, handleLoading }: Props) {
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
               onClick={() => {
+                handleButtonClick();
+                mobileNav.onClose();
                 handleButtonClick()
                 mobileNav.onClose()
                 router.push('/discover')
@@ -418,6 +456,8 @@ export function Header({ className, handleLoading }: Props) {
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
               onClick={() => {
+                handleButtonClick();
+                mobileNav.onClose();
                 handleButtonClick()
                 mobileNav.onClose()
                 router.push('/events')
@@ -462,7 +502,7 @@ export function Header({ className, handleLoading }: Props) {
                       {truncateEthAddress(`${address}`)}
                     </MenuItem>
                     <MenuDivider />
-                    <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
+                    <MenuItem icon={<WarningIcon />} onClick={() => handlePaywallCheckout()}>
                       Subscribe for ${price?.toString()}
                     </MenuItem>
                     <MenuDivider />
@@ -488,6 +528,18 @@ export function Header({ className, handleLoading }: Props) {
                       {truncateEthAddress(address)}
                     </MenuItem>
                     <MenuDivider />
+                    <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => {
+                      handleButtonClick();
+                      mobileNav.onClose();
+                      router.push(`/profile/${address}`)
+                    }}>
+                      Profile
+                    </MenuItem>
+                    <MenuItem icon={<RiVideoUploadFill />} onClick={() => {
+                      handleButtonClick();
+                      mobileNav.onClose();
+                      router.push(`/profile/${address}/upload`)
+                    }}>
                     <MenuItem
                       icon={<MdOutlineAccountCircle />}
                       onClick={() => {
@@ -623,6 +675,19 @@ export function Header({ className, handleLoading }: Props) {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
+                  <Tag size={'md'} bg={useColorModeValue('red.300', 'red.800')} borderRadius={'full'} color={'white'}>
+                    <Avatar
+                      src='/7ee2e00167cad6ac24339f8246cfdb11.png'
+                      size='xs'
+                      name='Creative Kidz'
+                      ml={-1}
+                      mr={2}
+                    />
+                    <TagLabel>Coming Soon</TagLabel>
+                  </Tag>
+                  <Button
+                    color="black.700"
+                    px="2"
                   <Button
                     color="black.700"
                     px="0"
@@ -647,6 +712,7 @@ export function Header({ className, handleLoading }: Props) {
                 _hover={{ color: cl }}
                 _focus={{ boxShadow: 'none' }}
                 onClick={() => {
+                  handleButtonClick();
                   handleButtonClick()
                   router.push('/discover')
                 }}>
@@ -700,7 +766,13 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   <Avatar name="creative" src={PFP} />
                 </MenuButton>
-
+                {!subscribed ? (
+                  <MenuList>
+                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
+                      {truncateEthAddress(`${address}`)}
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem icon={<WarningIcon />} onClick={() => handlePaywallCheckout()}>
                 <MenuList>
                   <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
                     {truncateEthAddress(`${address}`)}
@@ -779,11 +851,21 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuList>
                 ) : (
                   <MenuList>
+                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={() => handleCopyAddress()}>
                     <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
                       {truncateEthAddress(address)}
                     </MenuItem>
                     <MenuDivider />
-
+                    <MenuItem icon={<MdOutlineAccountCircle />} onClick={() => {
+                      handleButtonClick();
+                      router.push(`/profile/${address}`)
+                    }}>
+                      Profile
+                    </MenuItem>
+                    <MenuItem icon={<RiVideoUploadFill />} onClick={() => {
+                      handleButtonClick();
+                      router.push(`/profile/${address}/upload`)
+                    }}>
                     <MenuItem
                       icon={<MdOutlineAccountCircle />}
                       onClick={() => {
@@ -818,6 +900,7 @@ export function Header({ className, handleLoading }: Props) {
                       Sign Out
                     </MenuItem>
                   </MenuList>
+                )}
                 )} */}
               </Menu>
             )}
