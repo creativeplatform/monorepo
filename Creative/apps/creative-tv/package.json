@@ -13,7 +13,8 @@
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.5.1",
     "@chakra-ui/stepper": "^2.2.0",
-    "@emotion/styled": "^11.10.6",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@livepeer/react": "^2.5.8",
     "@next/font": "13.1.1",
     "@orbisclub/components": "^0.2.5",
@@ -21,7 +22,7 @@
     "@thirdweb-dev/chains": "^0.1.42",
     "@thirdweb-dev/react": "3.14.29",
     "@thirdweb-dev/sdk": "^3.10.48",
-    "@unlock-protocol/networks": "^0.0.15",
+    "@unlock-protocol/networks": "0.0.15",
     "@unlock-protocol/paywall": "^0.6.8",
     "@unlock-protocol/unlock-js": "^0.39.1",
     "@wagmi/chains": "^0.1.7",
@@ -49,7 +50,8 @@
     "ui": "*",
     "usehooks-ts": "^2.9.1",
     "wagmi": "^0.10.0",
-    "webpack": "^5.88.1"
+    "walletconnect": "^1.7.8",
+    "webpack": "5.88.1"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "4.24.4",
