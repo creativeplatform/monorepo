@@ -59,6 +59,7 @@ import { ConnectWallet, useAddress, useContract, useContractRead, useContractWri
 import { SITE_NAME, CREATIVE_ADDRESS, SITE_LOGO, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from 'utils/config'
 import { PFP } from 'utils/context'
 
+
 interface Props {
   className?: string
   icon?: string
@@ -70,12 +71,12 @@ interface Props {
 export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? ''
   const [navIsOpen, setNavIsOpen] = useState(false)
-
+  const [addr, setAddr] = useState('')
   const ref = useRef(null)
   const router = useRouter()
   const toast = useToast()
   const sdk = useSDK()
-  const signer = useSigner()
+  const signers = useSigner()
 
   const handleButtonClick = () => {
     if (handleLoading) {
@@ -109,6 +110,14 @@ export function Header({ className, handleLoading }: Props) {
   const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
 
+  useEffect(() => {
+    if (address != undefined && addr === '') {
+      setAddr(address)
+    } else if (address === undefined) {
+      setAddr('')
+    }
+  }, [address])
+
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
 
@@ -117,7 +126,7 @@ export function Header({ className, handleLoading }: Props) {
 
   /*******  CONTRACT READING ********/
   // Determine whether the connected wallet address has a valid subscription
-  const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [address])
+  const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [addr])
 
   // Native Token
   // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
@@ -140,7 +149,6 @@ export function Header({ className, handleLoading }: Props) {
 
   // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
   // If no provider is set, the library uses window.ethereum
-
 
   // Loads the checkout UI
   const handlePaywallCheckout = async () => {
