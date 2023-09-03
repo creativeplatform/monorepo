@@ -22,7 +22,7 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
       <Box>
         <Breadcrumb mt={10}>
           <BreadcrumbItem>
-            <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
+            <BreadcrumbLink onClick={() => router.push('/')}>🏠 Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage className="active-crumb">
             <BreadcrumbLink>Mint NFT Video</BreadcrumbLink>

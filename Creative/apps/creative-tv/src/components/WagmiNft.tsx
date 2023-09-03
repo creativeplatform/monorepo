@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Stack, Text, useToast, Flex } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRenderer } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
@@ -333,12 +333,12 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Button>
 
                 <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                  <div style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
-                    <p>
+                  <Flex style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
+                    <Text>
                       Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
-                    </p>
+                    </Text>
                     {getContractMetaData()}
-                  </div>
+                  </Flex>
                 </Box>
               </Stack>
 

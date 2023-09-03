@@ -451,15 +451,13 @@ export function Header({ className, handleLoading }: Props) {
             {!address ? (
               <ConnectWallet
                 theme={connector} 
-                btnTitle={'Connect'}
+                btnTitle={'Link Account'}
                 modalTitle={'Login'}
               />
             ) : (
               <>
               <ConnectWallet
                 theme={connector} 
-                btnTitle={'Connect'}
-                modalTitle={'Login'}
                 dropdownPosition={{
                   side: "bottom", // "top" | "bottom" | "left" | "right";
                   align: "end", // "start" | "center" | "end";
@@ -662,15 +660,13 @@ export function Header({ className, handleLoading }: Props) {
             {!address ? (
               <ConnectWallet
                 theme={connector} 
-                btnTitle={'Connect'}
+                btnTitle={'Link Account'}
                 modalTitle={'Login'}
               />
             ) : (
               <>
               <ConnectWallet
                 theme={connector} 
-                btnTitle={'Connect'}
-                modalTitle={'Login'}
                 dropdownPosition={{
                   side: "bottom", // "top" | "bottom" | "left" | "right";
                   align: "end", // "start" | "center" | "end";
