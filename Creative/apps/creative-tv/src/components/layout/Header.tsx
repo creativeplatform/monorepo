@@ -73,6 +73,7 @@ export function Header({ className, handleLoading }: Props) {
   const toast = useToast()
   // const sdk = useSDK()
   const signer = useSigner()
+  const connector = useColorModeValue('light', 'dark')
 
   const handleButtonClick = () => {
     if (handleLoading) {
@@ -337,8 +338,10 @@ export function Header({ className, handleLoading }: Props) {
     )
   }
 
-  const MobileNavContent = (
-    <Drawer isOpen={mobileNav.isOpen} placement="top" onClose={mobileNav.onClose} size={{ base: 'full', sm: 'full', md: 'xs' }}>
+  const MobileNavContent = (props: any) => {
+    const connector = useColorModeValue('light', 'dark')
+    return (
+      <Drawer isOpen={mobileNav.isOpen} placement="top" onClose={mobileNav.onClose} size={{ base: 'full', sm: 'full', md: 'xs' }}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader>
@@ -379,10 +382,6 @@ export function Header({ className, handleLoading }: Props) {
                     }}>
                     CREATIVE Kidz ⌐◨-◨
                   </Button>
-                  <Tag size={'md'} bg={useColorModeValue('red.300', 'red.800')} borderRadius={'full'} ml={2} color={'white'}>
-                    <Avatar src="/7ee2e00167cad6ac24339f8246cfdb11.png" size="xs" name="Creative Kidz" ml={-1} mr={2} />
-                    <TagLabel>Coming Soon</TagLabel>
-                  </Tag>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -450,18 +449,28 @@ export function Header({ className, handleLoading }: Props) {
           </p>
           <chakra.p my={4}>
             {!address ? (
-              <ConnectWallet btnTitle={'Sign In'} />
+              <ConnectWallet
+                theme={connector} 
+                btnTitle={'Connect'}
+                modalTitle={'Login'}
+              />
             ) : (
+              <>
+              <ConnectWallet
+                theme={connector} 
+                btnTitle={'Connect'}
+                modalTitle={'Login'}
+                dropdownPosition={{
+                  side: "bottom", // "top" | "bottom" | "left" | "right";
+                  align: "end", // "start" | "center" | "end";
+                }} 
+              />
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  <Avatar name="creative" src={PFP} />
+                  <Avatar mb={6} size={'md'} name="creative" src={PFP} />
                 </MenuButton>
                 {!subscribed ? (
                   <MenuList>
-                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
-                      {truncateEthAddress(`${address}`)}
-                    </MenuItem>
-                    <MenuDivider />
                     <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
                       Subscribe for ${price?.toString()}
                     </MenuItem>
@@ -484,10 +493,6 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuList>
                 ) : (
                   <MenuList>
-                    <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
-                      {truncateEthAddress(address)}
-                    </MenuItem>
-                    <MenuDivider />
                     <MenuItem
                       icon={<MdOutlineAccountCircle />}
                       onClick={() => {
@@ -525,12 +530,15 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuList>
                 )}
               </Menu>
+              </>
             )}
           </chakra.p>
         </DrawerBody>
       </DrawerContent>
     </Drawer>
-  )
+    )
+  }
+    
   return (
     <chakra.header
       className={styleName}
@@ -652,19 +660,28 @@ export function Header({ className, handleLoading }: Props) {
           </Flex>
           <chakra.div display={{ base: 'none', md: 'none', lg: 'block' }}>
             {!address ? (
-              <ConnectWallet btnTitle={'Sign In'} />
+              <ConnectWallet
+                theme={connector} 
+                btnTitle={'Connect'}
+                modalTitle={'Login'}
+              />
             ) : (
+              <>
+              <ConnectWallet
+                theme={connector} 
+                btnTitle={'Connect'}
+                modalTitle={'Login'}
+                dropdownPosition={{
+                  side: "bottom", // "top" | "bottom" | "left" | "right";
+                  align: "end", // "start" | "center" | "end";
+                }}
+              />
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  <Avatar name="creative" src={PFP} />
+                  <Avatar mb={6} size={'lg'} name="creative" src={PFP} />
                 </MenuButton>
 
                 <MenuList>
-                  <MenuItem icon={<HiOutlineClipboardCopy />} onClick={handleCopyAddress}>
-                    {truncateEthAddress(`${address}`)}
-                  </MenuItem>
-                  <MenuDivider />
-
                   {!subscribed ? (
                     <>
                       <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
@@ -710,6 +727,7 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuItem>
                 </MenuList>
               </Menu>
+              </>
             )}
           </chakra.div>
           <Flex gap="1.2rem" display={{ base: 'flex', md: 'flex', lg: 'none' }}>
@@ -726,7 +744,7 @@ export function Header({ className, handleLoading }: Props) {
             />
           </Flex>
         </Flex>
-        {MobileNavContent}
+        {<MobileNavContent />}
       </chakra.div>
     </chakra.header>
   )
