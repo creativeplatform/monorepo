@@ -316,7 +316,33 @@ const CreateAndViewAsset = () => {
       {createdAsset?.[0]?.playbackId && (
         <>
           <div style={{ marginBottom: '32px' }}>
-            <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
+            <Player 
+            title={createdAsset[0].name} 
+            playbackId={createdAsset[0].playbackId}
+            autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
+            showUploadingIndicator={true}
+            controls={{
+            autohide: 3000,
+            hotkeys: true
+            }}
+            theme={{
+            borderStyles: {
+                containerBorderStyle: 'solid',
+            },
+            colors: {
+                accent: '#EC407A',
+            },
+            space: {
+                controlsBottomMarginX: '10px',
+                controlsBottomMarginY: '5px',
+                controlsTopMarginX: '15px',
+                controlsTopMarginY: '10px',
+            },
+            radii: {
+                containerBorderRadius: '0px',
+            },
+            }} 
+            />
           </div>
 
           <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }}>
@@ -325,11 +351,11 @@ const CreateAndViewAsset = () => {
             </Text>
 
             <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
-            <div style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
-              <p>Asset Name: {createdAsset?.[0]?.name}</p>
-              <p>Playback URL: {createdAsset?.[0]?.playbackUrl}</p>
-              <p>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</p>
-            </div>
+            <Box style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
+              <Text>Asset Name: {createdAsset?.[0]?.name}</Text>
+              <Text>Playback URL: {createdAsset?.[0]?.playbackUrl}</Text>
+              <Text>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
+            </Box>
           </Stack>
           <Box className="Proceed-button">
             <Box my={12} maxWidth={400} mx={'auto'}>

@@ -90,7 +90,7 @@ export default function AllAssets() {
                   <Text>Views: {video?.viewCount.toString()}</Text> {/* Displaying the view count */}
                 </Flex>
                 <Stack mt="6" spacing="3">
-                  <Heading size={'md'}>{video?.name.slice(0, -4)}</Heading>
+                  <Heading size={'md'}>{video?.name}</Heading>
                   <Text>
                     With Creative TV, we wanted to sync the speed of creation with the speed of design. We wanted the creator to be just as excited as the designer to create new content.
                   </Text>
