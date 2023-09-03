@@ -159,7 +159,7 @@ export default function ProfilePage() {
     <Container maxW="7xl" my={10}>
       <Breadcrumb>
           <BreadcrumbItem>
-            <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
+            <BreadcrumbLink onClick={() => router.push('/')}>🏠 Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage className="active-crumb">
             <BreadcrumbLink>Profile</BreadcrumbLink>

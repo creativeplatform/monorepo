@@ -14,7 +14,7 @@ const UpdateVideoAsset = ({ children }: HeaderProps): JSX.Element => {
     <Box>
       <Breadcrumb mt={10}>
         <BreadcrumbItem>
-          <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
+          <BreadcrumbLink onClick={() => router.push('/')}>🏠 Home</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage className="active-crumb">
           <BreadcrumbLink href="#">Update Video Assets</BreadcrumbLink>
