@@ -451,7 +451,7 @@ export function Header({ className, handleLoading }: Props) {
             {!address ? (
               <ConnectWallet
                 theme={connector} 
-                btnTitle={'Sign-In'}
+                btnTitle={'Link Account'}
                 modalTitle={'Login'}
               />
             ) : (
@@ -660,7 +660,7 @@ export function Header({ className, handleLoading }: Props) {
             {!address ? (
               <ConnectWallet
                 theme={connector} 
-                btnTitle={'Sign-In'}
+                btnTitle={'Link Account'}
                 modalTitle={'Login'}
               />
             ) : (
