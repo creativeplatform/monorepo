@@ -17,26 +17,10 @@ export default function TransferPage() {
     const address = useAddress();
     return (
         <>
-            <NextSeo title="Creative Xfer" />
-            <Container maxW={"1200px"} mt={10}>
-                <Breadcrumb>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                        <BreadcrumbLink onClick={() => router.push(`/profile/${address}`)}>Profile</BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem isCurrentPage>
-                        <BreadcrumbLink>Xfer</BreadcrumbLink>
-                    </BreadcrumbItem>
-                </Breadcrumb>
-                <Flex flexDirection={'column'} justifyContent={"center"} alignItems={"center"}>
-                    <TransferCard />
-                    <Events />
-                </Flex>
-            </Container>
+            <Flex flexDirection={'column'} justifyContent={"center"} alignItems={"center"}>
+                <TransferCard />
+                <Events />
+            </Flex>
         </>
     );
 }

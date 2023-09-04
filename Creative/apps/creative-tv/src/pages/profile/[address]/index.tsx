@@ -35,6 +35,7 @@ import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdAutorenew, MdCancel, MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
+import TransferPage from './transfer'
 import { useState } from 'react'
 
 export default function ProfilePage() {
@@ -210,6 +211,10 @@ export default function ProfilePage() {
                     <Emoji symbol="💰" label="money bag" />
                     &nbsp;Earnings
                   </Tab>
+                  <Tab>
+                    <Emoji symbol='🏧' label="ATM" />
+                    &nbsp;Transfer
+                  </Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -324,6 +329,11 @@ export default function ProfilePage() {
                         Earnings:
                       </Text>
                       <Text>No earnings... yet</Text>
+                    </Box>
+                  </TabPanel>
+                  <TabPanel>
+                    <Box>
+                      <TransferPage />
                     </Box>
                   </TabPanel>
                 </TabPanels>

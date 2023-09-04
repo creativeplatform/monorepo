@@ -1,10 +1,11 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
+import React, { ReactNode, useMemo } from 'react'
 import { LivepeerConfig } from '@livepeer/react'
 import {useLivepeerClient} from '../hooks/useLivepeerClient';
 import { useRouter } from 'next/router'
-import { ReactNode, useMemo } from 'react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
 import { AssetData } from './CreateAndViewAsset'
 import WagmiNft from './WagmiNft'
+import { Emoji } from 'ui'
 
 interface HeaderProps {
   children: ReactNode
@@ -22,7 +23,7 @@ const MintNftVideo = ({ children }: HeaderProps): JSX.Element => {
       <Box>
         <Breadcrumb mt={10}>
           <BreadcrumbItem>
-            <BreadcrumbLink onClick={() => router.push('/')}>🏠 Home</BreadcrumbLink>
+            <BreadcrumbLink onClick={() => router.push('/')}><Emoji symbol='🏠' label='home'/> Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage className="active-crumb">
             <BreadcrumbLink>Mint NFT Video</BreadcrumbLink>

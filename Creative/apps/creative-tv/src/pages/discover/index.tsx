@@ -4,6 +4,7 @@ import { NextSeo } from 'next-seo'
 import { BreadcrumbItem, BreadcrumbLink, Breadcrumb, Box, Heading, Flex, Text } from '@chakra-ui/react'
 import { ConnectWallet, useAddress } from '@thirdweb-dev/react'
 import AllAssets from '../../components/AllAssets'
+import { Emoji } from 'ui'
 
 export default function Discover() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function Discover() {
       <Box p={4}>
         <Breadcrumb>
           <BreadcrumbItem>
-            <BreadcrumbLink onClick={() => router.push('/')}>🏠 Home</BreadcrumbLink>
+            <BreadcrumbLink onClick={() => router.push('/')}><Emoji symbol='🏠' label='home'/> Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage className="active-crumb">
             <BreadcrumbLink>Explore</BreadcrumbLink>
