@@ -17,7 +17,7 @@ function Contact(props) {
                     <div className="col-md-12">
 
                         <ul className="breadcrumbs">
-                            <li><Link to="/">🏠 Home</Link></li>
+                            <li><Link to="/">Home</Link></li>
                             <li>Contact</li>
                         </ul>
                 
