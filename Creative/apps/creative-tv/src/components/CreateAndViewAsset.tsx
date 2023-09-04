@@ -104,6 +104,7 @@ const CreateAndViewAsset = () => {
           sources: [
             {
               name: assetName,
+              description: description,
               file: video,
               data: assetData,
               creatorId: address,
@@ -225,7 +226,6 @@ const CreateAndViewAsset = () => {
         <>
           {/* The preview of uploaded video */}
           {!createdAsset?.[0]?.id && renderVideoPreview}
-
           {/* Form for asset name and description */}
           <Box my={12} maxWidth={400} mx={'auto'}>
             {!createdAsset?.[0]?.id && (
@@ -245,7 +245,7 @@ const CreateAndViewAsset = () => {
                           field.onChange(e)
                         }}
                         value={field.value}
-                        mb={formErrors.description ? 0 : 4}
+                        mb={formErrors.title ? 0 : 4}
                         disabled={createAssetStatus === 'loading'}
                         placeholder="Enter the name of the video"
                         aria-invalid={formErrors.title ? 'true' : 'false'}
@@ -296,7 +296,6 @@ const CreateAndViewAsset = () => {
                 <Button
                   type="submit"
                   className="upload-button"
-                  //  as={motion.div}
                   style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
                   _hover={{
                     color: 'gray.800',
