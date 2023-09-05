@@ -89,7 +89,7 @@ export function Header({ className, handleLoading }: Props) {
     if (isNewTab) {
       window.open(url, '_blank')
       if (isPlugin) {
-        handleOpenUnlock()
+        handlePaywallCheckout()
       } else {
         router.push(url)
         setNavIsOpen(false)
@@ -105,7 +105,8 @@ export function Header({ className, handleLoading }: Props) {
   const address = useAddress()
   const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
-
+  const addr = signers ? signers?.provider?.originalSigner?._address : ''
+  
   // Get the Lock contract we deployed
   const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
   // Get the Membership Price
@@ -142,24 +143,25 @@ export function Header({ className, handleLoading }: Props) {
 
   // Loads the checkout UI
   const handlePaywallCheckout = async () => {
-    const provider = 'goerli.rpc.thirdweb.com'
-
-    const paywall = new Paywall()
-    paywall.connect(provider) // provider from Thirdweb
-    paywall.loadCheckoutModal({
+    const provider = 'https://goerli.rpc.thirdweb.com'
+    
+    const paywallConfig = {
+      pessimistic: true,
       locks: {
         [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
-          network: Goerli,
+          network: Goerli.chainId,
         },
       },
-      pessimistic: true,
-      recipient: address, // from new SmartWallet(config);
-    })
+      recipient: address// from new SmartWallet(config);
+    }
+    // provider from Thirdweb
+    const paywall = new Paywall(provider);
 
     try {
-      const response = await paywall.loadCheckoutModal()
       // Handle the response from the paywall modal
-      console.log(response)
+      const res = await paywall.loadCheckoutModal(paywallConfig);
+      // Handle the response from the paywall modal
+      console.log(res)
       toast({
         title: 'Welcome Creative',
         description: 'Successfully Subscribed 🎉',
@@ -467,7 +469,7 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
                 {!subscribed ? (
                   <MenuList>
-                    <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
+                    <MenuItem icon={<WarningIcon />} onClick={() => handlePaywallCheckout()}>
                       Subscribe for ${price?.toString()}
                     </MenuItem>
                     <MenuDivider />
@@ -741,7 +743,7 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuList>
                   {!subscribed ? (
                     <>
-                      <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
+                      <MenuItem icon={<WarningIcon />} onClick={() => handlePaywallCheckout()}>
                         Subscribe for ${price?.toString()}
                       </MenuItem>
                       <MenuDivider />
