@@ -120,14 +120,13 @@ function Footer(props) {
                                     <img id="logo_footer" className='logo-dark' src={logodark} alt="Creative" />
                                     <img id="logo_footer" className='logo-light' src={logo} alt="Creative" />
                                 </div>
-                                <p className="content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+                                <p className="content">We believe in the future of the creator economy and are introducing a platform to launch a asset NFT for creators and brands to incentivize from NFTs.</p>
                                 <ul className="social-item">
-                                    <li><Link to="#"><i className="fab fa-twitter"></i></Link></li>
-                                    <li><Link to="#"><i className="fab fa-facebook"></i></Link></li>
-                                    <li><Link to="#"><i className="fab fa-telegram-plane"></i></Link></li>
-                                    <li><Link to="#"><i className="fab fa-youtube"></i></Link></li>
-                                    <li><Link to="#"><i className="icon-fl-tik-tok-2"></i></Link></li>
-                                    <li><Link to="#"><i className="icon-fl-vt"></i></Link></li>
+                                    <li><Link to="https://twitter.com/creativecrtv"><i className="fab fa-twitter"></i></Link></li>
+                                    <li><Link to="https://t.me/thecrtv"><i className="fab fa-telegram-plane"></i></Link></li>
+                                    <li><Link to="https://youtube.com/creativecrtv"><i className="fab fa-youtube"></i></Link></li>
+                                    <li><Link to="https://tiktok.com/@creativeplatform.xyz"><i className="icon-fl-tik-tok-2"></i></Link></li>
+                                    <li><Link to="https://discord.gg/5GeeZykgm4"><i className="icon-fl-vt"></i></Link></li>
                                 </ul>
                                 <p className="copy-right">Copyright © 2023 Creative Organization DAO, LLC. All Rights Reserved.
 
@@ -140,7 +139,6 @@ function Footer(props) {
                                     <h6 className="widget-title">Maketplace</h6>
                                     <ul >
                                         <li><Link to="/explore-v3">Explore</Link></li>
-                                        <li><Link to="/item-details-v1">Item Detail</Link></li>
                                         <li><Link to="/live-auctions-v2">Live Auctions</Link></li>
                                     </ul>
                                 </div>
@@ -148,7 +146,6 @@ function Footer(props) {
                                     <h6 className="widget-title">Stats</h6>
                                     <ul >
                                         <li><Link to="/ranking">Ranking</Link></li>
-                                        <li><Link to="/login">Login</Link></li>
                                     </ul>
                                 </div>
                                 <div className="menu menu-3">
@@ -162,7 +159,6 @@ function Footer(props) {
                                     <h6 className="widget-title">My account</h6>
                                     <ul >
                                         <li><Link to="/dashboard">Profile</Link></li>
-                                        <li><Link to="/wallet">My wallet</Link></li>
                                     </ul>
                                 </div>
                             </div>

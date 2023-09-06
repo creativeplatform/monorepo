@@ -5,9 +5,6 @@ import CardModal from '../layouts/CardModal';
 import { Link } from 'react-router-dom';
 
 
-
-
-
 Explore.propTypes = {
     data : PropTypes.array,
 };

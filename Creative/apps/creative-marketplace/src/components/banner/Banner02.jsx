@@ -65,7 +65,7 @@ function Banner02(props) {
                                                         <Link to="#" className="avatar" data-tooltip="Creator: Solvador" tabIndex="0"><img src={avt3} alt="images" /></Link>
                                                     </div>
                                                     <div className="details-product">
-                                                        <div className="title"> <Link to="/item-details-v1">“The Monkey sad ”</Link> </div>
+                                                        <div className="title"> <Link to="/item-details-v1">“Monster”</Link> </div>
                                                         <div className="creator"> <Link to="#">{idx.tag}</Link> </div>
                                                     </div>
                                                     <div className="price">
