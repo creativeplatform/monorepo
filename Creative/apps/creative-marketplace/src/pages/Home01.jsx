@@ -1,6 +1,6 @@
 import React from 'react';
 import dataBanner from '../assets/fake-data/data-banner';
-import dataCategory from '../assets/fake-data/data-category';
+import dataCategory from '../const/context';
 import dataCollection from '../assets/fake-data/data-collection';
 import dataCreate from '../assets/fake-data/data-create';
 import dataExplore from '../assets/fake-data/data-explore';

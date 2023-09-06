@@ -1,19 +1,20 @@
 
 
-import img1 from '../images/product-category/product-category-1.jpg'
-import img2 from '../images/product-category/product-category-2.jpg'
-import img3 from '../images/product-category/product-category-3.jpg'
-import img4 from '../images/product-category/product-category-5.jpg'
+import img1 from '../images/product-category/digital-art.gif'
+import img2 from '../images/product-category/Fashion.gif'
+import img3 from '../images/product-category/Music.gif'
+import img4 from '../images/product-category/sports.gif'
+import img5 from '../images/product-category/videos.gif'
 const dataCategory = [
     {
         id: 1,
         img: img1,
-        title: 'Digital art',
+        title: 'Digital Art',
     },
     {
         id: 2,
         img: img2,
-        title: 'Style',
+        title: 'Fashion',
     },
     {
         id: 3,
@@ -23,12 +24,12 @@ const dataCategory = [
     {
         id: 4,
         img: img4,
-        title: 'Sport',
+        title: 'Sports',
     },
     {
         id: 5,
-        img: img1,
-        title: 'Digital art',
+        img: img5,
+        title: 'Videos',
     },
 
    
