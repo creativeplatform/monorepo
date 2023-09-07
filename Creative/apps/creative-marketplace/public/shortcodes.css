@@ -602,7 +602,7 @@
   bottom: 24px;
   padding: 4px 17px 4px 17px;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.7);
+  background: #EC407A 0.7;
   border: 1px solid rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(4px);
   border-radius: 100px;

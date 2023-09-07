@@ -22,7 +22,7 @@ import avt4 from '../images/author/author15.png'
 import avt5 from '../images/author/author16.png'
 import avt6 from '../images/author/author17.png'
 
-const dataLiveaution = [
+const dataLiveauction = [
     {
         id: 1,
         img: img1,
@@ -140,4 +140,4 @@ const dataLiveaution = [
    
 ]
 
-export default dataLiveaution;
+export default dataLiveauction;
