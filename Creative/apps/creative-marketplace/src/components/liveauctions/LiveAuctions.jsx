@@ -4,6 +4,7 @@ import { Navigation, Scrollbar, A11y , Pagination   } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useContract, useValidEnglishAuctions } from "@thirdweb-dev/react";
 import truncateEthAddress from 'truncate-eth-address';
+import { ethers } from 'ethers';
 
 import 'swiper/scss';
 import 'swiper/scss/navigation';
@@ -103,7 +104,7 @@ function LiveAuctions(props) {
                         }}
                         className="live-auction visible"
                         navigation
-                        loop= {true}
+                        loop= {false}
                         pagination={{
                             clickable: true,
                           }}
@@ -145,7 +146,7 @@ function LiveAuctions(props) {
                                                     <div className="current-bid">
                                                         <div className="subtitle">Current bid</div>
                                                         <div className="price">
-                                                            <span className="cash">{idx?.minimumBidAmount}</span><span className="icon"><img src={icon3} alt="images" /></span>
+                                                            <span className="cash">{idx?.minimumBidCurrencyValue?.displayValue} {idx?.minimumBidCurrencyValue?.symbol}</span><span className="icon"><img src={icon3} alt="images" /></span>
                                                         </div>
                                                     </div>
                                                 </div>
