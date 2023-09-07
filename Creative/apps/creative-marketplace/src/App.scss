@@ -1292,16 +1292,18 @@ a {
             left: 50%;
             top: unset;
             bottom: 24px;
-            padding: 4px 17px 4px 17px;
+            width: fit-content;
+            padding: 0.5vw 0.2vw 0.5vw 0.2vw;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.7);
+            background: #EC407A;
+            opacity: 0.8;
             border: 1px solid rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(4px);
             border-radius: 100px;
             & .countdown__item {
                 font-family: 'DM Sans';
                 font-weight: 700;
-                font-size: 16px;
+                font-size: 14px;
                 color: #191820;
                 &:last-child .countdown__label::after {
                     display: none;

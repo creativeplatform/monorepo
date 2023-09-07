@@ -1,8 +1,9 @@
-import React , {useState} from 'react';
-import PropTypes from 'prop-types';
+import React , {useState, useEffect} from 'react';
 
 import { Navigation, Scrollbar, A11y , Pagination   } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useContract, useValidEnglishAuctions } from "@thirdweb-dev/react";
+import truncateEthAddress from 'truncate-eth-address';
 
 import 'swiper/scss';
 import 'swiper/scss/navigation';
@@ -14,15 +15,63 @@ import icon2 from '../../assets/images/icon/rain2.svg'
 import icon3 from '../../assets/images/icon/dai.svg'
 import { Link } from 'react-router-dom';
 
-LiveAutions.propTypes = {
-    data : PropTypes.array,
-};
+// LiveAuctions.propTypes = {
+//     data : PropTypes.array,
+// };
 
-function LiveAutions(props) {
-
+function LiveAuctions(props) {
     const [modalShow, setModalShow] = useState(false);
+    const [timeLefts, setTimeLefts] = useState({}); // Store countdowns for each auction
 
-    const {data} = props;
+    const { contract } = useContract("0xa71AB8eE65586BB6e305a98B919f1B83e007A946", "marketplace-v3");
+    const { data: validEnglishAuctions } = useValidEnglishAuctions(contract, { start: 0, count: 100 });
+
+    function formatTime(timeLeft = {}) {
+        const { days = 0, hours = 0, minutes = 0, seconds = 0 } = timeLeft;
+        const formattedHours = String(hours).padStart(2, '0');
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(seconds).padStart(2, '0');
+    
+        if(days > 0) {
+            return `${days}d ${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
+        }
+        return `${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
+    }
+
+    useEffect(() => {
+        let localTimers = {};
+    
+        validEnglishAuctions?.forEach(idx => {
+            const endDate = new Date(idx.endTimeInSeconds * 1000);
+            
+            function updateCountdown() {
+                const now = new Date();
+                const difference = endDate - now;
+    
+                if (difference > 0) {
+                    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+    
+                    setTimeLefts(prevTimeLefts => ({
+                        ...prevTimeLefts,
+                        [idx.id]: { days, hours, minutes, seconds }
+                    }));
+    
+                    localTimers[idx.id] = setTimeout(updateCountdown, 1000);
+                }
+            }
+    
+            updateCountdown();
+        });
+    
+        // Cleanup function
+        return () => {
+            Object.values(localTimers).forEach(timerId => clearTimeout(timerId));
+        }
+    }, [validEnglishAuctions]);
+
     return (
         <section className="tf-section tf-live-auction visible-sw">
             <div className="tf-container">
@@ -60,22 +109,24 @@ function LiveAutions(props) {
                           }}
                     >
                     {
-                        data.slice(0,4).map(idx => (
-                            <SwiperSlide key={idx.id}>
+                        validEnglishAuctions?.map(idx => (
+                                <SwiperSlide key={idx?.id}>
                                 <div className="slider-item">
                                         <div className="sc-product style1">
                                             <div className="top">
-                                                <Link to="/item-details-v1" className="tag">{idx.title}</Link>
+                                                <Link to="/item-details-v1" className="tag">{idx?.asset?.name}</Link>
                                                 <div className="wish-list">
                                                     <Link to="#" className="heart-icon"></Link>
                                                 </div>
                                             </div>
                                             <div className="features">
                                                 <div className="product-media">
-                                                    <img src={idx.img} alt="images" />
+                                                    <img src={idx?.asset?.image} alt="images" />
                                                 </div>
                                                 <div className="featured-countdown">
-                                                    <span className="js-countdown" data-timer="55555" data-labels=" ,  h , m , s "></span>
+                                                    <span className="js-countdown" data-timer={idx?.endTimeInSeconds} data-labels="d, h, m, s ">
+                                                    {timeLefts[idx?.id] ? formatTime(timeLefts[idx?.id]) : "Loading..."}
+                                                    </span>
                                                 </div>
                                                 <div className="rain-drop1"><img src={icon1} alt="images" /></div>
                                                 <div className="rain-drop2"><img src={icon2} alt="images" /></div>
@@ -83,18 +134,18 @@ function LiveAutions(props) {
                                             <div className="bottom">
                                                 <div className="details-product">
                                                     <div className="author">
-                                                        <div className="avatar">
-                                                            <img src={idx.avt} alt="images" />
-                                                        </div>
+                                                        {/* <div className="avatar">
+                                                            <img src={idx?.} alt="images" />
+                                                        </div> */}
                                                         <div className="content">
                                                             <div className="position">Creator</div>
-                                                            <div className="name"> <Link to="/item-details-v1">{idx.create}</Link></div>
+                                                            <div className="name"> <Link to="/item-details-v1">{truncateEthAddress(idx?.creatorAddress)}</Link></div>
                                                         </div>
                                                     </div>
                                                     <div className="current-bid">
                                                         <div className="subtitle">Current bid</div>
                                                         <div className="price">
-                                                            <span className="cash">{idx.price}</span><span className="icon"><img src={icon3} alt="images" /></span>
+                                                            <span className="cash">{idx?.minimumBidAmount}</span><span className="icon"><img src={icon3} alt="images" /></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -106,7 +157,6 @@ function LiveAutions(props) {
                                         </div>
                                     </div>
                             </SwiperSlide>
-                            
                         ))
                     }
                 </Swiper>
@@ -123,4 +173,4 @@ function LiveAutions(props) {
     );
 }
 
-export default LiveAutions;
+export default LiveAuctions;
