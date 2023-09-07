@@ -4,7 +4,6 @@ import { Navigation, Scrollbar, A11y , Pagination   } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useContract, useValidEnglishAuctions } from "@thirdweb-dev/react";
 import truncateEthAddress from 'truncate-eth-address';
-import { ethers } from 'ethers';
 
 import 'swiper/scss';
 import 'swiper/scss/navigation';
