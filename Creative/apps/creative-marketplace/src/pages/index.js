@@ -10,10 +10,7 @@ import Home01 from "./Home01";
 import ItemDetails01 from "./ItemDetails01";
 import ItemDetails02 from "./ItemDetails02";
 import LiveAuctions02 from "./LiveAuctions02";
-import Login from "./Login";
 import Ranking from "./Ranking";
-import SignUp from "./SignUp";
-import Wallet from "./Wallet";
 
 
 
@@ -29,9 +26,6 @@ const routes = [
   { path: '/ranking', component: <Ranking />},
   { path: '/help-center', component: <HelpCenter />},
   { path: '/faqs', component: <Faqs />},
-  { path: '/wallet', component: <Wallet />},
-  { path: '/login', component: <Login />},
-  { path: '/signup', component: <SignUp />},
   { path: '/create', component: <Create />},
   { path: '/contact', component: <Contact />},
 

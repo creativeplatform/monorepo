@@ -16,7 +16,7 @@ const dataCreate = [
         id: 2,
         img: img2,
         heading: 'Become A Creator',
-        text: 'Unlock membership by buying our exclusive NFT.'
+        text: 'Unlock membership by subscribing to our exclusive membership pass.'
     },
     {
         id: 3,

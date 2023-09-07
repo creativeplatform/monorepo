@@ -151,14 +151,15 @@ function Footer(props) {
                                 <div className="menu menu-3">
                                     <h6 className="widget-title">Resoures</h6>
                                     <ul >
-                                        <li><Link to="/help-center">Help and Center</Link></li>
+                                        <li><Link to="/help-center">Help Center</Link></li>
                                         <li><Link to="/faqs">FAQs</Link></li>
                                     </ul>
                                 </div>
                                 <div className="menu menu-4">
-                                    <h6 className="widget-title">My account</h6>
+                                    <h6 className="widget-title">Contact Us</h6>
                                     <ul >
                                         <li><Link to="/dashboard">Profile</Link></li>
+                                        <li><Link to="/contact">Contact</Link></li>
                                     </ul>
                                 </div>
                             </div>

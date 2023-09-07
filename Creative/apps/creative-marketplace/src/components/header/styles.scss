@@ -487,6 +487,7 @@ header {
 #main-nav-mobi .menu-item-has-children.current-menu-item .arrow:before {
   background: var(--primary-color3);
   -webkit-background-clip: text;
+  background-clip: content-box;
   -webkit-text-fill-color: transparent;
 }
 
