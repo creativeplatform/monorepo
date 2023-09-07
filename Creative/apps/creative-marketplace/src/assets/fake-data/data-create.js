@@ -9,26 +9,26 @@ const dataCreate = [
     {
         id: 1,
         img: img1,
-        heading: 'Set up your wallet',
-        text: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque'
+        heading: 'Link Account',
+        text: 'Enter your email to establish your Creative account.'
     },
     {
         id: 2,
         img: img2,
-        heading: 'Create Your collection',
-        text: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque'
+        heading: 'Become A Creator',
+        text: 'Unlock membership by subscribing to our exclusive membership pass.'
     },
     {
         id: 3,
         img: img3,
-        heading: 'Add Your NFTs',
-        text: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque'
+        heading: 'Add Your Media',
+        text: 'Start building your unique collections and upload them.'
     },
     {
         id: 4,
         img: img4,
-        heading: 'List them for sale',
-        text: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque'
+        heading: 'List For Sale',
+        text: 'Turn your creativity into profit by listing them for sale!'
     },
 
 

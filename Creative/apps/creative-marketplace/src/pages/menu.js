@@ -11,8 +11,8 @@ const menus = [
     },
     {
         id: 3,
-        name: 'Contact',
-        links: '/contact',
+        name: 'DAO',
+        links: 'https://vote.creativeplatform.xyz',
     },
     {
         id: 4,

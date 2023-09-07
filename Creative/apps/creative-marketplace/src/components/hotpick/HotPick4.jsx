@@ -81,7 +81,7 @@ function HotPick4(props) {
                                     </TabList>
                                     <Dropdown>
                                         <Dropdown.Toggle id="dropdown-basic" className=''>
-                                            Recently create    
+                                            SORT BY   
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu>

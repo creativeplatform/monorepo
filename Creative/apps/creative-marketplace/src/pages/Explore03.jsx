@@ -1,7 +1,10 @@
 import React , {useState} from 'react';
+import { useContract, useValidDirectListings, useValidEnglishAuctions } from '@thirdweb-dev/react';
+import truncateEthAddress from 'truncate-eth-address';
+import Spinner from 'react-bootstrap/Spinner';
+
 import PageTitle from '../components/pagetitle/PageTitle';
 
-import data from '../assets/fake-data/data-hotpick'
 import { Link } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 
@@ -14,10 +17,15 @@ import CardModal from '../components/layouts/CardModal';
 function Explore03(props) {
 
     const [modalShow, setModalShow] = useState(false);
+    const { contract } = useContract("0xa71AB8eE65586BB6e305a98B919f1B83e007A946", "marketplace-v3");
+    const { data: validDirectListings = [], isLoading: isLoadingListings } = useValidDirectListings(contract, { start: 0, count: 8 });
+    const { data: validEnglishAuctions = [], isLoading: isLoadingAuctions } = useValidEnglishAuctions(contract, { start:0, count: 8 });
+
+    const combinedData = [...validDirectListings, ...validEnglishAuctions];
+
     return (
         <div>
             <PageTitle sub='Explore' title='Explore' />
-
             <section className="tf-explore-sidebar">
                 <div className="tf-container">
                     <div className="row ">
@@ -46,7 +54,7 @@ function Explore03(props) {
                                                     <input type="checkbox" />
                                                     <span className="btn-checkbox"></span>
                                                 </span>
-                                                <span>On Auctions</span>
+                                                <span>Live Auctions</span>
                                             </label>
                                             <label className="checkbox-item">
                                                 <span className="custom-checkbox">
@@ -189,7 +197,7 @@ function Explore03(props) {
 
                                     <Dropdown>
                                     <Dropdown.Toggle id="dropdown-basic" className=''>
-                                       Recently Create
+                                       SORT BY
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
@@ -229,12 +237,18 @@ function Explore03(props) {
                                     </ul>
                                 </div>
                             </div>
+                            { isLoadingListings ?? isLoadingAuctions
+                                ? <div className="d-flex justify-content-center">
+                                <Spinner animation="border" variant="light" role={'status'}><span className="visually-hidden">Loading...</span></Spinner>
+                                </div> 
+                                :
                             <div className="tf-explore-sidebar-wrap">
+                            
                                 {
-                                    data.slice(0,6).map(idx =>(
-                                        <div key={idx.id} className="sc-product style2">
+                                    combinedData.map(idx =>(
+                                        <div key={idx?.id} className="sc-product style2">
                                             <div className="top">
-                                                <Link to="/item-details-v1" className="tag">{idx.title}</Link>
+                                                <Link to="/item-details-v1" className="tag">{idx?.asset?.name}</Link>
                                                 <div className="wish-list">
                                                     <Link to="#" className="heart-icon"></Link>
                                                 </div>
@@ -242,19 +256,16 @@ function Explore03(props) {
                                             <div className="bottom">
                                                 <div className="details-product">
                                                     <div className="author">
-                                                        <div className="avatar">
-                                                            <img src={idx.avt} alt="images" />
-                                                        </div>
                                                         <div className="content">
                                                             <div className="position">Creator</div>
-                                                            <div className="name"> <Link to="#">{idx.create}</Link></div>
+                                                            <div className="name"> <Link to="#">{truncateEthAddress(idx?.creatorAddress)}</Link></div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="features">
                                                 <div className="product-media">
-                                                    <img src={idx.img} alt="images" />
+                                                    <img src={idx?.asset?.image} alt="images" />
                                                 </div>
                                                 <div className="rain-drop1"><img src={icon1} alt="images" /></div>
                                                 <div className="rain-drop2"><img src={icon2} alt="images" /></div>
@@ -264,7 +275,8 @@ function Explore03(props) {
                                                     <div className="icon"><img src={icon3} alt="images" /></div>
                                                     <div className="content">
                                                         <div className="name">DAI</div>
-                                                        <div className="cash">{idx.price}</div>
+                                                        <div className="cash"> {idx?.currencyValuePerToken?.displayValue ? idx.currencyValuePerToken.displayValue : idx?.buyoutCurrencyValue.displayValue}
+                                                    </div>
                                                     </div>
                                                 </div>
                                                 <div className="product-button">
@@ -275,8 +287,9 @@ function Explore03(props) {
                                         </div>
                                     ))
                                 }
- 
+                            
                             </div>
+                        }
                             <div className="btn-loadmore ">
                                 <Link to="#" className="tf-button loadmore">Load More</Link>
                             </div>

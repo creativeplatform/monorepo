@@ -22,7 +22,7 @@ function Create(props) {
                                 <div className="col-lg-3 col-md-6" key={idx.id}>
                                     <div className="tf-create wow fadeInUp"  data-wow-delay="0.2s">
                                         <div className="icon">
-                                            <img src={idx.img} alt="Binasea" />
+                                            <img src={idx.img} alt="creative" />
                                         </div>
                                         <h6 className="title"><Link to="#">{idx.heading}</Link></h6>
                                         <p className="content">{idx.text}</p>

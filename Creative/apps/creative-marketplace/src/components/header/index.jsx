@@ -82,7 +82,7 @@ const Header = () => {
 
                                 <div className="header-right">
                                     <ConnectWallet 
-                                    btnTitle='Connect'
+                                    btnTitle='Link Account'
                                     modalTitle='Login'
                                     switchToActiveChain={true}
                                     dropdownPosition={{

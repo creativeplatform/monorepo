@@ -194,7 +194,7 @@ function Explore04(props) {
 
                                     <Dropdown>
                                     <Dropdown.Toggle id="dropdown-basic" className=''>
-                                       Recently Create
+                                       SORT BY
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
