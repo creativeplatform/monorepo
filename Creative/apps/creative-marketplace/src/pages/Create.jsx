@@ -5,7 +5,7 @@ import { useAddress, useStorageUpload, ConnectWallet } from '@thirdweb-dev/react
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from 'react-router-dom';
-import icon1 from '../assets/images/svg/metamask.svg'
+import icon1 from '../assets/images/svg/Polygon.png'
 import icon2 from '../assets/images/svg/coinbase.svg'
 import icon5 from '../assets/images/svg/drap-upload.svg'
 import img1 from '../assets/images/collection/add-collection.jpg'
