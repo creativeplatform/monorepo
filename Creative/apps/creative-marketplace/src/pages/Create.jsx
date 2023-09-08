@@ -71,8 +71,7 @@ function Create() {
                                     <TabPanel>
                                     <div className="tab-create-item">
                                                 <h6 className="title">Upload An Item</h6>
-                                                <p className="sub">Each One Takes A Different Approach And Makes Different Tradeoffs.</p>
-
+                                                <p className="sub">Represents unique, individual assets (each token is distinct). Often used for collectibles and NFTs. Each token has a unique identifier.</p>
                                                 <div className="drag-upload">
                                                     <input type="file" />
                                                     <img src={icon5} alt="Upload" />
