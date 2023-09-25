@@ -471,7 +471,7 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
                 {!subscribed ? (
                   <MenuList>
-                    <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
+                    <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
                       Subscribe for ${price?.toString()}
                     </MenuItem>
                     <MenuDivider />
@@ -682,7 +682,7 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuList>
                   {!subscribed ? (
                     <>
-                      <MenuItem icon={<WarningIcon />} onClick={() => handleOpenUnlock()}>
+                      <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
                         Subscribe for ${price?.toString()}
                       </MenuItem>
                       <MenuDivider />
@@ -723,9 +723,6 @@ export function Header({ className, handleLoading }: Props) {
                     }}>
                     Sign Out
                   </MenuItem>
-                  <Button sx={{ color: 'black' }} onClick={() => purchaseNFT()}>
-                    Buy
-                  </Button>
                 </MenuList>
               </Menu>
               </>

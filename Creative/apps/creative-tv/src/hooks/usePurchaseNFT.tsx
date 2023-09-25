@@ -1,8 +1,11 @@
 import React from 'react'
-import { useContract, useContractWrite } from '@thirdweb-dev/react'
+import { useContract, useContractWrite, useAddress } from '@thirdweb-dev/react'
+import { useToast } from '@chakra-ui/react';
 
 export default function usePurchaseNFT() {
-   //contract call to purchase lock
+  const toast = useToast()
+  const address = useAddress()
+  //contract call to purchase lock
    const { contract } = useContract(
     "0x697560Ba635e92c19e660Fa0EB0bDFcD7938A08B"
   );
@@ -11,20 +14,42 @@ export default function usePurchaseNFT() {
     "purchase"
   );
 
-  //This function should take 1 parameter, which is the created wallet address, and then call the contract to purchase the NFT, the address should be passed into the args
-  //where there are currently addresses.
-  const purchaseNFT = async (address?: string) => {
+
+  const purchaseNFT = async () => {
+    toast({
+      title: "Purchasing NFT",
+      description: "Please wait while we process your request.",
+      status: "info",
+      duration: 9000,
+      isClosable: false,   
+    })
     try {
       const data = await purchase({ args: [
-        [0],
-        ['0x5EDf48dAF4AB7239BA9Bdc5E7AdEBB730540d133'],
-        ['0x5EDf48dAF4AB7239BA9Bdc5E7AdEBB730540d133'],
-        ['0x5EDf48dAF4AB7239BA9Bdc5E7AdEBB730540d133'],
+        [0], //price here
+        [address],
+        [address],
+        [address],
         ['0x'],
-      ]});
+      ]}).then(() => {
+        toast({
+          title: "Purchased NFT",
+          description: "You are now a member of CreativeTV!.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,   
+        })
+      })
+      
       console.info("contract call success", data);
     } catch (err) {
       console.error("contract call failure", err);
+      toast({
+        title: "Failed to purchase NFT",
+        description: "Please try again",
+        status: "error",
+        duration: 9000,
+        isClosable: true,   
+      })
     }
   };
 
