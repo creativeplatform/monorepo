@@ -25,21 +25,6 @@ const MemberCard = (props: MemberCardProps) => {
       <Flex justifyContent={'center'} direction={'row'} mb={4}>
         <Text fontSize="xs">{nft.metadata.description}</Text>
       </Flex>
-      {/* <Flex justifyContent={"center"} alignItems={"center"} direction={"column"} p={5}>
-                                <Text fontSize={'sm'}>Expires:</Text>
-                                {!loadingIsExpiring && (
-                                    <Box>
-                                        <CountdownCircleTimer
-                                            isPlaying
-                                            duration={expiring}
-                                            colors={['#004777', '#F7B801', '#A30000', '#A30000']}
-                                            colorsTime={[7, 5, 2, 0]}
-                                        >
-                                            {renderTime}
-                                        </CountdownCircleTimer>
-                                    </Box>
-                                )}
-                            </Flex> */}
       <ButtonGroup justifyContent={'center'}>
         <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => {}} isLoading={renewMembershipForIsLoading}>
           RENEW
