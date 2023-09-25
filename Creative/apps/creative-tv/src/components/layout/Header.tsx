@@ -42,13 +42,13 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Goerli } from '@thirdweb-dev/chains'
-import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useContractWrite } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import { useScroll } from 'framer-motion'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
-import { HiOutlineClipboardCopy } from 'react-icons/hi'
+import usePurchaseNFT from 'hooks/usePurchaseNFT'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
@@ -80,6 +80,8 @@ export function Header({ className, handleLoading }: Props) {
       handleLoading()
     }
   }
+
+  const { purchaseNFT } = usePurchaseNFT()
 
   const handleNavClick = (url: string, disabled: boolean, isNewTab: boolean, isPlugin: boolean) => {
     if (disabled) {
@@ -721,6 +723,9 @@ export function Header({ className, handleLoading }: Props) {
                     }}>
                     Sign Out
                   </MenuItem>
+                  <Button sx={{ color: 'black' }} onClick={() => purchaseNFT()}>
+                    Buy
+                  </Button>
                 </MenuList>
               </Menu>
               </>
