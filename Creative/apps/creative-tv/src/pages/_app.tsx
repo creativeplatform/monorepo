@@ -25,21 +25,15 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         {isMounted && (
           <ThirdwebProvider
+            queryClient={queryClient}
             activeChain={activeChain}
-            autoSwitch={true}
             supportedWallets={[
               smartWallet({
                 factoryAddress: ACCOUNT_FACTORY_TESTNET,
-                gasless: true,
+                gasless: false,
                 personalWallets: [
                   localWallet(),
                   metamaskWallet(),
-                  // paperWallet({
-                  //   paperClientId: `${PAPER_CLIENT_ID}`,
-                  //   advancedOptions: {
-                  //     recoveryShareManagement: 'AWS_MANAGED'
-                  //   },
-                  // })
                 ],
               }),
             ]}
