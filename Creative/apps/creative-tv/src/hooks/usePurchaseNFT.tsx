@@ -10,8 +10,8 @@ export default function usePurchaseNFT() {
   const toast = useToast()
   const address = useAddress()
   const LOCK_ADDRESS = '0xC9bdfA5f177961D96F137C42241e8EcBCa605781'
-  const TOKEN_ADDRESS = '0x0000000000000000000000000000000000000000'
-  const PURCHASE_PRICE = 2000000000000000
+  const TOKEN_ADDRESS = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F'
+  const PURCHASE_PRICE = 3000000
   const signer = useSigner()
 
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
