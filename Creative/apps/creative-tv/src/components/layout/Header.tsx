@@ -106,14 +106,14 @@ export function Header({ className, handleLoading }: Props) {
 
   // Currently connected wallet address
   const address = useAddress()
+  console.log(address, 'addy')
   const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
 
   // Get the Lock contract we deployed
-  const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
+  const { contract } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781')
   // Get the Membership Price
   const { data: price, isLoading: priceLoading } = useContractRead(contract, 'keyPrice')
-  console.log('address: ', FREE_LOCK_ADDRESS_GOERLI_TESTNET.address == contract?.getAddress())
 
   /*******  CONTRACT READING ********/
   // Determine whether the connected wallet address has a valid subscription

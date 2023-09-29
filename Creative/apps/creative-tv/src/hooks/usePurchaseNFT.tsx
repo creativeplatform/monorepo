@@ -1,9 +1,6 @@
-import React from 'react'
 import { useContract, useContractWrite, useAddress, ThirdwebSDK, useSigner } from '@thirdweb-dev/react'
 import { useToast } from '@chakra-ui/react';
 import { BigNumber } from 'ethers';
-import { Goerli } from '@thirdweb-dev/chains';
-import { ethers } from 'ethers';
 import { ERC20_ABI } from '../utils/config';
 
 export default function usePurchaseNFT() {
