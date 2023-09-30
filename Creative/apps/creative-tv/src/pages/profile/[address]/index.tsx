@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Card,
   Container,
   Flex,
   Heading,
@@ -9,7 +8,6 @@ import {
   Text,
   Input,
   useToast,
-  Image,
   ButtonGroup,
   IconButton,
   Link,
@@ -27,12 +25,11 @@ import {
   Breadcrumb
 } from '@chakra-ui/react'
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, ConnectWallet } from '@thirdweb-dev/react'
-import { Emoji } from 'ui'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { useRouter } from 'next/router'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
-import { MdAutorenew, MdCancel, MdOutbound } from 'react-icons/md'
+import { MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import TransferPage from './transfer'
@@ -145,17 +142,6 @@ export default function ProfilePage() {
     })
   }
 
-  // RENDER REMAINING TIME FOR COUNTDOWN TIMER
-  // const renderTime = ({ remainingTime }: { remainingTime: number }) => {
-  //     const hours = Math.floor(remainingTime / 3600)
-  //     const minutes = Math.floor((remainingTime % 3600) / 60)
-  //     const seconds = remainingTime % 60
-  //     if (remainingTime === 0) {
-  //         return <div className="timer">Services Expired...</div>;
-  //       }
-  //     return `${hours}:${minutes}:${seconds}`
-  //   }
-
   return (
     <Container maxW="7xl" my={10}>
       <Breadcrumb>
@@ -196,23 +182,23 @@ export default function ProfilePage() {
               <Tabs width="100%">
                 <TabList minW="fit-content" display="flex" justifyContent="start">
                   <Tab>
-                    <Emoji symbol="🪪" label="identification" />
+                  <span role="img" aria-label="identification">🪪</span>
                     &nbsp;Membership
                   </Tab>
                   <Tab>
-                    <Emoji symbol="🪙" label="coin" />
+                  <span role="img" aria-label="coin">🪙</span>
                     &nbsp;meToken
                   </Tab>
                   <Tab>
-                    <Emoji symbol="🎥" label="video camera" />
+                  <span role="img" aria-label="camcorder">📹</span>
                     &nbsp;Video Uploads
                   </Tab>
                   <Tab>
-                    <Emoji symbol="💰" label="money bag" />
+                  <span role="img" aria-label="money">💰</span>
                     &nbsp;Earnings
                   </Tab>
                   <Tab>
-                    <Emoji symbol='🏧' label="ATM" />
+                  <span role="img" aria-label="transfer">🔀</span>
                     &nbsp;Transfer
                   </Tab>
                 </TabList>
