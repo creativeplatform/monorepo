@@ -1,6 +1,6 @@
-import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Stack, Text, useToast, Flex } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
+import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRenderer } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
@@ -256,14 +256,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           {!contract?.getAddress() && asset?.storage?.ipfs?.cid ? (
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
-                {/* <MediaRenderer
-                  width="100%"
-                  height="auto"
-                  alt={asset.name}
-                  requireInteraction={true}
-                  style={{ backgroundColor: 'black' }}
-                  src={`https://${NEXT_PUBLIC_THIRDWEB_API_KEY}.ipfscdn.io/ipfs/${asset?.storage?.ipfs?.cid}`}
-                /> */}
+                <MediaRenderer
+                  src={`${asset?.storage?.ipfs?.url}`}
+                />
 
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
                   Congrats, your asset was uploaded to IPFS.
@@ -282,17 +277,17 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
                     Asset Details is as follows:
                   </Text>
-                  <div style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
-                    <p>
-                      Asset Name: <span style={{ fontWeight: '700' }}>{asset.name}</span>{' '}
-                    </p>
-                    <p>
-                      Playback URL: <span style={{ fontWeight: '700' }}>{asset.playbackUrl}</span>
-                    </p>
-                    <p>
+                  <Box style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
+                    <Text>
+                      Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
+                    </Text>
+                    <Text>
+                      Playback URL: <span style={{ fontWeight: '700' }}>{asset?.playbackUrl}</span>
+                    </Text>
+                    <Text>
                       IPFS CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.cid ?? 'None'}</span>
-                    </p>
-                  </div>
+                    </Text>
+                  </Box>
                 </Box>
               </Stack>
 
@@ -338,12 +333,12 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Button>
 
                 <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                  <div style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
-                    <p>
+                  <Flex style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
+                    <Text>
                       Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
-                    </p>
+                    </Text>
                     {getContractMetaData()}
-                  </div>
+                  </Flex>
                 </Box>
               </Stack>
 

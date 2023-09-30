@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { ConnectWallet, useAddress, useSigner } from '@thirdweb-dev/react'
+import { useAddress, useSigner } from '@thirdweb-dev/react'
 import { createMeToken, approveTokens, isApprovedAmount, getMeTokenInfo, mint } from 'utils/fetchers/createMeToken'
 import { getMeTokenContract } from 'utils/fetchers/createMeToken'
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, Heading, Input, Stack } from '@chakra-ui/react'
 import { getMeTokenFor } from 'utils/fetchers/createMeToken'
-import Image from 'next/image'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 
@@ -15,7 +14,6 @@ export default function MeTokenCreationForm() {
     handleSubmit,
     getValues,
     formState: { errors },
-    reset,
   } = useForm()
   const address = useAddress()
   const [meTokenContract, setMeTokenContract] = useState<any>(null)

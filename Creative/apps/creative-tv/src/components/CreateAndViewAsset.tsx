@@ -104,6 +104,7 @@ const CreateAndViewAsset = () => {
           sources: [
             {
               name: assetName,
+              description: description,
               file: video,
               data: assetData,
               creatorId: address,
@@ -225,7 +226,6 @@ const CreateAndViewAsset = () => {
         <>
           {/* The preview of uploaded video */}
           {!createdAsset?.[0]?.id && renderVideoPreview}
-
           {/* Form for asset name and description */}
           <Box my={12} maxWidth={400} mx={'auto'}>
             {!createdAsset?.[0]?.id && (
@@ -245,7 +245,7 @@ const CreateAndViewAsset = () => {
                           field.onChange(e)
                         }}
                         value={field.value}
-                        mb={formErrors.description ? 0 : 4}
+                        mb={formErrors.title ? 0 : 4}
                         disabled={createAssetStatus === 'loading'}
                         placeholder="Enter the name of the video"
                         aria-invalid={formErrors.title ? 'true' : 'false'}
@@ -296,7 +296,6 @@ const CreateAndViewAsset = () => {
                 <Button
                   type="submit"
                   className="upload-button"
-                  //  as={motion.div}
                   style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
                   _hover={{
                     color: 'gray.800',
@@ -316,7 +315,33 @@ const CreateAndViewAsset = () => {
       {createdAsset?.[0]?.playbackId && (
         <>
           <div style={{ marginBottom: '32px' }}>
-            <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
+            <Player 
+            title={createdAsset[0].name} 
+            playbackId={createdAsset[0].playbackId}
+            autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
+            showUploadingIndicator={true}
+            controls={{
+            autohide: 3000,
+            hotkeys: true
+            }}
+            theme={{
+            borderStyles: {
+                containerBorderStyle: 'solid',
+            },
+            colors: {
+                accent: '#EC407A',
+            },
+            space: {
+                controlsBottomMarginX: '10px',
+                controlsBottomMarginY: '5px',
+                controlsTopMarginX: '15px',
+                controlsTopMarginY: '10px',
+            },
+            radii: {
+                containerBorderRadius: '0px',
+            },
+            }} 
+            />
           </div>
 
           <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }}>
@@ -325,11 +350,11 @@ const CreateAndViewAsset = () => {
             </Text>
 
             <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
-            <div style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
-              <p>Asset Name: {createdAsset?.[0]?.name}</p>
-              <p>Playback URL: {createdAsset?.[0]?.playbackUrl}</p>
-              <p>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</p>
-            </div>
+            <Box style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
+              <Text>Asset Name: {createdAsset?.[0]?.name}</Text>
+              <Text>Playback URL: {createdAsset?.[0]?.playbackUrl}</Text>
+              <Text>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
+            </Box>
           </Stack>
           <Box className="Proceed-button">
             <Box my={12} maxWidth={400} mx={'auto'}>
