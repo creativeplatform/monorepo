@@ -1,6 +1,5 @@
 import { Box, createIcon, Heading, Stack, Text } from "@chakra-ui/react"
 import Image from 'next/image'
-import { Emoji } from "ui"
 import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import { Provider, Carousel, LeftButton, RightButton, } from "chakra-ui-carousel"
 import { LivepeerConfig, Player } from '@livepeer/react'
