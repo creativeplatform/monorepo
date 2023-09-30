@@ -1,11 +1,13 @@
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container } from '@chakra-ui/react'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Heading, Flex, Text, Box } from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
+import { useAddress, ConnectWallet } from '@thirdweb-dev/react'
 import UploadVideoAsset from '../../../components/UploadVideoAsset'
 
 export default function Upload() {
   const router = useRouter()
+  const address = useAddress()
   const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [router?.query])
 
   return (
@@ -20,7 +22,20 @@ export default function Upload() {
             <BreadcrumbLink>Upload Video Assets</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-        <UploadVideoAsset />
+        <Heading mt={10}>Upload Video Content</Heading>
+        {!address ? (
+          <Flex flexDirection="column" my={10} gap={5} maxW="md">
+          <Text>Sign in to upload your video content 🧐</Text>
+          <Box w="50%">
+            <ConnectWallet btnTitle={'Sign In'} />
+          </Box>
+        </Flex>
+        ): (
+          <>
+            <UploadVideoAsset />
+          </>
+        )}
+        
       </Container>
     </>
   )
