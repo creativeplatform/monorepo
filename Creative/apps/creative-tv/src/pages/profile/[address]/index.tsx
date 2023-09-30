@@ -27,7 +27,7 @@ import {
   Breadcrumb
 } from '@chakra-ui/react'
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, ConnectWallet } from '@thirdweb-dev/react'
-import { Emoji } from '../../../../../../packages/ui'
+import { Emoji } from 'ui'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { useRouter } from 'next/router'
