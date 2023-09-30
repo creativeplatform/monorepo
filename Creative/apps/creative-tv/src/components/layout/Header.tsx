@@ -452,18 +452,27 @@ export function Header({ className, handleLoading }: Props) {
           <chakra.p my={4}>
             {!address ? (
               <ConnectWallet
+                welcomeScreen={{
+                  title: "Creative TV",
+                  subtitle: "The Way Content Should Be",
+                  img: {
+                    src: "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/",
+                    width: 300,
+                    height: 50,
+                  },
+                }}
                 theme={connector} 
                 btnTitle={'Link Account'}
                 modalTitle={'Login'}
-              />
-            ) : (
-              <>
-              <ConnectWallet
-                theme={connector} 
                 dropdownPosition={{
                   side: "bottom", // "top" | "bottom" | "left" | "right";
                   align: "end", // "start" | "center" | "end";
                 }} 
+              />
+            ) : (
+              <>
+              <ConnectWallet
+                theme={connector}  
               />
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
