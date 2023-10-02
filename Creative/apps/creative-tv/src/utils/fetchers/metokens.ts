@@ -64,6 +64,7 @@ export const getCollateralData = async (collateralTokenAddress: string) => {
 
 // Get the user's address using the Thirdweb SDK
 const address = useAddress()
+if (address === undefined) throw new Error('Wallet not detected');
 
 // Get the signer for the user's address
 const signer = new ethers.providers.JsonRpcProvider().getSigner(address)
@@ -238,3 +239,4 @@ export const burn = async (
     );
     return meTokenFoundry.call('burn', [meToken, amount, sender]);
 };
+
