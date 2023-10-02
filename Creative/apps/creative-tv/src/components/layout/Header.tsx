@@ -1,4 +1,5 @@
-import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
+import React, { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   Accordion,
   AccordionButton,
@@ -33,8 +34,6 @@ import {
   PopoverTrigger,
   SimpleGrid,
   Stack,
-  Tag,
-  TagLabel,
   Text,
   chakra,
   useColorModeValue,
@@ -42,11 +41,12 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { Goerli } from '@thirdweb-dev/chains'
-import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useContractWrite } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner } from '@thirdweb-dev/react'
+import { CrossmintPaymentElement } from "@crossmint/client-sdk-react-ui";
 import { Paywall } from '@unlock-protocol/paywall'
+import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
-import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
 import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
 import usePurchaseNFT from 'hooks/usePurchaseNFT'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -56,6 +56,8 @@ import truncateEthAddress from 'truncate-eth-address'
 import { PFP } from 'utils/context'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
+import { creatorPaywallConfig } from 'utils/checkoutConfig'
+
 
 interface Props {
   className?: string
@@ -75,43 +77,31 @@ export function Header({ className, handleLoading }: Props) {
   const signer = useSigner()
   const connector = useColorModeValue('light', 'dark')
 
+  const [creatorPaywallConfig, setCreatorPaywallConfig] = useState(null);
+
   const handleButtonClick = () => {
     if (handleLoading) {
       handleLoading()
     }
   }
 
+  const paywall = new Paywall(networks) 
+    
+  function handleCreatorCheckout() {
+      paywall.loadCheckoutModal(creatorPaywallConfig)
+  }
+
   const { purchaseNFT } = usePurchaseNFT()
-
-  const handleNavClick = (url: string, disabled: boolean, isNewTab: boolean, isPlugin: boolean) => {
-    if (disabled) {
-      return
-    }
-
-    if (isNewTab) {
-      window.open(url, '_blank')
-      if (isPlugin) {
-        handleOpenUnlock()
-      } else {
-        router.push(url)
-        setNavIsOpen(false)
-      }
-    }
-  }
-
-  const handleOpenUnlock = () => {
-    window?.unlockProtocol && window?.unlockProtocol.loadCheckoutModal()
-    setNavIsOpen(false)
-  }
 
   // Currently connected wallet address
   const address = useAddress()
   console.log(address, 'addy')
   const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
+  const lockAbi = [{"inputs":[{"internalType":"address","name":"_logic","type":"address"},{"internalType":"address","name":"admin_","type":"address"},{"internalType":"bytes","name":"_data","type":"bytes"}],"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"}],"name":"AdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"beacon","type":"address"}],"name":"BeaconUpgraded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"implementation","type":"address"}],"name":"Upgraded","type":"event"},{"stateMutability":"payable","type":"fallback"},{"inputs":[],"name":"admin","outputs":[{"internalType":"address","name":"admin_","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newAdmin","type":"address"}],"name":"changeAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"implementation","outputs":[{"internalType":"address","name":"implementation_","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"}],"name":"upgradeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"upgradeToAndCall","outputs":[],"stateMutability":"payable","type":"function"},{"stateMutability":"payable","type":"receive"}]
 
   // Get the Lock contract we deployed
-  const { contract } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781')
+  const { contract, isLoading, error } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781', lockAbi)
   // Get the Membership Price
   const { data: price, isLoading: priceLoading } = useContractRead(contract, 'keyPrice')
 
