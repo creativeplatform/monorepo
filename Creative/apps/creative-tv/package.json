@@ -27,6 +27,8 @@
     "@unlock-protocol/paywall": "^0.6.8",
     "@unlock-protocol/unlock-js": "^0.39.1",
     "@wagmi/chains": "^0.1.7",
+    "@wert-io/widget-initializer": "^4.0.0",
+    "@wert-io/widget-sc-signer": "^2.0.0",
     "chakra-ui-carousel": "^1.0.7",
     "connectkit": "^1.1.1",
     "connectkit-next-siwe": "^0.0.2",

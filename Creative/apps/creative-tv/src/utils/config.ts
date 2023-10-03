@@ -36,6 +36,7 @@ export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
 export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT
+export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
