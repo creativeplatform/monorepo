@@ -501,7 +501,7 @@ export function Header({ className, handleLoading }: Props) {
                 {!subscribed ? (
                   <MenuList>
                     <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
-                      Subscribe for ${price?.toString()}
+                      Subscribe = 10 USDC
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem
@@ -712,7 +712,7 @@ export function Header({ className, handleLoading }: Props) {
                   {!subscribed ? (
                     <>
                       <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
-                        Subscribe for ${price?.toString()}
+                        Subscribe = 10 USDC
                       </MenuItem>
                       <MenuDivider />
                     </>
