@@ -1,10 +1,11 @@
 import React from 'react'
 import { NextSeo } from 'next-seo'
+import type { NextPage } from 'next'
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { HOST, SITE_LOGO } from 'utils/config'
 
-export default function Unauthorized() {
+const Unauthorized: NextPage = () => {
   const url = new URL('https://app.unlock-protocol.com/checkout')
   const paywallConfig = {
     locks: {
@@ -50,3 +51,5 @@ export default function Unauthorized() {
     </>
   )
 }
+
+export default Unauthorized;

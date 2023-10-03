@@ -1,4 +1,5 @@
-import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
+import React, { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   Accordion,
   AccordionButton,
@@ -33,29 +34,30 @@ import {
   PopoverTrigger,
   SimpleGrid,
   Stack,
-  Tag,
-  TagLabel,
   Text,
   chakra,
   useColorModeValue,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
+import { signSmartContractData } from '@wert-io/widget-sc-signer';
+import WertWidget from '@wert-io/widget-initializer';
 import { Goerli } from '@thirdweb-dev/chains'
-import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useContractWrite } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useUser } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
+import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
-import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
 import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
 import usePurchaseNFT from 'hooks/usePurchaseNFT'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import truncateEthAddress from 'truncate-eth-address'
 import { PFP } from 'utils/context'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME } from '../../utils/config'
+import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME, WERT_PRIVATE_KEY } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
+
+
 
 interface Props {
   className?: string
@@ -66,14 +68,38 @@ interface Props {
 }
 
 export function Header({ className, handleLoading }: Props) {
-  const styleName = className ?? ''
-  const [navIsOpen, setNavIsOpen] = useState(false)
-  const ref = useRef(null)
-  const router = useRouter()
-  const toast = useToast()
-  // const sdk = useSDK()
-  const signer = useSigner()
+  const styleName = className ?? '';
+  const [navIsOpen, setNavIsOpen] = useState(false);
+  const ref = useRef(null);
+  const router = useRouter();
+  const toast = useToast();
+  const address = useAddress() || '';
+  const { isLoggedIn } = useUser();
+
+  // WERT SIGNER HELPER
+  const signedData = signSmartContractData({
+    address: address,
+    commodity: "TTG",
+    network: "goerli",
+    commodity_amount: 1,
+    sc_address: "0xc9bdfa5f177961d96f137c42241e8ecbca605781",
+    sc_input_data: "0x",
+  }, `${WERT_PRIVATE_KEY}`);
+
+  const wertOptions = {
+    partner_id: "01FGKYK638SV618KZHAVEY7P79",
+    origin: "https://sandbox.wert.io",
+    lang: 'en',
+  }
+
+  const wertWidget = new WertWidget({
+    ...signedData,
+    ...wertOptions,
+});
+
   const connector = useColorModeValue('light', 'dark')
+
+  const [creatorPaywallConfig, setCreatorPaywallConfig] = useState(null);
 
   const handleButtonClick = () => {
     if (handleLoading) {
@@ -81,107 +107,25 @@ export function Header({ className, handleLoading }: Props) {
     }
   }
 
+  const paywall = new Paywall(networks) 
+    
+  function handleCreatorCheckout() {
+      paywall.loadCheckoutModal(creatorPaywallConfig)
+  }
+
   const { purchaseNFT } = usePurchaseNFT()
 
-  const handleNavClick = (url: string, disabled: boolean, isNewTab: boolean, isPlugin: boolean) => {
-    if (disabled) {
-      return
-    }
-
-    if (isNewTab) {
-      window.open(url, '_blank')
-      if (isPlugin) {
-        handleOpenUnlock()
-      } else {
-        router.push(url)
-        setNavIsOpen(false)
-      }
-    }
-  }
-
-  const handleOpenUnlock = () => {
-    window?.unlockProtocol && window?.unlockProtocol.loadCheckoutModal()
-    setNavIsOpen(false)
-  }
-
   // Currently connected wallet address
-  const address = useAddress()
+  
   console.log(address, 'addy')
   const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
-
-  // Get the Lock contract we deployed
-  const { contract } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781')
-  // Get the Membership Price
-  const { data: price, isLoading: priceLoading } = useContractRead(contract, 'keyPrice')
-
-  /*******  CONTRACT READING ********/
-  // Determine whether the connected wallet address has a valid subscription
-  const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [address])
-
-  console.log('isSubcribed: ', subscribed)
-
-  // Native Token
-  // const { data: tokenBalance, isLoading: tokenLoading } = useBalance(NATIVE_TOKEN_ADDRESS);
-
-  const handleCopyAddress = () => {
-    navigator.clipboard.writeText(address ?? '')
-    // Optionally, you can show a success message or perform any other actions
-    console.log('Address copied:', address)
-    toast({
-      title: 'Address Copied',
-      description: 'Successfully Copied ' + truncateEthAddress(`${address}`),
-      status: 'success',
-      duration: 5000,
-      isClosable: true,
-    })
-  }
-
+  
   // Configure networks to use
   // You can also use @unlock-protocol/networks for convenience...
 
   // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
   // If no provider is set, the library uses window.ethereum
-
-  // Loads the checkout UI
-  const handlePaywallCheckout = async () => {
-    const provider = 'goerli.rpc.thirdweb.com'
-
-    const paywall = new Paywall()
-    paywall.connect(provider) // provider from Thirdweb
-    paywall.loadCheckoutModal({
-      locks: {
-        [FREE_LOCK_ADDRESS_GOERLI_TESTNET.address]: {
-          network: Goerli,
-        },
-      },
-      pessimistic: true,
-      recipient: address, // from new SmartWallet(config);
-    })
-
-    try {
-      const response = await paywall.loadCheckoutModal()
-      // Handle the response from the paywall modal
-      console.log(response)
-      toast({
-        title: 'Welcome Creative',
-        description: 'Successfully Subscribed 🎉',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
-    } catch (error) {
-      // Handle any errors that occur during the checkout process
-      console.error(error)
-      toast({
-        title: 'Error',
-        description: `${error}`,
-        status: 'warning',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-  }
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
@@ -450,17 +394,22 @@ export function Header({ className, handleLoading }: Props) {
             </Accordion>
           </p>
           <chakra.p my={4}>
-            {!address ? (
+            {!isLoggedIn ? (
               <ConnectWallet
                 welcomeScreen={{
-                  title: "Creative TV",
+                  title: "CREATIVE TV",
                   subtitle: "The Way Content Should Be",
                   img: {
-                    src: "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/",
-                    width: 300,
-                    height: 50,
+                    src: "https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif",
+                    width: 250,
+                    height: 250,
                   },
                 }}
+                auth={{
+                  loginOptional: false,
+                }}
+                switchToActiveChain={true}
+                modalSize={"wide"}
                 theme={connector} 
                 btnTitle={'Link Account'}
                 modalTitle={'Login'}
@@ -478,10 +427,10 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   <Avatar mb={6} size={'md'} name="creative" src={PFP} />
                 </MenuButton>
-                {!subscribed ? (
+                {!isLoggedIn ? (
                   <MenuList>
-                    <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
-                      Subscribe for ${price?.toString()}
+                    <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
+                      Purchase Membership
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem
@@ -670,18 +619,32 @@ export function Header({ className, handleLoading }: Props) {
           <chakra.div display={{ base: 'none', md: 'none', lg: 'block' }}>
             {!address ? (
               <ConnectWallet
-                theme={connector} 
-                btnTitle={'Link Account'}
-                modalTitle={'Login'}
+              welcomeScreen={{
+                title: "CREATIVE TV",
+                subtitle: "The Way Content Should Be",
+                img: {
+                  src: "https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif",
+                  width: 250,
+                  height: 250,
+                },
+              }}
+              auth={{
+                loginOptional: false,
+              }}
+              theme={connector} 
+              btnTitle={'Link Account'}
+              modalTitle={'Login'}
+              switchToActiveChain={true}
+              modalSize={"wide"}
+              dropdownPosition={{
+                side: "bottom", // "top" | "bottom" | "left" | "right";
+                align: "end", // "start" | "center" | "end";
+              }} 
               />
             ) : (
               <>
               <ConnectWallet
                 theme={connector} 
-                dropdownPosition={{
-                  side: "bottom", // "top" | "bottom" | "left" | "right";
-                  align: "end", // "start" | "center" | "end";
-                }}
               />
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
@@ -689,10 +652,10 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
 
                 <MenuList>
-                  {!subscribed ? (
+                  {!isLoggedIn ? (
                     <>
-                      <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
-                        Subscribe for ${price?.toString()}
+                      <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
+                        Purchase Membership
                       </MenuItem>
                       <MenuDivider />
                     </>
