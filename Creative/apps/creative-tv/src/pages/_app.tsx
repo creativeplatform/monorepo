@@ -19,6 +19,11 @@ export default function App({ Component, pageProps }: AppProps) {
   // Create a client
   const queryClient = new QueryClient()
 
+  const config = {
+    factoryAddress: ACCOUNT_FACTORY_TESTNET,
+    gasless: false,
+  }
+
   return (
     <ChakraProvider>
       <Seo />
@@ -28,14 +33,8 @@ export default function App({ Component, pageProps }: AppProps) {
             queryClient={queryClient}
             activeChain={activeChain}
             supportedWallets={[
-              smartWallet({
-                factoryAddress: ACCOUNT_FACTORY_TESTNET,
-                gasless: false,
-                personalWallets: [
-                  localWallet(),
-                  metamaskWallet(),
-                ],
-              }),
+              smartWallet(metamaskWallet(), config),
+              smartWallet(localWallet(), config),
             ]}
             clientId={THIRDWEB_API_KEY}>
             <Layout>
