@@ -56,7 +56,7 @@ import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import truncateEthAddress from 'truncate-eth-address'
 import { PFP } from 'utils/context'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME, WERT_PRIVATE_KEY, WERT_PARTNER_ID } from '../../utils/config'
+import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME, WERT_PRIVATE_KEY } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { creatorPaywallConfig } from 'utils/checkoutConfig'
 
