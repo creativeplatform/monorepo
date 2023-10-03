@@ -1,3 +1,6 @@
+import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+import type { NextPage } from "next"
 import {
   Box,
   Button,
@@ -27,15 +30,14 @@ import {
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, ConnectWallet } from '@thirdweb-dev/react'
 import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
-import { useRouter } from 'next/router'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import TransferPage from './transfer'
-import { useState } from 'react'
 
-export default function ProfilePage() {
+
+const ProfilePage: NextPage = () => {
   const router = useRouter()
   const [transferAddress, setTransferAddress] = useState('')
   const [lendingAddress, setLendingAddress] = useState('')
@@ -331,3 +333,5 @@ export default function ProfilePage() {
     </Container>
   )
 }
+
+export default ProfilePage;

@@ -1,9 +1,10 @@
 import { Head } from 'components/layout/Head'
+import type { NextPage } from "next"
 import HeroSection from 'components/HeroSection'
 import Featured from 'components/Featured'
 import Carousel from '../components/Carousel'
 
-export default function Home() {
+const Home: NextPage = () => {
   return (
     <>
       <Head />
@@ -15,3 +16,5 @@ export default function Home() {
     </>
   )
 }
+
+export default Home;

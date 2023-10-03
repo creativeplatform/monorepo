@@ -1,11 +1,12 @@
+import React, { useMemo } from 'react'
+import { useAddress, ConnectWallet } from '@thirdweb-dev/react'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Container, Heading, Flex, Text, Box } from '@chakra-ui/react'
 import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
-import { useAddress, ConnectWallet } from '@thirdweb-dev/react'
+import type { NextPage } from 'next'
 import UploadVideoAsset from '../../../components/UploadVideoAsset'
 
-export default function Upload() {
+const Upload: NextPage = () => {
   const router = useRouter()
   const address = useAddress()
   const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [router?.query])
@@ -40,3 +41,5 @@ export default function Upload() {
     </>
   )
 }
+
+export default Upload;
