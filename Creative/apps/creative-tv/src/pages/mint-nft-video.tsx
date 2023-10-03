@@ -1,10 +1,13 @@
 import React from 'react'
+import type { NextPage } from "next"
 import MintNftVideo from '../components/MintNftVideo'
 
-export default function Mint() {
+const Mint : NextPage = () => {
   return (
     <>
       <MintNftVideo>{''}</MintNftVideo>
     </>
   )
 }
+
+export default Mint;
