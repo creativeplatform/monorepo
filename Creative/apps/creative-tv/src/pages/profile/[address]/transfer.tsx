@@ -1,20 +1,11 @@
 import { 
-    Container, 
     Flex, 
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbSeparator, 
 } from "@chakra-ui/react";
-import { useRouter } from 'next/router';
-import { NextSeo } from 'next-seo';
-import { useAddress } from '@thirdweb-dev/react';
+import type { NextPage } from "next"
 import TransferCard from "ui/XferCard";
 import Events from "ui/Events";
 
-export default function TransferPage() {
-    const router = useRouter();
-    const address = useAddress();
+const TransferPage: NextPage = () => {
     return (
         <>
             <Flex flexDirection={'column'} justifyContent={"center"} alignItems={"center"}>
@@ -24,3 +15,4 @@ export default function TransferPage() {
         </>
     );
 }
+export default TransferPage;

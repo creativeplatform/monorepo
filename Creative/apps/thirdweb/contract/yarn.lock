@@ -765,6 +765,11 @@
   dependencies:
     "@types/node" "*"
 
+"@unlock-protocol/contracts@^0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@unlock-protocol/contracts/-/contracts-0.0.22.tgz#634932a7e0628f812d26b5f6aa4839637a9d36eb"
+  integrity sha512-Vr3dMEBMBrQZ4tHY9HbGHNSKi4hWuRqt5G7zLI2WPDhhecBjTWD2ad6pY2EyGfoF/oIvhjdhi80uPJgxBSZlvA==
+
 JSONStream@1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.2.tgz#c102371b6ec3a7cf3b847ca00c20bb0fce4c6dea"

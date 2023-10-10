@@ -3,7 +3,7 @@ import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains'
 import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
-export const SITE_DESCRIPTION = 'The way your content should be.'
+export const SITE_DESCRIPTION = 'The way content should be.'
 export const SITE_IMAGE = '/creative-membership.gif'
 export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
@@ -36,6 +36,8 @@ export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
 export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT
+export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY
+export const WERT_PARTNER_ID = process.env.NEXT_PUBLIC_WERT_PARTNER_ID
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({

@@ -1,6 +1,6 @@
 import { ThemingProps } from '@chakra-ui/react';
 export declare const SITE_NAME = "CREATIVE TV";
-export declare const SITE_DESCRIPTION = "The way your content should be.";
+export declare const SITE_DESCRIPTION = "The way content should be.";
 export declare const SITE_IMAGE = "/creative-membership.gif";
 export declare const SITE_URL = "https://creativeplatform.xyz";
 export declare const SITE_COPYRIGHT = "\u00A9 2023 Creative Organization DAO, LLC. All rights reserved.";
@@ -18,6 +18,8 @@ export declare const THIRDWEB_API_KEY: string | undefined;
 export declare const EXPLORER_KEY: string | undefined;
 export declare const PAPER_CLIENT_ID: string | undefined;
 export declare const WALLET_CONNECT: string | undefined;
+export declare const WERT_PRIVATE_KEY: string | undefined;
+export declare const WERT_PARTNER_ID: string | undefined;
 export declare const THEME_INITIAL_COLOR = "system";
 export declare const THEME_COLOR_MODES: Record<string, any>;
 export declare const THEME_COLOR_SCHEME: ThemingProps['colorScheme'];

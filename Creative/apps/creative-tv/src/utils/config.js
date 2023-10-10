@@ -3,25 +3,13 @@ import { extendTheme } from '@chakra-ui/react';
 import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains';
 import gql from 'graphql-tag';
 export const SITE_NAME = 'CREATIVE TV';
-export const SITE_DESCRIPTION = 'The way your content should be.';
+export const SITE_DESCRIPTION = 'The way content should be.';
 export const SITE_IMAGE = '/creative-membership.gif';
 export const SITE_URL = 'https://creativeplatform.xyz';
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.';
 export const SITE_LOGO = '/grant-logo.png';
-/* declare var process: {
-  env: {
-    NEXT_PUBLIC_STUDIO_API_KEY: string,
-    NEXT_SESSION_PASSWORD: string,
-    NODE_ENV: string,
-    NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
-    NEXT_PUBLIC_ALCHEMY_API_KEY: string,
-    NEXT_PUBLIC_INFURA_API_KEY: string,
-    NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
-    NEXT_PUBLIC_HOST: string,
-    NEXT_PUBLIC_SMART_WALLET_API_KEY: string
-    NEXT_PUBLIC_EXPLORER_KEY: string
-  }
-} */
+
+
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY;
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY;
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD;
@@ -35,6 +23,8 @@ export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY;
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY;
 export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID;
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT;
+export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY;
+export const WERT_PARTNER_ID = process.env.NEXT_PUBLIC_WERT_PARTNER_ID;
 export const THEME_INITIAL_COLOR = 'system';
 export const THEME_COLOR_MODES = extendTheme({
     colors: {

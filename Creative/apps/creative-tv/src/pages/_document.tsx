@@ -15,6 +15,11 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta charSet="utf-8" />
+        <meta property="og:image" content="https://bafybeifvxi7xs6qrtaymrefolo56zxwm4z7tggf245uy6l5bf4idodda7m.ipfs.w3s.link/membership_banner.gif"/>
+        <meta property="og:title" content="Creative Membership"/>
+        <meta property="og:description" content="For 10 USDC a month you can finally start earning for being creative."/>
+        <meta property="og:image:width" content="1200"/>
+        <meta property="og:image:height" content="630"/>
         <link rel="icon" href="/favicon.ico" />
         <script
           id="unlock-protocol-paywall"
@@ -28,22 +33,7 @@ export default function Document() {
               }(document, "script"));`,
           }}
         />
-        <script
-          id="unlockProtocolPaywallConfig"
-          dangerouslySetInnerHTML={{
-            __html: `
-              var unlockProtocolConfig = {
-                "locks": {
-                  "0x697560ba635e92c19e660fa0eb0bdfcd7938a08b": {
-                    "name": "Member Test",
-                    "network": 5,
-                  }
-                },    
-                "title": "Creative TV Membership",
-                "icon": "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/"           
-              }`,
-          }}
-        />
+
       </Head>
       <body>
         <ColorModeScript initialColorMode={THEME_INITIAL_COLOR} />
