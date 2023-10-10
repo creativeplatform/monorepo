@@ -40,10 +40,8 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { signSmartContractData } from '@wert-io/widget-sc-signer';
-import WertWidget from '@wert-io/widget-initializer';
-import { Goerli } from '@thirdweb-dev/chains'
-import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useUser } from '@thirdweb-dev/react'
+import { CrossmintPayButton } from '@crossmint/client-sdk-react-ui'
+import { ConnectWallet, useAddress, useDisconnect, useUser, useContract, useContractRead } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
@@ -54,7 +52,7 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { PFP } from 'utils/context'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME, WERT_PRIVATE_KEY } from '../../utils/config'
+import { SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
 
@@ -69,33 +67,11 @@ interface Props {
 
 export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? '';
-  const [navIsOpen, setNavIsOpen] = useState(false);
   const ref = useRef(null);
   const router = useRouter();
   const toast = useToast();
   const address = useAddress() || '';
   const { isLoggedIn } = useUser();
-
-  // WERT SIGNER HELPER
-  const signedData = signSmartContractData({
-    address: address,
-    commodity: "TTG",
-    network: "goerli",
-    commodity_amount: 1,
-    sc_address: "0xc9bdfa5f177961d96f137c42241e8ecbca605781",
-    sc_input_data: "0x",
-  }, `${WERT_PRIVATE_KEY}`);
-
-  const wertOptions = {
-    partner_id: "01FGKYK638SV618KZHAVEY7P79",
-    origin: "https://sandbox.wert.io",
-    lang: 'en',
-  }
-
-  const wertWidget = new WertWidget({
-    ...signedData,
-    ...wertOptions,
-});
 
   const connector = useColorModeValue('light', 'dark')
 
@@ -118,7 +94,6 @@ export function Header({ className, handleLoading }: Props) {
   // Currently connected wallet address
   
   console.log(address, 'addy')
-  const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
   
   // Configure networks to use
