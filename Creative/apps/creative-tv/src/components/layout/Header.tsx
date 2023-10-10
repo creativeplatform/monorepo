@@ -126,6 +126,10 @@ export function Header({ className, handleLoading }: Props) {
 
   // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
   // If no provider is set, the library uses window.ethereum
+  const { contract } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781')
+  /*******  CONTRACT READING ********/
+  // Determine whether the connected wallet address has a valid subscription
+  const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [address])
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
@@ -427,9 +431,9 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   <Avatar mb={6} size={'md'} name="creative" src={PFP} />
                 </MenuButton>
-                {!isLoggedIn ? (
+                {!isLoggedIn && !subscribed ? (
                   <MenuList>
-                    <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
+                    <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
                       Purchase Membership
                     </MenuItem>
                     <MenuDivider />
@@ -652,11 +656,11 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
 
                 <MenuList>
-                  {!isLoggedIn ? (
-                    <>
-                      <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
-                        Purchase Membership
-                      </MenuItem>
+                  {!isLoggedIn && !subscribed ? (
+                  <>
+                    <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
+                      Purchase Membership
+                    </MenuItem>
                       <MenuDivider />
                     </>
                   ) : (
