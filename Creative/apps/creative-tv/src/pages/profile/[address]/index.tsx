@@ -326,9 +326,7 @@ const ProfilePage: NextPage = () => {
                   </TabPanel>
                   <TabPanel>
                     <Box>
-                      <Text fontWeight={'bold'} srOnly>
                         <Wert />
-                      </Text>
                     </Box>
                   </TabPanel>
                   <TabPanel>

@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { signSmartContractData } from '@wert-io/widget-sc-signer';
 import WertWidget from '@wert-io/widget-initializer';
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { WERT_PRIVATE_KEY } from '../../../utils/config';
 import { useAddress } from '@thirdweb-dev/react';
 
@@ -20,7 +20,6 @@ const Wert: NextPage = () => {
 
     const wertOptions = {
         partner_id: "01FGKYK638SV618KZHAVEY7P79",
-        container_id: "wertModule",
         origin: "https://sandbox.wert.io",
         autosize: true,
         lang: 'en',
@@ -32,10 +31,9 @@ const Wert: NextPage = () => {
     })
 
     return (
-        <Box>
-            <Button onClick={() => wertWidget.mount()}>Add Funds to Account</Button>
-            <Flex id='wertModule'></Flex>
-        </Box>
+        <>
+            <Button colorScheme='blue' onClick={() => wertWidget.mount()}>Add Funds to Account</Button>
+        </>
     )
 }
 

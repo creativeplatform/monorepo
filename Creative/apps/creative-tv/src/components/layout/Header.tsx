@@ -41,7 +41,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { CrossmintPayButton } from '@crossmint/client-sdk-react-ui'
-import { ConnectWallet, useAddress, useDisconnect, useUser } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress, useDisconnect, useUser, useContract, useContractRead } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
