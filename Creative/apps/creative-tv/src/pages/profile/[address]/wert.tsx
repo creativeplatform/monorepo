@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import { signSmartContractData } from '@wert-io/widget-sc-signer';
 import WertWidget from '@wert-io/widget-initializer';
 import { Button } from '@chakra-ui/react';
+import { TbMoneybag } from 'react-icons/tb'
 import { WERT_PRIVATE_KEY } from '../../../utils/config';
 import { useAddress } from '@thirdweb-dev/react';
 
@@ -32,7 +33,7 @@ const Wert: NextPage = () => {
 
     return (
         <>
-            <Button colorScheme='blue' onClick={() => wertWidget.mount()}>Add Funds to Account</Button>
+            <Button leftIcon={<TbMoneybag />} variant='solid' colorScheme='blue' onClick={() => wertWidget.mount()}>Add Funds to Account</Button>
         </>
     )
 }
