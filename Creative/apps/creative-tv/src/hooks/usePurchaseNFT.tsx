@@ -2,6 +2,7 @@ import { useContract, useContractWrite, useAddress, ThirdwebSDK, useSigner } fro
 import { useToast } from '@chakra-ui/react';
 import { BigNumber } from 'ethers';
 import { ERC20_ABI } from '../utils/config';
+import { UnlockABI } from '../utils/fetchers/Unlock.js'
 
 export default function usePurchaseNFT() {
   const toast = useToast()
@@ -14,8 +15,9 @@ export default function usePurchaseNFT() {
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
 
   //contract call to purchase lock
-   const { contract } = useContract(
+   const contract = sdkSigner?.getContractFromAbi(
     LOCK_ADDRESS,
+    UnlockABI,
   );
 
   const approveAnyToken = async (
@@ -32,10 +34,8 @@ export default function usePurchaseNFT() {
   }
 
 
-  const { mutateAsync: purchase, isLoading } = useContractWrite(
-    contract,
-    "purchase"
-  );
+  // const purchase = contract?.method('purchase')
+  console.log(contract, 'contract')
 
   const purchaseNFT = async () => {
     toast({
@@ -59,21 +59,21 @@ export default function usePurchaseNFT() {
 
       })
 
-      const data = await purchase({ args: [
-        [PURCHASE_PRICE], //price here
-        [address],
-        [address],
-        [address],
-        ['0x'],
-      ]}).then(() => {
-        toast({
-          title: "Purchased NFT",
-          description: "You are now a member of CreativeTV!.",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        })
-      })
+      // const data = await purchase({ args: [
+      //   [PURCHASE_PRICE], //price here
+      //   [address],
+      //   [address],
+      //   [address],
+      //   ['0x'],
+      // ]}).then(() => {
+      //   toast({
+      //     title: "Purchased NFT",
+      //     description: "You are now a member of CreativeTV!.",
+      //     status: "success",
+      //     duration: 9000,
+      //     isClosable: true,
+      //   })
+      // })
 
       console.info("contract call success", data);
     } catch (err) {
