@@ -2,7 +2,7 @@ import { useContract, useContractWrite, useAddress, ThirdwebSDK, useSigner } fro
 import { useToast } from '@chakra-ui/react';
 import { BigNumber } from 'ethers';
 import { ERC20_ABI } from '../utils/config';
-import { UnlockABI } from '../utils/fetchers/Unlock.js'
+// import { UnlockABI } from '../utils/fetchers/Unlock.js'
 
 export default function usePurchaseNFT() {
   const toast = useToast()
@@ -15,10 +15,10 @@ export default function usePurchaseNFT() {
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
 
   //contract call to purchase lock
-   const contract = sdkSigner?.getContractFromAbi(
-    LOCK_ADDRESS,
-    UnlockABI,
-  );
+  //  const contract = sdkSigner?.getContractFromAbi(
+  //   LOCK_ADDRESS,
+  //   UnlockABI,
+  // );
 
   const approveAnyToken = async (
     tokenAddress: string,
@@ -35,7 +35,7 @@ export default function usePurchaseNFT() {
 
 
   // const purchase = contract?.method('purchase')
-  console.log(contract, 'contract')
+  //console.log(contract, 'contract')
 
   const purchaseNFT = async () => {
     toast({
@@ -75,7 +75,7 @@ export default function usePurchaseNFT() {
       //   })
       // })
 
-      console.info("contract call success", data);
+      // console.info("contract call success", data);
     } catch (err) {
       console.error("contract call failure", err);
       toast({
