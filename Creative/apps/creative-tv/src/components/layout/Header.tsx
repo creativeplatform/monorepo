@@ -54,7 +54,7 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { PFP } from 'utils/context'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME, WERT_PRIVATE_KEY } from '../../utils/config'
+import { SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
 
@@ -69,7 +69,6 @@ interface Props {
 
 export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? '';
-  const [navIsOpen, setNavIsOpen] = useState(false);
   const ref = useRef(null);
   const router = useRouter();
   const toast = useToast();
@@ -77,27 +76,6 @@ export function Header({ className, handleLoading }: Props) {
   const { isLoggedIn } = useUser();
   const signer = useSigner()
   const [subscribed, setSubscribed] = useState(false)
-
-  // WERT SIGNER HELPER
-  const signedData = signSmartContractData({
-    address: address,
-    commodity: "TTG",
-    network: "goerli",
-    commodity_amount: 1,
-    sc_address: "0xc9bdfa5f177961d96f137c42241e8ecbca605781",
-    sc_input_data: "0x",
-  }, `${WERT_PRIVATE_KEY}`);
-
-  const wertOptions = {
-    partner_id: "01FGKYK638SV618KZHAVEY7P79",
-    origin: "https://sandbox.wert.io",
-    lang: 'en',
-  }
-
-  const wertWidget = new WertWidget({
-    ...signedData,
-    ...wertOptions,
-});
 
   const connector = useColorModeValue('light', 'dark')
 

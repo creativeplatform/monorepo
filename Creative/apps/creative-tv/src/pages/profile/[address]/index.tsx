@@ -35,6 +35,7 @@ import { MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import TransferPage from './transfer'
+import Wert from './wert'
 
 
 const ProfilePage: NextPage = () => {
@@ -200,8 +201,12 @@ const ProfilePage: NextPage = () => {
                     &nbsp;Earnings
                   </Tab>
                   <Tab>
-                  <span role="img" aria-label="transfer">🔀</span>
-                    &nbsp;Transfer
+                    <span role="img" aria-label='ATM'>🏧</span>
+                    &nbsp;ATM
+                  </Tab>
+                  <Tab>
+                  <span role="img" aria-label="transfer">📤</span>
+                    &nbsp;Export
                   </Tab>
                 </TabList>
                 <TabPanels>
@@ -317,6 +322,11 @@ const ProfilePage: NextPage = () => {
                         Earnings:
                       </Text>
                       <Text>No earnings... yet</Text>
+                    </Box>
+                  </TabPanel>
+                  <TabPanel>
+                    <Box>
+                        <Wert />
                     </Box>
                   </TabPanel>
                   <TabPanel>
