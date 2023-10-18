@@ -226,10 +226,10 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
+          "indexed":true,
+          "internalType":"uint256",
+          "name":"tokenId",
+          "type":"uint256"
         },
         {
           "indexed": true,
@@ -840,7 +840,7 @@
       "name": "approve",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
+      "type":"function"
     },
     {
       "inputs": [
@@ -1077,7 +1077,8 @@
         [
           {
             "internalType": "uint256",
-            "name": "_tokenId",
+            "name":
+              "_tokenId",
             "type": "uint256"
           },
           {

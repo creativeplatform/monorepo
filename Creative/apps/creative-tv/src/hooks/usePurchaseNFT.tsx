@@ -2,7 +2,7 @@ import { useContract, useContractWrite, useAddress, ThirdwebSDK, useSigner } fro
 import { useToast } from '@chakra-ui/react';
 import { BigNumber } from 'ethers';
 import { ERC20_ABI } from '../utils/config';
-// import { UnlockABI } from '../utils/fetchers/Unlock.js'
+import Unlock from "../utils/fetchers/Unlock.json"
 
 export default function usePurchaseNFT() {
   const toast = useToast()
@@ -15,10 +15,7 @@ export default function usePurchaseNFT() {
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
 
   //contract call to purchase lock
-  //  const contract = sdkSigner?.getContractFromAbi(
-  //   LOCK_ADDRESS,
-  //   UnlockABI,
-  // );
+
 
   const approveAnyToken = async (
     tokenAddress: string,
@@ -32,12 +29,12 @@ export default function usePurchaseNFT() {
       );
       return erc20Contract?.call('approve',[approveAddress, amount]);
   }
-
-
-  // const purchase = contract?.method('purchase')
-  //console.log(contract, 'contract')
-
   const purchaseNFT = async () => {
+    const unlockContract = await sdkSigner?.getContractFromAbi(
+      LOCK_ADDRESS,
+      Unlock.abi,
+    );
+  
     toast({
       title: "Purchasing NFT",
       description: "Please wait while we process your request.",
@@ -58,22 +55,25 @@ export default function usePurchaseNFT() {
         })
 
       })
-
-      // const data = await purchase({ args: [
-      //   [PURCHASE_PRICE], //price here
-      //   [address],
-      //   [address],
-      //   [address],
-      //   ['0x'],
-      // ]}).then(() => {
-      //   toast({
-      //     title: "Purchased NFT",
-      //     description: "You are now a member of CreativeTV!.",
-      //     status: "success",
-      //     duration: 9000,
-      //     isClosable: true,
-      //   })
-      // })
+      return await unlockContract?.call(
+        "purchase", // Name of your function as it is on the smart contract
+        // Arguments to your function, in the same order they are on your smart contract
+        [
+          [PURCHASE_PRICE], //price here
+          [address],
+          [address],
+          [address],
+          ['0x'],
+        ],
+      ).then(() => {
+        toast({
+          title: "Purchased NFT",
+          description: "You are now a member of CreativeTV!.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        })
+      })
 
       // console.info("contract call success", data);
     } catch (err) {
