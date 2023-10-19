@@ -40,8 +40,10 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { CrossmintPayButton } from '@crossmint/client-sdk-react-ui'
-import { ConnectWallet, useAddress, useDisconnect, useUser, useContract, useContractRead } from '@thirdweb-dev/react'
+import { signSmartContractData } from '@wert-io/widget-sc-signer';
+import WertWidget from '@wert-io/widget-initializer';
+import Unlock from "../../utils/fetchers/Unlock.json"
+import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
@@ -72,6 +74,8 @@ export function Header({ className, handleLoading }: Props) {
   const toast = useToast();
   const address = useAddress() || '';
   const { isLoggedIn } = useUser();
+  const signer = useSigner()
+  const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
 
@@ -84,7 +88,7 @@ export function Header({ className, handleLoading }: Props) {
   }
 
   const paywall = new Paywall(networks) 
-    
+  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
   function handleCreatorCheckout() {
       paywall.loadCheckoutModal(creatorPaywallConfig)
   }
@@ -93,18 +97,30 @@ export function Header({ className, handleLoading }: Props) {
 
   // Currently connected wallet address
   
-  console.log(address, 'addy')
   const disconnect = useDisconnect()
   
-  // Configure networks to use
-  // You can also use @unlock-protocol/networks for convenience...
-
-  // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
-  // If no provider is set, the library uses window.ethereum
-  const { contract } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781')
   /*******  CONTRACT READING ********/
-  // Determine whether the connected wallet address has a valid subscription
-  const { data: subscribed } = useContractRead(contract, 'getHasValidKey', [address])
+  useEffect(() => {
+    if (!address || !sdkSigner || !Unlock.abi) return
+    const getSubscribedData = async () => {
+        const unlockContract = await sdkSigner?.getContractFromAbi(
+          '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+          Unlock.abi,
+        );
+        return await unlockContract?.call(
+          "getHasValidKey", // Name of your function as it is on the smart contract
+          // Arguments to your function, in the same order they are on your smart contract
+          [
+            address
+          ],
+        )
+      }
+      getSubscribedData().then((res) => {
+        console.log(res)
+        setSubscribed(res)
+      })
+    }, [address, sdkSigner, Unlock.abi])
+
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
