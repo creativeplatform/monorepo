@@ -99,6 +99,7 @@ export function Header({ className, handleLoading }: Props) {
   
   const disconnect = useDisconnect()
   
+  /*******  CONTRACT READING ********/
   useEffect(() => {
     if (!address || !sdkSigner || !Unlock.abi) return
     const getSubscribedData = async () => {
@@ -119,9 +120,6 @@ export function Header({ className, handleLoading }: Props) {
         setSubscribed(res)
       })
     }, [address, sdkSigner, Unlock.abi])
-
- 
-  /*******  CONTRACT READING ********/
 
 
   const [y, setY] = useState(0)
