@@ -400,9 +400,9 @@ export function Header({ className, handleLoading }: Props) {
                     height: 250,
                   },
                 }}
-                auth={{
-                  loginOptional: false,
-                }}
+                // auth={{
+                //   loginOptional: false,
+                // }}
                 switchToActiveChain={true}
                 modalSize={"wide"}
                 theme={connector} 
@@ -623,9 +623,9 @@ export function Header({ className, handleLoading }: Props) {
                   height: 250,
                 },
               }}
-              auth={{
-                loginOptional: false,
-              }}
+              // auth={{
+              //   loginOptional: false,
+              // }}
               theme={connector} 
               btnTitle={'Link Account'}
               modalTitle={'Login'}

@@ -39,10 +39,10 @@ export default function App({
             url: "https://tv.creativeplatform.xyz",
             isDarkMode: true,
           }}
-          authConfig={{
-            authUrl: "/api/auth",
-            domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "creativeplatform.xyz",
-          }}
+          // authConfig={{
+          //   authUrl: "/api/auth",
+          //   domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "creativeplatform.xyz",
+          // }}
             queryClient={queryClient}
             activeChain={activeChain}
             supportedWallets={[
