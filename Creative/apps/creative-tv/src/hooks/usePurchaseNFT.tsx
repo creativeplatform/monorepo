@@ -79,7 +79,7 @@ export default function usePurchaseNFT() {
           }
         },
         pessimistic: true,
-        recipient: `${address}`, // from new SmartWallet(config);
+        recipient: address, // from new SmartWallet(config);
       };
       const response = await paywall.loadCheckoutModal(paywallConfig);
       
