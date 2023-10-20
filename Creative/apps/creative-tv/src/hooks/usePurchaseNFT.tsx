@@ -42,22 +42,6 @@ export default function usePurchaseNFT() {
 
   // Function to purchase the NFT
   const purchaseNFT = async () => {
-    (window as any).unlockProtocolConfig = {
-      network: 5, // Network ID (1 is for mainnet, 4 for rinkeby... etc)
-      locks: {
-        '0xc9bdfa5f177961d96f137c42241e8ecbca605781': { // 0xabc is the address of a lock.
-          name: 'One Month Premium Goerli',
-          network: 5 // you can customize the network for each lock
-        },
-        '0xb6b645c3e2025cf69983983266d16a0aa323e2b0': { // 0xabc is the address of a lock.
-          name: 'One Month Premium',
-          network: 137 // you can customize the network for each lock
-        },
-      },
-      icon: 'https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/',
-    }
-    
-
    
     const paywall = new Paywall(networks);
     if (typeof window !== 'undefined') {
