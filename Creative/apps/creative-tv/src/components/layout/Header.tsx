@@ -40,10 +40,9 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { signSmartContractData } from '@wert-io/widget-sc-signer';
-import WertWidget from '@wert-io/widget-initializer';
 import Unlock from "../../utils/fetchers/Unlock.json"
-import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
+import { CrossmintPayButton } from "@crossmint/client-sdk-react-ui";
+import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
@@ -54,7 +53,7 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { PFP } from 'utils/context'
-import { SITE_LOGO, SITE_NAME } from '../../utils/config'
+import { CREATIVE_ADDRESS, SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
 
@@ -415,6 +414,13 @@ export function Header({ className, handleLoading }: Props) {
               />
             ) : (
               <>
+              <CrossmintPayButton
+                collectionId="344ce56f-aa96-4765-866f-f5d447201d68"
+                projectId="75feb281-8149-40fc-a8ce-a10793656a76"
+                mintConfig={{"totalPrice":"0.5","_values":["5000000000000000"],"_recipients": address,"_referrers": [CREATIVE_ADDRESS],"_keyManagers": [CREATIVE_ADDRESS],"_data":['0x']}}
+                environment="staging"
+                mintTo={address}
+              />
               <ConnectWallet
                 theme={connector}  
               />

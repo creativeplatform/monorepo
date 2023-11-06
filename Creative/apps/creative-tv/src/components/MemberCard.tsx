@@ -1,7 +1,4 @@
-import { useState } from 'react'
-import { useQuery, QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import { Flex, Input, Image, Button, ButtonGroup, Card, Text } from '@chakra-ui/react'
-import { useAccount } from 'wagmi'
+import { Flex, Image, Button, ButtonGroup, Card, Text } from '@chakra-ui/react'
 import { MdAutorenew, MdCancel } from 'react-icons/md'
 
 export type MemberCardProps = {
@@ -10,10 +7,11 @@ export type MemberCardProps = {
   balance: string
   renewMembershipForIsLoading: boolean
   cancelAndRefundIsLoading: boolean
+  expireDate: string
 }
 
 const MemberCard = (props: MemberCardProps) => {
-  const { nft, balance, renewMembershipForIsLoading, cancelAndRefundIsLoading } = props
+  const { nft, balance, renewMembershipForIsLoading, cancelAndRefundIsLoading, expireDate } = props
 
   return (
     <Card overflow={'hidden'} p={8} mb={4} alignItems="center" boxShadow="2xl">
@@ -24,6 +22,9 @@ const MemberCard = (props: MemberCardProps) => {
       </Flex>
       <Flex justifyContent={'center'} direction={'row'} mb={4}>
         <Text fontSize="xs">{nft.metadata.description}</Text>
+      </Flex>
+      <Flex justifyContent={'center'} direction={'column'} mb={4}>
+        <Text fontSize="xs">Expires: {expireDate}</Text>
       </Flex>
       <ButtonGroup justifyContent={'center'}>
         <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => {}} isLoading={renewMembershipForIsLoading}>

@@ -5,9 +5,21 @@ import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import type { AppProps } from 'next/app'
-import { ChakraProvider } from 'providers/Chakra'
 import { ACCOUNT_FACTORY_TESTNET, ETH_CHAINS, THIRDWEB_API_KEY, WALLET_CONNECT, PAPER_CLIENT_ID } from '../utils/config'
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 
+// Call `extendTheme` and pass your custom values
+const theme = extendTheme({
+  colors: {
+    brand: {
+      100: "#1A202C",
+      200: "#161D2F",
+      300: "#EC407A",
+      400: "#FACB80",
+      500: "#EE774D",
+    },
+  },
+})
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
@@ -27,7 +39,7 @@ export default function App({
   }
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Seo />
       <QueryClientProvider client={queryClient}>
         {isMounted && (

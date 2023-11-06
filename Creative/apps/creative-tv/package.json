@@ -10,10 +10,11 @@
     "lint": "tsc"
   },
   "dependencies": {
+    "@chakra-ui/counter": "^2.1.0",
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.5.1",
     "@chakra-ui/stepper": "^2.2.0",
-    "@crossmint/client-sdk-react-ui": "^1.1.1",
+    "@crossmint/client-sdk-react-ui": "^1.1.2-alpha.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@livepeer/react": "^2.5.8",

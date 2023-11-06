@@ -1501,7 +1501,7 @@
   resolved "https://registry.yarnpkg.com/@chakra-ui/control-box/-/control-box-2.1.0.tgz#0f4586797b3154c02463bc5c106782e70c88f04f"
   integrity sha512-gVrRDyXFdMd8E7rulL0SKeoljkLQiPITFnsyMO8EFHNZ+AHt5wK4LIguYVEq88APqAGZGfHFWXr79RYrNiE3Mg==
 
-"@chakra-ui/counter@2.1.0":
+"@chakra-ui/counter@2.1.0", "@chakra-ui/counter@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@chakra-ui/counter/-/counter-2.1.0.tgz#e413a2f1093a18f847bb7aa240117fde788a59e6"
   integrity sha512-s6hZAEcWT5zzjNz2JIWUBzRubo9la/oof1W7EKZVVfPYHERnl5e16FmBC79Yfq8p09LQ+aqFKm/etYoJMMgghw==
@@ -2230,20 +2230,20 @@
     stream-browserify "^3.0.0"
     util "^0.12.4"
 
-"@crossmint/client-sdk-base@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-base/-/client-sdk-base-1.1.1.tgz#10f4bf6560b36202af62c4718895317daff07bcc"
-  integrity sha512-Hv1N4v9x8+3HyKpg7IeFmzv1YbHXYo/xZUxjYyMWwTn3441WiajwqUZpBptCCiW8h+478p7EhIGe56jVcDspgA==
+"@crossmint/client-sdk-base@1.1.2-alpha.0":
+  version "1.1.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-base/-/client-sdk-base-1.1.2-alpha.0.tgz#f3f4481e0661ed2698989f4aab52a8d863fb59a5"
+  integrity sha512-cC2jAvYggOcTS5T3tLHSzMiNFw+MEDpy8yjK52rUAbR1sRNB+ID6CngZPtxV+7gtgk8XEYkbMqhX+wPnEnojvg==
   dependencies:
     exponential-backoff "3.1.1"
     uuid "9.0.1"
 
-"@crossmint/client-sdk-react-ui@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-react-ui/-/client-sdk-react-ui-1.1.1.tgz#198ef3ec2d4729623dafc47d43206880035c87f0"
-  integrity sha512-BynBehMkF+zs+HRsTl+exAEszIt4Vu92TRe6UnSLrTcyNw6NQlUYS0gYoLEf01HffBkijXP7e4QJ/ohX52opuA==
+"@crossmint/client-sdk-react-ui@^1.1.2-alpha.0":
+  version "1.1.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-react-ui/-/client-sdk-react-ui-1.1.2-alpha.0.tgz#5454040d3374705c1f97f72acc8f896db553bed4"
+  integrity sha512-C3lIvFNJpgAZYNJzd0pWGnfuI4YXet4cT9UeQxdjssmQKzlYypB3RUN5C6Wa7oUOrCwl9xi6AgiTtbuG9v8QCA==
   dependencies:
-    "@crossmint/client-sdk-base" "1.1.1"
+    "@crossmint/client-sdk-base" "1.1.2-alpha.0"
     "@ethersproject/transactions" "5.7.0"
     "@solana/web3.js" "1.78.5"
     bs58 "5.0.0"
