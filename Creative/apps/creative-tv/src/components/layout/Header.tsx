@@ -453,7 +453,7 @@ export function Header({ className, handleLoading }: Props) {
                 {!isLoggedIn && !subscribed ? (
                   <MenuList>
                     <MenuItem onClick={() => wertWidget.mount()}>
-                    Are you Creative?
+                    Are You Creative?
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem
@@ -678,7 +678,7 @@ export function Header({ className, handleLoading }: Props) {
                   {!isLoggedIn && !subscribed ? (
                   <>
                     <MenuItem onClick={() => wertWidget.mount()}>
-                    Are you Creative?
+                    Are You Creative?
                     </MenuItem>
                       <MenuDivider />
                     </>
