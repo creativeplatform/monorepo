@@ -10,10 +10,11 @@
     "lint": "tsc"
   },
   "dependencies": {
+    "@chakra-ui/counter": "^2.1.0",
     "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.5.1",
     "@chakra-ui/stepper": "^2.2.0",
-    "@crossmint/client-sdk-react-ui": "^1.1.1",
+    "@crossmint/client-sdk-react-ui": "^1.1.2-alpha.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@livepeer/react": "^2.5.8",
@@ -28,7 +29,7 @@
     "@unlock-protocol/paywall": "^0.6.8",
     "@unlock-protocol/unlock-js": "^0.39.1",
     "@wagmi/chains": "^0.1.7",
-    "@wert-io/widget-initializer": "^4.0.0",
+    "@wert-io/widget-initializer": "^4.0.1",
     "@wert-io/widget-sc-signer": "^2.0.0",
     "chakra-ui-carousel": "^1.0.7",
     "connectkit": "^1.1.1",
@@ -54,6 +55,7 @@
     "turbo": "^1.7.4",
     "ui": "*",
     "usehooks-ts": "^2.9.1",
+    "uuid": "^9.0.1",
     "wagmi": "^0.10.0",
     "walletconnect": "^1.7.8",
     "webpack": "5.88.1"
@@ -64,6 +66,7 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/styled-components": "^5.1.26",
+    "@types/uuid": "^9.0.6",
     "@wagmi/cli": "^0.1.11",
     "tsconfig": "*",
     "typescript": "4.9.4"

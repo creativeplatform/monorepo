@@ -40,22 +40,24 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { signSmartContractData } from '@wert-io/widget-sc-signer';
-import WertWidget from '@wert-io/widget-initializer';
 import Unlock from "../../utils/fetchers/Unlock.json"
-import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
+import { CrossmintPayButton } from "@crossmint/client-sdk-react-ui";
+import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
+import { signSmartContractData } from '@wert-io/widget-sc-signer'
+import WertWidget from '@wert-io/widget-initializer'
 import { useScroll } from 'framer-motion'
-import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
 import usePurchaseNFT from 'hooks/usePurchaseNFT'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { PFP } from 'utils/context'
-import { SITE_LOGO, SITE_NAME } from '../../utils/config'
+import { CREATIVE_ADDRESS, SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -78,6 +80,31 @@ export function Header({ className, handleLoading }: Props) {
   const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
+
+  const options = {
+    address: address,
+    commodity: 'TTG',
+    network: 'goerli',
+    commodity_amount: 0.5,
+    sc_address: '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+    sc_input_data: '0x',
+  };
+
+  const signedData = signSmartContractData(options, `${process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY}`);
+
+  const otherWidgetOptions = {
+    partner_id: process.env.NEXT_PUBLIC_WERT_PARTNER_ID,
+    click_id: uuidv4(), // unique id of purchase in your system
+    origin: 'https://sandbox.wert.io',
+    lang: 'en',
+    theme: connector,
+    signature: signedData.signature,
+
+  };
+  const wertWidget = new WertWidget({
+    ...signedData,
+    ...otherWidgetOptions,
+  });
 
   const [creatorPaywallConfig, setCreatorPaywallConfig] = useState(null);
 
@@ -415,6 +442,7 @@ export function Header({ className, handleLoading }: Props) {
               />
             ) : (
               <>
+              
               <ConnectWallet
                 theme={connector}  
               />
@@ -424,8 +452,8 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
                 {!isLoggedIn && !subscribed ? (
                   <MenuList>
-                    <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
-                      Purchase Membership
+                    <MenuItem onClick={() => wertWidget.mount()}>
+                    Purchase Membership
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem
@@ -649,8 +677,8 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuList>
                   {!isLoggedIn && !subscribed ? (
                   <>
-                    <MenuItem icon={<WarningIcon />} onClick={() => purchaseNFT()}>
-                      Purchase Membership
+                    <MenuItem onClick={() => wertWidget.mount()}>
+                    Purchase Membership
                     </MenuItem>
                       <MenuDivider />
                     </>

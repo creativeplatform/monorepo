@@ -1,7 +1,7 @@
 import { ColorModeScript } from '@chakra-ui/react'
 import { Head, Html, Main, NextScript } from 'next/document'
 import Script from 'next/script'
-import { THEME_INITIAL_COLOR } from 'utils/config'
+import theme from '../theme/theme'
 
 declare global {
   interface Window {
@@ -51,7 +51,7 @@ export default function Document() {
         />
       </Head>
       <body>
-        <ColorModeScript initialColorMode={THEME_INITIAL_COLOR} />
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Main />
         <NextScript />
       </body>

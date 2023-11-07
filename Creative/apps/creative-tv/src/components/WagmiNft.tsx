@@ -230,7 +230,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         <>
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
             <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
                 <Text my={4} style={{ fontWeight: '600', fontSize: 24 }}>
                   Your asset is ready to be uploaded to IPFS.
                 </Text>
@@ -255,7 +255,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
           {!contract?.getAddress() && asset?.storage?.ipfs?.cid ? (
             <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
                 <MediaRenderer
                   src={`${asset?.storage?.ipfs?.url}`}
                 />
@@ -275,9 +275,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
                 <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
                   <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
-                    Asset Details is as follows:
+                    Asset details:
                   </Text>
-                  <Box style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
+                  <Box style={{ lineHeight: 2.75 }}>
                     <Text>
                       Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
                     </Text>
@@ -292,7 +292,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
               </Stack>
 
               <ErrorBoundary fallback={<p>Failed to load...</p>}>
-                <Box my={16} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
+                <Box my={16} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
                   <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
                   <br />
                   <Button
@@ -316,7 +316,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
           {asset?.storage?.ipfs?.cid && contract?.getAddress() && (
             <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
                   Contract deployed succesfully!
                 </Text>
@@ -333,7 +333,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Button>
 
                 <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                  <Flex style={{ color: 'whitesmoke', lineHeight: 2.75 }}>
+                  <Flex style={{ lineHeight: 2.75 }}>
                     <Text>
                       Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
                     </Text>
@@ -342,7 +342,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Box>
               </Stack>
 
-              <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }} maxWidth="700px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
                   Time to mint your NFTs!
                 </Text>
