@@ -27,9 +27,8 @@ import {
   BreadcrumbLink, 
   Breadcrumb
 } from '@chakra-ui/react'
-import { useCounter } from "@chakra-ui/counter"
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK } from '@thirdweb-dev/react'
-import { LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
+import { CREATIVE_ADDRESS } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
