@@ -85,7 +85,7 @@ export function Header({ className, handleLoading }: Props) {
     address: address,
     commodity: 'TTG',
     network: 'goerli',
-    commodity_amount: 0.5,
+    commodity_amount: 1.0,
     sc_address: '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
     sc_input_data: '0x',
   };
