@@ -39,9 +39,23 @@ const WertPurchaseNFT: NextPage = () => {
         lang: 'en',
     }
 
+    const nftOptions = {
+        extra: {
+            item_info: {
+                author_image_url: "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/",
+                author: "Creative Organization DAO",
+                image_url:
+                "https://storage.unlock-protocol.com/e47cb521-03a1-490d-9582-a221029d241f",
+                name: "The CREATIVE Membership",
+                seller: "Creative Organization DAO",
+            }
+        },
+    };
+
     const wertWidget = new WertWidget({
         ...signedData,
         ...wertOptions,
+        ...nftOptions,
     })
 
     return (
