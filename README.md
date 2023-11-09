@@ -75,7 +75,9 @@ To learn more about Turbo Repo and how to use it effectively, refer to the [Turb
 
 ## Contributing
 
-Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please submit an issue or create a pull request.
+Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please submit an [issue](https://feedback.creativeplatform.xyz) or create a pull request.
+
+- Before making a pull request be sure to run `yarn turbo lint`. 
 
 ## License
 
