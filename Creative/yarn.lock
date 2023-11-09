@@ -7819,6 +7819,20 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@wert-io/module-react-component@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@wert-io/module-react-component/-/module-react-component-1.0.0.tgz#d9f4f92e80027bf55e7532b15d7edc2168742a4e"
+  integrity sha512-oN1/MVySO2q4cwHDS/U78yB4cTaNHRRjQfF64Psot2jxF0A1h4cVbzfjissGNFcCsJcljQga20BRY6CSLg8O7Q==
+  dependencies:
+    "@wert-io/widget-initializer" "3.1.0"
+    react "^18.1.0"
+    react-dom "^18.1.0"
+
+"@wert-io/widget-initializer@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@wert-io/widget-initializer/-/widget-initializer-3.1.0.tgz#39e074b792f256659ba0811a987c5a014d22f0ed"
+  integrity sha512-pY5Ws0rL/lhxTAu5fEcLPPqvX9nr+aru3+/3DvypkPAuouBbbpW5xEW0lc9DcWfWsgrpudp0Cpujg5IPRtvjVw==
+
 "@wert-io/widget-initializer@^4.0.1":
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/@wert-io/widget-initializer/-/widget-initializer-4.0.1.tgz#20170b5d469e9115d8710ded754fc62947d4112f"
@@ -21368,7 +21382,7 @@ react-display-name@^0.2.4:
   resolved "https://registry.yarnpkg.com/react-display-name/-/react-display-name-0.2.5.tgz#304c7cbfb59ee40389d436e1a822c17fe27936c6"
   integrity sha512-I+vcaK9t4+kypiSgaiVWAipqHRXYmZIuAiS8vzFvXHHXVigg/sMKwlRgLy6LH2i3rmP+0Vzfl5lFsFRwF1r3pg==
 
-react-dom@18.2.0, react-dom@^18.2.0:
+react-dom@18.2.0, react-dom@^18.1.0, react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
   integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
@@ -21604,7 +21618,7 @@ react-use-measure@^2.1.1:
   dependencies:
     debounce "^1.2.1"
 
-react@18.2.0, react@^18.2.0:
+react@18.2.0, react@^18.1.0, react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
