@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThirdwebProvider, smartWallet, localWallet, metamaskWallet, paperWallet, coinbaseWallet, walletConnect} from '@thirdweb-dev/react'
+import { ThirdwebProvider, smartWallet, localWallet, metamaskWallet, embeddedWallet, coinbaseWallet, walletConnect} from '@thirdweb-dev/react'
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import type { AppProps } from 'next/app'
-import { ACCOUNT_FACTORY_TESTNET, ETH_CHAINS, THIRDWEB_API_KEY, WALLET_CONNECT, PAPER_CLIENT_ID } from '../utils/config'
+import { ACCOUNT_FACTORY_TESTNET, ETH_CHAINS, THIRDWEB_API_KEY, WALLET_CONNECT } from '../utils/config'
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 
 // Call `extendTheme` and pass your custom values
@@ -60,7 +60,7 @@ export default function App({
             supportedWallets={[
               smartWallet(metamaskWallet(), config),
               smartWallet(localWallet(), config),
-              smartWallet(paperWallet({recommended: true, paperClientId: PAPER_CLIENT_ID}), config),
+              smartWallet(embeddedWallet({recommended: true}), config),
               smartWallet(coinbaseWallet(), config),
               smartWallet(walletConnect({projectId: WALLET_CONNECT }), config)
             ]}
