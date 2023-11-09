@@ -1501,7 +1501,7 @@
   resolved "https://registry.yarnpkg.com/@chakra-ui/control-box/-/control-box-2.1.0.tgz#0f4586797b3154c02463bc5c106782e70c88f04f"
   integrity sha512-gVrRDyXFdMd8E7rulL0SKeoljkLQiPITFnsyMO8EFHNZ+AHt5wK4LIguYVEq88APqAGZGfHFWXr79RYrNiE3Mg==
 
-"@chakra-ui/counter@2.1.0":
+"@chakra-ui/counter@2.1.0", "@chakra-ui/counter@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@chakra-ui/counter/-/counter-2.1.0.tgz#e413a2f1093a18f847bb7aa240117fde788a59e6"
   integrity sha512-s6hZAEcWT5zzjNz2JIWUBzRubo9la/oof1W7EKZVVfPYHERnl5e16FmBC79Yfq8p09LQ+aqFKm/etYoJMMgghw==
@@ -2230,20 +2230,20 @@
     stream-browserify "^3.0.0"
     util "^0.12.4"
 
-"@crossmint/client-sdk-base@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-base/-/client-sdk-base-1.1.1.tgz#10f4bf6560b36202af62c4718895317daff07bcc"
-  integrity sha512-Hv1N4v9x8+3HyKpg7IeFmzv1YbHXYo/xZUxjYyMWwTn3441WiajwqUZpBptCCiW8h+478p7EhIGe56jVcDspgA==
+"@crossmint/client-sdk-base@1.1.2-alpha.0":
+  version "1.1.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-base/-/client-sdk-base-1.1.2-alpha.0.tgz#f3f4481e0661ed2698989f4aab52a8d863fb59a5"
+  integrity sha512-cC2jAvYggOcTS5T3tLHSzMiNFw+MEDpy8yjK52rUAbR1sRNB+ID6CngZPtxV+7gtgk8XEYkbMqhX+wPnEnojvg==
   dependencies:
     exponential-backoff "3.1.1"
     uuid "9.0.1"
 
-"@crossmint/client-sdk-react-ui@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-react-ui/-/client-sdk-react-ui-1.1.1.tgz#198ef3ec2d4729623dafc47d43206880035c87f0"
-  integrity sha512-BynBehMkF+zs+HRsTl+exAEszIt4Vu92TRe6UnSLrTcyNw6NQlUYS0gYoLEf01HffBkijXP7e4QJ/ohX52opuA==
+"@crossmint/client-sdk-react-ui@^1.1.2-alpha.0":
+  version "1.1.2-alpha.0"
+  resolved "https://registry.yarnpkg.com/@crossmint/client-sdk-react-ui/-/client-sdk-react-ui-1.1.2-alpha.0.tgz#5454040d3374705c1f97f72acc8f896db553bed4"
+  integrity sha512-C3lIvFNJpgAZYNJzd0pWGnfuI4YXet4cT9UeQxdjssmQKzlYypB3RUN5C6Wa7oUOrCwl9xi6AgiTtbuG9v8QCA==
   dependencies:
-    "@crossmint/client-sdk-base" "1.1.1"
+    "@crossmint/client-sdk-base" "1.1.2-alpha.0"
     "@ethersproject/transactions" "5.7.0"
     "@solana/web3.js" "1.78.5"
     bs58 "5.0.0"
@@ -6545,6 +6545,11 @@
   dependencies:
     source-map "^0.6.1"
 
+"@types/uuid@^9.0.6":
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.6.tgz#c91ae743d8344a54b2b0c691195f5ff5265f6dfb"
+  integrity sha512-BT2Krtx4xaO6iwzwMFUYvWBWkV2pr37zD68Vmp1CDV196MzczBRxuEpD6Pr395HAgebC/co7hOphs53r8V7jew==
+
 "@types/webpack-sources@*":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-3.2.1.tgz#98670b35fa799c44ac235910f3fda9bfdcdbc2c6"
@@ -7814,10 +7819,10 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wert-io/widget-initializer@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@wert-io/widget-initializer/-/widget-initializer-4.0.0.tgz#bec302518a2407b7dc85c68cdbdb17838b5b8815"
-  integrity sha512-s5DQ+1LAMQBwDzFQVEhIMMCYoIxw5uFyPgGkyvk1if9pEllnmDTzD/8AKnBlCAmDAQNrsCjKuMBGTAYp3miWcQ==
+"@wert-io/widget-initializer@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@wert-io/widget-initializer/-/widget-initializer-4.0.1.tgz#20170b5d469e9115d8710ded754fc62947d4112f"
+  integrity sha512-kW9RAYYpCbxwHS+pmT6aM+K7WFrqCxnvINWR1MHd7KNawntrccv9UrvaEREGKWOU/m6OHkADuV6fZmyOvnNGZQ==
 
 "@wert-io/widget-sc-signer@^2.0.0":
   version "2.0.0"
@@ -24198,32 +24203,74 @@ turbo-darwin-64@1.10.14:
   resolved "https://registry.yarnpkg.com/turbo-darwin-64/-/turbo-darwin-64-1.10.14.tgz#9e8061bc0d706a69bc61d88fbfa7690fa2a897fc"
   integrity sha512-I8RtFk1b9UILAExPdG/XRgGQz95nmXPE7OiGb6ytjtNIR5/UZBS/xVX/7HYpCdmfriKdVwBKhalCoV4oDvAGEg==
 
+turbo-darwin-64@1.10.16:
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/turbo-darwin-64/-/turbo-darwin-64-1.10.16.tgz#5a8717c1372f2a75e8cfe0b4b6455119ce410b19"
+  integrity sha512-+Jk91FNcp9e9NCLYlvDDlp2HwEDp14F9N42IoW3dmHI5ZkGSXzalbhVcrx3DOox3QfiNUHxzWg4d7CnVNCuuMg==
+
 turbo-darwin-arm64@1.10.14:
   version "1.10.14"
   resolved "https://registry.yarnpkg.com/turbo-darwin-arm64/-/turbo-darwin-arm64-1.10.14.tgz#2589aeb814257601c979dd40ff8a6cace6c9e4e5"
   integrity sha512-KAdUWryJi/XX7OD0alOuOa0aJ5TLyd4DNIYkHPHYcM6/d7YAovYvxRNwmx9iv6Vx6IkzTnLeTiUB8zy69QkG9Q==
+
+turbo-darwin-arm64@1.10.16:
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/turbo-darwin-arm64/-/turbo-darwin-arm64-1.10.16.tgz#19b5b63acf7ee0fce7e1fe5850e093c2ac9c73f5"
+  integrity sha512-jqGpFZipIivkRp/i+jnL8npX0VssE6IAVNKtu573LXtssZdV/S+fRGYA16tI46xJGxSAivrZ/IcgZrV6Jk80bw==
 
 turbo-linux-64@1.10.14:
   version "1.10.14"
   resolved "https://registry.yarnpkg.com/turbo-linux-64/-/turbo-linux-64-1.10.14.tgz#c01d26f62f6c47701026dea083054918fe8caf47"
   integrity sha512-BOBzoREC2u4Vgpap/WDxM6wETVqVMRcM8OZw4hWzqCj2bqbQ6L0wxs1LCLWVrghQf93JBQtIGAdFFLyCSBXjWQ==
 
+turbo-linux-64@1.10.16:
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/turbo-linux-64/-/turbo-linux-64-1.10.16.tgz#ee97c0011553a96bd7995e7bcc6e65aab8996798"
+  integrity sha512-PpqEZHwLoizQ6sTUvmImcRmACyRk9EWLXGlqceogPZsJ1jTRK3sfcF9fC2W56zkSIzuLEP07k5kl+ZxJd8JMcg==
+
 turbo-linux-arm64@1.10.14:
   version "1.10.14"
   resolved "https://registry.yarnpkg.com/turbo-linux-arm64/-/turbo-linux-arm64-1.10.14.tgz#7cbcb091995a09134342a57e0672501115b46df2"
   integrity sha512-D8T6XxoTdN5D4V5qE2VZG+/lbZX/89BkAEHzXcsSUTRjrwfMepT3d2z8aT6hxv4yu8EDdooZq/2Bn/vjMI32xw==
+
+turbo-linux-arm64@1.10.16:
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/turbo-linux-arm64/-/turbo-linux-arm64-1.10.16.tgz#2723cc2a846d89df7484002161b25673f4f04009"
+  integrity sha512-TMjFYz8to1QE0fKVXCIvG/4giyfnmqcQIwjdNfJvKjBxn22PpbjeuFuQ5kNXshUTRaTJihFbuuCcb5OYFNx4uw==
 
 turbo-windows-64@1.10.14:
   version "1.10.14"
   resolved "https://registry.yarnpkg.com/turbo-windows-64/-/turbo-windows-64-1.10.14.tgz#935d2d1da7fb1f9a941fb3aa122fd9a70b61c416"
   integrity sha512-zKNS3c1w4i6432N0cexZ20r/aIhV62g69opUn82FLVs/zk3Ie0GVkSB6h0rqIvMalCp7enIR87LkPSDGz9K4UA==
 
+turbo-windows-64@1.10.16:
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/turbo-windows-64/-/turbo-windows-64-1.10.16.tgz#87c46a78502a86dec73634b255a6b3471285969b"
+  integrity sha512-+jsf68krs0N66FfC4/zZvioUap/Tq3sPFumnMV+EBo8jFdqs4yehd6+MxIwYTjSQLIcpH8KoNMB0gQYhJRLZzw==
+
 turbo-windows-arm64@1.10.14:
   version "1.10.14"
   resolved "https://registry.yarnpkg.com/turbo-windows-arm64/-/turbo-windows-arm64-1.10.14.tgz#cb3a55d30a75aa76258991e929e92f207cac872f"
   integrity sha512-rkBwrTPTxNSOUF7of8eVvvM+BkfkhA2OvpHM94if8tVsU+khrjglilp8MTVPHlyS9byfemPAmFN90oRIPB05BA==
 
-turbo@^1.10.13, turbo@^1.7.4:
+turbo-windows-arm64@1.10.16:
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/turbo-windows-arm64/-/turbo-windows-arm64-1.10.16.tgz#a6208c2bc27e5e6ef0aa4a3e64389c4285c3f274"
+  integrity sha512-sKm3hcMM1bl0B3PLG4ifidicOGfoJmOEacM5JtgBkYM48ncMHjkHfFY7HrJHZHUnXM4l05RQTpLFoOl/uIo2HQ==
+
+turbo@^1.10.16:
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/turbo/-/turbo-1.10.16.tgz#51601a65a3aa56d1b9d9cb9a2ab3a5a2eab41e19"
+  integrity sha512-2CEaK4FIuSZiP83iFa9GqMTQhroW2QryckVqUydmg4tx78baftTOS0O+oDAhvo9r9Nit4xUEtC1RAHoqs6ZEtg==
+  optionalDependencies:
+    turbo-darwin-64 "1.10.16"
+    turbo-darwin-arm64 "1.10.16"
+    turbo-linux-64 "1.10.16"
+    turbo-linux-arm64 "1.10.16"
+    turbo-windows-64 "1.10.16"
+    turbo-windows-arm64 "1.10.16"
+
+turbo@^1.7.4:
   version "1.10.14"
   resolved "https://registry.yarnpkg.com/turbo/-/turbo-1.10.14.tgz#31f3bb3017218191e0de64728da199678a50aa7d"
   integrity sha512-hr9wDNYcsee+vLkCDIm8qTtwhJ6+UAMJc3nIY6+PNgUTtXcQgHxCq8BGoL7gbABvNWv76CNbK5qL4Lp9G3ZYRA==
@@ -24831,7 +24878,7 @@ uuid@9.0.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
   integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
 
-uuid@9.0.1, uuid@^9.0.0:
+uuid@9.0.1, uuid@^9.0.0, uuid@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
   integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==

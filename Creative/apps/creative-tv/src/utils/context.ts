@@ -12,7 +12,10 @@ export const FOOTER_LINKS = {
   about_us: 'https://creativeplatform.xyz/docs/intro',
   releases: 'https://creative-org-dao.canny.io/changelog',
   pricing: 'https://app.unlock-protocol.com/checkout?paywallConfig=%7B%22locks%22%3A%7B%220xe174caa294999ec622988242641a27c11e6c22d8%22%3A%7B%22network%22%3A137%2C%22skipRecipient%22%3Atrue%7D%7D%2C%22pessimistic%22%3Atrue%2C%22skipRecipient%22%3Atrue%7D',
-  tutorial: 'https://crew3.xyz/c/thecreativedao/questboard'
+  tutorial: 'https://crew3.xyz/c/thecreativedao/questboard',
+  cookie_policy: 'https://creativeplatform.xyz/docs/cookie-policy',
+  privacy_policy: 'https://creativeplatform.xyz/docs/privacy-policy',
+  terms_and_conditions: 'https://creativeplatform.xyz/docs/terms-and-conditions',
 }
 
 export const HERO_NAME = {
@@ -41,6 +44,7 @@ export const FEATURED_TEXT = {
 // BIGGER THAN YOU THINK
 export const CREATIVE_LOGO_BLK = '/Blog-Logo_blk.png'
 export const CREATIVE_LOGO_WHT = '/Blog-Logo_wht.png'
+export const CREATIVE_ICON = '/creative_logo_only.png'
 export const HEADING_1 = "You're Bigger, Than You Think"
 export const GOVERN_DESC = "Our community is built to push creatives to the front of the line. The following videos have been voted on by the community to choose which videos should get more visibility."
 

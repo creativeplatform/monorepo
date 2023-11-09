@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import type { NextPage } from "next"
 import {
@@ -27,37 +27,67 @@ import {
   BreadcrumbLink, 
   Breadcrumb
 } from '@chakra-ui/react'
-import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, ConnectWallet } from '@thirdweb-dev/react'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, CREATIVE_ADDRESS } from 'utils/config'
+import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK } from '@thirdweb-dev/react'
+import { CREATIVE_ADDRESS } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
-import TransferPage from './transfer'
+import Wert from './wert'
+import Unlock from '../../../utils/fetchers/Unlock.json'
 
 
 const ProfilePage: NextPage = () => {
   const router = useRouter()
   const [transferAddress, setTransferAddress] = useState('')
   const [lendingAddress, setLendingAddress] = useState('')
+  const [subscribed, setSubscribed] = useState(false)
   const toast = useToast()
   const address = useAddress()
+  const signer = useSigner()
+  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
 
-  const { contract } = useContract(FREE_LOCK_ADDRESS_GOERLI_TESTNET.address)
+  /*******  CONTRACT READING ********/
+  useEffect(() => {
+    if (!address || !sdkSigner || !Unlock.abi) return
+    const getSubscribedData = async () => {
+        const unlockContract = await sdkSigner?.getContractFromAbi(
+          '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+          Unlock.abi,
+        );
+        return await unlockContract?.call(
+          "getHasValidKey", // Name of your function as it is on the smart contract
+          // Arguments to your function, in the same order they are on your smart contract
+          [
+            address
+          ],
+        )
+      }
+      getSubscribedData().then((res) => {
+        console.log(res)
+        setSubscribed(res)
+      })
+    }, [address, sdkSigner, Unlock.abi])
 
-  const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(contract, address)
+  const { 
+    contract: unlockContract,
+    isLoading: loadingUnlockContract,
+    error: unlockContractError,
+   } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781', Unlock.abi)
 
-  const { data: ownerBalance } = useNFTBalance(contract, address)
+  const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs( unlockContract, address)
+
+  const { data: ownerBalance } = useNFTBalance(unlockContract, address)
 
   // Stringify the owners balance
   const ownerBalanceString = ownerBalance?.toString()
 
   /******* READ FROM CONTRACT ******/
-  //const { data: expiring, isLoading: loadingIsExpiring } = useContractRead(contract, "expirationDuration");
+  const { data: expiring, isLoading: loadingIsExpiring, error: ExpirationError } = useContractRead(unlockContract, "expirationDuration");
 
   /****** WRITE TO CONTRACT *******/
-  const { mutateAsync: lendKey } = useContractWrite(contract, 'lendKey')
+  const { mutateAsync: lendKey } = useContractWrite(unlockContract, 'lendKey')
 
   const lend = async () => {
     try {
@@ -81,7 +111,7 @@ const ProfilePage: NextPage = () => {
       })
     }
   }
-  const { mutateAsync: renewMembershipFor, isLoading: renewMembershipForIsLoading } = useContractWrite(contract, 'renewMembershipFor')
+  const { mutateAsync: renewMembershipFor, isLoading: renewMembershipForIsLoading } = useContractWrite(unlockContract, 'renewMembershipFor')
 
   const renew = async () => {
     try {
@@ -106,7 +136,7 @@ const ProfilePage: NextPage = () => {
     }
   }
 
-  const { mutateAsync: cancelAndRefund, isLoading: cancelAndRefundIsLoading } = useContractWrite(contract, 'cancelAndRefund')
+  const { mutateAsync: cancelAndRefund, isLoading: cancelAndRefundIsLoading } = useContractWrite(unlockContract, 'cancelAndRefund')
 
   const cancelMembership = async () => {
     try {
@@ -200,8 +230,8 @@ const ProfilePage: NextPage = () => {
                     &nbsp;Earnings
                   </Tab>
                   <Tab>
-                  <span role="img" aria-label="transfer">🔀</span>
-                    &nbsp;Transfer
+                    <span role="img" aria-label='ATM'>🏧</span>
+                    &nbsp;ATM
                   </Tab>
                 </TabList>
                 <TabPanels>
@@ -212,13 +242,13 @@ const ProfilePage: NextPage = () => {
                           <Text fontWeight={'bold'} srOnly>
                             Membership:
                           </Text>
-
                           <Box display="flex" justifyContent="space-between" alignItems="start">
                             <Box flex="0 0 33%">
                               <MemberCard
                                 member={address}
                                 nft={nft}
                                 balance={ownerBalanceString!}
+                                expireDate={expiring.toString()}
                                 renewMembershipForIsLoading={renewMembershipForIsLoading}
                                 cancelAndRefundIsLoading={cancelAndRefundIsLoading}
                               />
@@ -321,7 +351,7 @@ const ProfilePage: NextPage = () => {
                   </TabPanel>
                   <TabPanel>
                     <Box>
-                      <TransferPage />
+                        <Wert />
                     </Box>
                   </TabPanel>
                 </TabPanels>

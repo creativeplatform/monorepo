@@ -1,7 +1,7 @@
 import { Box, Container, Link, SimpleGrid, Stack, Text, Flex, Tag, useColorModeValue, Image } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import { SOCIAL_GITHUB, SOCIAL_TWITTER, SOCIAL_LENS, SOCIAL_DISCORD, SOCIAL_LINKEDIN, SOCIAL_EMAIL, SITE_COPYRIGHT } from 'utils/config'
-import { CREATIVE_LOGO_BLK, FOOTER_LINKS } from 'utils/context'
+import { CREATIVE_ICON, FOOTER_LINKS } from 'utils/context'
 
 interface Props {
   className?: string
@@ -45,9 +45,9 @@ export default function Footer(props: Props): JSX.Element {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Legal</ListHeader>
-            <Link href={'#'}>Cookies Policy</Link>
-            <Link href={'#'}>Privacy Policy</Link>
-            <Link href={'#'}>Terms of Service</Link>
+            <Link href={FOOTER_LINKS.cookie_policy}>Cookies Policy</Link>
+            <Link href={FOOTER_LINKS.privacy_policy}>Privacy Policy</Link>
+            <Link href={FOOTER_LINKS.terms_and_conditions}>Terms of Service</Link>
             <Link href={'#'}>Law Enforcement</Link>
             <Link href={'#'}>Status</Link>
           </Stack>
@@ -89,11 +89,11 @@ export default function Footer(props: Props): JSX.Element {
             ml: 8,
           }}>
               <Image 
-                src={ CREATIVE_LOGO_BLK }
+                src={ CREATIVE_ICON }
                 alt="Creative Logo"
                 width={250}
                 height={'auto'}
-                boxSize='200px'
+                boxSize='100px'
                 objectFit = 'contain'
               />
         </Flex>

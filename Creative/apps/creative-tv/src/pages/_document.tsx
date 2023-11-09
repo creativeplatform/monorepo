@@ -1,7 +1,7 @@
 import { ColorModeScript } from '@chakra-ui/react'
 import { Head, Html, Main, NextScript } from 'next/document'
 import Script from 'next/script'
-import { THEME_INITIAL_COLOR } from 'utils/config'
+import theme from '../theme/theme'
 
 declare global {
   interface Window {
@@ -21,7 +21,7 @@ export default function Document() {
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
         <link rel="icon" href="/favicon.ico" />
-        <script
+        <Script
           id="unlock-protocol-paywall"
           dangerouslySetInnerHTML={{
             __html: `
@@ -33,10 +33,25 @@ export default function Document() {
               }(document, "script"));`,
           }}
         />
-
+        <Script
+          id="unlockProtocolPaywallConfig"
+          dangerouslySetInnerHTML={{
+            __html: `
+              var unlockProtocolConfig = {
+                "locks": {
+                  "0xC9bdfA5f177961D96F137C42241e8EcBCa605781": {
+                  "name": "Test Membership",
+                  "network": 5,
+                  }
+                },  
+                "title": "Creative TV Membership",
+                "icon": "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/"           
+              }`,
+          }}
+        />
       </Head>
       <body>
-        <ColorModeScript initialColorMode={THEME_INITIAL_COLOR} />
+        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Main />
         <NextScript />
       </body>

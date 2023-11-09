@@ -40,22 +40,22 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { signSmartContractData } from '@wert-io/widget-sc-signer';
-import WertWidget from '@wert-io/widget-initializer';
-import { Goerli } from '@thirdweb-dev/chains'
-import { ConnectWallet, useAddress, useContract, useContractRead, useDisconnect, useSigner, useUser } from '@thirdweb-dev/react'
+import Unlock from "../../utils/fetchers/Unlock.json"
+import { CrossmintPayButton } from "@crossmint/client-sdk-react-ui";
+import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
-import { ChevronDownIcon, WarningIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
 import usePurchaseNFT from 'hooks/usePurchaseNFT'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { PFP } from 'utils/context'
-import { FREE_LOCK_ADDRESS_GOERLI_TESTNET, SITE_LOGO, SITE_NAME, WERT_PRIVATE_KEY } from '../../utils/config'
+import { SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
+import WertPurchaseNFT from 'components/WertPurchaseNFT'
 
 
 
@@ -69,33 +69,13 @@ interface Props {
 
 export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? '';
-  const [navIsOpen, setNavIsOpen] = useState(false);
   const ref = useRef(null);
   const router = useRouter();
   const toast = useToast();
   const address = useAddress() || '';
   const { isLoggedIn } = useUser();
-
-  // WERT SIGNER HELPER
-  const signedData = signSmartContractData({
-    address: address,
-    commodity: "TTG",
-    network: "goerli",
-    commodity_amount: 1,
-    sc_address: "0xc9bdfa5f177961d96f137c42241e8ecbca605781",
-    sc_input_data: "0x",
-  }, `${WERT_PRIVATE_KEY}`);
-
-  const wertOptions = {
-    partner_id: "01FGKYK638SV618KZHAVEY7P79",
-    origin: "https://sandbox.wert.io",
-    lang: 'en',
-  }
-
-  const wertWidget = new WertWidget({
-    ...signedData,
-    ...wertOptions,
-});
+  const signer = useSigner()
+  const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
 
@@ -108,7 +88,7 @@ export function Header({ className, handleLoading }: Props) {
   }
 
   const paywall = new Paywall(networks) 
-    
+  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
   function handleCreatorCheckout() {
       paywall.loadCheckoutModal(creatorPaywallConfig)
   }
@@ -117,15 +97,30 @@ export function Header({ className, handleLoading }: Props) {
 
   // Currently connected wallet address
   
-  console.log(address, 'addy')
-  const [content, setContent] = useState<string | undefined>('')
   const disconnect = useDisconnect()
   
-  // Configure networks to use
-  // You can also use @unlock-protocol/networks for convenience...
+  /*******  CONTRACT READING ********/
+  useEffect(() => {
+    if (!address || !sdkSigner || !Unlock.abi) return
+    const getSubscribedData = async () => {
+        const unlockContract = await sdkSigner?.getContractFromAbi(
+          '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+          Unlock.abi,
+        );
+        return await unlockContract?.call(
+          "getHasValidKey", // Name of your function as it is on the smart contract
+          // Arguments to your function, in the same order they are on your smart contract
+          [
+            address
+          ],
+        )
+      }
+      getSubscribedData().then((res) => {
+        console.log(res)
+        setSubscribed(res)
+      })
+    }, [address, sdkSigner, Unlock.abi])
 
-  // Pass a provider. You can also use a provider from a library such as Magic.link or privy.io
-  // If no provider is set, the library uses window.ethereum
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
@@ -405,9 +400,9 @@ export function Header({ className, handleLoading }: Props) {
                     height: 250,
                   },
                 }}
-                auth={{
-                  loginOptional: false,
-                }}
+                // auth={{
+                //   loginOptional: false,
+                // }}
                 switchToActiveChain={true}
                 modalSize={"wide"}
                 theme={connector} 
@@ -420,6 +415,7 @@ export function Header({ className, handleLoading }: Props) {
               />
             ) : (
               <>
+              
               <ConnectWallet
                 theme={connector}  
               />
@@ -427,10 +423,10 @@ export function Header({ className, handleLoading }: Props) {
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   <Avatar mb={6} size={'md'} name="creative" src={PFP} />
                 </MenuButton>
-                {!isLoggedIn ? (
+                {!isLoggedIn && !subscribed ? (
                   <MenuList>
-                    <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
-                      Purchase Membership
+                    <MenuItem>
+                      <WertPurchaseNFT />
                     </MenuItem>
                     <MenuDivider />
                     <MenuItem
@@ -628,9 +624,9 @@ export function Header({ className, handleLoading }: Props) {
                   height: 250,
                 },
               }}
-              auth={{
-                loginOptional: false,
-              }}
+              // auth={{
+              //   loginOptional: false,
+              // }}
               theme={connector} 
               btnTitle={'Link Account'}
               modalTitle={'Login'}
@@ -652,11 +648,11 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
 
                 <MenuList>
-                  {!isLoggedIn ? (
-                    <>
-                      <MenuItem icon={<WarningIcon />} onClick={() => wertWidget.mount()}>
-                        Purchase Membership
-                      </MenuItem>
+                  {!isLoggedIn && !subscribed ? (
+                  <>
+                    <MenuItem>
+                      <WertPurchaseNFT />
+                    </MenuItem>
                       <MenuDivider />
                     </>
                   ) : (
