@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
+import NextLink from 'next/link'
 import {
   Accordion,
   AccordionButton,
@@ -41,7 +42,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import Unlock from "../../utils/fetchers/Unlock.json"
-import { CrossmintPayButton } from "@crossmint/client-sdk-react-ui";
 import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
@@ -56,7 +56,6 @@ import { PFP } from 'utils/context'
 import { SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import WertPurchaseNFT from 'components/WertPurchaseNFT'
-
 
 
 interface Props {
@@ -86,17 +85,10 @@ export function Header({ className, handleLoading }: Props) {
       handleLoading()
     }
   }
-
-  const paywall = new Paywall(networks) 
+  
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
-  function handleCreatorCheckout() {
-      paywall.loadCheckoutModal(creatorPaywallConfig)
-  }
-
-  const { purchaseNFT } = usePurchaseNFT()
 
   // Currently connected wallet address
-  
   const disconnect = useDisconnect()
   
   /*******  CONTRACT READING ********/
@@ -125,8 +117,8 @@ export function Header({ className, handleLoading }: Props) {
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
   const mobileNav = useDisclosure()
-  const bg = useColorModeValue('#F0F0F0', 'gray.900')
-  const cl = useColorModeValue('gray.800', 'white')
+  const cbg = useColorModeValue('#F0F0F0', 'brand.100')
+  const cl = useColorModeValue('gray.900', 'white')
 
   useEffect(() => {
     function updateScrollY() {
@@ -139,9 +131,9 @@ export function Header({ className, handleLoading }: Props) {
   const { height } = ref.current ? ref.current : { height: 0 }
 
   const Section = ({ icon, title, children }: Props) => {
-    const ic = useColorModeValue('brand.600', 'brand.200')
-    const hbg = useColorModeValue('gray.100', 'brand.400')
-    const tcl = useColorModeValue('gray.900', 'brand.100')
+    const ic = useColorModeValue('brand.600', 'brand.300')
+    const hbg = useColorModeValue('gray.100', 'brand.100')
+    const tcl = useColorModeValue('gray.900', 'brand.400')
     const dcl = useColorModeValue('gray.500', 'gray.100')
     return (
       <Box display="flex" alignItems="start" rounded="lg" _hover={{ bg: hbg, cursor: 'pointer' }}>
@@ -170,9 +162,9 @@ export function Header({ className, handleLoading }: Props) {
   }
 
   const Features = (props: any) => {
-    const hbg = useColorModeValue('gray.50', 'brand.400')
-    const hbgh = useColorModeValue('gray.400', 'pink.800')
-    const tcl = useColorModeValue('gray.900', 'gray.50')
+    const hbg = useColorModeValue('gray.100', 'brand.100')
+    const hbgh = useColorModeValue('brand.400', 'brand.300')
+    const tcl = useColorModeValue('brand.100', 'brand.600')
     return (
       <>
         <SimpleGrid columns={props.h ? { base: 1, md: 3, lg: 5 } : 1} pos="relative" gap={{ base: 6, sm: 8 }} px={5} py={6} p={{ sm: 8 }}>
@@ -307,22 +299,19 @@ export function Header({ className, handleLoading }: Props) {
                   <AccordionIcon display={{ base: 'none', sm: 'none', md: 'block' }} />
                 </AccordionButton>
                 <AccordionPanel>
-                  <Button
-                    bg={bg}
-                    color="black.700"
-                    px="2"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => {
-                      mobileNav.onClose()
-                      router.push('https://kidz.creativeplatform.xyz')
-                    }}>
-                    CREATIVE Kidz ⌐◨-◨
-                  </Button>
+                  <LinkBox as='article' maxW='sm' p='4' borderWidth='1px' rounded='md'>
+                    <Box as='time' dateTime='2023-11-09 15:30:00 +0000 UTC'>
+                      Exclusive
+                    </Box>
+                    <Heading size='md' my='2'>
+                      <LinkOverlay as={NextLink} href='https://kidz.creativeplatform.xyz' target='_blank'>
+                        New Year, New Beginnings: Creative Kidz
+                      </LinkOverlay>
+                    </Heading>
+                    <Text>
+                      Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
+                    </Text>
+                  </LinkBox>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -370,7 +359,6 @@ export function Header({ className, handleLoading }: Props) {
               <AccordionItem>
                 <AccordionButton>
                   <Button
-                    color="black.700"
                     display="inline-flex"
                     alignItems="center"
                     fontSize="14px"
@@ -499,7 +487,7 @@ export function Header({ className, handleLoading }: Props) {
       ref={ref}
       shadow={y > height ? 'sm' : undefined}
       transition="box-shadow 0.2s"
-      bg={bg}
+      bg={cbg}
       borderBottom="6px solid"
       borderBottomColor="brand.400"
       w="full"
@@ -509,7 +497,7 @@ export function Header({ className, handleLoading }: Props) {
           <Flex align="flex-start">
             <HStack p={2}>
               <Button
-                bg={bg}
+                bg={cbg}
                 px="0px"
                 color="black.900"
                 display="inline-flex"
@@ -543,18 +531,19 @@ export function Header({ className, handleLoading }: Props) {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
-                  <Button
-                    color="black.700"
-                    px="0"
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}
-                    onClick={() => router.push('https://kidz.creativeplatform.xyz')}>
-                    CREATIVE Kidz ⌐◨-◨
-                  </Button>
+                <LinkBox as='article' maxW='sm' p='4' borderWidth='1px' rounded='md'>
+                    <Box as='time' dateTime='2023-11-09 15:30:00 +0000 UTC'>
+                      Exclusive
+                    </Box>
+                    <Heading size='md' my='2'>
+                      <LinkOverlay as={NextLink} href='https://kidz.creativeplatform.xyz' target='_blank'>
+                        New Year, New Beginnings: Creative Kidz
+                      </LinkOverlay>
+                    </Heading>
+                    <Text>
+                      Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
+                    </Text>
+                  </LinkBox>
                 </PopoverContent>
               </Popover>
               <Button
@@ -590,7 +579,6 @@ export function Header({ className, handleLoading }: Props) {
               <Popover>
                 <PopoverTrigger>
                   <Button
-                    color="black.700"
                     display="inline-flex"
                     alignItems="center"
                     fontSize="14px"

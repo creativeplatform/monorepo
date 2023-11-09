@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way content should be.'
-export const SITE_IMAGE = '/creative-membership.gif'
+export const SITE_IMAGE = '/creative-membership.png'
 export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'

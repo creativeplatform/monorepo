@@ -1,7 +1,7 @@
 import { ThemingProps } from '@chakra-ui/react';
 export declare const SITE_NAME = "CREATIVE TV";
 export declare const SITE_DESCRIPTION = "The way content should be.";
-export declare const SITE_IMAGE = "/creative-membership.gif";
+export declare const SITE_IMAGE = "/creative-membership.png";
 export declare const SITE_URL = "https://creativeplatform.xyz";
 export declare const SITE_COPYRIGHT = "\u00A9 2023 Creative Organization DAO, LLC. All rights reserved.";
 export declare const SITE_LOGO = "/grant-logo.png";
