@@ -351,10 +351,11 @@ const ProfilePage: NextPage = () => {
                     </Box>
                   </TabPanel>
                   <TabPanel>
+                    {/* create two columns */}
                     <Box>
                         <Wert />
                     </Box>
-                    <Box>
+                    <Box mt={10}>
                       <UniswapWidget />
                     </Box>
                   </TabPanel>

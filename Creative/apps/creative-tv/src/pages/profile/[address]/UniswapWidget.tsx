@@ -1,5 +1,5 @@
 import { SwapWidget } from '@uniswap/widgets'
-import { useSigner } from '@thirdweb-dev/react';
+import { useSigner, useSmartWallet } from '@thirdweb-dev/react';
 import '@uniswap/widgets/fonts.css'
 
 const UniswapWidget = () => {
@@ -11,7 +11,7 @@ const UniswapWidget = () => {
   }
   return (
     <>
-    <SwapWidget provider={signer?._checkProvider?.prototype} jsonRpcUrlMap={jsonRpcUrlMap} />
+    <SwapWidget provider={signer?.connect.prototype} jsonRpcUrlMap={jsonRpcUrlMap} />
     </>
   );
 }

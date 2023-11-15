@@ -40,7 +40,7 @@ const Wert: NextPage = () => {
 
     return (
         <>
-            <Button leftIcon={<TbMoneybag />} variant='solid' colorScheme='blue' onClick={() => wertWidget.mount()}>Add Funds</Button>
+            <Button leftIcon={<TbMoneybag />} variant='solid' colorScheme='blue' onClick={() => wertWidget.mount()}>Buy Crypto</Button>
         </>
     )
 }
