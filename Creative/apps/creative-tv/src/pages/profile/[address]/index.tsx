@@ -35,6 +35,7 @@ import { MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import Wert from './wert'
+import UniswapWidget from './UniswapWidget'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 
 
@@ -352,6 +353,9 @@ const ProfilePage: NextPage = () => {
                   <TabPanel>
                     <Box>
                         <Wert />
+                    </Box>
+                    <Box>
+                      <UniswapWidget />
                     </Box>
                   </TabPanel>
                 </TabPanels>
