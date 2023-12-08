@@ -4,7 +4,7 @@ import { signSmartContractData } from '@wert-io/widget-sc-signer';
 import WertWidget from '@wert-io/widget-initializer';
 import { Button } from '@chakra-ui/react';
 import { MdOutlineShoppingCartCheckout } from 'react-icons/md';
-import { WERT_PRIVATE_KEY, CREATIVE_ADDRESS } from '../utils/config';
+import { WERT_PRIVATE_KEY, CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from '../utils/config';
 import { useAddress } from '@thirdweb-dev/react';
 import { v4 as uuidv4 } from 'uuid';
 import { encodeFunctionData } from 'viem';
@@ -23,10 +23,10 @@ const WertPurchaseNFT: NextPage = () => {
     // WERT SIGNER HELPER
     const signedData = signSmartContractData({
         address: address,
-        commodity: "TTG",
-        network: "goerli",
+        commodity: "MATIC",
+        network: "mumbai",
         commodity_amount: 1,
-        sc_address: "0xc9bdfa5f177961d96f137c42241e8ecbca605781",
+        sc_address: LOCK_ADDRESS_MUMBAI_TESTNET.address,
         sc_input_data: data,
     }, `${WERT_PRIVATE_KEY}`);
 

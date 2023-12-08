@@ -26,7 +26,6 @@ export declare const THEME_COLOR_SCHEME: ThemingProps['colorScheme'];
 export declare const THEME_CONFIG: {
     initialColorMode: string;
 };
-export declare const GOERLI_PROVIDER_URL = "https://ethereum-goerli.publicnode.com";
 export declare const EXPLORER_API_URL: {
     GOERLI: string;
     POLYGON: string;
@@ -51,49 +50,7 @@ export declare const CAROUSEL_PLAYLISTS: {
         playbackId_4: string;
     };
 };
-export declare const ETH_CHAINS: {
-    readonly name: "Goerli";
-    readonly title: "Ethereum Testnet Goerli";
-    readonly chain: "ETH";
-    readonly rpc: readonly ["https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}", "https://goerli.infura.io/v3/${INFURA_API_KEY}", "wss://goerli.infura.io/v3/${INFURA_API_KEY}", "https://eth-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}", "https://rpc.goerli.mudit.blog/", "https://ethereum-goerli.publicnode.com", "wss://ethereum-goerli.publicnode.com", "https://goerli.gateway.tenderly.co", "wss://goerli.gateway.tenderly.co"];
-    readonly faucets: readonly ["https://faucet.paradigm.xyz/", "http://fauceth.komputing.org?chain=5&address=${ADDRESS}", "https://goerli-faucet.slock.it?address=${ADDRESS}", "https://faucet.goerli.mudit.blog"];
-    readonly nativeCurrency: {
-        readonly name: "Goerli Ether";
-        readonly symbol: "ETH";
-        readonly decimals: 18;
-    };
-    readonly infoURL: "https://goerli.net/#about";
-    readonly shortName: "gor";
-    readonly chainId: 5;
-    readonly networkId: 5;
-    readonly ens: {
-        readonly registry: "0x112234455c3a32fd11230c42e7bccd4a84e02010";
-    };
-    readonly explorers: readonly [{
-        readonly name: "etherscan-goerli";
-        readonly url: "https://goerli.etherscan.io";
-        readonly standard: "EIP3091";
-    }, {
-        readonly name: "blockscout-goerli";
-        readonly url: "https://eth-goerli.blockscout.com";
-        readonly icon: {
-            readonly url: "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM";
-            readonly width: 551;
-            readonly height: 540;
-            readonly format: "png";
-        };
-        readonly standard: "EIP3091";
-    }];
-    readonly icon: {
-        readonly url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
-        readonly height: 512;
-        readonly width: 512;
-        readonly format: "png";
-    };
-    readonly testnet: true;
-    readonly slug: "goerli";
-}[];
-export declare const POLYGON_CHAINS: {
+export declare const POLYGON_CHAIN: {
     readonly name: "Polygon Mainnet";
     readonly chain: "Polygon";
     readonly icon: {
@@ -163,21 +120,14 @@ export declare const LOCK_ADDRESS_CREATIVE_TV: {
     fan: string;
     brand: string;
 };
-export declare const LOCK_ADDRESS_GOERLI_TESTNET: {
+export declare const LOCK_ADDRESS_MUMBAI_TESTNET: {
     address: string;
     rpc_url: string;
     chainId: string;
     symbol: string;
 };
-export declare const FREE_LOCK_ADDRESS_GOERLI_TESTNET: {
-    address: string;
-    rpc_url: string;
-    chainId: string;
-    symbol: string;
-    data: string;
-};
-export declare const ACCOUNT_FACTORY_TESTNET = "0xEA69aD73011E39E223873214a1F98aFF008A8ab6";
-export declare const ACCOUNT_FACTORY_MUMBAI = "";
+export declare const ACCOUNT_FACTORY_TESTNET = "0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2bf";
+export declare const ACCOUNT_FACTORY_POLYGON = "";
 export declare const SMART_WALLET_CONFIG: {
     chain: {
         readonly name: "Goerli";
@@ -226,7 +176,6 @@ export declare const SMART_WALLET_CONFIG: {
     gasless: boolean;
 };
 export declare const CREATIVE_ADDRESS = "0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260";
-export declare const TRANSFER_CONTRACT_ADDRESS = "0xBd25C36811Df69d080735eC53Ea4A61C55FdccCd";
 export declare const UNLOCK_API_URL = "https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2";
 export declare const UNLOCK_QUERY_HOLDS_KEY: import("graphql/language/ast").DocumentNode;
 export declare const LIVEPEER_API_URL = "https://livepeer.com/api";

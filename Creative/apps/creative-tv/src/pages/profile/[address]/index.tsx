@@ -28,7 +28,7 @@ import {
   Breadcrumb
 } from '@chakra-ui/react'
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK } from '@thirdweb-dev/react'
-import { CREATIVE_ADDRESS } from 'utils/config'
+import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
@@ -54,7 +54,7 @@ const ProfilePage: NextPage = () => {
     if (!address || !sdkSigner || !Unlock.abi) return
     const getSubscribedData = async () => {
         const unlockContract = await sdkSigner?.getContractFromAbi(
-          '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+          LOCK_ADDRESS_MUMBAI_TESTNET.address,
           Unlock.abi,
         );
         return await unlockContract?.call(
@@ -75,7 +75,7 @@ const ProfilePage: NextPage = () => {
     contract: unlockContract,
     isLoading: loadingUnlockContract,
     error: unlockContractError,
-   } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781', Unlock.abi)
+   } = useContract(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
 
   const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs( unlockContract, address)
 

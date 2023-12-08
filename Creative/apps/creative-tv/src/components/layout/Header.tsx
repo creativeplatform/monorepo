@@ -41,8 +41,9 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import Unlock from "../../utils/fetchers/Unlock.json"
-import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
+import Unlock from '../../utils/fetchers/Unlock.json'
+import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser } from '@thirdweb-dev/react'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
@@ -53,7 +54,7 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { PFP } from 'utils/context'
-import { SITE_LOGO, SITE_NAME } from '../../utils/config'
+import { SITE_LOGO, SITE_NAME, LOCK_ADDRESS_MUMBAI_TESTNET } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import WertPurchaseNFT from 'components/WertPurchaseNFT'
 
@@ -73,7 +74,8 @@ export function Header({ className, handleLoading }: Props) {
   const toast = useToast();
   const address = useAddress() || '';
   const { isLoggedIn } = useUser();
-  const signer = useSigner()
+  const signer = useSigner();
+
   const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
@@ -82,21 +84,21 @@ export function Header({ className, handleLoading }: Props) {
 
   const handleButtonClick = () => {
     if (handleLoading) {
-      handleLoading()
+      handleLoading();
     }
-  }
-  
-  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
+  };
+
+  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer);
 
   // Currently connected wallet address
-  const disconnect = useDisconnect()
+  const disconnect = useDisconnect();
   
   /*******  CONTRACT READING ********/
   useEffect(() => {
     if (!address || !sdkSigner || !Unlock.abi) return
     const getSubscribedData = async () => {
         const unlockContract = await sdkSigner?.getContractFromAbi(
-          '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+          '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
           Unlock.abi,
         );
         return await unlockContract?.call(
@@ -108,7 +110,7 @@ export function Header({ className, handleLoading }: Props) {
         )
       }
       getSubscribedData().then((res) => {
-        console.log(res)
+        console.log(res, 'Are you a subscriber?')
         setSubscribed(res)
       })
     }, [address, sdkSigner, Unlock.abi])
