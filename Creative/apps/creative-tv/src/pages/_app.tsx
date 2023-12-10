@@ -67,7 +67,14 @@ export default function App({
             queryClient={queryClient}
             activeChain={activeChain}
             supportedWallets={[
-              smartWallet(embeddedWallet(), config),
+              smartWallet(
+                embeddedWallet({
+                  auth: {
+                    options: [ "email", "google", "apple", "facebook" ],
+                  }
+                }), config
+              )
+              
             ]}
             clientId={THIRDWEB_API_KEY}>
             <Layout>

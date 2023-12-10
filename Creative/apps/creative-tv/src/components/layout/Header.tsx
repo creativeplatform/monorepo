@@ -30,6 +30,8 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  MenuOptionGroup,
+  MenuItemOption,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -40,9 +42,10 @@ import {
   useColorModeValue,
   useDisclosure,
   useToast,
+  MenuGroup,
 } from '@chakra-ui/react'
 import Unlock from '../../utils/fetchers/Unlock.json'
-import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress, useSmartWallet, useSigner, useUser, embeddedWallet, Web3Button } from '@thirdweb-dev/react'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
@@ -53,10 +56,10 @@ import usePurchaseNFT from 'hooks/usePurchaseNFT'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import { PFP } from 'utils/context'
-import { SITE_LOGO, SITE_NAME, LOCK_ADDRESS_MUMBAI_TESTNET } from '../../utils/config'
+import { SITE_LOGO, SITE_NAME, LOCK_ADDRESS_MUMBAI_TESTNET, ACCOUNT_FACTORY_TESTNET, CREATIVE_ADDRESS } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import WertPurchaseNFT from 'components/WertPurchaseNFT'
+import BuyCrypto from 'components/BuyCrypto'
 
 
 interface Props {
@@ -76,44 +79,57 @@ export function Header({ className, handleLoading }: Props) {
   const { isLoggedIn } = useUser();
   const signer = useSigner();
 
+  const { connect } = useSmartWallet(embeddedWallet(), {
+    factoryAddress: ACCOUNT_FACTORY_TESTNET,
+    gasless: true,
+  });
+
+  const onConnect = async () => {
+    await connect({
+      connectPersonalWallet: async (embeddedWallet) => {
+        // login with google and connect the embedded wallet
+        const authResult = await embeddedWallet.authenticate({
+          strategy: "google",
+        });
+        await embeddedWallet.connect({ authResult });
+      },
+    });
+  };
   const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
 
-  const [creatorPaywallConfig, setCreatorPaywallConfig] = useState(null);
+  // const [creatorPaywallConfig, setCreatorPaywallConfig] = useState(null);
 
-  const handleButtonClick = () => {
-    if (handleLoading) {
-      handleLoading();
-    }
-  };
+  // const handleButtonClick = () => {
+  //   if (handleLoading) {
+  //     handleLoading();
+  //   }
+  // };
 
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer);
-
-  // Currently connected wallet address
-  const disconnect = useDisconnect();
   
   /*******  CONTRACT READING ********/
-  useEffect(() => {
-    if (!address || !sdkSigner || !Unlock.abi) return
-    const getSubscribedData = async () => {
-        const unlockContract = await sdkSigner?.getContractFromAbi(
-          '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
-          Unlock.abi,
-        );
-        return await unlockContract?.call(
-          "getHasValidKey", // Name of your function as it is on the smart contract
-          // Arguments to your function, in the same order they are on your smart contract
-          [
-            address
-          ],
-        )
-      }
-      getSubscribedData().then((res) => {
-        console.log(res, 'Are you a subscriber?')
-        setSubscribed(res)
-      })
-    }, [address, sdkSigner, Unlock.abi])
+  // useEffect(() => {
+  //   if (!address || !sdkSigner || !Unlock.abi) return
+  //   const getSubscribedData = async () => {
+  //       const unlockContract = await sdkSigner?.getContractFromAbi(
+  //         '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
+  //         Unlock.abi,
+  //       );
+  //       return await unlockContract?.call(
+  //         "getHasValidKey", // Name of your function as it is on the smart contract
+  //         // Arguments to your function, in the same order they are on your smart contract
+  //         [
+  //           address
+  //         ],
+  //       )
+  //     }
+  //     getSubscribedData().then((res) => {
+  //       console.log(res, 'Are you a subscriber?')
+  //       setSubscribed(res)
+  //     })
+  //   }, [address, sdkSigner, Unlock.abi])
 
 
   const [y, setY] = useState(0)
@@ -330,7 +346,6 @@ export function Header({ className, handleLoading }: Props) {
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
               onClick={() => {
-                handleButtonClick()
                 mobileNav.onClose()
                 router.push('/discover')
               }}>
@@ -349,7 +364,6 @@ export function Header({ className, handleLoading }: Props) {
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
               onClick={() => {
-                handleButtonClick()
                 mobileNav.onClose()
                 router.push('/events')
               }}>
@@ -390,9 +404,6 @@ export function Header({ className, handleLoading }: Props) {
                     height: 250,
                   },
                 }}
-                // auth={{
-                //   loginOptional: false,
-                // }}
                 switchToActiveChain={true}
                 modalSize={"wide"}
                 theme={connector} 
@@ -405,42 +416,42 @@ export function Header({ className, handleLoading }: Props) {
               />
             ) : (
               <>
-              
               <ConnectWallet
                 theme={connector}  
               />
               <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  <Avatar mb={6} size={'md'} name="creative" src={PFP} />
+                <MenuButton mx={4} mb={2} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                  User Menu
                 </MenuButton>
-                {!isLoggedIn && !subscribed ? (
+                {!subscribed ? (
                   <MenuList>
-                    <MenuItem>
-                      <WertPurchaseNFT />
-                    </MenuItem>
+                    <MenuGroup title='Wallet Options'>
+                      <MenuItem>
+                        <BuyCrypto />
+                      </MenuItem>
+                    </MenuGroup>
                     <MenuDivider />
-                    <MenuItem
-                      icon={<AiOutlineDisconnect />}
-                      onClick={() => {
-                        disconnect()
-                        router.push('/')
-                        toast({
-                          title: 'Sign Out',
-                          description: 'Successfully signed out.',
-                          status: 'info',
-                          duration: 5000,
-                          isClosable: true,
-                        })
-                      }}>
-                      Sign Out
-                    </MenuItem>
+                    <MenuGroup title='Creator Access'>
+                      <MenuItem>
+                        <WertPurchaseNFT />
+                      </MenuItem>
+                      <MenuItemOption>
+                        <Web3Button
+                        contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
+                        action={async (contract) => {
+                          await contract.call('purchase', [[1000000000000000000], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']]);
+                        }} 
+                        >
+                          Buy with Crypto
+                        </Web3Button>
+                      </MenuItemOption>
+                    </MenuGroup>
                   </MenuList>
                 ) : (
                   <MenuList>
                     <MenuItem
                       icon={<MdOutlineAccountCircle />}
                       onClick={() => {
-                        handleButtonClick()
                         mobileNav.onClose()
                         router.push(`/profile/${address}`)
                       }}>
@@ -449,27 +460,10 @@ export function Header({ className, handleLoading }: Props) {
                     <MenuItem
                       icon={<RiVideoUploadFill />}
                       onClick={() => {
-                        handleButtonClick()
                         mobileNav.onClose()
                         router.push(`/profile/${address}/upload`)
                       }}>
                       Upload
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuItem
-                      icon={<AiOutlineDisconnect />}
-                      onClick={() => {
-                        disconnect()
-                        router.push('/')
-                        toast({
-                          title: 'Sign Out',
-                          description: 'Successfully signed out.',
-                          status: 'info',
-                          duration: 5000,
-                          isClosable: true,
-                        })
-                      }}>
-                      Sign Out
                     </MenuItem>
                   </MenuList>
                 )}
@@ -558,7 +552,6 @@ export function Header({ className, handleLoading }: Props) {
                 _hover={{ color: cl }}
                 _focus={{ boxShadow: 'none' }}
                 onClick={() => {
-                  handleButtonClick()
                   router.push('/discover')
                 }}>
                 Discover
@@ -614,9 +607,6 @@ export function Header({ className, handleLoading }: Props) {
                   height: 250,
                 },
               }}
-              // auth={{
-              //   loginOptional: false,
-              // }}
               theme={connector} 
               btnTitle={'Link Account'}
               modalTitle={'Login'}
@@ -633,55 +623,51 @@ export function Header({ className, handleLoading }: Props) {
                 theme={connector} 
               />
               <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  <Avatar mb={6} size={'lg'} name="creative" src={PFP} />
-                </MenuButton>
-
-                <MenuList>
-                  {!isLoggedIn && !subscribed ? (
-                  <>
-                    <MenuItem>
-                      <WertPurchaseNFT />
-                    </MenuItem>
+                <MenuButton mx={4} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                  User Menu
+                </MenuButton>                
+                  {!subscribed ? (
+                    <MenuList>
+                      <MenuGroup title='Wallet Options'>
+                        <MenuItem>
+                          <BuyCrypto />
+                        </MenuItem>
+                      </MenuGroup>
                       <MenuDivider />
-                    </>
+                      <MenuGroup title='Creator Access'>
+                        <MenuItem>
+                          <WertPurchaseNFT />
+                        </MenuItem>
+                        <MenuItemOption>
+                          <Web3Button
+                          contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
+                          action={async (contract) => {
+                            await contract.call('purchase', [[1000000000000000000], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']]);
+                          }} 
+                          >
+                            Buy with Crypto
+                          </Web3Button>
+                        </MenuItemOption>
+                      </MenuGroup>
+                    </MenuList>
                   ) : (
-                    <>
-                      <MenuItem
-                        icon={<MdOutlineAccountCircle />}
-                        onClick={() => {
-                          handleButtonClick()
-                          router.push(`/profile/${address}`)
-                        }}>
-                        Profile
-                      </MenuItem>
-                      <MenuItem
-                        icon={<RiVideoUploadFill />}
-                        onClick={() => {
-                          handleButtonClick()
-                          router.push(`/profile/${address}/upload`)
-                        }}>
-                        Upload
-                      </MenuItem>
-                      <MenuDivider />
-                    </>
+                    <MenuList>
+                        <MenuItem
+                          icon={<MdOutlineAccountCircle />}
+                          onClick={() => {
+                            router.push(`/profile/${address}`)
+                          }}>
+                          Profile
+                        </MenuItem>
+                        <MenuItem
+                          icon={<RiVideoUploadFill />}
+                          onClick={() => {
+                            router.push(`/profile/${address}/upload`)
+                          }}>
+                          Upload
+                        </MenuItem>
+                      </MenuList>
                   )}
-                  <MenuItem
-                    icon={<AiOutlineDisconnect />}
-                    onClick={() => {
-                      disconnect()
-                      router.push('/')
-                      toast({
-                        title: 'Sign Out',
-                        description: 'Successfully signed out.',
-                        status: 'info',
-                        duration: 5000,
-                        isClosable: true,
-                      })
-                    }}>
-                    Sign Out
-                  </MenuItem>
-                </MenuList>
               </Menu>
               </>
             )}
