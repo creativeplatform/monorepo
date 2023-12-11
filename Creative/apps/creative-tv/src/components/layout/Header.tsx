@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { use, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import {
@@ -10,6 +10,7 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Center,
   Divider,
   Drawer,
@@ -45,7 +46,7 @@ import {
   MenuGroup,
 } from '@chakra-ui/react'
 import Unlock from '../../utils/fetchers/Unlock.json'
-import { ConnectWallet, useAddress, useSmartWallet, useSigner, useUser, embeddedWallet, Web3Button } from '@thirdweb-dev/react'
+import { ConnectWallet, useAddress, useSmartWallet, useSigner, useUser, embeddedWallet, Web3Button, useWallet } from '@thirdweb-dev/react'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
@@ -78,11 +79,25 @@ export function Header({ className, handleLoading }: Props) {
   const address = useAddress() || '';
   const { isLoggedIn } = useUser();
   const signer = useSigner();
+  const emailLogin = useWallet("embeddedWallet"); 
 
   const { connect } = useSmartWallet(embeddedWallet(), {
     factoryAddress: ACCOUNT_FACTORY_TESTNET,
     gasless: true,
   });
+
+  useEffect(() => {
+    const getEmail = async () => {
+      if (emailLogin) {
+        const email = await emailLogin.getEmail();
+        // Use the email address here
+        console.log(email);
+        return email;
+      }
+    };
+    getEmail();
+  }, [address]);
+
 
   const onConnect = async () => {
     await connect({
@@ -95,6 +110,7 @@ export function Header({ className, handleLoading }: Props) {
       },
     });
   };
+
   const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
@@ -108,6 +124,36 @@ export function Header({ className, handleLoading }: Props) {
   // };
 
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer);
+
+  const paywallConfig = {
+    "pessimistic": true,
+    "locks": {
+      "0x9a9280897c123b165e23f77cf4c58292d6ab378d": {
+        "network": 80001,
+        "name": "DAO Membership"
+      }
+    },
+    "icon": "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/",
+    "metadataInputs": [
+      {
+        "name": "Name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "Email",
+        "defaultValue": emailLogin ? emailLogin.getEmail() : '',
+        "type": "email",
+        "required": true
+      }
+    ]
+  }
+
+  const networkConfigs = {
+    80001: {
+      
+    }
+  }
   
   /*******  CONTRACT READING ********/
   // useEffect(() => {
@@ -404,6 +450,8 @@ export function Header({ className, handleLoading }: Props) {
                     height: 250,
                   },
                 }}
+                termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
+                privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
                 switchToActiveChain={true}
                 modalSize={"wide"}
                 theme={connector} 
@@ -415,7 +463,7 @@ export function Header({ className, handleLoading }: Props) {
                 }} 
               />
             ) : (
-              <>
+              <ButtonGroup>
               <ConnectWallet
                 theme={connector}  
               />
@@ -432,19 +480,15 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuGroup>
                     <MenuDivider />
                     <MenuGroup title='Creator Access'>
-                      <MenuItem>
                         <WertPurchaseNFT />
-                      </MenuItem>
-                      <MenuItemOption>
                         <Web3Button
                         contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
                         action={async (contract) => {
-                          await contract.call('purchase', [[1000000000000000000], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']]);
+                          await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [{"icon":"","locks":{"0x9a9280897c123b165e23f77cf4c58292d6ab378d":{"network":80001,"name":"DAO Membership"}},"title":"Creative TV TEST","skipSelect":false,"hideSoldOut":false,"pessimistic":true,"messageToSign":"","skipRecipient":true,"endingCallToAction":"","persistentCheckout":true}]]);
                         }} 
                         >
                           Buy with Crypto
                         </Web3Button>
-                      </MenuItemOption>
                     </MenuGroup>
                   </MenuList>
                 ) : (
@@ -468,7 +512,7 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuList>
                 )}
               </Menu>
-              </>
+              </ButtonGroup>
             )}
           </chakra.p>
         </DrawerBody>
@@ -607,6 +651,8 @@ export function Header({ className, handleLoading }: Props) {
                   height: 250,
                 },
               }}
+              termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
+              privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
               theme={connector} 
               btnTitle={'Link Account'}
               modalTitle={'Login'}
@@ -618,7 +664,7 @@ export function Header({ className, handleLoading }: Props) {
               }} 
               />
             ) : (
-              <>
+              <ButtonGroup>
               <ConnectWallet
                 theme={connector} 
               />
@@ -635,19 +681,17 @@ export function Header({ className, handleLoading }: Props) {
                       </MenuGroup>
                       <MenuDivider />
                       <MenuGroup title='Creator Access'>
-                        <MenuItem>
+                        <ButtonGroup>
                           <WertPurchaseNFT />
-                        </MenuItem>
-                        <MenuItemOption>
                           <Web3Button
                           contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                          action={async (contract) => {
-                            await contract.call('purchase', [[1000000000000000000], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']]);
+                          action={async (contract: any) => {
+                            await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']]);
                           }} 
                           >
                             Buy with Crypto
                           </Web3Button>
-                        </MenuItemOption>
+                        </ButtonGroup>
                       </MenuGroup>
                     </MenuList>
                   ) : (
@@ -669,7 +713,7 @@ export function Header({ className, handleLoading }: Props) {
                       </MenuList>
                   )}
               </Menu>
-              </>
+              </ButtonGroup>
             )}
           </chakra.div>
           <Flex gap="1.2rem" display={{ base: 'flex', md: 'flex', lg: 'none' }}>

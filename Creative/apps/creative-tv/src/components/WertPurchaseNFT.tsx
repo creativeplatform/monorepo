@@ -19,7 +19,7 @@ const WertPurchaseNFT: NextPage = () => {
         const data = encodeFunctionData({
             abi: Unlock.abi,
             functionName: 'purchase',
-            args: [[1000000000000000000], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']]
+            args: [[1000000000000000000], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [{"icon":"","locks":{"0x9a9280897c123b165e23f77cf4c58292d6ab378d":{"network":80001,"name":"DAO Membership"}},"title":"Creative TV TEST","skipSelect":false,"hideSoldOut":false,"pessimistic":true,"messageToSign":"","skipRecipient":true,"endingCallToAction":"","persistentCheckout":true}]]
           })
     
 
@@ -70,7 +70,7 @@ const WertPurchaseNFT: NextPage = () => {
 }
     return (
         <>
-            <Button leftIcon={<MdOutlineShoppingCartCheckout />} onClick={() => alert("Connect your wallet to purchase a membership")}>Buy with Debit/Credit</Button>
+            <Button leftIcon={<MdOutlineShoppingCartCheckout />} onClick={() => alert("Connect your wallet to purchase a membership")}>Not Connected</Button>
         </>
     )
 }
