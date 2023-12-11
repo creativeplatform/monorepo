@@ -37,6 +37,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   SimpleGrid,
+  VStack,
   Stack,
   Text,
   chakra,
@@ -47,6 +48,7 @@ import {
 } from '@chakra-ui/react'
 import Unlock from '../../utils/fetchers/Unlock.json'
 import { ConnectWallet, useAddress, useSmartWallet, useSigner, useUser, embeddedWallet, Web3Button, useWallet } from '@thirdweb-dev/react'
+import { utils } from 'ethers'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { Paywall } from '@unlock-protocol/paywall'
 import networks from '@unlock-protocol/networks'
@@ -480,15 +482,17 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuGroup>
                     <MenuDivider />
                     <MenuGroup title='Creator Access'>
+                      <VStack direction={'column'} spacing={2}>
                         <WertPurchaseNFT />
                         <Web3Button
                         contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
                         action={async (contract) => {
-                          await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], [{"icon":"","locks":{"0x9a9280897c123b165e23f77cf4c58292d6ab378d":{"network":80001,"name":"DAO Membership"}},"title":"Creative TV TEST","skipSelect":false,"hideSoldOut":false,"pessimistic":true,"messageToSign":"","skipRecipient":true,"endingCallToAction":"","persistentCheckout":true}]]);
+                          await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
                         }} 
                         >
                           Buy with Crypto
                         </Web3Button>
+                        </VStack>
                     </MenuGroup>
                   </MenuList>
                 ) : (
@@ -681,17 +685,17 @@ export function Header({ className, handleLoading }: Props) {
                       </MenuGroup>
                       <MenuDivider />
                       <MenuGroup title='Creator Access'>
-                        <ButtonGroup>
+                        <VStack direction={'column'} spacing={2}>
                           <WertPurchaseNFT />
                           <Web3Button
                           contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                          action={async (contract: any) => {
-                            await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']]);
+                          action={async (contract) => {
+                            await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
                           }} 
                           >
                             Buy with Crypto
                           </Web3Button>
-                        </ButtonGroup>
+                        </VStack>
                       </MenuGroup>
                     </MenuList>
                   ) : (
