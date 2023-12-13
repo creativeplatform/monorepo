@@ -482,6 +482,7 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuList>
                 ) : (
                   <MenuList>
+                    <MenuGroup title='Active Member'>
                     <MenuItem
                       icon={<MdOutlineAccountCircle />}
                       onClick={() => {
@@ -498,6 +499,13 @@ export function Header({ className, handleLoading }: Props) {
                       }}>
                       Upload
                     </MenuItem>
+                    </MenuGroup>
+                    <MenuDivider />
+                    <MenuGroup title='Wallet Options'>
+                      <Center>
+                        <AddFunds />
+                      </Center>
+                    </MenuGroup>
                   </MenuList>
                 )}
               </Menu>
@@ -701,7 +709,7 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuList>
                   ) : (
                     <MenuList>
-                      <MenuGroup title='Active Membership'>
+                      <MenuGroup title='Active Member'>
                           <MenuItem
                             icon={<MdOutlineAccountCircle />}
                             onClick={() => {
