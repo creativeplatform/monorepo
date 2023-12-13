@@ -1,4 +1,4 @@
-import React, { use, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import {
@@ -7,7 +7,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Avatar,
   Box,
   Button,
   ButtonGroup,
@@ -31,8 +30,6 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-  MenuOptionGroup,
-  MenuItemOption,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -51,18 +48,16 @@ import { ConnectWallet, useAddress, useSmartWallet, useSigner, useUser, embedded
 import { utils } from 'ethers'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { Paywall } from '@unlock-protocol/paywall'
-import networks from '@unlock-protocol/networks'
 import { useScroll } from 'framer-motion'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
-import usePurchaseNFT from 'hooks/usePurchaseNFT'
+import { AiOutlineMenu } from 'react-icons/ai'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { SITE_LOGO, SITE_NAME, LOCK_ADDRESS_MUMBAI_TESTNET, ACCOUNT_FACTORY_TESTNET, CREATIVE_ADDRESS } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import WertPurchaseNFT from 'components/WertPurchaseNFT'
-import BuyCrypto from 'components/BuyCrypto'
+import AddFunds from 'components/AddFunds'
 
 
 interface Props {
@@ -79,14 +74,9 @@ export function Header({ className, handleLoading }: Props) {
   const router = useRouter();
   const toast = useToast();
   const address = useAddress() || '';
-  const { isLoggedIn } = useUser();
   const signer = useSigner();
+  const { isLoggedIn } = useUser();
   const emailLogin = useWallet("embeddedWallet"); 
-
-  const { connect } = useSmartWallet(embeddedWallet(), {
-    factoryAddress: ACCOUNT_FACTORY_TESTNET,
-    gasless: true,
-  });
 
   useEffect(() => {
     const getEmail = async () => {
@@ -100,84 +90,63 @@ export function Header({ className, handleLoading }: Props) {
     getEmail();
   }, [address]);
 
-
-  const onConnect = async () => {
-    await connect({
-      connectPersonalWallet: async (embeddedWallet) => {
-        // login with google and connect the embedded wallet
-        const authResult = await embeddedWallet.authenticate({
-          strategy: "google",
-        });
-        await embeddedWallet.connect({ authResult });
-      },
-    });
-  };
-
   const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
 
-  // const [creatorPaywallConfig, setCreatorPaywallConfig] = useState(null);
-
-  // const handleButtonClick = () => {
-  //   if (handleLoading) {
-  //     handleLoading();
-  //   }
-  // };
-
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer);
 
-  const paywallConfig = {
-    "pessimistic": true,
-    "locks": {
-      "0x9a9280897c123b165e23f77cf4c58292d6ab378d": {
-        "network": 80001,
-        "name": "DAO Membership"
-      }
-    },
-    "icon": "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/",
-    "metadataInputs": [
-      {
-        "name": "Name",
-        "type": "text",
-        "required": true
-      },
-      {
-        "name": "Email",
-        "defaultValue": emailLogin ? emailLogin.getEmail() : '',
-        "type": "email",
-        "required": true
-      }
-    ]
-  }
+  // const paywallConfig = {
+  //   "pessimistic": true,
+  //   "locks": {
+  //     "0x9a9280897c123b165e23f77cf4c58292d6ab378d": {
+  //       "network": 80001,
+  //       "name": "DAO Membership"
+  //     }
+  //   },
+  //   "icon": "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/",
+  //   "metadataInputs": [
+  //     {
+  //       "name": "Name",
+  //       "type": "text",
+  //       "required": true
+  //     },
+  //     {
+  //       "name": "Email",
+  //       "defaultValue": emailLogin ? emailLogin.getEmail() : '',
+  //       "type": "email",
+  //       "required": true
+  //     }
+  //   ]
+  // }
 
-  const networkConfigs = {
-    80001: {
+  // const networkConfigs = {
+  //   80001: {
       
-    }
-  }
+  //   }
+  // }
   
   /*******  CONTRACT READING ********/
-  // useEffect(() => {
-  //   if (!address || !sdkSigner || !Unlock.abi) return
-  //   const getSubscribedData = async () => {
-  //       const unlockContract = await sdkSigner?.getContractFromAbi(
-  //         '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
-  //         Unlock.abi,
-  //       );
-  //       return await unlockContract?.call(
-  //         "getHasValidKey", // Name of your function as it is on the smart contract
-  //         // Arguments to your function, in the same order they are on your smart contract
-  //         [
-  //           address
-  //         ],
-  //       )
-  //     }
-  //     getSubscribedData().then((res) => {
-  //       console.log(res, 'Are you a subscriber?')
-  //       setSubscribed(res)
-  //     })
-  //   }, [address, sdkSigner, Unlock.abi])
+  useEffect(() => {
+    if (!address || !sdkSigner || !Unlock.abi) return
+    const getSubscribedData = async () => {
+        const unlockContract = await sdkSigner?.getContractFromAbi(
+          '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
+          Unlock.abi,
+        );
+        return await unlockContract?.call(
+          "getHasValidKey", // Name of your function as it is on the smart contract
+          // Arguments to your function, in the same order they are on your smart contract
+          [
+            address
+          ],
+        )
+      }
+      getSubscribedData().then((res) => {
+        console.log('Is your membership valid?', res)
+        setSubscribed(res)
+      })
+    }, [address, sdkSigner, Unlock.abi])
 
 
   const [y, setY] = useState(0)
@@ -441,7 +410,7 @@ export function Header({ className, handleLoading }: Props) {
             </Accordion>
           </p>
           <chakra.p my={4}>
-            {!isLoggedIn ? (
+            {!address && !isLoggedIn ? (
               <ConnectWallet
                 welcomeScreen={{
                   title: "CREATIVE TV",
@@ -475,20 +444,36 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>
                 {!subscribed ? (
                   <MenuList>
-                    <MenuGroup title='Wallet Options'>
-                      <MenuItem>
-                        <BuyCrypto />
-                      </MenuItem>
+                    <MenuGroup title='1. Wallet Options'>
+                        <Center>
+                          <AddFunds />
+                        </Center>
                     </MenuGroup>
                     <MenuDivider />
-                    <MenuGroup title='Creator Access'>
+                    <MenuGroup title='2. Creator Access'>
                       <VStack direction={'column'} spacing={2}>
                         <WertPurchaseNFT />
                         <Web3Button
                         contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
+                        contractAbi={Unlock.abi}
                         action={async (contract) => {
                           await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
-                        }} 
+                        }}
+                        onSuccess={(result) => toast({
+                          title: "Congratulations, Trailblazer!",
+                          description: "🚀 You've just unlocked a universe of creativity.",
+                          status: "success",
+                          duration: 9000,
+                          isClosable: true,
+                        })}
+                        onError={(error) => toast({
+                          title: "Error",
+                          description: "There was an error processing your request.",
+                          status: "error",
+                          duration: 9000,
+                          isClosable: true,
+                        })} 
+                        theme={connector}
                         >
                           Buy with Crypto
                         </Web3Button>
@@ -644,7 +629,7 @@ export function Header({ className, handleLoading }: Props) {
             </HStack>
           </Flex>
           <chakra.div display={{ base: 'none', md: 'none', lg: 'block' }}>
-            {!address ? (
+            {!address && !isLoggedIn ? (
               <ConnectWallet
               welcomeScreen={{
                 title: "CREATIVE TV",
@@ -678,43 +663,67 @@ export function Header({ className, handleLoading }: Props) {
                 </MenuButton>                
                   {!subscribed ? (
                     <MenuList>
-                      <MenuGroup title='Wallet Options'>
-                        <MenuItem>
-                          <BuyCrypto />
-                        </MenuItem>
+                      <MenuGroup title='1. Wallet Options'>
+                        <Center>
+                          <AddFunds />
+                        </Center>
                       </MenuGroup>
                       <MenuDivider />
-                      <MenuGroup title='Creator Access'>
+                      <MenuGroup title='2. Creator Access'>
                         <VStack direction={'column'} spacing={2}>
-                          <WertPurchaseNFT />
                           <Web3Button
-                          contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                          action={async (contract) => {
-                            await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
-                          }} 
-                          >
-                            Buy with Crypto
-                          </Web3Button>
+                        contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
+                        contractAbi={Unlock.abi}
+                        action={async (contract) => {
+                          await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
+                        }}
+                        onSuccess={(result) => toast({
+                          title: "Congratulations, Trailblazer!",
+                          description: "🚀 You've just unlocked a universe of creativity.",
+                          status: "success",
+                          duration: 9000,
+                          isClosable: true,
+                        })}
+                        onError={(error) => toast({
+                          title: "Error",
+                          description: "There was an error processing your request.",
+                          status: "error",
+                          duration: 9000,
+                          isClosable: true,
+                        })}
+                        theme={connector} 
+                        >
+                          Buy with Crypto
+                        </Web3Button>
+                        <WertPurchaseNFT />
                         </VStack>
                       </MenuGroup>
                     </MenuList>
                   ) : (
                     <MenuList>
-                        <MenuItem
-                          icon={<MdOutlineAccountCircle />}
-                          onClick={() => {
-                            router.push(`/profile/${address}`)
-                          }}>
-                          Profile
-                        </MenuItem>
-                        <MenuItem
-                          icon={<RiVideoUploadFill />}
-                          onClick={() => {
-                            router.push(`/profile/${address}/upload`)
-                          }}>
-                          Upload
-                        </MenuItem>
-                      </MenuList>
+                      <MenuGroup title='Active Membership'>
+                          <MenuItem
+                            icon={<MdOutlineAccountCircle />}
+                            onClick={() => {
+                              router.push(`/profile/${address}`)
+                            }}>
+                            Profile
+                          </MenuItem>
+                          <MenuItem
+                            icon={<RiVideoUploadFill />}
+                            onClick={() => {
+                              router.push(`/profile/${address}/upload`)
+                            }}>
+                            Upload
+                          </MenuItem>
+                      </MenuGroup>
+                      <MenuDivider />
+                      <MenuGroup title='Wallet Options'>
+                        <Center>
+                          <AddFunds />
+                        </Center>
+                      </MenuGroup>
+                    </MenuList>
                   )}
               </Menu>
               </ButtonGroup>

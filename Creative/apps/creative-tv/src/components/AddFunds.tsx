@@ -5,7 +5,7 @@ import { Button } from '@chakra-ui/react';
 import { TbMoneybag } from 'react-icons/tb'
 import { useAddress } from '@thirdweb-dev/react';
 
-const BuyCrypto: NextPage = () => {
+const AddFunds: NextPage = () => {
     const address = useAddress() || '';
 
     if (address) {
@@ -53,4 +53,4 @@ const BuyCrypto: NextPage = () => {
     )
 }
 
-export default BuyCrypto
+export default AddFunds;

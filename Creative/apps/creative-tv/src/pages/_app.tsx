@@ -1,13 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThirdwebProvider, smartWallet, embeddedWallet, localWallet, metamaskWallet, coinbaseWallet, walletConnect} from '@thirdweb-dev/react'
-import { Mumbai } from '@thirdweb-dev/chains'
+import { ThirdwebProvider, smartWallet, embeddedWallet} from '@thirdweb-dev/react'
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import type { AppProps } from 'next/app'
-import { ACCOUNT_FACTORY_TESTNET, MUMBAI_CHAIN, THIRDWEB_API_KEY, WALLET_CONNECT } from '../utils/config'
-import { GLOBAL_EWS_AUTH_TOKEN_KEY } from 'utils/app'
+import { ACCOUNT_FACTORY_TESTNET, MUMBAI_CHAIN, THIRDWEB_API_KEY } from '../utils/config'
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 
 // Call `extendTheme` and pass your custom values
@@ -35,17 +33,10 @@ export default function App({
   // Create a client
   const queryClient = new QueryClient()
 
-  const config = {
+  const smartWalletConfig = {
     factoryAddress: ACCOUNT_FACTORY_TESTNET,
     gasless: true,
   }
-
-  const wallets = [embeddedWallet({
-    onAuthSuccess: ({ storedToken }) => {
-      // expose paper auth token for onboarding screens to pick up and clear up
-      (window as any)[GLOBAL_EWS_AUTH_TOKEN_KEY] = storedToken.cookieString;
-    },
-  }), metamaskWallet()]
 
   return (
     <ChakraProvider theme={theme}>
@@ -72,7 +63,7 @@ export default function App({
                   auth: {
                     options: [ "email", "google", "apple", "facebook" ],
                   }
-                }), config
+                }), smartWalletConfig
               )
               
             ]}
