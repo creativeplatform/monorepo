@@ -25,18 +25,18 @@ import {
   Spinner,
   BreadcrumbItem, 
   BreadcrumbLink, 
-  Breadcrumb
+  Breadcrumb,
+  useColorModeValue,
 } from '@chakra-ui/react'
-import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK } from '@thirdweb-dev/react'
+import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK, Web3Button } from '@thirdweb-dev/react'
 import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
-import MeTokenCreationForm from 'components/MeTokenCreationForm'
+//import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import Wert from './wert'
 import dayjs from 'dayjs'
-import UniswapWidget from './UniswapWidget'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 
 
@@ -49,6 +49,8 @@ const ProfilePage: NextPage = () => {
   const address = useAddress()
   const signer = useSigner()
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
+
+  const connector = useColorModeValue('light', 'dark')
 
   /*******  CONTRACT READING ********/
   useEffect(() => {
@@ -284,6 +286,30 @@ const ProfilePage: NextPage = () => {
                                 <Button colorScheme="pink" aria-disabled={transferAddress !== '' ? false : true} w={32}>
                                   Transfer
                                 </Button>
+                                {/* <Web3Button
+                                  contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
+                                  contractAbi={Unlock.abi}
+                                  action={async (contract) => {
+                                    await contract.call('shareKey', [transferAddress, [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
+                                  }}
+                                  onSuccess={(result) => toast({
+                                    title: "Congratulations, Trailblazer!",
+                                    description: "🚀 You've just unlocked a universe of creativity.",
+                                    status: "success",
+                                    duration: 9000,
+                                    isClosable: true,
+                                  })}
+                                  onError={(error) => toast({
+                                    title: "Error",
+                                    description: "There was an error processing your request.",
+                                    status: "error",
+                                    duration: 9000,
+                                    isClosable: true,
+                                  })}
+                                  theme={connector} 
+                                >
+                                Buy with Crypto
+                                </Web3Button> */}
                               </Box>
                               <Box display="flex" maxW="md" flexFlow="row nowrap" justifyContent="space-between" alignItems="center">
                                 <FormControl flexGrow={1}>
@@ -333,7 +359,7 @@ const ProfilePage: NextPage = () => {
                         method for transactions and supports your growth as a creator.
                       </Text>
                     </Box>
-                    <MeTokenCreationForm />
+                    {/* <MeTokenCreationForm /> */}
                   </TabPanel>
                   <TabPanel>
                     <Box>
@@ -355,9 +381,6 @@ const ProfilePage: NextPage = () => {
                     {/* create two columns */}
                     <Box>
                         <Wert />
-                    </Box>
-                    <Box mt={10}>
-                      <UniswapWidget />
                     </Box>
                   </TabPanel>
                 </TabPanels>

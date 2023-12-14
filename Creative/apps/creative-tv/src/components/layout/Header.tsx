@@ -680,29 +680,29 @@ export function Header({ className, handleLoading }: Props) {
                       <MenuGroup title='2. Creator Access'>
                         <VStack direction={'column'} spacing={2}>
                           <Web3Button
-                        contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                        contractAbi={Unlock.abi}
-                        action={async (contract) => {
-                          await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
-                        }}
-                        onSuccess={(result) => toast({
-                          title: "Congratulations, Trailblazer!",
-                          description: "🚀 You've just unlocked a universe of creativity.",
-                          status: "success",
-                          duration: 9000,
-                          isClosable: true,
-                        })}
-                        onError={(error) => toast({
-                          title: "Error",
-                          description: "There was an error processing your request.",
-                          status: "error",
-                          duration: 9000,
-                          isClosable: true,
-                        })}
-                        theme={connector} 
-                        >
+                            contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
+                            contractAbi={Unlock.abi}
+                            action={async (contract) => {
+                              await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
+                            }}
+                            onSuccess={(result) => toast({
+                              title: "Congratulations, Trailblazer!",
+                              description: "🚀 You've just unlocked a universe of creativity.",
+                              status: "success",
+                              duration: 9000,
+                              isClosable: true,
+                            })}
+                            onError={(error) => toast({
+                              title: "Error",
+                              description: "There was an error processing your request.",
+                              status: "error",
+                              duration: 9000,
+                              isClosable: true,
+                            })}
+                            theme={connector} 
+                          >
                           Buy with Crypto
-                        </Web3Button>
+                          </Web3Button>
                         <WertPurchaseNFT />
                         </VStack>
                       </MenuGroup>
