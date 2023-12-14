@@ -1,10 +1,10 @@
 // Importing required modules and dependencies
 import { useContract, useContractWrite, useAddress, ThirdwebSDK, useSigner } from '@thirdweb-dev/react';
-import { Paywall, networkConfigs,  } from '@unlock-protocol/paywall';
+import { Paywall } from '@unlock-protocol/paywall';
 import { networks, goerli } from '@unlock-protocol/networks';
 import { useToast } from '@chakra-ui/react';
 import { BigNumber } from 'ethers';
-import { ERC20_ABI, FREE_LOCK_ADDRESS_GOERLI_TESTNET } from '../utils/config';
+import { ERC20_ABI, LOCK_ADDRESS_MUMBAI_TESTNET } from '../utils/config';
 import Unlock from "../utils/fetchers/Unlock.json";
 
 // Main hook for purchasing NFTs
@@ -16,9 +16,9 @@ export default function usePurchaseNFT() {
   const address = useAddress();
   
   // Predefined contract addresses and purchase price
-  const LOCK_ADDRESS = '0xC9bdfA5f177961D96F137C42241e8EcBCa605781';
+  const LOCK_ADDRESS = LOCK_ADDRESS_MUMBAI_TESTNET.address;
   const TOKEN_ADDRESS = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
-  const PURCHASE_PRICE = 3000000;
+  const PURCHASE_PRICE = 1000000;
   
   // Get the signer from ThirdwebSDK
   const signer = useSigner();
