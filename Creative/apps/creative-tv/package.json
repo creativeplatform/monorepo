@@ -36,7 +36,7 @@
     "chakra-ui-carousel": "^1.0.7",
     "connectkit": "^1.1.1",
     "connectkit-next-siwe": "^0.0.2",
-    "dayjs": "^1.11.7",
+    "dayjs": "^1.11.10",
     "ethers": "5",
     "framer-motion": "^10.2.3",
     "graphql": "^16.6.0",

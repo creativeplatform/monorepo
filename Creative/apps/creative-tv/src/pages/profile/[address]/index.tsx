@@ -35,6 +35,7 @@ import { MdOutbound } from 'react-icons/md'
 import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import Wert from './wert'
+import dayjs from 'dayjs'
 import UniswapWidget from './UniswapWidget'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 
