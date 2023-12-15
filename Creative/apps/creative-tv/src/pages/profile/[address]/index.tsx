@@ -26,21 +26,20 @@ import {
   BreadcrumbItem, 
   BreadcrumbLink, 
   Breadcrumb,
-  useColorModeValue,
 } from '@chakra-ui/react'
-import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK, Web3Button } from '@thirdweb-dev/react'
-import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
+import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK } from '@thirdweb-dev/react'
+import { LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
 //import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import Wert from './wert'
-import dayjs from 'dayjs'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 
 
 const ProfilePage: NextPage = () => {
+  // State and hooks setup
   const router = useRouter()
   const [transferAddress, setTransferAddress] = useState('')
   const [lendingAddress, setLendingAddress] = useState('')
@@ -50,11 +49,11 @@ const ProfilePage: NextPage = () => {
   const signer = useSigner()
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
 
-  const connector = useColorModeValue('light', 'dark')
-
   /*******  CONTRACT READING ********/
   useEffect(() => {
-    if (!address || !sdkSigner || !Unlock.abi) return
+    // Skip if prerequisites aren't met
+    if (!address || !sdkSigner || !Unlock.abi) return;
+    // Function to get subscription status from the contract
     const getSubscribedData = async () => {
         const unlockContract = await sdkSigner?.getContractFromAbi(
           LOCK_ADDRESS_MUMBAI_TESTNET.address,
@@ -68,12 +67,14 @@ const ProfilePage: NextPage = () => {
           ],
         )
       }
+       // Fetch and set subscription status
       getSubscribedData().then((res) => {
         console.log(res)
         setSubscribed(res)
       })
     }, [address, sdkSigner, Unlock.abi])
-
+   
+    // Hooks to interact with the contract
   const { 
     contract: unlockContract,
     isLoading: loadingUnlockContract,
@@ -87,13 +88,16 @@ const ProfilePage: NextPage = () => {
   // Stringify the owners balance
   const ownerBalanceString = ownerBalance?.toString()
 
-  /******* READ FROM CONTRACT ******/
-  const { data: expiring, isLoading: loadingIsExpiring, error: ExpirationError } = useContractRead(unlockContract, "expirationDuration");
+  // READ FROM CONTRACT
+  const { data: expirationDuration, isLoading: expirationLoading } = useContractRead(unlockContract, "expirationDuration");
 
   /****** WRITE TO CONTRACT *******/
+    // Functions to write to the contract: lending and sharing keys
   const { mutateAsync: lendKey } = useContractWrite(unlockContract, 'lendKey')
-
+  
+  // Function to lend a key
   const lend = async () => {
+    // Error handling and toast notifications
     try {
       const data = await lendKey({ args: [address, lendingAddress, ownedNFTs?.[0].metadata.id] })
       console.info('contract call successs', data)
@@ -105,31 +109,7 @@ const ProfilePage: NextPage = () => {
         isClosable: true,
       })
     } catch (err) {
-      console.error('contract call failure', err)
-      toast({
-        title: 'Error',
-        description: `${err}`,
-        status: 'warning',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-  }
-  const { mutateAsync: renewMembershipFor, isLoading: renewMembershipForIsLoading } = useContractWrite(unlockContract, 'renewMembershipFor')
-
-  const renew = async () => {
-    try {
-      const data = await renewMembershipFor({ args: [ownedNFTs?.[0].metadata.id, CREATIVE_ADDRESS] })
-      console.info('contract call successs', data)
-      toast({
-        title: 'Membership Renewal',
-        description: 'Successfully renewed your membership 🙌🏾',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
-    } catch (err) {
-      console.error('contract call failure', err)
+      console.error('Lending call failure', err)
       toast({
         title: 'Error',
         description: `${err}`,
@@ -140,31 +120,47 @@ const ProfilePage: NextPage = () => {
     }
   }
 
-  const { mutateAsync: cancelAndRefund, isLoading: cancelAndRefundIsLoading } = useContractWrite(unlockContract, 'cancelAndRefund')
-
-  const cancelMembership = async () => {
-    try {
-      const data = await cancelAndRefund({ args: [ownedNFTs?.[0].metadata.id] })
-      console.info('contract call successs', data)
-      toast({
-        title: 'Membership Cancelled',
-        description: 'Sorry to see you go... 🥹',
-        status: 'info',
-        duration: 5000,
-        isClosable: true,
-      })
-    } catch (err) {
-      console.error('contract call failure', err)
-      toast({
-        title: 'Error',
-        description: `${err}`,
-        status: 'warning',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
+  const { mutateAsync: shareKey } = useContractWrite(unlockContract, 'shareKey')
+  
+  // Function to share a key
+const share = async () => {
+  if (!transferAddress || !ownedNFTs?.length || !expirationDuration) {
+    toast({
+      title: 'Error',
+      description: 'Required information is missing or invalid.',
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
   }
 
+  try {
+    const data = await shareKey({ args: [transferAddress, ownedNFTs[0].metadata.id, expirationDuration] });
+    const remainingTime = expirationDuration.toNumber() / 2; // Ensure that expirationDuration is a BigNumber instance
+
+    console.info('Contract call success', data);
+    toast({
+      title: "Key Shared Successfully!",
+      description: `You've shared your Creative key! 🏋️‍♂️ You now have ${remainingTime} days left, and your friend has ${remainingTime} days. Stay Creative together!`,
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+  } catch (err) {
+    const error = err as Error; // Typecasting the error for better error handling in TypeScript
+    console.error('Share call failure', error);
+    toast({
+      title: 'Error',
+      description: error.message || 'An unknown error occurred',
+      status: 'warning',
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+};
+
+  // Function to copy the user's address to clipboard
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(address ?? '')
     // Optionally, you can show a success message or perform any other actions
@@ -189,7 +185,7 @@ const ProfilePage: NextPage = () => {
           </BreadcrumbItem>
         </Breadcrumb>
       <Heading mt={10}>My Creative Profile</Heading>
-      {!address ? (
+      {!address && !subscribed ? (
         <Flex flexDirection="column" my={10} gap={5} maxW="md">
           <Text>Sign in to see your profile or create a new account</Text>
           <Box w="50%">
@@ -233,10 +229,6 @@ const ProfilePage: NextPage = () => {
                   <span role="img" aria-label="money">💰</span>
                     &nbsp;Earnings
                   </Tab>
-                  <Tab>
-                    <span role="img" aria-label='ATM'>🏧</span>
-                    &nbsp;ATM
-                  </Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -252,9 +244,6 @@ const ProfilePage: NextPage = () => {
                                 member={address}
                                 nft={nft}
                                 balance={ownerBalanceString!}
-                                expireDate={expiring.toString()}
-                                renewMembershipForIsLoading={renewMembershipForIsLoading}
-                                cancelAndRefundIsLoading={cancelAndRefundIsLoading}
                               />
                             </Box>
                             <Flex
@@ -273,7 +262,7 @@ const ProfilePage: NextPage = () => {
                               }}>
                               <Box display="flex" maxW="md" flexFlow="row nowrap" justifyContent="space-between" alignItems="center">
                                 <FormControl flexGrow={1}>
-                                  <FormLabel fontSize={'x-small'}>Export to:</FormLabel>
+                                  <FormLabel fontSize={'x-small'}>Share with:</FormLabel>
                                   <Input
                                     placeholder={'0x00000'}
                                     width={'100%'}
@@ -283,37 +272,13 @@ const ProfilePage: NextPage = () => {
                                   />
                                   <FormHelperText>Enter an address to transfer your membership to.</FormHelperText>
                                 </FormControl>
-                                <Button colorScheme="pink" aria-disabled={transferAddress !== '' ? false : true} w={32}>
-                                  Transfer
+                                <Button colorScheme="pink" aria-disabled={transferAddress !== '' ? false : true} w={32} onClick={() => {share()}}>
+                                  Share
                                 </Button>
-                                {/* <Web3Button
-                                  contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                                  contractAbi={Unlock.abi}
-                                  action={async (contract) => {
-                                    await contract.call('shareKey', [transferAddress, [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
-                                  }}
-                                  onSuccess={(result) => toast({
-                                    title: "Congratulations, Trailblazer!",
-                                    description: "🚀 You've just unlocked a universe of creativity.",
-                                    status: "success",
-                                    duration: 9000,
-                                    isClosable: true,
-                                  })}
-                                  onError={(error) => toast({
-                                    title: "Error",
-                                    description: "There was an error processing your request.",
-                                    status: "error",
-                                    duration: 9000,
-                                    isClosable: true,
-                                  })}
-                                  theme={connector} 
-                                >
-                                Buy with Crypto
-                                </Web3Button> */}
                               </Box>
                               <Box display="flex" maxW="md" flexFlow="row nowrap" justifyContent="space-between" alignItems="center">
                                 <FormControl flexGrow={1}>
-                                  <FormLabel fontSize={'x-small'}>Rent to:</FormLabel>
+                                  <FormLabel fontSize={'x-small'}>Lend to:</FormLabel>
                                   <Input
                                     placeholder={'0x00000'}
                                     width={'100%'}
@@ -375,12 +340,6 @@ const ProfilePage: NextPage = () => {
                         Earnings:
                       </Text>
                       <Text>No earnings... yet</Text>
-                    </Box>
-                  </TabPanel>
-                  <TabPanel>
-                    {/* create two columns */}
-                    <Box>
-                        <Wert />
                     </Box>
                   </TabPanel>
                 </TabPanels>

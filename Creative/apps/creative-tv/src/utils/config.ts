@@ -53,7 +53,7 @@ export const SOCIAL_TWITTER = 'https://twitter.com/creativecrtv'
 export const SOCIAL_GITHUB = 'https://github.com/creativeplatform/creative-tv'
 export const SOCIAL_DISCORD = 'https://discord.gg/creativeplatform'
 export const SOCIAL_EMAIL = 'mailto:creatives@creativeplatform.xyz'
-export const SOCIAL_LENS = 'https://lensfrens.xyz/thecreative.lens'
+export const SOCIAL_LENS = 'https://lensfrens.xyz/thecreative'
 export const SOCIAL_LINKEDIN = 'https://www.linkedin.com/company/creativeplatform'
 
 // FEATURED CAROUSEL PLAYLISTS
