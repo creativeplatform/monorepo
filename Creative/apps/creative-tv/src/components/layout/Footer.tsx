@@ -48,7 +48,6 @@ export default function Footer(props: Props): JSX.Element {
             <Link href={FOOTER_LINKS.cookie_policy}>Cookies Policy</Link>
             <Link href={FOOTER_LINKS.privacy_policy}>Privacy Policy</Link>
             <Link href={FOOTER_LINKS.terms_and_conditions}>Terms of Service</Link>
-            <Link href={'#'}>Law Enforcement</Link>
             <Link href={'#'}>Status</Link>
           </Stack>
           <Stack align={'flex-start'}>
