@@ -44,20 +44,22 @@ import {
   MenuGroup,
 } from '@chakra-ui/react'
 import Unlock from '../../utils/fetchers/Unlock.json'
-import { ConnectWallet, useAddress, useSmartWallet, useSigner, useUser, embeddedWallet, Web3Button, useWallet } from '@thirdweb-dev/react'
-import { utils } from 'ethers'
-import { ThirdwebSDK } from '@thirdweb-dev/sdk'
+import { ConnectWallet, useAddress, useSigner, useUser, Web3Button, useWallet } from '@thirdweb-dev/react'
 import { Paywall } from '@unlock-protocol/paywall'
+import { networks } from '@unlock-protocol/networks'
+import { creatorCheckoutUrl } from 'utils/checkoutConfig'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { useScroll } from 'framer-motion'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import { SITE_LOGO, SITE_NAME, LOCK_ADDRESS_MUMBAI_TESTNET, ACCOUNT_FACTORY_TESTNET, CREATIVE_ADDRESS } from '../../utils/config'
+import { SITE_LOGO, SITE_NAME, LOCK_ADDRESS_MUMBAI_TESTNET, CREATIVE_ADDRESS } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import WertPurchaseNFT from 'components/WertPurchaseNFT'
 import AddFunds from 'components/AddFunds'
+import PurchaseKey from 'components/PurchaseKey'
+
 
 
 interface Props {
@@ -77,7 +79,6 @@ export function Header({ className, handleLoading }: Props) {
   const signer = useSigner();
   const { isLoggedIn } = useUser();
   const emailLogin = useWallet("embeddedWallet"); 
-
   useEffect(() => {
     const getEmail = async () => {
       if (emailLogin) {
@@ -95,36 +96,6 @@ export function Header({ className, handleLoading }: Props) {
   const connector = useColorModeValue('light', 'dark')
 
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer);
-
-  // const paywallConfig = {
-  //   "pessimistic": true,
-  //   "locks": {
-  //     "0x9a9280897c123b165e23f77cf4c58292d6ab378d": {
-  //       "network": 80001,
-  //       "name": "DAO Membership"
-  //     }
-  //   },
-  //   "icon": "https://bafkreiehm3yedt4cmtckelgfwqtgfvp6bolvk5nx2esle4tnwe7mi5q43q.ipfs.nftstorage.link/",
-  //   "metadataInputs": [
-  //     {
-  //       "name": "Name",
-  //       "type": "text",
-  //       "required": true
-  //     },
-  //     {
-  //       "name": "Email",
-  //       "defaultValue": emailLogin ? emailLogin.getEmail() : '',
-  //       "type": "email",
-  //       "required": true
-  //     }
-  //   ]
-  // }
-
-  // const networkConfigs = {
-  //   80001: {
-      
-  //   }
-  // }
   
   /*******  CONTRACT READING ********/
   useEffect(() => {
@@ -451,33 +422,9 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuGroup>
                     <MenuDivider />
                     <MenuGroup title='2. Creator Access'>
-                      <VStack direction={'column'} spacing={2}>
-                        <WertPurchaseNFT />
-                        <Web3Button
-                        contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                        contractAbi={Unlock.abi}
-                        action={async (contract) => {
-                          await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
-                        }}
-                        onSuccess={(result) => toast({
-                          title: "Congratulations, Trailblazer!",
-                          description: "🚀 You've just unlocked a universe of creativity.",
-                          status: "success",
-                          duration: 9000,
-                          isClosable: true,
-                        })}
-                        onError={(error) => toast({
-                          title: "Error",
-                          description: "There was an error processing your request.",
-                          status: "error",
-                          duration: 9000,
-                          isClosable: true,
-                        })} 
-                        theme={connector}
-                        >
-                          Buy with Crypto
-                        </Web3Button>
-                        </VStack>
+                      <Center>
+                        <PurchaseKey />
+                      </Center>
                     </MenuGroup>
                   </MenuList>
                 ) : (
@@ -678,33 +625,9 @@ export function Header({ className, handleLoading }: Props) {
                       </MenuGroup>
                       <MenuDivider />
                       <MenuGroup title='2. Creator Access'>
-                        <VStack direction={'column'} spacing={2}>
-                          <Web3Button
-                            contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                            contractAbi={Unlock.abi}
-                            action={async (contract) => {
-                              await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
-                            }}
-                            onSuccess={(result) => toast({
-                              title: "Congratulations, Trailblazer!",
-                              description: "🚀 You've just unlocked a universe of creativity.",
-                              status: "success",
-                              duration: 9000,
-                              isClosable: true,
-                            })}
-                            onError={(error) => toast({
-                              title: "Error",
-                              description: "There was an error processing your request.",
-                              status: "error",
-                              duration: 9000,
-                              isClosable: true,
-                            })}
-                            theme={connector} 
-                          >
-                          Buy with Crypto
-                          </Web3Button>
-                        <WertPurchaseNFT />
-                        </VStack>
+                        <Center>
+                          <PurchaseKey />
+                        </Center>
                       </MenuGroup>
                     </MenuList>
                   ) : (
