@@ -26,8 +26,8 @@ export const HERO_NAME = {
 export const HERO_DESCRIPTION = `${SITE_NAME} is a decentralized live streaming platform that puts you in control of your content and earnings. Get paid 100% of streaming revenue, have access to your own social token, and monetize your content into NFTs.`
 
 export const HERO_BUTTONS = {
-  primary: { text: 'Get Started', href: 'https://spearmint.xyz/p/creative-tv' },
-  secondary: { text: 'How It Works', href: 'https://creativeplatform.xyz/docs/resources/whitepaper' },
+  primary: { text: 'Get Started', href: 'https://app.unlock-protocol.com/checkout?id=bbbcff5f-835d-4fa3-9761-988d5da9da18' },
+  secondary: { text: 'How It Works', href: 'https://creativeplatform.xyz/docs/intro' },
 }
 
 export const HERO_IMAGE = 'https://bafybeiefwmq6zykvyhwih5qbhucxrc34zbtxjbwboz7hdgkyh3u6p2ykfa.ipfs.nftstorage.link'
