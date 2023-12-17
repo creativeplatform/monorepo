@@ -53,7 +53,7 @@ export default function HeroSection() {
                   bottom: 1,
                   left: 0,
                   bg: '#EE774D',
-                  zIndex: -1,
+                  zIndex: -99,
                 }}>
                 {HERO_NAME.top}
               </Text>
