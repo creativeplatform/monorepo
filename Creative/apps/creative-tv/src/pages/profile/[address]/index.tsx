@@ -26,6 +26,7 @@ import {
   BreadcrumbItem, 
   BreadcrumbLink, 
   Breadcrumb,
+  VStack,
 } from '@chakra-ui/react'
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK } from '@thirdweb-dev/react'
 import { LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
@@ -175,8 +176,8 @@ const share = async () => {
   }
 
   return (
-    <Container maxW="7xl" my={10}>
-      <Breadcrumb>
+    <Container maxW={"7xl"} my={10}>
+    <Breadcrumb mb={4}>
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => router.push('/')}>🏠 Home</BreadcrumbLink>
           </BreadcrumbItem>
@@ -184,35 +185,33 @@ const share = async () => {
             <BreadcrumbLink>Profile</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-      <Heading mt={10}>My Creative Profile</Heading>
-      {!address && !subscribed ? (
-        <Flex flexDirection="column" my={10} gap={5} maxW="md">
-          <Text>Sign in to see your profile or create a new account</Text>
-          <Box w="50%">
-            <ConnectWallet btnTitle={'Sign In'} />
-          </Box>
-        </Flex>
+        <Heading mt={10} mb={6} fontSize={{ base: "2xl", md: "3xl" }}>My Creative Profile</Heading>      
+        {!address ? (
+        <Flex flexDirection="column" alignItems="center" gap={5} my={10}>
+        <Text textAlign="center">Sign in to see your profile or create a new account</Text>
+        <Box w={{ base: "100%", sm: "75%", md: "50%" }}>
+          <ConnectWallet btnTitle={'Sign In'} />
+        </Box>
+      </Flex>
       ) : (
         <>
-          <Box mt={5} key={address}>
-            <ButtonGroup size="sm" isAttached variant="outline">
-              <Text as={'b'} fontSize={'2xl'}>
-                CRTV Account &nbsp;
-              </Text>
+          <VStack spacing={4} align="flex-start" my={5}>
+            <Text as={'b'} fontSize={'2xl'}>
+              CRTV Account &nbsp;
+            </Text>
+            <ButtonGroup size="sm" variant="outline">
               <Button>{address}</Button>
               <IconButton
                 aria-label="Add to clipboard"
                 icon={<HiOutlineClipboardCopy />}
-                onClick={() => {
-                  handleCopyAddress()
-                }}
+                onClick={handleCopyAddress}
               />
             </ButtonGroup>
-          </Box>
+          </VStack>
+          
           <Box mt={5}>
-            <SimpleGrid columns={1} spacing={5} my={4}>
-              <Tabs width="100%">
-                <TabList minW="fit-content" display="flex" justifyContent="start">
+            <Tabs variant="enclosed" isFitted>
+              <TabList mb="1em">
                   <Tab>
                   <span role="img" aria-label="identification">🪪</span>
                     &nbsp;Membership
@@ -235,20 +234,16 @@ const share = async () => {
                     {!loadingOwnedNFTs && ownedNFTs?.length ? (
                       ownedNFTs?.map((nft) => (
                         <Box key={nft?.metadata.id.toString()}>
-                          <Text fontWeight={'bold'} srOnly>
-                            Membership:
-                          </Text>
-                          <Box display="flex" justifyContent="space-between" alignItems="start">
-                            <Box flex="0 0 33%">
+                          <Box display="flex" justifyContent="space-between">
+                            <Box flex="0 0 50%" alignItems="center">
                               <MemberCard
                                 member={address}
                                 nft={nft}
                                 balance={ownerBalanceString!}
                               />
-                            </Box>
-                            <Flex
-                              flex="0 0 50%"
-                              flexFlow="column wrap"
+                              <Flex
+                              direction={{ base: "column", md: "row" }} // Stack vertically on base, horizontally on md and above
+                              wrap="wrap" // Allow wrapping
                               flexGrow={1}
                               px={8}
                               gap={5}
@@ -259,9 +254,10 @@ const share = async () => {
                                 input: {
                                   borderRightRadius: '0px',
                                 },
-                              }}>
-                              <Box display="flex" maxW="md" flexFlow="row nowrap" justifyContent="space-between" alignItems="center">
-                                <FormControl flexGrow={1}>
+                              }}
+                            >
+                              <Box flex="1" maxW="md" mb={{ base: 4, md: 0 }}>
+                                <FormControl>
                                   <FormLabel fontSize={'x-small'}>Share with:</FormLabel>
                                   <Input
                                     placeholder={'0x00000'}
@@ -276,8 +272,8 @@ const share = async () => {
                                   Share
                                 </Button>
                               </Box>
-                              <Box display="flex" maxW="md" flexFlow="row nowrap" justifyContent="space-between" alignItems="center">
-                                <FormControl flexGrow={1}>
+                              <Box flex="1" maxW="md">
+                                <FormControl>
                                   <FormLabel fontSize={'x-small'}>Lend to:</FormLabel>
                                   <Input
                                     placeholder={'0x00000'}
@@ -293,6 +289,8 @@ const share = async () => {
                                 </Button>
                               </Box>
                             </Flex>
+                            </Box>
+                            
                           </Box>
                         </Box>
                       )
@@ -344,7 +342,6 @@ const share = async () => {
                   </TabPanel>
                 </TabPanels>
               </Tabs>
-            </SimpleGrid>
           </Box>
         </>
       )}

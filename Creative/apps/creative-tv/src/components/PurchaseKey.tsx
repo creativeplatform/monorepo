@@ -15,7 +15,7 @@ import {
     useColorModeValue,
     ButtonGroup, 
 } from "@chakra-ui/react";
-import { useAddress, Web3Button, useContract, useNFT, ThirdwebNftMedia } from "@thirdweb-dev/react";
+import { useAddress, Web3Button, useContract, useNFT } from "@thirdweb-dev/react";
 import { utils } from "ethers";
 import { CrossmintPayButton } from '@crossmint/client-sdk-react-ui';
 import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from "utils/config";
@@ -62,7 +62,7 @@ function PurchaseKey() {
               contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
               contractAbi={ Unlock.abi } // Your smart contract ABI
               action={async (contract) => {
-                await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS], ['0x']], { value: utils.parseEther("1.0")});
+                await contract.call('purchase', [["1000000000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS, address], ['0x']], { value: utils.parseEther("1.0")});
               }}
               onSuccess={(result) => toast({
                 title: "Congratulations, Trailblazer!",
@@ -85,7 +85,7 @@ function PurchaseKey() {
             <CrossmintPayButton
               collectionId="3e5b47d7-a89f-4ae6-8f0e-fd8e7478d550"
               projectId="75feb281-8149-40fc-a8ce-a10793656a76"
-              mintConfig={{"totalPrice": "1.0", "_values": [1000000000000000000], "_recipients": address, "_referrers": [CREATIVE_ADDRESS], "_keyManagers": [CREATIVE_ADDRESS, address], "_data": ["0x"]}}
+              mintConfig={{"totalPrice": "1.0", "_values": ["1000000000000000000"], "_recipients": `${address}`, "_referrers": [CREATIVE_ADDRESS], "_keyManagers": [CREATIVE_ADDRESS, address], "_data": ["0x"]}}
               environment="staging"
             />
             </ButtonGroup>

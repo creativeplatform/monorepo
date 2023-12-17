@@ -397,7 +397,7 @@ export function Header({ className, handleLoading }: Props) {
                 switchToActiveChain={true}
                 modalSize={"wide"}
                 theme={connector} 
-                btnTitle={'Link Account'}
+                btnTitle={'Sign In/Up'}
                 modalTitle={'Login'}
                 dropdownPosition={{
                   side: "bottom", // "top" | "bottom" | "left" | "right";
@@ -598,7 +598,7 @@ export function Header({ className, handleLoading }: Props) {
               termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
               privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
               theme={connector} 
-              btnTitle={'Link Account'}
+              btnTitle={'Sign In/Up'}
               modalTitle={'Login'}
               switchToActiveChain={true}
               modalSize={"wide"}
