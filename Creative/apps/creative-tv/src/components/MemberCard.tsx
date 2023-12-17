@@ -88,22 +88,22 @@ const MemberCard = (props: MemberCardProps) => {
 
   return (
     <Card overflow={'hidden'} p={8} mb={4} alignItems="center" boxShadow="2xl">
-      <Image src={`${nft.metadata.image}`} height={250} width={200} mb={4} />
+      <Image src={`${nft?.metadata?.image}`} height={250} width={200} mb={4} />
       <Flex justify={'space-between'} alignItems={'center'} direction={'row'} width="100%" mb={4}>
-        <Text fontWeight={'bold'}>{nft.metadata.name}</Text>
+        <Text fontWeight={'bold'}>{nft?.metadata?.name}</Text>
         <Text fontWeight={'bold'}>Qty: {balance}</Text>
       </Flex>
       <Flex justify={'space-between'} alignItems={'center'} direction={'row'} width="100%" mb={4}>
-        <Text fontWeight={'bold'}>Member No. { nft.metadata.id }</Text>
+        <Text fontWeight={'bold'}>Member No. { nft?.metadata?.id }</Text>
       </Flex>
       <Flex justifyContent={'center'} direction={'row'} mb={4}>
-        <Text fontSize="xs">{nft.metadata.description}</Text>
+        <Text fontSize="xs">{nft?.metadata?.description}</Text>
       </Flex>
       <Flex justifyContent={'center'} direction={'column'} mb={4}>
       <Text fontSize="xs">
         Expires in {
           expirationDuration
-          ? new Date(expirationDuration.toNumber() * 1000).toISOString().slice(11, 16)
+          ? new Date(expirationDuration?.toNumber() * 1000).toISOString().slice(11, 16)
           : "Loading..."
         } hour(s).
       </Text>

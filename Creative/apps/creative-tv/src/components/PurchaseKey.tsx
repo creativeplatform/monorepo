@@ -1,6 +1,8 @@
 import { 
     useDisclosure, 
-    Button, 
+    Button,
+    Center,
+    Image, 
     Modal, 
     ModalBody, 
     ModalOverlay, 
@@ -9,7 +11,9 @@ import {
     ModalCloseButton, 
     ModalFooter,
     useToast,
-    useColorModeValue, 
+    Text,
+    useColorModeValue,
+    ButtonGroup, 
 } from "@chakra-ui/react";
 import { useAddress, Web3Button, useContract, useNFT, ThirdwebNftMedia } from "@thirdweb-dev/react";
 import { utils } from "ethers";
@@ -31,30 +35,29 @@ function PurchaseKey() {
   );
 
   // Load the NFT metadata from the contract using a hook
-  const { data: nft, isLoading, error } = useNFT(contract, "0");
+  const { data: nft, isLoading, error } = useNFT(contract, "1");
   // Render the NFT onto the UI
   if (isLoading) return <div>Loading...</div>;
   if (error || !nft) return <div>NFT not found</div>;
 
   return (
     <>
-      <Button onClick={onOpen}>Earn with Us</Button>
-
+      <Button onClick={onOpen}>Get Access</Button>
+      {/* MODAL */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Purchase A Creative Membership</ModalHeader>
+          <ModalHeader textAlign={'center'}>Claim the {`${nft?.metadata?.name}`}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <ThirdwebNftMedia 
-              metadata={nft.metadata}
-            />
+            <Center>
+              <Image src={`${nft?.metadata?.image}`} alt='Creative Membership' width={250} height={250} />
+            </Center>
+            <Text fontSize="sm" color="gray.700" textAlign={'center'} mt={4}>{`${nft?.metadata?.description}`}</Text>
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
-              Close
-            </Button>
+            <ButtonGroup>
             <Web3Button
               contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
               contractAbi={ Unlock.abi } // Your smart contract ABI
@@ -82,9 +85,10 @@ function PurchaseKey() {
             <CrossmintPayButton
               collectionId="3e5b47d7-a89f-4ae6-8f0e-fd8e7478d550"
               projectId="75feb281-8149-40fc-a8ce-a10793656a76"
-              mintConfig={{"totalPrice":"1.0","_values":["1000000000000000000"],"_recipients":[address],"_referrers":[CREATIVE_ADDRESS],"_keyManagers":[CREATIVE_ADDRESS, address],"_data":["0x"]}}
+              mintConfig={{"totalPrice": "1.0", "_values": [1000000000000000000], "_recipients": address, "_referrers": [CREATIVE_ADDRESS], "_keyManagers": [CREATIVE_ADDRESS, address], "_data": ["0x"]}}
               environment="staging"
             />
+            </ButtonGroup>
           </ModalFooter>
         </ModalContent>
       </Modal>
