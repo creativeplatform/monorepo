@@ -1,10 +1,10 @@
-import { SITE_LOGO, CREATIVE_ADDRESS } from "./config"
+import { SITE_LOGO, CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from "./config"
 
 const baseUrl = 'https://app.unlock-protocol.com/checkout?'
-const redirectUri: string = window.location.href
+const redirectUri: string = 'https://tv.creativeplatform.xyz'
 const crtvLogoUrl = SITE_LOGO
-const checkoutTitle = 'Creative'
-const checkoutRefefrer = CREATIVE_ADDRESS
+const checkoutTitle = 'Creative TV'
+const checkoutReferrer = CREATIVE_ADDRESS
 
 const requiredMetadata = [
     {
@@ -27,16 +27,16 @@ const requiredMetadata = [
 
 export const creatorPaywallConfig = {
     locks: {
-        '0xc9bdfa5f177961d96f137c42241e8ecbca605781': {
-            network: 5, // Goerli
+        '0x9a9280897c123b165e23f77cf4c58292d6ab378d': {
+            network: 80001, // Mumbai
             emailRequired: true,
         },
-        pessimistic: true,
+        pessimistic: false,
     },
     icon: crtvLogoUrl,
     title: checkoutTitle,
-    referrer: checkoutRefefrer,
+    referrer: checkoutReferrer,
     metadataInputs: requiredMetadata,
 }
 
-export const creatorCheckoutUrl = `${baseUrl}&paywallConfig=${encodeURIComponent(JSON.stringify(creatorPaywallConfig))}&redirectUri=${redirectUri}`
+export const creatorCheckoutUrl = `${baseUrl}id=1505d0df-b86c-4171-80d5-da502a081db7`
