@@ -14,7 +14,6 @@ const PosterImage = () => {
     return <Image src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
 }
 
-
 const VideoPage = () => {
     const router = useRouter()
     // Extract the assetId from the router's query parameters
@@ -26,7 +25,6 @@ const VideoPage = () => {
         enabled: assetId?.length === 36,
         refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
     })
-    
     // Check if the asset data is still loading
     if (assetLoading) {
         // Render loading state

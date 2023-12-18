@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Stack, Flex, Box, Heading, Text, IconButton, createIcon } from '@chakra-ui/react'
+import { Container, Stack, Flex, Box, Heading, Text, createIcon } from '@chakra-ui/react'
 import Image from 'next/image'
 import { LIVEPEER_FEATURED_PLAYBACK_ID } from 'utils/config'
 import { FEATURED_TEXT } from 'utils/context'
