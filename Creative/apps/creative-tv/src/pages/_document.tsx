@@ -1,6 +1,7 @@
 import { ColorModeScript } from '@chakra-ui/react'
-import { Head, Html, Main, NextScript } from 'next/document'
+import NextDocument, { Head, Html, Main, NextScript } from 'next/document'
 import theme from '../theme/theme'
+import { getCssText } from "@livepeer/react";
 
 declare global {
   interface Window {
@@ -9,7 +10,8 @@ declare global {
   }
 }
 
-export default function Document() {
+export default class Document extends NextDocument {
+  render() {
   return (
     <Html lang="en">
       <Head>
@@ -20,6 +22,10 @@ export default function Document() {
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
         <link rel="icon" href="/favicon.ico" />
+        <style
+          id="stitches"
+          dangerouslySetInnerHTML={{ __html: getCssText() }}
+        />
         
       </Head>
       <body>
@@ -29,4 +35,4 @@ export default function Document() {
       </body>
     </Html>
   )
-}
+}}

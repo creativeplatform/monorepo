@@ -1,9 +1,12 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThirdwebProvider, smartWallet, embeddedWallet} from '@thirdweb-dev/react'
+import {
+  LivepeerConfig,
+} from "@livepeer/react"
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
+import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import type { AppProps } from 'next/app'
 import { ACCOUNT_FACTORY_TESTNET, MUMBAI_CHAIN, THIRDWEB_API_KEY } from '../utils/config'
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
@@ -28,11 +31,10 @@ const activeChain = MUMBAI_CHAIN[0]
 export default function App({ 
   Component, 
   pageProps
-}: AppProps) {
+}: AppProps<{ dehydratedState: string}>) {
+  
   const isMounted = useIsMounted()
-  // Create a client
-  const queryClient = new QueryClient()
-
+  
   const smartWalletConfig = {
     factoryAddress: ACCOUNT_FACTORY_TESTNET,
     gasless: true,
@@ -41,7 +43,7 @@ export default function App({
   return (
     <ChakraProvider theme={theme}>
       <Seo />
-      <QueryClientProvider client={queryClient}>
+      <LivepeerConfig dehydratedState={pageProps?.dehydratedState} client={useLivepeerClient}>
         {isMounted && (
           <ThirdwebProvider
           dAppMeta={{
@@ -55,7 +57,6 @@ export default function App({
             authUrl: "/api/auth",
             domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "creativeplatform.xyz",
           }}
-            queryClient={queryClient}
             activeChain={activeChain}
             supportedWallets={[
               smartWallet(
@@ -65,7 +66,6 @@ export default function App({
                   }
                 }), smartWalletConfig
               )
-              
             ]}
             clientId={THIRDWEB_API_KEY}>
             <Layout>
@@ -74,7 +74,7 @@ export default function App({
             <ReactQueryDevtools initialIsOpen={false} />
           </ThirdwebProvider>
         )}
-      </QueryClientProvider>
+      </LivepeerConfig>
     </ChakraProvider>
   )
 }

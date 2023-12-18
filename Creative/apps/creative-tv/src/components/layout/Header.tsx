@@ -34,7 +34,6 @@ import {
   PopoverContent,
   PopoverTrigger,
   SimpleGrid,
-  VStack,
   Stack,
   Text,
   chakra,
@@ -44,10 +43,7 @@ import {
   MenuGroup,
 } from '@chakra-ui/react'
 import Unlock from '../../utils/fetchers/Unlock.json'
-import { ConnectWallet, useAddress, useSigner, useUser, Web3Button, useWallet } from '@thirdweb-dev/react'
-import { Paywall } from '@unlock-protocol/paywall'
-import { networks } from '@unlock-protocol/networks'
-import { creatorCheckoutUrl } from 'utils/checkoutConfig'
+import { ConnectWallet, useAddress, useSigner, useUser, useWallet } from '@thirdweb-dev/react'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { useScroll } from 'framer-motion'
 import { ChevronDownIcon } from '@chakra-ui/icons'
@@ -55,11 +51,10 @@ import { AiOutlineMenu } from 'react-icons/ai'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import { SITE_LOGO, SITE_NAME, LOCK_ADDRESS_MUMBAI_TESTNET, CREATIVE_ADDRESS } from '../../utils/config'
+import { SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import AddFunds from 'components/AddFunds'
 import PurchaseKey from 'components/PurchaseKey'
-
 
 
 interface Props {
@@ -74,7 +69,6 @@ export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? '';
   const ref = useRef(null);
   const router = useRouter();
-  const toast = useToast();
   const address = useAddress() || '';
   const signer = useSigner();
   const { isLoggedIn } = useUser();

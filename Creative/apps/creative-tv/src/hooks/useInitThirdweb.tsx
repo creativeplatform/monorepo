@@ -18,11 +18,7 @@ const useInitThirdweb = () => {
 
     // Call the initializeSDK function when the sdk value changes
     initializeSDK();
-  }, [sdk]);
-
-  // Rest of your component code...
-
-  // Replace with your component JSX
+  }, [sdk])
 };
 
 export default useInitThirdweb;
