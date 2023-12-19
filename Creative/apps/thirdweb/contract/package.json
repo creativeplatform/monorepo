@@ -10,6 +10,7 @@
     "hardhat": "^2.13.0"
   },
   "dependencies": {
+    "@superfluid-finance/ethereum-contracts": "^1.8.1",
     "@thirdweb-dev/contracts": "^3",
     "@unlock-protocol/contracts": "^0.0.22",
     "zksync-web3": "^0.14.3"
