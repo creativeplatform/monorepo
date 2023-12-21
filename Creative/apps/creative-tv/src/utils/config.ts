@@ -9,7 +9,6 @@ export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
 
-
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
@@ -3078,6 +3077,34 @@ export const METOKENS_DIAMOND_ABI = [
 export const DAI = {
   goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
   mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+}
+
+// USDC ADDRESS 
+export const tokenContractAddress = {
+  USDC: {
+    chain: {
+      polygon: {
+        mumbai: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  DAI: {
+    chain: {
+      polygon: {
+        mumbai: '0xcB1e72786A6eb3b44C2a2429e317c8a2462CFeb1',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
 }
 
 // ERC20 ABI
