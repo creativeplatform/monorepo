@@ -1,22 +1,43 @@
 import axios from 'axios'
 
-export type assetData = {
-  id: number
+export type AssetData = {
+  id: string
   user: string
   title: string
   description: string
   video: Video
   views: Views
-  
 }
 
 export type Video = {
   id?: any | null
   name: string
-  status: { phase: string| null, updatedAt: bigint, progress: string | null, errorMessage: string | null }
+  status: { phase: string | null; updatedAt: bigint; progress: string | null; errorMessage: string | null }
   playbackId: string
   creatorId: string | null
-  storage: string | null
+  storage: {
+    ipfs: {
+      cid: string
+      gateway: string
+      url: string
+      nftMetadata: {
+        cid: string
+        gateway: string
+        url: string
+      }
+      spec: {
+        nftMetadata: {
+          description: string
+          image: string
+          properties: {
+            [idx: string]: any
+            nFTAmountToMint: number | string
+            pricePerNFT: number | string
+          }
+        }
+      }
+    }
+  }
   transcodingStatus: string
   createdAt: bigint
   updatedAt: bigint
@@ -44,19 +65,17 @@ export const videoApi = axios.create({
 export const fetchAssetId = async (id: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Fetching asset')
-  const response = await videoApi.get<assetData['video']>(`/${assetId}?details=true`)
+  const response = await videoApi.get<AssetData['video']>(`/${assetId}?details=true`)
   const asset = response.data
 
   console.log('Asset: ', asset)
   return [asset]
 }
 
-
-
 export const updateAsset = async (id: any, data: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Updating asset')
-  const response = await videoApi.patch<assetData["video"]>(`/${assetId}`, data)
+  const response = await videoApi.patch<AssetData['video']>(`/${assetId}`, data)
   const asset = response.data
 
   console.log('Asset: ', asset)
