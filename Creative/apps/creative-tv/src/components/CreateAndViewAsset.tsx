@@ -21,19 +21,8 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { IAssetData } from '../utils/typings/types'
 import { VideoPreview } from './videoPreview'
-
-export interface AssetData {
-  title: string
-  description: string
-  animation_url: string
-  external_url: string
-  image_url: string
-  properties: {
-    playbackId: string
-    videoIpfs: string
-  }
-}
 
 export interface MintDetail {
   nFTAmountToMint: number
@@ -41,6 +30,7 @@ export interface MintDetail {
 }
 
 // Add MintDetails to AssetData
+export interface AssetData extends IAssetData {}
 export interface AssetData extends Partial<MintDetail> {}
 
 // Note: This code contains a React component for creating and viewing assets.
@@ -78,7 +68,6 @@ const CreateAndViewAsset = () => {
 
   const [assetData, setAssetData] = useState<AssetData>({
     // Note: The `assetData` state variable stores the data related to the asset, including the title, description, animation URL, external URL, image URL, playback ID, and video IPFS.
-
     title: '',
     description: '',
     animation_url: '',
@@ -303,6 +292,7 @@ const CreateAndViewAsset = () => {
                     cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
                   }}
                   disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
+                  isLoading={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
                   mb={20}>
                   Upload Video
                 </Button>
@@ -315,32 +305,32 @@ const CreateAndViewAsset = () => {
       {createdAsset?.[0]?.playbackId && (
         <>
           <div style={{ marginBottom: '32px' }}>
-            <Player 
-            title={createdAsset[0].name} 
-            playbackId={createdAsset[0].playbackId}
-            autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
-            showUploadingIndicator={true}
-            controls={{
-            autohide: 3000,
-            hotkeys: true
-            }}
-            theme={{
-            borderStyles: {
-                containerBorderStyle: 'solid',
-            },
-            colors: {
-                accent: '#EC407A',
-            },
-            space: {
-                controlsBottomMarginX: '10px',
-                controlsBottomMarginY: '5px',
-                controlsTopMarginX: '15px',
-                controlsTopMarginY: '10px',
-            },
-            radii: {
-                containerBorderRadius: '0px',
-            },
-            }} 
+            <Player
+              title={createdAsset[0].name}
+              playbackId={createdAsset[0].playbackId}
+              autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
+              showUploadingIndicator={true}
+              controls={{
+                autohide: 3000,
+                hotkeys: true,
+              }}
+              theme={{
+                borderStyles: {
+                  containerBorderStyle: 'solid',
+                },
+                colors: {
+                  accent: '#EC407A',
+                },
+                space: {
+                  controlsBottomMarginX: '10px',
+                  controlsBottomMarginY: '5px',
+                  controlsTopMarginX: '15px',
+                  controlsTopMarginY: '10px',
+                },
+                radii: {
+                  containerBorderRadius: '0px',
+                },
+              }}
             />
           </div>
 
@@ -424,6 +414,7 @@ const CreateAndViewAsset = () => {
                   className="mint-button"
                   bgColor="#EC407A"
                   disabled={mintFormState.isLoading}
+                  isLoading={mintFormState.isLoading}
                   _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
                   // as={motion.div}
                   onClick={() => {
@@ -437,7 +428,7 @@ const CreateAndViewAsset = () => {
                       },
                     }))
                   }}>
-                  Proceed to Mint NFT
+                  Update Metadata
                 </Button>
               </form>
             </Box>
