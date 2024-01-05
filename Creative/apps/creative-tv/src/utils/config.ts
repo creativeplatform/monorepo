@@ -9,6 +9,10 @@ export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
 
+
+export const THIRDWEB_API_SECRET = process.env.THIRDWEB_API_SECRET // for backend access
+export const DEV_TESTNET_PRIVATE_KEY = process.env.DEV_TESTNET_PRIVATE_KEY // dev private key
+
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD

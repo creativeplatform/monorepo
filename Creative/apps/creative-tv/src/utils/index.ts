@@ -1,20 +1,26 @@
-import { NetworkInput, ThirdwebSDK } from '@thirdweb-dev/react'
+import { ChainOrRpcUrl, NetworkInput, ThirdwebSDK} from '@thirdweb-dev/react'
 import { THIRDWEB_API_KEY } from './config'
+import { Signer } from 'ethers'
+
 
 export const thirdwebSDK = (network: NetworkInput) =>
   new ThirdwebSDK(network, {
     clientId: THIRDWEB_API_KEY,
   })
 
-export function thirdwebSdkWithSigner(signer: any, network: NetworkInput | undefined) {
-  const sdk = ThirdwebSDK.fromSigner(signer, network as any, {
-    clientId: THIRDWEB_API_KEY,
-  })
+// export function thirdwebSdkWithSigner(signer: Signer, network: ChainOrRpcUrl | undefined) {
+//   return ThirdwebSDK.fromSigner(signer, network, {
+//     clientId: THIRDWEB_API_KEY,
+//   })
+// }
 
-  return sdk
+export const salesClaimPhase = {
+  'Select phase': '',
+  'Phase 1': 'Phase 1',
 }
 
 export const waitInSecondsClaimConditionsOptions = {
+  'Select period': '',
   '30 mins': 60 * 30,
   '1 hr': 60 * 60 * 1,
   '3 hrs': 60 * 60 * 3,
@@ -29,11 +35,16 @@ export const waitInSecondsClaimConditionsOptions = {
 }
 
 export function parseTimestampToDate(ts: number) {
-  const d = new Date(ts)
-  const longEnUSFormat = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-  return longEnUSFormat.format(d)
+  if (!ts) {
+    return 'Not available'
+  } else {
+    const d = new Date(ts)
+    const longEnUSFormat = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    return longEnUSFormat.format(d)
+  }
 }

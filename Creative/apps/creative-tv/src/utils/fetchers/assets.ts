@@ -14,7 +14,7 @@ export type Video = {
   name: string
   status: { phase: string | null; updatedAt: bigint; progress: string | null; errorMessage: string | null }
   playbackId: string
-  creatorId: string | null
+  creatorId: { [index: string]: string }
   storage: {
     ipfs: {
       cid: string
