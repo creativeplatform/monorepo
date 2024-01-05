@@ -4,7 +4,7 @@ import { useAddress, useContract, useContractMetadata, useSigner } from '@thirdw
 import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { IAssetData, IReturnedAssetData } from '../utils/typings/types'
+import { IAssetData, IReturnedAssetData } from '../utils/types'
 import { tokenContractAddress } from '../utils/config'
 
 // Milestone

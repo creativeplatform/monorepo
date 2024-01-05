@@ -5,10 +5,10 @@ import { useAddress } from '@thirdweb-dev/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { parseTimestampToDate } from 'utils'
-import { CREATIVE_LOGO_WHT } from 'utils/context'
-import { AssetData } from 'utils/fetchers/assets'
-import { titleCase } from 'utils/formatString'
+import { parseTimestampToDate } from '../utils'
+import { CREATIVE_LOGO_WHT } from '../utils/context'
+import { AssetData } from '../utils/fetchers/assets'
+import { titleCase } from '../utils/formatString'
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
