@@ -7,22 +7,15 @@ import {
     Box,
     Button,
     Container,
-    useToast,
     Image,
 } from '@chakra-ui/react'
-import {
-    useAddress,
-} from '@thirdweb-dev/react'
 
 const PosterImage = () => {
     return <Image src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
 }
 
-
 const VideoPage = () => {
     const router = useRouter()
-    const address = useAddress()
-    const toast = useToast()
     // Extract the assetId from the router's query parameters
     const assetId = useMemo(() => (router?.query?.assetId ? String(router?.query?.assetId) : undefined), [router?.query])
 
@@ -32,7 +25,6 @@ const VideoPage = () => {
         enabled: assetId?.length === 36,
         refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
     })
-    
     // Check if the asset data is still loading
     if (assetLoading) {
         // Render loading state

@@ -25,20 +25,23 @@ import {
   Spinner,
   BreadcrumbItem, 
   BreadcrumbLink, 
-  Breadcrumb
+  Breadcrumb,
+  VStack,
 } from '@chakra-ui/react'
 import { useAddress, useContract, useOwnedNFTs, useNFTBalance, useContractWrite, useContractRead, ConnectWallet, useSigner, ThirdwebSDK } from '@thirdweb-dev/react'
-import { CREATIVE_ADDRESS } from 'utils/config'
+import { LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
-import MeTokenCreationForm from 'components/MeTokenCreationForm'
+//import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
 import Wert from './wert'
 import Unlock from '../../../utils/fetchers/Unlock.json'
+import MyAssets from 'components/my-assets'
 
 
 const ProfilePage: NextPage = () => {
+  // State and hooks setup
   const router = useRouter()
   const [transferAddress, setTransferAddress] = useState('')
   const [lendingAddress, setLendingAddress] = useState('')
@@ -48,12 +51,15 @@ const ProfilePage: NextPage = () => {
   const signer = useSigner()
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
 
+
   /*******  CONTRACT READING ********/
   useEffect(() => {
-    if (!address || !sdkSigner || !Unlock.abi) return
+    // Skip if prerequisites aren't met
+    if (!address || !sdkSigner || !Unlock.abi) return;
+    // Function to get subscription status from the contract
     const getSubscribedData = async () => {
         const unlockContract = await sdkSigner?.getContractFromAbi(
-          '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+          LOCK_ADDRESS_MUMBAI_TESTNET.address,
           Unlock.abi,
         );
         return await unlockContract?.call(
@@ -64,17 +70,19 @@ const ProfilePage: NextPage = () => {
           ],
         )
       }
+       // Fetch and set subscription status
       getSubscribedData().then((res) => {
         console.log(res)
         setSubscribed(res)
       })
     }, [address, sdkSigner, Unlock.abi])
-
+   
+    // Hooks to interact with the contract
   const { 
     contract: unlockContract,
     isLoading: loadingUnlockContract,
     error: unlockContractError,
-   } = useContract('0xC9bdfA5f177961D96F137C42241e8EcBCa605781', Unlock.abi)
+   } = useContract(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
 
   const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs( unlockContract, address)
 
@@ -83,13 +91,16 @@ const ProfilePage: NextPage = () => {
   // Stringify the owners balance
   const ownerBalanceString = ownerBalance?.toString()
 
-  /******* READ FROM CONTRACT ******/
-  const { data: expiring, isLoading: loadingIsExpiring, error: ExpirationError } = useContractRead(unlockContract, "expirationDuration");
+  // READ FROM CONTRACT
+  const { data: expirationDuration, isLoading: expirationLoading } = useContractRead(unlockContract, "expirationDuration");
 
   /****** WRITE TO CONTRACT *******/
+    // Functions to write to the contract: lending and sharing keys
   const { mutateAsync: lendKey } = useContractWrite(unlockContract, 'lendKey')
-
+  
+  // Function to lend a key
   const lend = async () => {
+    // Error handling and toast notifications
     try {
       const data = await lendKey({ args: [address, lendingAddress, ownedNFTs?.[0].metadata.id] })
       console.info('contract call successs', data)
@@ -101,31 +112,7 @@ const ProfilePage: NextPage = () => {
         isClosable: true,
       })
     } catch (err) {
-      console.error('contract call failure', err)
-      toast({
-        title: 'Error',
-        description: `${err}`,
-        status: 'warning',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-  }
-  const { mutateAsync: renewMembershipFor, isLoading: renewMembershipForIsLoading } = useContractWrite(unlockContract, 'renewMembershipFor')
-
-  const renew = async () => {
-    try {
-      const data = await renewMembershipFor({ args: [ownedNFTs?.[0].metadata.id, CREATIVE_ADDRESS] })
-      console.info('contract call successs', data)
-      toast({
-        title: 'Membership Renewal',
-        description: 'Successfully renewed your membership 🙌🏾',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
-    } catch (err) {
-      console.error('contract call failure', err)
+      console.error('Lending call failure', err)
       toast({
         title: 'Error',
         description: `${err}`,
@@ -136,31 +123,47 @@ const ProfilePage: NextPage = () => {
     }
   }
 
-  const { mutateAsync: cancelAndRefund, isLoading: cancelAndRefundIsLoading } = useContractWrite(unlockContract, 'cancelAndRefund')
-
-  const cancelMembership = async () => {
-    try {
-      const data = await cancelAndRefund({ args: [ownedNFTs?.[0].metadata.id] })
-      console.info('contract call successs', data)
-      toast({
-        title: 'Membership Cancelled',
-        description: 'Sorry to see you go... 🥹',
-        status: 'info',
-        duration: 5000,
-        isClosable: true,
-      })
-    } catch (err) {
-      console.error('contract call failure', err)
-      toast({
-        title: 'Error',
-        description: `${err}`,
-        status: 'warning',
-        duration: 5000,
-        isClosable: true,
-      })
-    }
+  const { mutateAsync: shareKey } = useContractWrite(unlockContract, 'shareKey')
+  
+  // Function to share a key
+const share = async () => {
+  if (!transferAddress || !ownedNFTs?.length || !expirationDuration) {
+    toast({
+      title: 'Error',
+      description: 'Required information is missing or invalid.',
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+    return;
   }
 
+  try {
+    const data = await shareKey({ args: [transferAddress, ownedNFTs[0].metadata.id, expirationDuration] });
+    const remainingTime = expirationDuration.toNumber() / 2; // Ensure that expirationDuration is a BigNumber instance
+
+    console.info('Contract call success', data);
+    toast({
+      title: "Key Shared Successfully!",
+      description: `You've shared your Creative key! 🏋️‍♂️ You now have ${remainingTime} days left, and your friend has ${remainingTime} days. Stay Creative together!`,
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+  } catch (err) {
+    const error = err as Error; // Typecasting the error for better error handling in TypeScript
+    console.error('Share call failure', error);
+    toast({
+      title: 'Error',
+      description: error.message || 'An unknown error occurred',
+      status: 'warning',
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+};
+
+  // Function to copy the user's address to clipboard
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(address ?? '')
     // Optionally, you can show a success message or perform any other actions
@@ -175,8 +178,8 @@ const ProfilePage: NextPage = () => {
   }
 
   return (
-    <Container maxW="7xl" my={10}>
-      <Breadcrumb>
+    <Container maxW={"7xl"} my={10}>
+    <Breadcrumb mb={4}>
           <BreadcrumbItem>
             <BreadcrumbLink onClick={() => router.push('/')}>🏠 Home</BreadcrumbLink>
           </BreadcrumbItem>
@@ -184,35 +187,33 @@ const ProfilePage: NextPage = () => {
             <BreadcrumbLink>Profile</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
-      <Heading mt={10}>My Creative Profile</Heading>
-      {!address ? (
-        <Flex flexDirection="column" my={10} gap={5} maxW="md">
-          <Text>Sign in to see your profile or create a new account</Text>
-          <Box w="50%">
-            <ConnectWallet btnTitle={'Sign In'} />
-          </Box>
-        </Flex>
+        <Heading mt={10} mb={6} fontSize={{ base: "2xl", md: "3xl" }}>My Creative Profile</Heading>      
+        {!address ? (
+        <Flex flexDirection="column" alignItems="center" gap={5} my={10}>
+        <Text textAlign="center">Sign in to see your profile or create a new account</Text>
+        <Box w={{ base: "100%", sm: "75%", md: "50%" }}>
+          <ConnectWallet btnTitle={'Sign In'} />
+        </Box>
+      </Flex>
       ) : (
         <>
-          <Box mt={5} key={address}>
-            <ButtonGroup size="sm" isAttached variant="outline">
-              <Text as={'b'} fontSize={'2xl'}>
-                CRTV Account &nbsp;
-              </Text>
+          <VStack spacing={4} align="flex-start" my={5}>
+            <Text as={'b'} fontSize={'2xl'}>
+              CRTV Account &nbsp;
+            </Text>
+            <ButtonGroup size="sm" variant="outline">
               <Button>{address}</Button>
               <IconButton
                 aria-label="Add to clipboard"
                 icon={<HiOutlineClipboardCopy />}
-                onClick={() => {
-                  handleCopyAddress()
-                }}
+                onClick={handleCopyAddress}
               />
             </ButtonGroup>
-          </Box>
+          </VStack>
+          
           <Box mt={5}>
-            <SimpleGrid columns={1} spacing={5} my={4}>
-              <Tabs width="100%">
-                <TabList minW="fit-content" display="flex" justifyContent="start">
+            <Tabs variant="enclosed" isFitted>
+              <TabList mb="1em">
                   <Tab>
                   <span role="img" aria-label="identification">🪪</span>
                     &nbsp;Membership
@@ -229,33 +230,22 @@ const ProfilePage: NextPage = () => {
                   <span role="img" aria-label="money">💰</span>
                     &nbsp;Earnings
                   </Tab>
-                  <Tab>
-                    <span role="img" aria-label='ATM'>🏧</span>
-                    &nbsp;ATM
-                  </Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
                     {!loadingOwnedNFTs && ownedNFTs?.length ? (
                       ownedNFTs?.map((nft) => (
                         <Box key={nft?.metadata.id.toString()}>
-                          <Text fontWeight={'bold'} srOnly>
-                            Membership:
-                          </Text>
-                          <Box display="flex" justifyContent="space-between" alignItems="start">
-                            <Box flex="0 0 33%">
+                          <Box display="flex" justifyContent="space-between">
+                            <Box flex="0 0 50%" alignItems="center">
                               <MemberCard
                                 member={address}
                                 nft={nft}
                                 balance={ownerBalanceString!}
-                                expireDate={expiring.toString()}
-                                renewMembershipForIsLoading={renewMembershipForIsLoading}
-                                cancelAndRefundIsLoading={cancelAndRefundIsLoading}
                               />
-                            </Box>
-                            <Flex
-                              flex="0 0 50%"
-                              flexFlow="column wrap"
+                              <Flex
+                              direction={{ base: "column", md: "row" }} // Stack vertically on base, horizontally on md and above
+                              wrap="wrap" // Allow wrapping
                               flexGrow={1}
                               px={8}
                               gap={5}
@@ -266,10 +256,11 @@ const ProfilePage: NextPage = () => {
                                 input: {
                                   borderRightRadius: '0px',
                                 },
-                              }}>
-                              <Box display="flex" maxW="md" flexFlow="row nowrap" justifyContent="space-between" alignItems="center">
-                                <FormControl flexGrow={1}>
-                                  <FormLabel fontSize={'x-small'}>Export to:</FormLabel>
+                              }}
+                            >
+                              <Box flex="1" maxW="md" mb={{ base: 4, md: 0 }}>
+                                <FormControl>
+                                  <FormLabel fontSize={'x-small'}>Share with:</FormLabel>
                                   <Input
                                     placeholder={'0x00000'}
                                     width={'100%'}
@@ -279,13 +270,13 @@ const ProfilePage: NextPage = () => {
                                   />
                                   <FormHelperText>Enter an address to transfer your membership to.</FormHelperText>
                                 </FormControl>
-                                <Button colorScheme="pink" aria-disabled={transferAddress !== '' ? false : true} w={32}>
-                                  Transfer
+                                <Button colorScheme="pink" aria-disabled={transferAddress !== '' ? false : true} w={32} onClick={() => {share()}}>
+                                  Share
                                 </Button>
                               </Box>
-                              <Box display="flex" maxW="md" flexFlow="row nowrap" justifyContent="space-between" alignItems="center">
-                                <FormControl flexGrow={1}>
-                                  <FormLabel fontSize={'x-small'}>Rent to:</FormLabel>
+                              <Box flex="1" maxW="md">
+                                <FormControl>
+                                  <FormLabel fontSize={'x-small'}>Lend to:</FormLabel>
                                   <Input
                                     placeholder={'0x00000'}
                                     width={'100%'}
@@ -300,6 +291,8 @@ const ProfilePage: NextPage = () => {
                                 </Button>
                               </Box>
                             </Flex>
+                            </Box>
+                            
                           </Box>
                         </Box>
                       )
@@ -331,14 +324,14 @@ const ProfilePage: NextPage = () => {
                         method for transactions and supports your growth as a creator.
                       </Text>
                     </Box>
-                    <MeTokenCreationForm />
+                    {/* <MeTokenCreationForm /> */}
                   </TabPanel>
-                  <TabPanel>
+                  <TabPanel id='videoUploads'>
                     <Box>
                       <Text fontWeight={'bold'} srOnly>
                         Video Uploads:
                       </Text>
-                      <Text>The emptiness ... upload some videos!</Text>
+                      <MyAssets/>
                     </Box>
                   </TabPanel>
                   <TabPanel>
@@ -349,14 +342,8 @@ const ProfilePage: NextPage = () => {
                       <Text>No earnings... yet</Text>
                     </Box>
                   </TabPanel>
-                  <TabPanel>
-                    <Box>
-                        <Wert />
-                    </Box>
-                  </TabPanel>
                 </TabPanels>
               </Tabs>
-            </SimpleGrid>
           </Box>
         </>
       )}

@@ -7,9 +7,9 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Avatar,
   Box,
   Button,
+  ButtonGroup,
   Center,
   Divider,
   Drawer,
@@ -40,22 +40,21 @@ import {
   useColorModeValue,
   useDisclosure,
   useToast,
+  MenuGroup,
 } from '@chakra-ui/react'
-import Unlock from "../../utils/fetchers/Unlock.json"
-import { ConnectWallet, useAddress, useDisconnect, useSigner, useUser, ThirdwebSDK } from '@thirdweb-dev/react'
-import { Paywall } from '@unlock-protocol/paywall'
-import networks from '@unlock-protocol/networks'
+import Unlock from '../../utils/fetchers/Unlock.json'
+import { ConnectWallet, useAddress, useSigner, useUser, useWallet } from '@thirdweb-dev/react'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { useScroll } from 'framer-motion'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { AiOutlineDisconnect, AiOutlineMenu } from 'react-icons/ai'
-import usePurchaseNFT from 'hooks/usePurchaseNFT'
+import { AiOutlineMenu } from 'react-icons/ai'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import { PFP } from 'utils/context'
 import { SITE_LOGO, SITE_NAME } from '../../utils/config'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import WertPurchaseNFT from 'components/WertPurchaseNFT'
+import AddFunds from 'components/AddFunds'
+import PurchaseKey from 'components/PurchaseKey'
 
 
 interface Props {
@@ -70,33 +69,34 @@ export function Header({ className, handleLoading }: Props) {
   const styleName = className ?? '';
   const ref = useRef(null);
   const router = useRouter();
-  const toast = useToast();
   const address = useAddress() || '';
+  const signer = useSigner();
   const { isLoggedIn } = useUser();
-  const signer = useSigner()
+  const emailLogin = useWallet("embeddedWallet"); 
+  useEffect(() => {
+    const getEmail = async () => {
+      if (emailLogin) {
+        const email = await emailLogin.getEmail();
+        // Use the email address here
+        console.log(email);
+        return email;
+      }
+    };
+    getEmail();
+  }, [address]);
+
   const [subscribed, setSubscribed] = useState(false)
 
   const connector = useColorModeValue('light', 'dark')
 
-  const [creatorPaywallConfig, setCreatorPaywallConfig] = useState(null);
-
-  const handleButtonClick = () => {
-    if (handleLoading) {
-      handleLoading()
-    }
-  }
-  
-  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
-
-  // Currently connected wallet address
-  const disconnect = useDisconnect()
+  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer);
   
   /*******  CONTRACT READING ********/
   useEffect(() => {
     if (!address || !sdkSigner || !Unlock.abi) return
     const getSubscribedData = async () => {
         const unlockContract = await sdkSigner?.getContractFromAbi(
-          '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
+          '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
           Unlock.abi,
         );
         return await unlockContract?.call(
@@ -108,7 +108,7 @@ export function Header({ className, handleLoading }: Props) {
         )
       }
       getSubscribedData().then((res) => {
-        console.log(res)
+        console.log('Is your membership valid?', res)
         setSubscribed(res)
       })
     }, [address, sdkSigner, Unlock.abi])
@@ -328,7 +328,6 @@ export function Header({ className, handleLoading }: Props) {
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
               onClick={() => {
-                handleButtonClick()
                 mobileNav.onClose()
                 router.push('/discover')
               }}>
@@ -347,7 +346,6 @@ export function Header({ className, handleLoading }: Props) {
               _hover={{ color: cl }}
               _focus={{ boxShadow: 'none' }}
               onClick={() => {
-                handleButtonClick()
                 mobileNav.onClose()
                 router.push('/events')
               }}>
@@ -377,7 +375,7 @@ export function Header({ className, handleLoading }: Props) {
             </Accordion>
           </p>
           <chakra.p my={4}>
-            {!isLoggedIn ? (
+            {!address && !isLoggedIn ? (
               <ConnectWallet
                 welcomeScreen={{
                   title: "CREATIVE TV",
@@ -388,13 +386,12 @@ export function Header({ className, handleLoading }: Props) {
                     height: 250,
                   },
                 }}
-                // auth={{
-                //   loginOptional: false,
-                // }}
+                termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
+                privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
                 switchToActiveChain={true}
                 modalSize={"wide"}
                 theme={connector} 
-                btnTitle={'Link Account'}
+                btnTitle={'Sign In/Up'}
                 modalTitle={'Login'}
                 dropdownPosition={{
                   side: "bottom", // "top" | "bottom" | "left" | "right";
@@ -402,43 +399,34 @@ export function Header({ className, handleLoading }: Props) {
                 }} 
               />
             ) : (
-              <>
-              
+              <ButtonGroup>
               <ConnectWallet
                 theme={connector}  
               />
               <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  <Avatar mb={6} size={'md'} name="creative" src={PFP} />
+                <MenuButton mx={4} mb={2} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                  User Menu
                 </MenuButton>
-                {!isLoggedIn && !subscribed ? (
+                {!subscribed ? (
                   <MenuList>
-                    <MenuItem>
-                      <WertPurchaseNFT />
-                    </MenuItem>
+                    <MenuGroup title='1. Wallet Options'>
+                        <Center>
+                          <AddFunds />
+                        </Center>
+                    </MenuGroup>
                     <MenuDivider />
-                    <MenuItem
-                      icon={<AiOutlineDisconnect />}
-                      onClick={() => {
-                        disconnect()
-                        router.push('/')
-                        toast({
-                          title: 'Sign Out',
-                          description: 'Successfully signed out.',
-                          status: 'info',
-                          duration: 5000,
-                          isClosable: true,
-                        })
-                      }}>
-                      Sign Out
-                    </MenuItem>
+                    <MenuGroup title='2. Creator Access'>
+                      <Center>
+                        <PurchaseKey />
+                      </Center>
+                    </MenuGroup>
                   </MenuList>
                 ) : (
                   <MenuList>
+                    <MenuGroup title='Active Member'>
                     <MenuItem
                       icon={<MdOutlineAccountCircle />}
                       onClick={() => {
-                        handleButtonClick()
                         mobileNav.onClose()
                         router.push(`/profile/${address}`)
                       }}>
@@ -447,32 +435,22 @@ export function Header({ className, handleLoading }: Props) {
                     <MenuItem
                       icon={<RiVideoUploadFill />}
                       onClick={() => {
-                        handleButtonClick()
                         mobileNav.onClose()
                         router.push(`/profile/${address}/upload`)
                       }}>
                       Upload
                     </MenuItem>
+                    </MenuGroup>
                     <MenuDivider />
-                    <MenuItem
-                      icon={<AiOutlineDisconnect />}
-                      onClick={() => {
-                        disconnect()
-                        router.push('/')
-                        toast({
-                          title: 'Sign Out',
-                          description: 'Successfully signed out.',
-                          status: 'info',
-                          duration: 5000,
-                          isClosable: true,
-                        })
-                      }}>
-                      Sign Out
-                    </MenuItem>
+                    <MenuGroup title='Wallet Options'>
+                      <Center>
+                        <AddFunds />
+                      </Center>
+                    </MenuGroup>
                   </MenuList>
                 )}
               </Menu>
-              </>
+              </ButtonGroup>
             )}
           </chakra.p>
         </DrawerBody>
@@ -556,7 +534,6 @@ export function Header({ className, handleLoading }: Props) {
                 _hover={{ color: cl }}
                 _focus={{ boxShadow: 'none' }}
                 onClick={() => {
-                  handleButtonClick()
                   router.push('/discover')
                 }}>
                 Discover
@@ -601,7 +578,7 @@ export function Header({ className, handleLoading }: Props) {
             </HStack>
           </Flex>
           <chakra.div display={{ base: 'none', md: 'none', lg: 'block' }}>
-            {!address ? (
+            {!address && !isLoggedIn ? (
               <ConnectWallet
               welcomeScreen={{
                 title: "CREATIVE TV",
@@ -612,11 +589,10 @@ export function Header({ className, handleLoading }: Props) {
                   height: 250,
                 },
               }}
-              // auth={{
-              //   loginOptional: false,
-              // }}
+              termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
+              privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
               theme={connector} 
-              btnTitle={'Link Account'}
+              btnTitle={'Sign In/Up'}
               modalTitle={'Login'}
               switchToActiveChain={true}
               modalSize={"wide"}
@@ -626,62 +602,56 @@ export function Header({ className, handleLoading }: Props) {
               }} 
               />
             ) : (
-              <>
+              <ButtonGroup>
               <ConnectWallet
                 theme={connector} 
               />
               <Menu>
-                <MenuButton as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  <Avatar mb={6} size={'lg'} name="creative" src={PFP} />
-                </MenuButton>
-
-                <MenuList>
-                  {!isLoggedIn && !subscribed ? (
-                  <>
-                    <MenuItem>
-                      <WertPurchaseNFT />
-                    </MenuItem>
+                <MenuButton mx={4} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                  User Menu
+                </MenuButton>                
+                  {!subscribed ? (
+                    <MenuList>
+                      <MenuGroup title='1. Wallet Options'>
+                        <Center>
+                          <AddFunds />
+                        </Center>
+                      </MenuGroup>
                       <MenuDivider />
-                    </>
+                      <MenuGroup title='2. Creator Access'>
+                        <Center>
+                          <PurchaseKey />
+                        </Center>
+                      </MenuGroup>
+                    </MenuList>
                   ) : (
-                    <>
-                      <MenuItem
-                        icon={<MdOutlineAccountCircle />}
-                        onClick={() => {
-                          handleButtonClick()
-                          router.push(`/profile/${address}`)
-                        }}>
-                        Profile
-                      </MenuItem>
-                      <MenuItem
-                        icon={<RiVideoUploadFill />}
-                        onClick={() => {
-                          handleButtonClick()
-                          router.push(`/profile/${address}/upload`)
-                        }}>
-                        Upload
-                      </MenuItem>
+                    <MenuList>
+                      <MenuGroup title='Active Member'>
+                          <MenuItem
+                            icon={<MdOutlineAccountCircle />}
+                            onClick={() => {
+                              router.push(`/profile/${address}`)
+                            }}>
+                            Profile
+                          </MenuItem>
+                          <MenuItem
+                            icon={<RiVideoUploadFill />}
+                            onClick={() => {
+                              router.push(`/profile/${address}/upload`)
+                            }}>
+                            Upload
+                          </MenuItem>
+                      </MenuGroup>
                       <MenuDivider />
-                    </>
+                      <MenuGroup title='Wallet Options'>
+                        <Center>
+                          <AddFunds />
+                        </Center>
+                      </MenuGroup>
+                    </MenuList>
                   )}
-                  <MenuItem
-                    icon={<AiOutlineDisconnect />}
-                    onClick={() => {
-                      disconnect()
-                      router.push('/')
-                      toast({
-                        title: 'Sign Out',
-                        description: 'Successfully signed out.',
-                        status: 'info',
-                        duration: 5000,
-                        isClosable: true,
-                      })
-                    }}>
-                    Sign Out
-                  </MenuItem>
-                </MenuList>
               </Menu>
-              </>
+              </ButtonGroup>
             )}
           </chakra.div>
           <Flex gap="1.2rem" display={{ base: 'flex', md: 'flex', lg: 'none' }}>

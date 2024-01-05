@@ -9,20 +9,10 @@ export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
 
-/* declare var process: {
-  env: {
-    NEXT_PUBLIC_STUDIO_API_KEY: string,
-    NEXT_SESSION_PASSWORD: string,
-    NODE_ENV: string,
-    NEXT_PUBLIC_SIWE_SESSION_SECRET: string,
-    NEXT_PUBLIC_ALCHEMY_API_KEY: string,
-    NEXT_PUBLIC_INFURA_API_KEY: string,
-    NEXT_PUBLIC_POLYGONSCAN_API_KEY: string,
-    NEXT_PUBLIC_HOST: string,
-    NEXT_PUBLIC_SMART_WALLET_API_KEY: string
-    NEXT_PUBLIC_EXPLORER_KEY: string
-  }
-} */
+
+export const THIRDWEB_API_SECRET = process.env.THIRDWEB_API_SECRET // for backend access
+export const DEV_TESTNET_PRIVATE_KEY = process.env.DEV_TESTNET_PRIVATE_KEY // dev private key
+
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
@@ -56,8 +46,6 @@ export const THEME_CONFIG = {
   initialColorMode: THEME_INITIAL_COLOR,
 }
 
-export const GOERLI_PROVIDER_URL = 'https://ethereum-goerli.publicnode.com'
-
 export const EXPLORER_API_URL = {
   GOERLI: 'https://api-goerli.etherscan.io/',
   POLYGON: 'https://api.polygonscan.com/',
@@ -68,7 +56,7 @@ export const SOCIAL_TWITTER = 'https://twitter.com/creativecrtv'
 export const SOCIAL_GITHUB = 'https://github.com/creativeplatform/creative-tv'
 export const SOCIAL_DISCORD = 'https://discord.gg/creativeplatform'
 export const SOCIAL_EMAIL = 'mailto:creatives@creativeplatform.xyz'
-export const SOCIAL_LENS = 'https://lensfrens.xyz/thecreative.lens'
+export const SOCIAL_LENS = 'https://lensfrens.xyz/thecreative'
 export const SOCIAL_LINKEDIN = 'https://www.linkedin.com/company/creativeplatform'
 
 // FEATURED CAROUSEL PLAYLISTS
@@ -88,8 +76,7 @@ export const CAROUSEL_PLAYLISTS = {
 }
 
 // BLOCKCHAIN LIST
-export const ETH_CHAINS = [Goerli]
-export const POLYGON_CHAINS = [Polygon]
+export const POLYGON_CHAIN = [Polygon]
 export const MUMBAI_CHAIN = [Mumbai]
 
 // Title text for the various transaction notifications.
@@ -103,33 +90,26 @@ export const EPISODE_DROP_ADDRESS = {
   testnet: '0xE675e85ccf7b8ADB2E466fc06662319628B75a9F',
 }
 
-// Unlock Contracts (Polygon)
+// Unlock Contracts (POLYGON)
 export const LOCK_ADDRESS_CREATIVE_TV = {
   creator: '0xb9c69af58109927cc2dcce8043f82158f7b96ca7',
   fan: '0xe174caa294999ec622988242641a27c11e6c22d8',
   brand: '0xb311afe316b004dbf569381ae174eaa897b757f6',
 }
 
-// Unlock Contracts (GOERLI)
-export const LOCK_ADDRESS_GOERLI_TESTNET = {
-  address: '0xC9bdfA5f177961D96F137C42241e8EcBCa605781',
-  rpc_url: 'goerli.rpc.thirdweb.com',
-  chainId: '5',
-  symbol: 'ETH',
-}
-export const FREE_LOCK_ADDRESS_GOERLI_TESTNET = {
-  address: '0x697560Ba635e92c19e660Fa0EB0bDFcD7938A08B',
-  rpc_url: 'goerli.rpc.thirdweb.com',
-  chainId: '5',
-  symbol: 'ETH',
-  data: '0x3381899700000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000001a0000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001000000000000000000000000c09f38a3a10a7be313f4253d3a9d76ebe1b7ccff00000000000000000000000000000000000000000000000000000000000000010000000000000000000000001fde40a4046eda0ca0539dd6c77abf8933b9426000000000000000000000000000000000000000000000000000000000000000010000000000000000000000001fde40a4046eda0ca0539dd6c77abf8933b942600000000000000000000000000000000000000000000000000000000000000000',
+// Unlock Contracts (MUMBAI)
+export const LOCK_ADDRESS_MUMBAI_TESTNET = {
+  address: '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
+  rpc_url: 'mumbai.rpc.thirdweb.com',
+  chainId: '80001',
+  symbol: 'MATIC',
 }
 
-// Account Factory (GOERLI)
-export const ACCOUNT_FACTORY_TESTNET = '0xEA69aD73011E39E223873214a1F98aFF008A8ab6'
+// Account Factory (MUMBAI)
+export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2bf'
 
 // FACTORY CONTRACT (POLYGON)
-export const ACCOUNT_FACTORY_MUMBAI = ''
+export const ACCOUNT_FACTORY_POLYGON = ''
 
 // Setup the Smart Wallet configuration
 export const SMART_WALLET_CONFIG = {
@@ -141,9 +121,6 @@ export const SMART_WALLET_CONFIG = {
 
 // CREATIVE ADDRESS
 export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
-
-// CREATIVE TRANSFER (XFER)
-export const TRANSFER_CONTRACT_ADDRESS = '0xBd25C36811Df69d080735eC53Ea4A61C55FdccCd'
 
 export const UNLOCK_API_URL = 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
 export const UNLOCK_QUERY_HOLDS_KEY = gql`
@@ -3104,6 +3081,34 @@ export const METOKENS_DIAMOND_ABI = [
 export const DAI = {
   goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
   mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+}
+
+// USDC ADDRESS 
+export const tokenContractAddress = {
+  USDC: {
+    chain: {
+      polygon: {
+        mumbai: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  DAI: {
+    chain: {
+      polygon: {
+        mumbai: '0xcB1e72786A6eb3b44C2a2429e317c8a2462CFeb1',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
 }
 
 // ERC20 ABI
