@@ -1,33 +1,20 @@
-require("@matterlabs/hardhat-zksync-solc");
-
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  zksolc: {
-    version: "1.3.9",
-    compilerSource: "binary",
-    settings: {
-      optimizer: {
-        enabled: true,
-      },
-    },
-  },
   networks: {
-    zksync_testnet: {
-      url: "https://zksync2-testnet.zksync.dev",
-      ethNetwork: "goerli",
-      chainId: 280,
-      zksync: true,
+    polygon_testnet: {
+      url: "https://polygon-mumbai.g.alchemy.com/v2/4QdGUP8BOp3_NdNJAN1c2sWs12LtsfDF",
+      ethNetwork: "mumbai",
+      chainId: 80001,
     },
-    zksync_mainnet: {
-      url: "https://zksync2-mainnet.zksync.io/",
-      ethNetwork: "mainnet",
-      chainId: 324,
-      zksync: true,
+    polygon_mainnet: {
+      url: "https://polygon-mainnet.g.alchemy.com/v2/NDsioMXTwci91lMdODnh3iBbcJoxCgy8",
+      ethNetwork: "polygon",
+      chainId: 137,
     },
   },
   paths: {
-    artifacts: "./artifacts-zk",
-    cache: "./cache-zk",
+    artifacts: "./artifacts-poly",
+    cache: "./cache-poly",
     sources: "./contracts",
     tests: "./test",
   },
