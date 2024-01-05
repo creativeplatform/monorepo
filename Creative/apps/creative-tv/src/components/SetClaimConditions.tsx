@@ -26,7 +26,7 @@ const tokenContractAcceptedForPayments = [{ usdc: tokenContractAddress.USDC.chai
 
 //
 export function SetClaimConditions(props: SetClaimConditionsProps) {
-  let tokenId = 0
+  let tokenId = 1
   const connectedAddress = useAddress()
   const router = useRouter()
   const { contract: nftContract } = useContract(props.nftContractAddress)
@@ -35,6 +35,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
   const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
 
   const toast = useToast()
+  console.log('props 101: ', props)
 
   // const [state, setState] = useState({
   //   price: props.nftMetadata['properties']['pricePerNFT'], // The price of the token in the currency specified above
@@ -76,8 +77,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
     try {
       setIsSubmitting(true)
       console.log('form data: ', formData)
-      tokenId++
-
+  
       const claimConditions = await nftContract?.erc1155.claimConditions.set(tokenId, [
         {
           startTime: formData.startTime, // When the phase starts (i.e. when users can start claiming tokens)
