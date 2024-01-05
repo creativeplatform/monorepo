@@ -7,6 +7,6 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/manage-smart-wallet.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
