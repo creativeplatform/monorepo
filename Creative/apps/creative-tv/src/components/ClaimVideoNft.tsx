@@ -4,8 +4,9 @@ import { useAddress, useContract, useContractMetadata, useSigner } from '@thirdw
 import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { IAssetData, IReturnedAssetData } from '../utils/types'
+import { thirdwebSDK } from 'utils'
 import { tokenContractAddress } from '../utils/config'
+import { IAssetData, IReturnedAssetData } from '../utils/types'
 
 // Milestone
 
@@ -85,6 +86,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   const connectedAddress = useAddress()
   const signer = useSigner()
   const toast = useToast()
+  const sdk = thirdwebSDK('mumbai')
 
   const [priceOfNft, setPriceOfNft] = useState(0)
   const [qtyOfNftToMint, setQtyOfNftToMint] = useState(1)
