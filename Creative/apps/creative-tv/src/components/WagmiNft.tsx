@@ -1,15 +1,33 @@
-import { Box, Button, Flex, IconButton, Stack, Text, useToast } from '@chakra-ui/react'
+import { 
+  Box,
+  IconButton, 
+  Button, 
+  Stack, 
+  Text, 
+  useToast, 
+  Flex, 
+  textDecoration
+} from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, MediaRenderer, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
+import { 
+  ThirdwebSDK, 
+  useAddress, 
+  useContract, 
+  useMetadata, 
+  useSigner, 
+  MediaRenderer,
+  SetClaimConditionsParams,
+  ClaimIneligibilityParams, 
+} from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
-import { ethers } from 'ethers'
-import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { removeUnderScore } from 'utils/formatString'
 import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
-import { AssetData } from './CreateAndViewAsset'
-import { SetClaimConditions } from './SetClaimConditions'
+import { ethers } from 'ethers'
+import { HiOutlineClipboardCopy } from 'react-icons/hi'
+import SignIn from '../components/SignIn'
+import { AssetData } from 'utils/fetchers/assets'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
 
 interface WagmiNftProps {
@@ -32,7 +50,7 @@ type ContractMetaData = {
   [idx: string]: any
 }
 const WagmiNft = (props: WagmiNftProps): JSX.Element => {
-  const connectedAddress = useAddress()
+  const address = useAddress()
   const router = useRouter()
   const signer = useSigner()
   const toast = useToast()
@@ -41,14 +59,14 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const [isMinting, setIsMinting] = useState(false)
   const [lazyMintTxStatus, setLazyMintTxStatus] = useState('')
   const [lazyMintTxHash, setLazyMintTxHash] = useState('')
+  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false)
   const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
-
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
   const { contract: nftContract } = useContract(deployedContractAddress)
   const { data: contractMetadata, isLoading } = useMetadata(nftContract)
 
-  /////////////////////////////////////////////
+   /////////////////////////////////////////////
   // TODO: write hooks that prevents page
   // reload after contract is deployed
   /////////////////////////////////////////////
@@ -95,8 +113,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 animation_url: props.assetData.animation_url,
                 external_url: props.assetData.external_url,
                 image_url: props.assetData.image_url,
-                nFTAmountToMint: props.assetData.nFTAmountToMint,
-                pricePerNFT: props.assetData.pricePerNFT,
+                nFTAmountToMint: props.assetData.properties.nFTAmountToMint,
+                pricePerNFT: props.assetData.properties.pricePerNFT,
               },
             },
           },
@@ -120,7 +138,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   // Function to deploy the edition drop contract
   const deployNftCollection = async () => {
     // Is there an sdk found and is there a connect wallet address?
-    if (!signer || !connectedAddress) return
+    if (!signer || !address) return
 
     // const sdk1 = thirdwebSDK('mumbai')
     // const sdk = thirdwebSdkWithSigner(signer,'mumbai')
@@ -139,14 +157,14 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
       const contractAddress = await sdk.deployer.deployEditionDrop({
         name: asset?.name,
-        primary_sale_recipient: connectedAddress,
+        primary_sale_recipient: address,
         app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
         symbol: 'EPISD', // Symbol of the edition drop
-        platform_fee_basis_points: 200,
+        platform_fee_basis_points: 100, // The address that will receive the proceeds from platform fees = 1%
         platform_fee_recipient: CREATIVE_ADDRESS,
-        fee_recipient: connectedAddress,
-        seller_fee_basis_points: 300,
-        image: props.assetData.image_url || 'Not available',
+        fee_recipient: address,
+        seller_fee_basis_points: 300, // The percentage (in basis points) of royalties for secondary sales for the seller = 3%
+        image: props.assetData.image_url || 'Not Available',
         description: props.assetData.description,
         trusted_forwarders: [CREATIVE_ADDRESS],
       })
@@ -187,13 +205,15 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
       return keys.map((k, i) => (
         <div key={i}>
           <p>
-            <span style={{ fontWeight: '700' }}>{removeUnderScore(k)}: </span>
+          <span style={{ fontWeight: '700' }}>{removeUnderScore(k)}: </span>
             <span>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}</span>
           </p>
         </div>
       ))
     }
   }
+
+
 
   // Copy string to clipboard
   const handleCopyString = () => {
@@ -213,11 +233,11 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     try {
       setIsMinting(true)
 
-      console.log('nftAmount: %s, nftCID: %s', ethers.BigNumber.from(props.assetData.nFTAmountToMint), asset?.storage?.ipfs?.nftMetadata?.cid)
+      console.log('nftAmount: %s, nftCID: %s', ethers.BigNumber.from(props.assetData.properties.nFTAmountToMint), asset?.storage?.ipfs?.nftMetadata?.cid)
       // console.log('pricePerNNft: %s', asset?.storage?.ipfs?.spec?.nftMetadata.properties.pricePerNFT as any)
 
       const lazyMintNftTx = await nftContract?.call('lazyMint', [
-        ethers.BigNumber.from(props.assetData.nFTAmountToMint),
+        ethers.BigNumber.from(props.assetData.properties.nFTAmountToMint),
         asset?.storage?.ipfs?.nftMetadata?.cid,
         0x0,
       ])
@@ -255,16 +275,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
   return (
     <Box className="address-mint" minH={'600'}>
-      {!connectedAddress && (
-        <ConnectWallet
-          btnTitle={'Sign In'}
-          className="signIn-button"
-          style={{
-            marginBottom: '24px',
-            margin: '48px 0',
-            fontWeight: '600',
-          }}
-        />
+      {!address && (
+        <SignIn btnTitle='Sign In'/>
       )}
 
       {notification ? (
@@ -273,7 +285,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         </Text>
       ) : null}
 
-      {connectedAddress && props.assetId && (
+      {address && props.assetId && (
         <>
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
             <>
@@ -299,7 +311,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Button>
               </Stack>
             </>
-          ) : null}
+          ) : null
+        }
 
           {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid ? (
             <>
@@ -325,10 +338,10 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   </Text>
                   <Box style={{ lineHeight: 2.75 }}>
                     <Text>
-                      Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
+                      <span style={{ fontWeight: '700' }}>Asset Name: </span>{asset?.name}{' '}
                     </Text>
                     <Text>
-                      Metadata CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.nftMetadata?.url ?? 'None'}</span>
+                      <span style={{ fontWeight: '700' }}>Metadata CID: </span><a href={asset?.storage?.ipfs?.nftMetadata?.url} style={{textDecoration: 'underline'}} target='_blank'>{asset?.storage?.ipfs?.nftMetadata?.url ?? 'None'}</a>
                     </Text>
                   </Box>
                 </Box>
@@ -336,7 +349,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
               <ErrorBoundary fallback={<p>Failed to load...</p>}>
                 <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
+                  <Text as={'h2'} style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now Deploy the Contract For Your Uploaded Video</Text>
                   <br />
                   <Button
                     className="deploy-button"
@@ -349,7 +362,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                       e.preventDefault()
                       deployNftCollection?.() // Function to deploy edition drop contract
                     }}
-                    // disabled={isDeploying}
+                    disabled={isDeploying}
                   >
                     {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                   </Button>
@@ -364,7 +377,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }}>
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Contract deployed succesfully!
+                  Contract Deployed Successfully!
                 </Text>
 
                 <Button
@@ -420,11 +433,11 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 Set conditions for the sale/claim of your NFT(s)
               </Text>
 
-              <SetClaimConditions
+              {/* <SetClaimConditions
                 nftContractAddress={nftContract.getAddress()}
                 nftMetadata={asset?.storage?.ipfs?.spec?.nftMetadata as any}
                 contractMetadata={contractMetadata as any}
-              />
+              /> */}
             </Stack>
           )}
         </>
@@ -432,5 +445,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     </Box>
   )
 }
+
 
 export default WagmiNft
