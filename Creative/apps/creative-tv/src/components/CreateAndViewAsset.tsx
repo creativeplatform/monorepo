@@ -66,7 +66,6 @@ const CreateAndViewAsset = () => {
 
   const [assetData, setAssetData] = useState<AssetData>({
     // Note: The `assetData` state variable stores the data related to the asset, including the title, description, animation URL, external URL, image URL, playback ID, and video IPFS.
-
     title: '',
     description: '',
     animation_url: '',
@@ -307,32 +306,32 @@ const CreateAndViewAsset = () => {
       {createdAsset?.[0]?.playbackId && (
         <>
           <div style={{ marginBottom: '32px' }}>
-            <Player 
-            title={createdAsset[0].name} 
-            playbackId={createdAsset[0].playbackId}
-            autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
-            showUploadingIndicator={true}
-            controls={{
-            autohide: 3000,
-            hotkeys: true
-            }}
-            theme={{
-            borderStyles: {
-                containerBorderStyle: 'solid',
-            },
-            colors: {
-                accent: '#EC407A',
-            },
-            space: {
-                controlsBottomMarginX: '10px',
-                controlsBottomMarginY: '5px',
-                controlsTopMarginX: '15px',
-                controlsTopMarginY: '10px',
-            },
-            radii: {
-                containerBorderRadius: '0px',
-            },
-            }} 
+            <Player
+              title={createdAsset[0].name}
+              playbackId={createdAsset[0].playbackId}
+              autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
+              showUploadingIndicator={true}
+              controls={{
+                autohide: 3000,
+                hotkeys: true,
+              }}
+              theme={{
+                borderStyles: {
+                  containerBorderStyle: 'solid',
+                },
+                colors: {
+                  accent: '#EC407A',
+                },
+                space: {
+                  controlsBottomMarginX: '10px',
+                  controlsBottomMarginY: '5px',
+                  controlsTopMarginX: '15px',
+                  controlsTopMarginY: '10px',
+                },
+                radii: {
+                  containerBorderRadius: '0px',
+                },
+              }}
             />
           </div>
 

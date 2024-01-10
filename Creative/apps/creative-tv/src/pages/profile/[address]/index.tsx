@@ -37,6 +37,7 @@ import { MdOutbound } from 'react-icons/md'
 import MemberCard from 'components/MemberCard'
 import Wert from './wert'
 import Unlock from '../../../utils/fetchers/Unlock.json'
+import MyAssets from 'components/my-assets'
 
 
 const ProfilePage: NextPage = () => {
@@ -49,6 +50,7 @@ const ProfilePage: NextPage = () => {
   const address = useAddress()
   const signer = useSigner()
   const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
+
 
   /*******  CONTRACT READING ********/
   useEffect(() => {
@@ -324,12 +326,12 @@ const share = async () => {
                     </Box>
                     {/* <MeTokenCreationForm /> */}
                   </TabPanel>
-                  <TabPanel>
+                  <TabPanel id='videoUploads'>
                     <Box>
                       <Text fontWeight={'bold'} srOnly>
                         Video Uploads:
                       </Text>
-                      <Text>The emptiness ... upload some videos!</Text>
+                      <MyAssets/>
                     </Box>
                   </TabPanel>
                   <TabPanel>

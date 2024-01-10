@@ -22,7 +22,7 @@ export type AssetData = {
 export type Video = {
   id?: any | null
   name: string
-  status: { phase: string| null, updatedAt: bigint, progress: string | null, errorMessage: string | null }
+  status: { phase: string | null; updatedAt: bigint; progress: string | null; errorMessage: string | null }
   playbackId: string
   videoIpfs: string
   creatorId: { [index: string]: string }

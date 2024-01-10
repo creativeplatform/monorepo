@@ -140,8 +140,10 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     // Is there an sdk found and is there a connect wallet address?
     if (!signer || !address) return
 
-    const sdk = new ThirdwebSDK(signer, {
-       clientId: THIRDWEB_API_KEY,
+    // const sdk1 = thirdwebSDK('mumbai')
+    // const sdk = thirdwebSdkWithSigner(signer,'mumbai')
+    const sdk = ThirdwebSDK.fromSigner(signer, 'mumbai', {
+      clientId: THIRDWEB_API_KEY,
     })
 
     // Is there an sdk found?

@@ -5,3 +5,7 @@ export const removeUnderScore = (str: string) => {
     return str.split('_').join(' ').toUpperCase()
   }
 }
+
+export function titleCase(str: string) {
+  return str.slice(0, 1).toUpperCase() + str.slice(1)
+}
