@@ -1,13 +1,22 @@
 import axios from 'axios'
 
-export type assetData = {
+export type AssetData = {
   id: number
   user: string
   title: string
   description: string
+  animation_url: string
+  external_url: string
+  image_url: string
+  properties: {
+    [idx: string]: any
+    nFTAmountToMint: number | string
+    pricePerNFT: number | string
+    playbackId: string
+    videoIpfs: string
+  }
   video: Video
   views: Views
-  
 }
 
 export type Video = {
@@ -15,13 +24,30 @@ export type Video = {
   name: string
   status: { phase: string| null, updatedAt: bigint, progress: string | null, errorMessage: string | null }
   playbackId: string
-  creatorId: string | null
-  storage: string | null
+  videoIpfs: string
+  creatorId: { [index: string]: string }
   transcodingStatus: string
   createdAt: bigint
   updatedAt: bigint
   downloadUrl?: string
   viewCount: number
+  storage: {
+    ipfs: {
+      cid: string
+      gateway: string
+      url: string
+      nftMetadata: {
+        cid: string
+        gateway: string
+        url: string
+      }
+      spec: {
+        nftMetadata:{
+          assetData: AssetData
+        }
+      }
+    }
+  }
 }
 
 export type Views = {
@@ -44,7 +70,7 @@ export const videoApi = axios.create({
 export const fetchAssetId = async (id: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Fetching asset')
-  const response = await videoApi.get<assetData['video']>(`/${assetId}?details=true`)
+  const response = await videoApi.get<AssetData['video']>(`/${assetId}?details=true`)
   const asset = response.data
 
   console.log('Asset: ', asset)
@@ -52,11 +78,10 @@ export const fetchAssetId = async (id: any) => {
 }
 
 
-
 export const updateAsset = async (id: any, data: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Updating asset')
-  const response = await videoApi.patch<assetData["video"]>(`/${assetId}`, data)
+  const response = await videoApi.patch<AssetData["video"]>(`/${assetId}`, data)
   const asset = response.data
 
   console.log('Asset: ', asset)

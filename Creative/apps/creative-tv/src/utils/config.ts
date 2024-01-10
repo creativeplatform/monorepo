@@ -14,14 +14,9 @@ export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
 export const NODE_ENV = process.env.NODE_ENV
-export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
-export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
 export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
-export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
-export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT
 export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY
 export const WERT_PARTNER_ID = process.env.NEXT_PUBLIC_WERT_PARTNER_ID
@@ -101,6 +96,9 @@ export const LOCK_ADDRESS_MUMBAI_TESTNET = {
   chainId: '80001',
   symbol: 'MATIC',
 }
+
+// TOKEN CONTRACTS (POLYGON) 
+export const MUMBAI_TEST_TOKEN = "0xc0823427fE72cFD105c71BEAd0476412283B07c5"
 
 // Account Factory (MUMBAI)
 export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2bf'
@@ -3210,9 +3208,6 @@ export const ERC20_ABI = [
     type: 'function',
   },
 ]
-
-// ETH MAINNET THIRDWEB RPC
-export const MAINNET_RPC = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || 'https://ethereum.rpc.thirdweb.com'
 
 // VIDEO NFT MUMBAI
 export const VIDEO_NFT_CONTRACT_ADDRESS = '0x205e06b24328b59e3846c3Fa4a55de7c1D6b227C'

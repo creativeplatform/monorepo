@@ -4,7 +4,6 @@ import { Orbis } from '@orbisclub/orbis-sdk'
 import {
     METOKENS_ADDRESS_GOERLI,
     DAI,
-    MAINNET_RPC,
     FOUNDRY_FACET_ABI,
     HUB_FACET_ABI,
     METOKEN_FACTORY_ABI,
