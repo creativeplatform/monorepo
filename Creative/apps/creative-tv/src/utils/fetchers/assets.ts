@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export type AssetData = {
-  id: number
+  id: string
   user: string
   title: string
   description: string
