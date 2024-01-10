@@ -1,14 +1,40 @@
 import { ThemingProps, extendTheme } from '@chakra-ui/react'
-import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains'
+import { Mumbai, Polygon } from '@thirdweb-dev/chains'
+import { embeddedWallet, smartWallet } from '@thirdweb-dev/react'
 import gql from 'graphql-tag'
 
-export const SITE_NAME = 'CREATIVE TV'
-export const SITE_DESCRIPTION = 'The way content should be.'
-export const SITE_IMAGE = '/creative-membership.png'
-export const SITE_URL = 'https://creativeplatform.xyz'
-export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
-export const SITE_LOGO = '/grant-logo.png'
+// Account Factory (MUMBAI)
+export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2bf'
+// FACTORY CONTRACT (POLYGON)
+export const ACCOUNT_FACTORY_POLYGON = ''
 
+// This is the chain your dApp will work on.
+// Change this to the chain your app is built for.
+// You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
+// const activeChain = MUMBAI_CHAIN[0]
+export const activeChain = 'mumbai' // TODO: revert chain back to the top commented option
+
+// Setup the Smart Wallet configuration
+const personalWallet = embeddedWallet({
+  auth: {
+    options: ['email', 'google', 'apple', 'facebook'],
+  },
+})
+
+export const SmartWallet = smartWallet(personalWallet, {
+  factoryAddress: ACCOUNT_FACTORY_TESTNET,
+  gasless: true,
+})
+
+export const siteMetadata = {
+  NAME: 'CREATIVE TV',
+  DESCRIPTION: 'The way content should be.',
+  IMAGE: '/creative-membership.png',
+  URL: 'https://tv.creativeplatform.xyz',
+  SITE_COPYRIGHT: '© 2023 Creative Organization DAO, LLC. All rights reserved.',
+  LOGO: '/grant-logo.png',
+  LOGO_URL: 'https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif',
+}
 
 export const THIRDWEB_API_SECRET = process.env.THIRDWEB_API_SECRET // for backend access
 export const DEV_TESTNET_PRIVATE_KEY = process.env.DEV_TESTNET_PRIVATE_KEY // dev private key
@@ -17,9 +43,14 @@ export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
 export const NODE_ENV = process.env.NODE_ENV
+export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
+export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
 export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
+export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
+export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT
 export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY
 export const WERT_PARTNER_ID = process.env.NEXT_PUBLIC_WERT_PARTNER_ID
@@ -100,23 +131,6 @@ export const LOCK_ADDRESS_MUMBAI_TESTNET = {
   symbol: 'MATIC',
 }
 
-// TOKEN CONTRACTS (POLYGON) 
-export const MUMBAI_TEST_TOKEN = "0xc0823427fE72cFD105c71BEAd0476412283B07c5"
-
-// Account Factory (MUMBAI)
-export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2bf'
-
-// FACTORY CONTRACT (POLYGON)
-export const ACCOUNT_FACTORY_POLYGON = ''
-
-// Setup the Smart Wallet configuration
-export const SMART_WALLET_CONFIG = {
-  chain: Goerli, // the chain where your smart wallet will be or is deployed
-  factoryAddress: ACCOUNT_FACTORY_TESTNET, // your own deployed account factory address
-  clientId: THIRDWEB_API_KEY, // obtained from the thirdweb dashboard
-  gasless: true, // enable or disable gasless transactions
-}
-
 // CREATIVE ADDRESS
 export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
 
@@ -138,7 +152,7 @@ export const LIVEPEER_HERO_PLAYBACK_ID = 'cbd1dw72qst9xmps' // Welcome To Creati
 export const LIVEPEER_FEATURED_PLAYBACK_ID = '5c2bzf537qbq0r7o' // The Creative Podcast Episode 03
 
 export const SERVER_SESSION_SETTINGS = {
-  cookieName: SITE_NAME,
+  cookieName: siteMetadata.NAME,
   password: process.env.NEXT_SESSION_PASSWORD ?? 'UPDATE_TO_complex_password_at_least_32_characters_long',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
@@ -3081,7 +3095,7 @@ export const DAI = {
   mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 }
 
-// USDC ADDRESS 
+// USDC ADDRESS
 export const tokenContractAddress = {
   USDC: {
     chain: {
@@ -3239,6 +3253,9 @@ export const ERC20_ABI = [
     type: 'function',
   },
 ]
+
+// ETH MAINNET THIRDWEB RPC
+export const MAINNET_RPC = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || 'https://ethereum.rpc.thirdweb.com'
 
 // VIDEO NFT MUMBAI
 export const VIDEO_NFT_CONTRACT_ADDRESS = '0x205e06b24328b59e3846c3Fa4a55de7c1D6b227C'
