@@ -1,7 +1,5 @@
-import { ChainOrRpcUrl, NetworkInput, ThirdwebSDK} from '@thirdweb-dev/react'
+import { NetworkInput, ThirdwebSDK } from '@thirdweb-dev/react'
 import { THIRDWEB_API_KEY } from './config'
-import { Signer } from 'ethers'
-
 
 export const thirdwebSDK = (network: NetworkInput) =>
   new ThirdwebSDK(network, {
@@ -49,4 +47,52 @@ export function parseTimestampToDate(ts: number) {
 
     return longEnUSFormat.format(d)
   }
+}
+
+type LocalStateArgs = {
+  key: string
+  value: string
+}
+
+/**
+ * This object holds functions that works with the browser localStrage API
+ */
+export const windowStorage = {
+  /**
+   * This function saves data to the web browser local store
+   * @param key This represent the name to save the item on
+   * @param value This is the item to save
+   * @example
+   *
+   * set({key: 'bat', value: 'man mobile'})
+   * or
+   * set({ key: 'user', value: JSON.stringify({ firstName: 'bat', lastName: 'man' }) })
+   *
+   */
+  set: ({ key, value }: LocalStateArgs) => {
+    const res = windowStorage.get(key)
+    if (res) {
+      throw Error('Key already in use; try another key name')
+    } else {
+      if (typeof value == 'object') {
+        throw Error('Value needs to be stringified')
+      } else {
+        localStorage.setItem(key, value)
+      }
+    }
+  },
+  /**
+   *
+   * @param key This represent the name to the item to retrieve
+   * @returns item saved
+   */
+  get: (key: string) => {
+    const exists = localStorage.getItem(key)
+    if (exists) {
+      return exists
+    } else {
+      // throw Error('Key not found!')
+      console.log('Key not found!')
+    }
+  },
 }
