@@ -7,7 +7,7 @@ import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import type { AppProps } from 'next/app'
-import { SmartWallet, THIRDWEB_API_KEY, activeChain, siteMetadata } from '../utils/config'
+import { smartWalletInit, THIRDWEB_API_KEY, activeChain, siteMetadata } from '../utils/config'
 
 // Call `extendTheme` and pass your custom values
 const theme = extendTheme({
@@ -43,7 +43,7 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
               domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || 'creativeplatform.xyz',
             }}
             activeChain={activeChain}
-            supportedWallets={[SmartWallet]}
+            supportedWallets={[smartWalletInit]}
             clientId={THIRDWEB_API_KEY}>
             <Layout>
               <Component {...pageProps} />

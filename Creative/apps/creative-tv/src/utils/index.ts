@@ -21,6 +21,8 @@ export const salesClaimPhase = {
 
 export const waitInSecondsClaimConditionsOptions = {
   'Select period': '',
+  '5 mins': 60 * 5,
+  '15 mins': 60 * 15,
   '30 mins': 60 * 30,
   '1 hr': 60 * 60 * 1,
   '3 hrs': 60 * 60 * 3,

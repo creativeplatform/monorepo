@@ -1,9 +1,8 @@
-import { Flex, Image, Button, ButtonGroup, Card, Text, useToast } from '@chakra-ui/react'
+import { Button, ButtonGroup, Card, Flex, Image, Text, useToast } from '@chakra-ui/react'
+import { useAddress, useContract, useContractRead, useContractWrite, useOwnedNFTs } from '@thirdweb-dev/react'
 import { MdAutorenew, MdCancel } from 'react-icons/md'
-import { useAddress, useContract, useOwnedNFTs, useContractWrite, useContractRead } from '@thirdweb-dev/react'
-import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
+import { CREATIVE_ADDRESS, UNLOCK_PROTOCOL } from '../utils/config'
 import Unlock from '../utils/fetchers/Unlock.json'
-
 
 export type MemberCardProps = {
   member: any
@@ -15,23 +14,19 @@ const MemberCard = (props: MemberCardProps) => {
   const toast = useToast()
   const address = useAddress()
 
-  const { 
-      contract: unlockContract,
-      isLoading: loadingUnlockContract,
-      error: unlockContractError,
-    } = useContract(
-      LOCK_ADDRESS_MUMBAI_TESTNET.address, 
-      Unlock.abi
-    )
+  const {
+    contract: unlockContract,
+    isLoading: loadingUnlockContract,
+    error: unlockContractError,
+  } = useContract(UNLOCK_PROTOCOL.contracts.mumbai.address, Unlock.abi)
 
-  const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs( unlockContract, address)
+  const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(unlockContract, address)
 
   // SET PROPS
   const { nft, balance } = props
 
-
   // READ FROM CONTRACT
-  const { data: expirationDuration, isLoading: expirationLoading } = useContractRead(unlockContract, "expirationDuration");
+  const { data: expirationDuration, isLoading: expirationLoading } = useContractRead(unlockContract, 'expirationDuration')
 
   /****** WRITE TO CONTRACT *******/
 
@@ -85,7 +80,6 @@ const MemberCard = (props: MemberCardProps) => {
     }
   }
 
-
   return (
     <Card overflow={'hidden'} p={8} mb={4} alignItems="center" boxShadow="2xl">
       <Image src={`${nft?.metadata?.image}`} height={250} width={200} mb={4} />
@@ -94,25 +88,33 @@ const MemberCard = (props: MemberCardProps) => {
         <Text fontWeight={'bold'}>Qty: {balance}</Text>
       </Flex>
       <Flex justify={'space-between'} alignItems={'center'} direction={'row'} width="100%" mb={4}>
-        <Text fontWeight={'bold'}>Member No. { nft?.metadata?.id }</Text>
+        <Text fontWeight={'bold'}>Member No. {nft?.metadata?.id}</Text>
       </Flex>
       <Flex justifyContent={'center'} direction={'row'} mb={4}>
         <Text fontSize="xs">{nft?.metadata?.description}</Text>
       </Flex>
       <Flex justifyContent={'center'} direction={'column'} mb={4}>
-      <Text fontSize="xs">
-        Expires in {
-          expirationDuration
-          ? new Date(expirationDuration?.toNumber() * 1000).toISOString().slice(11, 16)
-          : "Loading..."
-        } hour(s).
-      </Text>
+        <Text fontSize="xs">
+          Expires in {expirationDuration ? new Date(expirationDuration?.toNumber() * 1000).toISOString().slice(11, 16) : 'Loading...'} hour(s).
+        </Text>
       </Flex>
       <ButtonGroup justifyContent={'center'}>
-        <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => {renew()}} isLoading={renewMembershipForIsLoading}>
+        <Button
+          colorScheme={'green'}
+          leftIcon={<MdAutorenew />}
+          onClick={() => {
+            renew()
+          }}
+          isLoading={renewMembershipForIsLoading}>
           RENEW
         </Button>
-        <Button colorScheme={'red'} leftIcon={<MdCancel />} onClick={() => {cancelMembership()}} isLoading={cancelAndRefundIsLoading}>
+        <Button
+          colorScheme={'red'}
+          leftIcon={<MdCancel />}
+          onClick={() => {
+            cancelMembership()
+          }}
+          isLoading={cancelAndRefundIsLoading}>
           CANCEL
         </Button>
       </ButtonGroup>
