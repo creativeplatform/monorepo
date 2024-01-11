@@ -3,10 +3,12 @@ import { Mumbai, Polygon } from '@thirdweb-dev/chains'
 import { embeddedWallet, metamaskWallet, smartWallet } from '@thirdweb-dev/react'
 import gql from 'graphql-tag'
 
-// Account Factory (MUMBAI)
-export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2bf'
-// FACTORY CONTRACT (POLYGON)
-export const ACCOUNT_FACTORY_POLYGON = ''
+export const ACCOUNT_FACTORY = {
+  polygon: {
+    mumbai: '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2bf', // Account Factory (MUMBAI)
+    mainnet: '', // FACTORY CONTRACT (POLYGON)
+  },
+}
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
@@ -26,7 +28,7 @@ const personalWallet =
       })
 
 export const smartWalletInit = smartWallet(personalWallet, {
-  factoryAddress: ACCOUNT_FACTORY_TESTNET,
+  factoryAddress: ACCOUNT_FACTORY.polygon.mumbai,
   gasless: true,
 })
 
@@ -3097,14 +3099,19 @@ export const METOKENS_DIAMOND_ABI = [
   },
 ]
 
-// DAI ADDRESS
-export const DAI = {
-  goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
-  mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-}
-
-// USDC ADDRESS
-export const tokenContractAddress = {
+export const erc20Token = {
+  TESTR: {
+    chain: {
+      polygon: {
+        mumbai: '0xc0823427fE72cFD105c71BEAd0476412283B07c5',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
   USDC: {
     chain: {
       polygon: {
@@ -3124,8 +3131,9 @@ export const tokenContractAddress = {
         mainnet: '',
       },
       ethereum: {
-        mainnet: '',
         sepolia: '',
+        goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
+        mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
       },
     },
   },
