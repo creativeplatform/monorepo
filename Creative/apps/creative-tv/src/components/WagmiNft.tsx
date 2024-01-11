@@ -2,15 +2,18 @@ import { Box, Button, Flex, IconButton, Stack, Text, useToast } from '@chakra-ui
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ConnectWallet, MediaRenderer, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
 import { ethers } from 'ethers'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { removeUnderScore } from 'utils/formatString'
+import { windowStorage } from '../utils'
 import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { SetClaimConditions } from './SetClaimConditions'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
+
+const edContractAddress = 'EditionDrop::ContractAddress'
 
 interface WagmiNftProps {
   assetId: string
@@ -39,12 +42,16 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const [deployError, setDeployError] = useState('')
   const [isDeploying, setIsDeploying] = useState(false)
   const [isMinting, setIsMinting] = useState(false)
-  const [lazyMintTxStatus, setLazyMintTxStatus] = useState('')
+  const [lazyMintTxStatus, setLazyMintTxStatus] = useState<number | undefined>(0)
+  const [isClaimConditionsSet, setClaimConditions] = useState<boolean | undefined>(false)
   const [lazyMintTxHash, setLazyMintTxHash] = useState('')
   const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [showMetadataDetails, setMetadataDetails] = useState(false)
 
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
+  const [isContractDeployed, setIsContractDeployed] = useState(false)
+
   const { contract: nftContract } = useContract(deployedContractAddress)
   const { data: contractMetadata, isLoading } = useMetadata(nftContract)
 
@@ -52,6 +59,15 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   // TODO: write hooks that prevents page
   // reload after contract is deployed
   /////////////////////////////////////////////
+  useEffect(() => {
+    const savedContractAddress = windowStorage.get(edContractAddress)
+    if (savedContractAddress) {
+      console.log('savedContractAddress:', deployedContractAddress)
+      setDeployedContractAddress(savedContractAddress)
+    }
+
+    return () => {}
+  }, [deployedContractAddress])
 
   // Getting asset and refreshing for the status
   const {
@@ -122,8 +138,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     // Is there an sdk found and is there a connect wallet address?
     if (!signer || !connectedAddress) return
 
-    // const sdk1 = thirdwebSDK('mumbai')
-    // const sdk = thirdwebSdkWithSigner(signer,'mumbai')
     const sdk = ThirdwebSDK.fromSigner(signer, 'mumbai', {
       clientId: THIRDWEB_API_KEY,
     })
@@ -152,6 +166,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
       })
 
       console.log('Contract deployed', contractAddress)
+      windowStorage.set({ key: edContractAddress, value: contractAddress })
+      setDeployedContractAddress(contractAddress)
+
       toast({
         title: 'Contract deployment',
         description: `Deployed successfully at: ${contractAddress}`,
@@ -159,7 +176,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         duration: 5000,
         isClosable: true,
       })
-      setDeployedContractAddress(contractAddress)
     } catch (err: any) {
       setIsDeploying(false)
 
@@ -216,27 +232,142 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
       console.log('nftAmount: %s, nftCID: %s', ethers.BigNumber.from(props.assetData.nFTAmountToMint), asset?.storage?.ipfs?.nftMetadata?.cid)
       // console.log('pricePerNNft: %s', asset?.storage?.ipfs?.spec?.nftMetadata.properties.pricePerNFT as any)
 
-      const lazyMintNftTx = await nftContract?.call('lazyMint', [
-        ethers.BigNumber.from(props.assetData.nFTAmountToMint),
-        asset?.storage?.ipfs?.nftMetadata?.cid,
-        0x0,
-      ])
+      // const lazyMintNftTx = await nftContract?.call('lazyMint', [
+      //   ethers.BigNumber.from(props.assetData.nFTAmountToMint),
+      //   asset?.storage?.ipfs?.nftMetadata?.cid,
+      //   '0x0',
+      // ])
 
-      if (!lazyMintNftTx.receipt) {
-        setIsMinting(false)
+      //  if (!lazyMintNftTx.receipt) {
+      //   setIsMinting(false)
+      // } else {
+      //   setLazyMintTxStatus(lazyMintNftTx.receipt.status)
+      //   setLazyMintTxHash(lazyMintNftTx.receipt.transactionHash)
+      // }
+      // console.log('[Minted: tx.receipt] ', lazyMintNftTx.receipt)
+
+      //  toast({
+      //   title: 'Lazy Minting',
+      //   description: `Minting was successfully with txHash: ${lazyMintNftTx.receipt.transactionHash}`,
+      //   status: 'success',
+      //   duration: 5000,
+      //   isClosable: true,
+      // })
+
+      // TODO: remove after debugging
+      /////////////////////////////////
+      // generate metadata object
+      ///////////////////////////
+
+      // const arr = []
+      // for(let i = 0; i < props.assetData.nFTAmountToMint!; i ++) {
+      //     arr.push()
+      // }
+
+      const nftMetadata = [
+        {
+          name: 'Your Collection #1',
+          description: 'Remember to replace this description',
+          image: 'ipfs://NewUriToReplace/1.png',
+          attributes: [
+            {
+              trait_type: 'Background',
+              value: 'Black',
+            },
+            {
+              trait_type: 'Eyeball',
+              value: 'White',
+            },
+            {
+              trait_type: 'Eye color',
+              value: 'Yellow',
+            },
+            {
+              trait_type: 'Iris',
+              value: 'Medium',
+            },
+            {
+              trait_type: 'Shine',
+              value: 'Shapes',
+            },
+            {
+              trait_type: 'Bottom lid',
+              value: 'Middle',
+            },
+            {
+              trait_type: 'Top lid',
+              value: 'High',
+            },
+          ],
+        },
+        {
+          name: 'Your Collection #2',
+          description: 'Remember to replace this description',
+          image: 'ipfs://NewUriToReplace/2.png',
+          attributes: [
+            {
+              trait_type: 'Background',
+              value: 'Black',
+            },
+            {
+              trait_type: 'Eyeball',
+              value: 'White',
+            },
+            {
+              trait_type: 'Eye color',
+              value: 'Red',
+            },
+            {
+              trait_type: 'Iris',
+              value: 'Small',
+            },
+            {
+              trait_type: 'Shine',
+              value: 'Shapes',
+            },
+            {
+              trait_type: 'Bottom lid',
+              value: 'Low',
+            },
+            {
+              trait_type: 'Top lid',
+              value: 'Middle',
+            },
+          ],
+        },
+      ]
+
+      let receipt: ethers.providers.TransactionReceipt
+      const lazyMint = await nftContract?.erc1155.lazyMint(nftMetadata)
+
+      if (lazyMint && lazyMint.length) {
+        receipt = lazyMint[0].receipt
+        setLazyMintTxStatus(receipt!.status)
+        setLazyMintTxHash(receipt.transactionHash)
+
+        console.log('[Minted: tx.receipt] ', receipt)
       } else {
-        setLazyMintTxStatus(lazyMintNftTx.receipt.status)
-        setLazyMintTxHash(lazyMintNftTx.receipt.transactionHash)
+        setIsMinting(false)
       }
 
-      console.log('[Minted: tx.receipt] ', lazyMintNftTx.receipt)
-
+      console.log('[Minted: tx.receipt] ', 'receipt')
       toast({
         title: 'Lazy Minting',
-        description: `Minting was successfully with txHash: ${lazyMintNftTx.receipt.transactionHash}`,
+        description: `Minting was successfully with txHash: ${lazyMintTxHash}`,
         status: 'success',
         duration: 5000,
         isClosable: true,
+      })
+
+      router.replace({
+        pathname: `profile/${encodeURIComponent(connectedAddress as any)}`,
+        hash: 'uploadedVideo',
+        // query: {
+        //   isClaimConditionSet: claimConditions?.receipt.status,
+        //   nftContractAddress: props.nftContractAddress,
+        //   contractMetadata: props.contractMetadata as any,
+        //   nftMetadata: props.nftMetadata as any,
+        // },
       })
     } catch (err: any) {
       console.error(err)
@@ -248,6 +379,58 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         title: 'NFT not minted',
         description: err.message,
         duration: 5000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const handleSetClaimCondition = async (formData: any): Promise<boolean | undefined> => {
+    const tokenId = 0
+    console.log('formData::setClaimCondition: ', formData)
+    // const [state, setState] = useState({
+    //   price: props.nftMetadata['properties']['pricePerNFT'], // The price of the token in the currency specified above
+    //   currencyAddress: '', // The address of the currency you want users to pay in
+    //   phaseName: '', // The name of the phase
+    //   maxClaimablePerWallet: '', // The maximum number of tokens a wallet can claim
+    //   maxClaimableSupply: '', // The total number of tokens that can be claimed in this phase
+    //   startTime: '', // When the phase starts (i.e. when users can start claiming tokens)
+    //   waitInSeconds: '',
+    // })
+
+    try {
+      const claimConditions = await nftContract?.erc1155.claimConditions.set(tokenId, [
+        {
+          startTime: formData.startTime, // When the phase starts (i.e. when users can start claiming tokens)
+          maxClaimableSupply: formData.maxClaimableSupply, // limit how many mints for this presale
+          price: formData.price, // presale price
+          currencyAddress: formData.currencyAddress, // The address of the currency you want users to pay in
+          maxClaimablePerWallet: formData.maxClaimablePerWallet, // The maximum number of tokens a wallet can claim
+          metadata: {
+            name: formData.phaseName, // Name of the sale's phase
+          },
+          waitInSeconds: formData.waitInSeconds, // How long a buyer waits before another purchase is possible
+        },
+      ])
+
+      console.log('claimConditions tx: ', claimConditions?.receipt)
+      setClaimConditions(Boolean(claimConditions?.receipt.status))
+      toast({
+        title: 'Set Claim Conditions',
+        description: `Status: ${claimConditions?.receipt.status}`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      return Number(claimConditions?.receipt.status) > 0
+    } catch (err) {
+      console.log('claimConditions txError: ', err)
+      setClaimConditions(false)
+      toast({
+        title: 'Set Claim Conditions',
+        description: `Status: 0`,
+        status: 'error',
+        duration: 3000,
         isClosable: true,
       })
     }
@@ -301,130 +484,126 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
             </>
           ) : null}
 
-          {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid ? (
-            <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-                <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} width="100%" alt={`${asset.name}`} />
-
-                <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Congrats, your asset was uploaded to IPFS.
-                </Text>
-
-                <Button
-                  width={160}
-                  className="show-details-button"
-                  my={4}
-                  onClick={() => setShowDetails(!showDetails)}
-                  style={{ backgroundColor: '#EC407A' }}>
-                  {showDetails ? 'Hide ' : 'Show '}Details
-                </Button>
-
-                <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                  <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
-                    Asset details:
-                  </Text>
-                  <Box style={{ lineHeight: 2.75 }}>
-                    <Text>
-                      Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
-                    </Text>
-                    <Text>
-                      Metadata CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.nftMetadata?.url ?? 'None'}</span>
-                    </Text>
-                  </Box>
-                </Box>
-              </Stack>
-
-              <ErrorBoundary fallback={<p>Failed to load...</p>}>
-                <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
-                  <br />
-                  <Button
-                    className="deploy-button"
-                    my={4}
-                    // as={motion.div}
-                    bgColor="#EC407A"
-                    isLoading={isDeploying}
-                    _hover={{ transform: isDeploying ? '' : 'scale(1.02)', cursor: isDeploying ? 'progress' : 'pointer' }}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      deployNftCollection?.() // Function to deploy edition drop contract
-                    }}
-                    // disabled={isDeploying}
-                  >
-                    {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
-                  </Button>
-
-                  {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>}
-                </Box>
-              </ErrorBoundary>
-            </>
-          ) : null}
-
-          {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
-            <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }}>
-                <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Contract deployed succesfully!
-                </Text>
-
-                <Button
-                  className="show-details-button"
-                  onClick={() => {
-                    setShowDetails(!showDetails)
-                  }}
-                  style={{ maxWidth: 240, margin: '12px 0', backgroundColor: '#EC407A', marginTop: 4 }}>
-                  {showDetails ? 'Hide ' : 'Show '}Contract MetaData
-                </Button>
-
-                <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                  <Flex direction={'column'} style={{ lineHeight: 2.75 }}>
-                    <Text>
-                      <span style={{ fontWeight: '700' }}>Contract Address: </span>
-                      <span>{nftContract.getAddress()}</span>
-                    </Text>
-                    {getContractMetaData()}
-                  </Flex>
-                </Box>
-              </Stack>
-
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }}>
-                <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  {lazyMintTxStatus ? 'NFT was lazy minted successfully!' : 'Time to lazy mint your NFTs!'}
-                </Text>
-
-                {lazyMintTxStatus ? (
-                  <p style={{ fontWeight: '500' }}>
-                    TxHash:{' '}
-                    <span style={{ cursor: lazyMintTxStatus && 'pointer' }} onClick={handleCopyString}>
-                      {lazyMintTxHash}
-                    </span>
-                    <IconButton aria-label="Copy to clipboard" icon={<HiOutlineClipboardCopy />} onClick={handleCopyString} />
-                  </p>
-                ) : (
-                  <Button
-                    onClick={lazyMintNFT}
-                    disabled={isMinting}
-                    isLoading={isMinting}
-                    _hover={{ cursor: isMinting ? 'progress' : 'pointer' }}
-                    style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}>
-                    {isMinting ? 'Lazy Minting...' : 'Lazy Mint NFT'}
-                  </Button>
-                )}
-              </Stack>
-            </>
-          )}
-
-          {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && lazyMintTxStatus && (
+          {asset?.storage?.ipfs?.cid && (
             <Stack spacing="20px" my={12} style={{ border: '1px solid #aeaeae', padding: 24 }}>
               <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                Set conditions for the sale/claim of your NFT(s)
+                Congrats, your asset was uploaded to IPFS.
               </Text>
 
-              <SetClaimConditions
-                nftContractAddress={nftContract.getAddress()}
-                nftMetadata={asset?.storage?.ipfs?.spec?.nftMetadata as any}
-                contractMetadata={contractMetadata as any}
-              />
+              <Button
+                width={160}
+                className="show-details-button"
+                my={4}
+                onClick={() => setShowDetails(!showDetails)}
+                style={{ backgroundColor: '#EC407A' }}>
+                {showDetails ? 'Hide ' : 'Show '}Details
+              </Button>
+
+              <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
+                <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
+                  Asset details:
+                </Text>
+                <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} width="100%" alt={`${asset.name}`} />
+                <Box style={{ lineHeight: 2.75 }}>
+                  <Text>
+                    Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
+                  </Text>
+                  <Text>
+                    Metadata CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.nftMetadata?.url ?? 'None'}</span>
+                  </Text>
+                </Box>
+              </Box>
+            </Stack>
+          )}
+
+          <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
+            {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid && (
+              <ErrorBoundary fallback={<p>Failed to load...</p>}>
+                <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
+                <br />
+                <Button
+                  className="deploy-button"
+                  my={4}
+                  // as={motion.div}
+                  bgColor="#EC407A"
+                  isLoading={isDeploying}
+                  _hover={{ transform: isDeploying ? '' : 'scale(1.02)', cursor: isDeploying ? 'progress' : 'pointer' }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    deployNftCollection?.() // Function to deploy edition drop contract
+                  }}>
+                  {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
+                </Button>
+
+                {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>}
+              </ErrorBoundary>
+            )}
+
+            {isContractDeployed && asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
+              <>
+                <Stack spacing="20px">
+                  <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+                    Contract deployed succesfully!
+                  </Text>
+
+                  <Button
+                    className="show-details-button"
+                    onClick={() => {
+                      setMetadataDetails(!showMetadataDetails)
+                    }}
+                    style={{ maxWidth: 240, margin: '12px 0', backgroundColor: '#EC407A', marginTop: 4 }}>
+                    {showMetadataDetails ? 'Hide ' : 'Show '}Contract MetaData
+                  </Button>
+
+                  <Box my={8} style={{ display: showMetadataDetails ? 'block' : 'none' }}>
+                    <Flex direction={'column'} style={{ lineHeight: 2.75 }}>
+                      <Text>
+                        <span style={{ fontWeight: '700' }}>Contract Address: </span>
+                        <span>{nftContract.getAddress()}</span>
+                      </Text>
+                      {getContractMetaData()}
+                    </Flex>
+                  </Box>
+                </Stack>
+              </>
+            )}
+          </Box>
+
+          {isContractDeployed && asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
+            <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }}>
+              <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+                {lazyMintTxStatus ? 'NFT was lazy minted successfully!' : 'Time to lazy mint your NFTs!'}
+              </Text>
+
+              {lazyMintTxStatus ? (
+                <p style={{ fontWeight: '500' }}>
+                  TxHash:{' '}
+                  <span style={{ cursor: 'pointer' }} onClick={handleCopyString}>
+                    {lazyMintTxHash}
+                  </span>
+                  <IconButton aria-label="Copy to clipboard" icon={<HiOutlineClipboardCopy />} onClick={handleCopyString} />
+                </p>
+              ) : (
+                <Button
+                  onClick={lazyMintNFT}
+                  isLoading={isMinting}
+                  _hover={{ cursor: isMinting ? 'progress' : 'pointer' }}
+                  style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}>
+                  {isMinting ? 'Lazy Minting...' : 'Lazy Mint NFT'}
+                </Button>
+              )}
+            </Stack>
+          )}
+
+          {isContractDeployed && asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
+            <Stack spacing="20px" my={12} style={{ border: '1px solid #aeaeae', padding: 24 }}>
+              {isClaimConditionsSet ? (
+                <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+                  Claim conditions was successfully set!
+                </Text>
+              ) : (
+                <SetClaimConditions handleSetClaimCondition={handleSetClaimCondition} nftMetadata={asset?.storage?.ipfs?.spec?.nftMetadata as any} />
+              )}
             </Stack>
           )}
         </>
