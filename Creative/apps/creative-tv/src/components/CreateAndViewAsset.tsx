@@ -21,7 +21,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { IAssetData } from '../utils/typings/types'
+import { IAssetData } from '../utils/types'
 import { VideoPreview } from './videoPreview'
 
 export interface MintDetail {

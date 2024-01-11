@@ -1,10 +1,8 @@
 import { Box, Button, FormControl, FormHelperText, FormLabel, Input, Select, Stack, Text, VStack, useToast } from '@chakra-ui/react'
-import { useAddress, useContract } from '@thirdweb-dev/react'
-import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { salesClaimPhase, waitInSecondsClaimConditionsOptions } from 'utils'
-import { tokenContractAddress } from 'utils/config'
+import { erc20Token } from 'utils/config'
 
 type ClaimFormData = {
   price?: string
@@ -17,40 +15,22 @@ type ClaimFormData = {
 }
 
 type SetClaimConditionsProps = {
-  nftContractAddress: string
+  nftContractAddress?: string
   nftMetadata: Record<string, any>
-  contractMetadata: string
+  contractMetadata?: string
+  handleSetClaimCondition: (data: any) => Promise<boolean | undefined>
 }
 
-const tokenContractAcceptedForPayments = [{ usdc: tokenContractAddress.USDC.chain.polygon.mumbai }] // The tokens accepted for payment by the buyer
+const tokenContractAcceptedForPayments = [{ usdc: erc20Token.USDC.chain.polygon.mumbai }] // The tokens accepted for payment by the buyer
 
 //
 export function SetClaimConditions(props: SetClaimConditionsProps) {
-  let tokenId = 1
-  const connectedAddress = useAddress()
-  const router = useRouter()
-  const { contract: nftContract } = useContract(props.nftContractAddress)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
-
   const toast = useToast()
-  console.log('props 101: ', props)
 
-  // const [state, setState] = useState({
-  //   price: props.nftMetadata['properties']['pricePerNFT'], // The price of the token in the currency specified above
-  //   currencyAddress: '', // The address of the currency you want users to pay in
-  //   phaseName: '', // The name of the phase
-  //   maxClaimablePerWallet: '', // The maximum number of tokens a wallet can claim
-  //   maxClaimableSupply: '', // The total number of tokens that can be claimed in this phase
-  //   startTime: '', // When the phase starts (i.e. when users can start claiming tokens)
-  //   waitInSeconds: '',
-  // })
-
-  // const handleChange = (e: any) => {
-  //   const name = e.target.name
-  //   setState({ ...state, [name]: e.target.value })
-  // }
+  console.log('SetClaimConditions::props: ', props)
 
   const handleClaimConditions: SubmitHandler<ClaimFormData> = async (data) => {
     const { errors } = formState
@@ -76,41 +56,10 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
 
     try {
       setIsSubmitting(true)
-      console.log('form data: ', formData)
-  
-      const claimConditions = await nftContract?.erc1155.claimConditions.set(tokenId, [
-        {
-          startTime: formData.startTime, // When the phase starts (i.e. when users can start claiming tokens)
-          maxClaimableSupply: formData.maxClaimableSupply, // limit how many mints for this presale
-          price: formData.price, // presale price
-          currencyAddress: formData.currencyAddress, // The address of the currency you want users to pay in
-          maxClaimablePerWallet: formData.maxClaimablePerWallet, // The maximum number of tokens a wallet can claim
-          metadata: {
-            name: formData.phaseName, // Name of the sale's phase
-          },
-          waitInSeconds: formData.waitInSeconds, // How long a buyer waits before another purchase is possible
-        },
-      ])
-
-      console.log('claimConditions tx: ', claimConditions?.receipt)
-      toast({
-        title: 'Set Claim Conditions',
-        description: `Status: ${claimConditions?.receipt.status}`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
-
-      router.replace({
-        pathname: `profile/${encodeURIComponent(connectedAddress as any)}`,
-        hash: 'uploadedVideo',
-        query: {
-          isClaimConditionSet: claimConditions?.receipt.status,
-          nftContractAddress: props.nftContractAddress,
-          contractMetadata: props.contractMetadata as any,
-          nftMetadata: props.nftMetadata as any,
-        },
-      })
+      const ans = await props.handleSetClaimCondition(formData)
+      if (ans) {
+        setIsSubmitting(false)
+      }
     } catch (err: any) {
       setIsSubmitting(false)
       console.error(err)
@@ -126,8 +75,8 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
 
   return (
     <Box>
-      <Text as={'h3'} style={{ paddingTop: '12px', paddingBottom: '24px', fontSize: 24 }}>
-        Set Claim Conditions
+      <Text as={'h4'} style={{ paddingTop: '12px', paddingBottom: '42px', fontSize: 24 }}>
+        Set conditions for the sale/claim of your NFT(s)
       </Text>
       <form onSubmit={handleSubmit(handleClaimConditions)} id="setClaimCondtion">
         <FormControl mb={8} style={{ color: '#ccc' }}>
@@ -197,7 +146,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                     {...register('currencyAddress')}
                     aria-invalid={formState.errors.currencyAddress ? 'true' : 'false'}>
                     <option value="">Select currency</option>
-                    <option value={tokenContractAddress.USDC.chain.polygon.mumbai}>USDC</option>
+                    <option value={erc20Token.USDC.chain.polygon.mumbai}>USDC</option>
                   </Select>
                 )}
               />
@@ -295,7 +244,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
             // cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
           }}
           style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}
-          isLoading={isSubmitting}
+          // isLoading={isSubmitting}
           mb={20}>
           Set Conditions
         </Button>
