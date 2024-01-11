@@ -1,6 +1,6 @@
 import { ThemingProps, extendTheme } from '@chakra-ui/react'
 import { Mumbai, Polygon } from '@thirdweb-dev/chains'
-import { embeddedWallet, smartWallet } from '@thirdweb-dev/react'
+import { embeddedWallet, metamaskWallet, smartWallet } from '@thirdweb-dev/react'
 import gql from 'graphql-tag'
 
 // Account Factory (MUMBAI)
@@ -15,17 +15,22 @@ export const ACCOUNT_FACTORY_POLYGON = ''
 export const activeChain = 'mumbai' // TODO: revert chain back to the top commented option
 
 // Setup the Smart Wallet configuration
-const personalWallet = embeddedWallet({
-  auth: {
-    options: ['email', 'google', 'apple', 'facebook'],
-  },
-})
 
-export const SmartWallet = smartWallet(personalWallet, {
+const personalWallet =
+  process.env.NODE_ENV !== 'production'
+    ? metamaskWallet() // set Metamask wallet for development purpose only
+    : embeddedWallet({
+        auth: {
+          options: ['email', 'google', 'apple', 'facebook'],
+        },
+      })
+
+export const smartWalletInit = smartWallet(personalWallet, {
   factoryAddress: ACCOUNT_FACTORY_TESTNET,
   gasless: true,
 })
 
+// refactor site metadata
 export const siteMetadata = {
   NAME: 'CREATIVE TV',
   DESCRIPTION: 'The way content should be.',
@@ -116,35 +121,38 @@ export const EPISODE_DROP_ADDRESS = {
   testnet: '0xE675e85ccf7b8ADB2E466fc06662319628B75a9F',
 }
 
-// Unlock Contracts (POLYGON)
-export const LOCK_ADDRESS_CREATIVE_TV = {
-  creator: '0xb9c69af58109927cc2dcce8043f82158f7b96ca7',
-  fan: '0xe174caa294999ec622988242641a27c11e6c22d8',
-  brand: '0xb311afe316b004dbf569381ae174eaa897b757f6',
-}
-
-// Unlock Contracts (MUMBAI)
-export const LOCK_ADDRESS_MUMBAI_TESTNET = {
-  address: '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
-  rpc_url: 'mumbai.rpc.thirdweb.com',
-  chainId: '80001',
-  symbol: 'MATIC',
+// All configs related to Unlock Protocol
+export const UNLOCK_PROTOCOL = {
+  contracts: {
+    mumbai: {
+      // Unlock Contracts (MUMBAI)
+      address: '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
+      rpc_url: 'mumbai.rpc.thirdweb.com',
+      chainId: '80001',
+      symbol: 'MATIC',
+    },
+    polygon: {
+      // Unlock Contracts (POLYGON)
+      creator: '0xb9c69af58109927cc2dcce8043f82158f7b96ca7',
+      fan: '0xe174caa294999ec622988242641a27c11e6c22d8',
+      brand: '0xb311afe316b004dbf569381ae174eaa897b757f6',
+    },
+  },
+  apiUrl: 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2',
+  queryHoldsKey: gql`
+    query keysForLock($lockAddresses: [String!]!, $walletAddress: String!) {
+      keys(where: { lock_in: $lockAddresses, owner: $walletAddress }) {
+        id
+        owner
+        expiration
+        cancelled
+      }
+    }
+  `,
 }
 
 // CREATIVE ADDRESS
 export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
-
-export const UNLOCK_API_URL = 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
-export const UNLOCK_QUERY_HOLDS_KEY = gql`
-  query keysForLock($lockAddresses: [String!]!, $walletAddress: String!) {
-    keys(where: { lock_in: $lockAddresses, owner: $walletAddress }) {
-      id
-      owner
-      expiration
-      cancelled
-    }
-  }
-`
 
 // Livepeer API
 export const LIVEPEER_API_URL = 'https://livepeer.com/api'
