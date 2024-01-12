@@ -1,8 +1,7 @@
 import { Box, Button, FormControl, FormHelperText, FormLabel, Input, Select, Stack, Text, VStack, useToast } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { salesClaimPhase, waitInSecondsClaimConditionsOptions } from 'utils'
-import { erc20Token } from 'utils/config'
+import { claimConditions } from 'utils/helpers'
 
 type ClaimFormData = {
   price?: string
@@ -20,8 +19,6 @@ type SetClaimConditionsProps = {
   contractMetadata?: string
   handleSetClaimCondition: (data: any) => Promise<boolean | undefined>
 }
-
-const tokenContractAcceptedForPayments = [{ usdc: erc20Token.USDC.chain.polygon.mumbai }] // The tokens accepted for payment by the buyer
 
 //
 export function SetClaimConditions(props: SetClaimConditionsProps) {
@@ -50,6 +47,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
 
     const formData = {
       ...data,
+      maxClaimableSupply: props.nftMetadata?.properties?.nFTAmountToMint,
       startTime: new Date(data.startTime).getTime(),
       price: props.nftMetadata['properties']['pricePerNFT'],
     }
@@ -81,8 +79,9 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
       <form onSubmit={handleSubmit(handleClaimConditions)} id="setClaimCondtion">
         <FormControl mb={8} style={{ color: '#ccc' }}>
           <Stack direction={'row'} spacing={24} mb={12}>
+            {/*
             <VStack>
-              <FormLabel>Name of Phase</FormLabel>
+               <FormLabel>Name of Phase</FormLabel>
               <Controller
                 name="phaseName"
                 control={ctrl}
@@ -94,8 +93,8 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                     size={'lg'}
                     {...register('phaseName')}
                     aria-invalid={formState.errors.phaseName ? 'true' : 'false'}>
-                    {Object.keys(salesClaimPhase).map((phase, i) => (
-                      <option key={i} value={Object.values(salesClaimPhase)[i]}>
+                    {Object.keys(claimConditions.phase).map((phase, i) => (
+                      <option key={i} value={Object.values(claimConditions.phase)[i]}>
                         {phase}
                       </option>
                     ))}
@@ -107,7 +106,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                   Select a name for the phase of sales.
                 </FormHelperText>
               )}
-            </VStack>
+            </VStack> */}
             <VStack>
               <FormLabel>Start time of Phase</FormLabel>
               <Controller
@@ -146,7 +145,11 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                     {...register('currencyAddress')}
                     aria-invalid={formState.errors.currencyAddress ? 'true' : 'false'}>
                     <option value="">Select currency</option>
-                    <option value={erc20Token.USDC.chain.polygon.mumbai}>USDC</option>
+                    {Object.keys(claimConditions.currency).map((c, i) => (
+                      <option key={i} value={Object.values(claimConditions.currency)[i]}>
+                        {c}
+                      </option>
+                    ))}
                   </Select>
                 )}
               />
@@ -167,8 +170,8 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                 rules={{ required: true }}
                 render={({ field }) => (
                   <Select placeholder="" size={'lg'} {...register('waitInSeconds')} aria-invalid={formState.errors.waitInSeconds ? 'true' : 'false'}>
-                    {Object.keys(waitInSecondsClaimConditionsOptions).map((time, i) => (
-                      <option key={i} value={Object.values(waitInSecondsClaimConditionsOptions)[i]}>
+                    {Object.keys(claimConditions.waitInSecondsOptions).map((time, i) => (
+                      <option key={i} value={Object.values(claimConditions.waitInSecondsOptions)[i]}>
                         {time}
                       </option>
                     ))}
@@ -181,7 +184,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                 </FormHelperText>
               )}
             </VStack>
-            <VStack>
+            {/* <VStack>
               <FormLabel mt={4}>The number of tokens to be claimed in this phase</FormLabel>
               <Controller
                 name="maxClaimableSupply"
@@ -204,7 +207,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                   Enter numbers of nft for sale.
                 </FormHelperText>
               )}
-            </VStack>
+            </VStack> */}
 
             <VStack>
               <FormLabel>Maximum purchase per Wallet </FormLabel>
@@ -237,14 +240,12 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
 
         <Button
           type="submit"
-          className="setClaim-button"
           _hover={{
             color: 'gray.300',
-            // transform: isError && 'scale(1.015)',
-            // cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
+            cursor: isSubmitting ? 'progress' : 'pointer',
           }}
           style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}
-          // isLoading={isSubmitting}
+          isLoading={isSubmitting}
           mb={20}>
           Set Conditions
         </Button>
