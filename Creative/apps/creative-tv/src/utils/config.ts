@@ -4468,7 +4468,8 @@ export const LENS_CONTRACT_ABI = [
   },
 ]
 
-export const NAME_OF_SAVE_CONTRACT_ADDRESS = 'JONDOE' // The name used to save the deployed contract address to localStorage or remote Server.
+
+export const NAME_OF_SAVED_CONTRACT_ADDRESS = 'JOHN_DOE' // The name used to save the deployed contract address to localStorage or remote Server.
 export const DEV_ENVIRONMENT = {
   prod: 'production',
   dev: 'development',
