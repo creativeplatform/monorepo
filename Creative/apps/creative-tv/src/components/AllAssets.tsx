@@ -25,7 +25,7 @@ import { useAddress } from '@thirdweb-dev/react'
 import { motion } from 'framer-motion'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { useRouter } from 'next/router'
-import { siteMetadata  } from 'utils/config'
+import { siteMetadata } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 import { AssetData } from 'utils/fetchers/assets'
 // import { Discussion } from "@orbisclub/components";
@@ -128,6 +128,7 @@ export default function AllAssets() {
                     </Text>
                   </HStack>
                   <Text>
+                    {/* {video.storage?.ipfs.spec.nftMetadata.description} */}
                     With Creative TV, we wanted to sync the speed of creation with the speed of design. We wanted the creator to be just as excited as
                     the designer to create new content.
                   </Text>
@@ -166,7 +167,7 @@ export default function AllAssets() {
                         backgroundColor={'#EC407A'}
                         onClick={() =>
                           router.push({
-                            pathname: `discover/mint-video-nft`,
+                            pathname: `discover/mint-nft`,
                             query: {
                               assetData: JSON.stringify(video),
                             },

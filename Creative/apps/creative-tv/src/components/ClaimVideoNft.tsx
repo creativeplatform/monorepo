@@ -4,8 +4,8 @@ import { useAddress, useContract, useContractMetadata, useSigner } from '@thirdw
 import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { thirdwebSDK } from '../utils'
 import { erc20Token } from '../utils/config'
+import { thirdwebSDK } from '../utils/helpers'
 import { IAssetData, IReturnedAssetData } from '../utils/types'
 
 // Milestone
@@ -43,7 +43,7 @@ export const NFT_CONTRACT_ADDRESS: string = '0xd5f81Ab154fD12A9f99Eb819aC3dFdA91
 export const tokenId = 1
 
 interface AssetData extends IAssetData {
-  storage: {
+  storage?: {
     ipfs: {
       cid: string
       spec: {
@@ -110,9 +110,9 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   const { data: nftContract } = useContract(NFT_CONTRACT_ADDRESS)
 
   const { data: contractMetadata } = useContractMetadata(nftContract)
-  // console.log('contractMetadata: ', contractMetadata)
 
   useEffect(() => {
+ 
     // set price of nft
     setPriceOfNft(Number(props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT))
     // console.log('assetData', props.assetData);
@@ -125,15 +125,17 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
 
         if (allClaimCondition?.length) {
           console.log('allClaimCondition: ', allClaimCondition)
+
           setIsActiveClaimConditionLoading(true)
           setClaimConditions([...allClaimCondition])
           setActiveClaimCondition(allClaimCondition as any) // TODO: delete this out
         } else {
           setClaimConditions([])
           setIsActiveClaimConditionLoading(false)
+          
           console.log('allClaimCondition: ', allClaimCondition || 'No conditions')
         }
-        // http://localhost:3000/profile/0x2776193725Acce9Ede4dD549b81a18Bd3B65173C/upload
+ 
 
         // ActiveClaimConditions
         // const activeClaimCondition = await nftContract?.erc1155.claimConditions.getActive(tokenId)
@@ -152,15 +154,16 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           connectedAddress
         )
 
-        if (claimIneligibilityReasons?.length) {
-          setClaimIneligibilityReasons(claimIneligibilityReasons)
-          setIsClaimIneligibilityReasonsLoading(true)
-          console.log('claimIneligibilityReasons: ', claimIneligibilityReasons || 'no claimIneligibilityReasons')
-        } else {
-          setIsClaimIneligibilityReasonsLoading(false)
-        }
+        // if (claimIneligibilityReasons?.length) {
+        //   setClaimIneligibilityReasons(claimIneligibilityReasons)
+        //   setIsClaimIneligibilityReasonsLoading(true)
+        //   console.log('claimIneligibilityReasons: ', claimIneligibilityReasons || 'no claimIneligibilityReasons')
+        // } else {
+        //   setIsClaimIneligibilityReasonsLoading(false)
+        // }
+
         // ClaimerProof
-        const claimerProofs = await nftContract?.erc1155.claimConditions.getClaimerProofs(tokenId, connectedAddress || '')
+        // const claimerProofs = await nftContract?.erc1155.claimConditions.getClaimerProofs(tokenId, connectedAddress || '')
         // console.log('claimerProofs: ', claimerProofs || 'no claimerProofs')
 
         // SupplyClaimedByWallet
@@ -168,8 +171,8 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         // console.log('supplyClaimedByWallet: ', supplyClaimedByWallet || 'no supplyClaimedByWallet')
 
         // claimedSupply
-        const claimedSupply = await nftContract?.erc1155.totalCirculatingSupply(tokenId)
-        setClaimedSupply(claimedSupply)
+        // const claimedSupply = await nftContract?.erc1155.totalCirculatingSupply(tokenId)
+        // setClaimedSupply(claimedSupply)
         // console.log('claimedSupply: ', claimedSupply?.toString() || 'no claimedSupply')
       } catch (err: any) {
         console.error('ERROR 101: ', err)
@@ -202,12 +205,12 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   }, [totalAvailableSupply, claimedSupply])
 
   const priceToMint = useMemo(() => {
-    const bnPrice = ethers.BigNumber.from(activeClaimCondition?.currencyMetadata.value || 0)
+    const bnPrice = ethers.BigNumber.from(activeClaimCondition?.currencyMetadata?.value || 0)
 
     return `${ethers.utils.formatUnits(
       bnPrice.mul(qtyOfNftToMint).toString(),
-      activeClaimCondition?.currencyMetadata.decimals || 18
-    )} ${activeClaimCondition?.currencyMetadata.symbol}`
+      activeClaimCondition?.currencyMetadata?.decimals || 18
+    )} ${activeClaimCondition?.currencyMetadata?.symbol}`
   }, [
     activeClaimCondition?.currencyMetadata?.decimals,
     activeClaimCondition?.currencyMetadata?.symbol,
@@ -306,7 +309,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
     }
 
     return 'Claiming not available'
-  }, [isNftSoldOut, canClaim, activeClaimCondition?.currencyMetadata.value, priceToMint, qtyOfNftToMint])
+  }, [isNftSoldOut, canClaim, activeClaimCondition?.currencyMetadata?.value, priceToMint, qtyOfNftToMint])
 
   async function estimateGasCostOfTxn(): Promise<number> {
     // This function estimates the cost of txn in nativeTokenBalance
@@ -535,7 +538,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
               controls={{ autohide: 500, hotkeys: false }}
               aspectRatio="16to9"
               showPipButton
-              autoUrlUpload={{ fallback: true, ipfsGateway: props.assetData.storage.ipfs.gatewayUrl }}
+              autoUrlUpload={{ fallback: true, ipfsGateway: props.assetData.storage?.ipfs.gatewayUrl }}
               theme={{
                 borderStyles: {
                   containerBorderStyle: 'solid',
