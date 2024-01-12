@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import { assetData } from './assets';
+import { AssetData } from './assets';
 
 export const videoApi = axios.create({
     baseURL: 'https://livepeer.studio/api/data/views/query/total/',
@@ -11,7 +11,7 @@ export const videoApi = axios.create({
   })
 
 export const fetchVideoViews = async (playbackId: string) => {
-    const response = await videoApi.get<assetData['views']>(`${playbackId}`);
+    const response = await videoApi.get<AssetData['views']>(`${playbackId}`);
     try {
         return response.data;
     } catch (error) {

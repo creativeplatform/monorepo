@@ -17,7 +17,6 @@ export const ACCOUNT_FACTORY = {
 export const activeChain = 'mumbai' // TODO: revert chain back to the top commented option
 
 // Setup the Smart Wallet configuration
-
 const personalWallet =
   process.env.NODE_ENV !== 'production'
     ? metamaskWallet() // set Metamask wallet for development purpose only
@@ -43,9 +42,10 @@ export const siteMetadata = {
   LOGO_URL: 'https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif',
 }
 
+export const THIRDWEB_AUTH_PRIVATE_KEY = process.env.THIRDWEB_AUTH_PRIVATE_KEY // for Thiredweb Auth
 export const THIRDWEB_API_SECRET = process.env.THIRDWEB_API_SECRET // for backend access
 export const DEV_TESTNET_PRIVATE_KEY = process.env.DEV_TESTNET_PRIVATE_KEY // dev private key
-
+export const NEXT_PUBLIC_AUTH_DOMAIN = process.env.NEXT_PUBLIC_AUTH_DOMAIN
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
@@ -4467,3 +4467,10 @@ export const LENS_CONTRACT_ABI = [
     type: 'function',
   },
 ]
+
+export const NAME_OF_SAVE_CONTRACT_ADDRESS = 'JONDOE' // The name used to save the deployed contract address to localStorage or remote Server.
+export const DEV_ENVIRONMENT = {
+  prod: 'production',
+  dev: 'development',
+  test: 'test',
+}
