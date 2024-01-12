@@ -1,26 +1,25 @@
-import React from 'react'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from 'utils/config'
 import { DefaultSeo } from 'next-seo'
+import {   SOCIAL_TWITTER, siteMetadata } from 'utils/config'
 
 export function Seo() {
-  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : siteMetadata.URL
 
   return (
     <DefaultSeo
-      title={SITE_NAME}
-      defaultTitle={SITE_NAME}
-      titleTemplate={`%s | ${SITE_NAME}`}
-      description={SITE_DESCRIPTION}
+      title={siteMetadata.NAME}
+      defaultTitle={siteMetadata.NAME}
+      titleTemplate={`%s | ${siteMetadata.NAME}`}
+      description={siteMetadata.DESCRIPTION}
       defaultOpenGraphImageWidth={1200}
       defaultOpenGraphImageHeight={630}
       openGraph={{
         type: 'website',
-        siteName: SITE_NAME,
+        siteName: siteMetadata.NAME,
         url: origin,
         images: [
           {
             url: `${origin}/og.png`,
-            alt: `${SITE_NAME} Open Graph Image`,
+            alt: `${siteMetadata.NAME} Open Graph Image`,
           },
         ],
       }}

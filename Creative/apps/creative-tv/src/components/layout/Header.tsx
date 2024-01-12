@@ -51,7 +51,8 @@ import { AiOutlineMenu } from 'react-icons/ai'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import { UNLOCK_PROTOCOL, siteMetadata } from '../../utils/config'
+import { windowStorage } from 'utils/helpers'
+import { DEV_ENVIRONMENT, UNLOCK_PROTOCOL, siteMetadata } from '../../utils/config'
 import Unlock from '../../utils/fetchers/Unlock.json'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
@@ -74,8 +75,8 @@ export function Header({ className, handleLoading }: Props) {
   const metamaskLogin = useWallet('metamask')
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') {
-      // TODO: run this code only in development
+    // Init wallet base on working environment
+    if (process.env.NODE_ENV !== DEV_ENVIRONMENT.prod) {
       const getMetaMaskAddress = async () => {
         if (metamaskLogin) {
           const meta = await metamaskLogin?.getAddress()
@@ -89,7 +90,7 @@ export function Header({ className, handleLoading }: Props) {
         if (emailLogin) {
           const email = await emailLogin.getEmail()
           // Use the email address here
-          console.log(email)
+          console.log('email: ', email)
           return email
         }
       }
@@ -107,10 +108,7 @@ export function Header({ className, handleLoading }: Props) {
   useEffect(() => {
     if (!address || !sdkSigner || !Unlock.abi) return
     const getSubscribedData = async () => {
-      const unlockContract = await sdkSigner?.getContractFromAbi(
-        UNLOCK_PROTOCOL.contracts.mumbai.address,
-        Unlock.abi
-      )
+      const unlockContract = await sdkSigner?.getContractFromAbi(UNLOCK_PROTOCOL.contracts.mumbai.address, Unlock.abi)
       return await unlockContract?.call(
         'getHasValidKey', // Name of your function as it is on the smart contract
         // Arguments to your function, in the same order they are on your smart contract

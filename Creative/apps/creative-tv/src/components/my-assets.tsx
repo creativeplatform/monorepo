@@ -5,10 +5,9 @@ import { useAddress } from '@thirdweb-dev/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { parseTimestampToDate } from '../utils'
 import { CREATIVE_LOGO_WHT } from '../utils/context'
 import { AssetData } from '../utils/fetchers/assets'
-import { titleCase } from '../utils/formatString'
+import { parseTimestampToDate, formatString } from '../utils/helpers'
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
@@ -72,7 +71,7 @@ export default function MyAssets(props: MyAssetsProps) {
                 <Tr key={i}>
                   <Td>
                     <Link as={NextLink} href={`${connectedAddress}/${video.id}?video=${JSON.stringify(video)}`}>
-                      {titleCase(video.name)}
+                      {formatString.titleCase(video.name)}
                     </Link>
                   </Td>
                   <Td>{parseTimestampToDate(video.createdAt as any)}</Td>

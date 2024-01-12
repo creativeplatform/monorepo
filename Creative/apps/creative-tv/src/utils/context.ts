@@ -1,4 +1,4 @@
-import { SITE_NAME } from './config'
+import {siteMetadata,  } from './config'
 
 // CREATIVE TV
 // ===========
@@ -23,7 +23,7 @@ export const HERO_NAME = {
   bottom: 'Use Everywhere!',
 }
 
-export const HERO_DESCRIPTION = `${SITE_NAME} is a decentralized live streaming platform that puts you in control of your content and earnings. Get paid 100% of streaming revenue, have access to your own social token, and monetize your content into NFTs.`
+export const HERO_DESCRIPTION = `${siteMetadata.NAME} is a decentralized live streaming platform that puts you in control of your content and earnings. Get paid 100% of streaming revenue, have access to your own social token, and monetize your content into NFTs.`
 
 export const HERO_BUTTONS = {
   primary: { text: 'Get Started', href: 'https://app.unlock-protocol.com/checkout?id=bbbcff5f-835d-4fa3-9761-988d5da9da18' },

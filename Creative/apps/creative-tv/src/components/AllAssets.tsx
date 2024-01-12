@@ -25,7 +25,7 @@ import { useAddress } from '@thirdweb-dev/react'
 import { motion } from 'framer-motion'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { useRouter } from 'next/router'
-import { SITE_LOGO } from 'utils/config'
+import { siteMetadata  } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 import { AssetData } from 'utils/fetchers/assets'
 // import { Discussion } from "@orbisclub/components";
@@ -75,7 +75,7 @@ export default function AllAssets() {
               <CardHeader>
                 <Flex>
                   <Flex flex={1} gap={4} align="center" flexWrap={'wrap'}>
-                    <Avatar name="creative" src={SITE_LOGO} />
+                    <Avatar name="creative" src={siteMetadata.LOGO} />
                     <Box>
                       <Heading size="sm">thecreative.eth</Heading>
                       <Text>Creator</Text>
