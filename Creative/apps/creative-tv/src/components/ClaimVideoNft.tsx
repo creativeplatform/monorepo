@@ -324,7 +324,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
       const prepareTxn = await nftContract?.erc1155.claim.prepare(tokenId, qtyOfNftToMint, {
         currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
         checkERC20Allowance: true,
-        pricePerToken: props.assetData.storage.ipfs.spec.nftMetadata.properties.pricePerNFT,
+        pricePerToken: props?.assetData?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT,
       })
       const estimateTxnCost = await prepareTxn?.estimateGasCost()
 
@@ -368,7 +368,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
     const claimConditionInput = {
       startTime: new Date(),
       currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
-      price: props.assetData.storage.ipfs.spec.nftMetadata.properties.pricePerNFT,
+      price: props?.assetData?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT,
       snapshot: [{ address: String(connectedAddress), maxClaimable: 1 }],
       maxClaimablePerWallet: 5,
     }
@@ -477,7 +477,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           const nftClaimTxn = await nftContract?.erc1155.claim(tokenId as any, qtyOfNftToMint, {
             currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
             checkERC20Allowance: true,
-            pricePerToken: props.assetData.storage.ipfs.spec.nftMetadata.properties.pricePerNFT,
+            pricePerToken: props?.assetData?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT,
           })
 
           console.log('receipt: ', nftClaimTxn?.receipt)
