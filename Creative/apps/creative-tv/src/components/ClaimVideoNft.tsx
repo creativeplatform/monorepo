@@ -1,11 +1,10 @@
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
 import { Player } from '@livepeer/react'
 import { useAddress, useContract, useContractMetadata, useSigner } from '@thirdweb-dev/react'
-import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
+import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof, ThirdwebSDK } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { erc20Token } from '../utils/config'
-import { thirdwebSDK } from '../utils/helpers'
+import { MUMBAI_ERC20_TOKENS } from '../utils/config'
 import { IAssetData, IReturnedAssetData } from '../utils/types'
 
 // Milestone
@@ -83,10 +82,10 @@ type MintVideoNFTProps = {
 
 export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   // const router = useRouter()
-  const connectedAddress = useAddress()
+  const address = useAddress()
   const signer = useSigner()
   const toast = useToast()
-  const sdk = thirdwebSDK('mumbai')
+  const sdk = new ThirdwebSDK('mumbai')
 
   const [priceOfNft, setPriceOfNft] = useState(0)
   const [qtyOfNftToMint, setQtyOfNftToMint] = useState(1)
@@ -104,7 +103,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
 
   // TODO: map out DAI & USDC as only token accepted for purchasing nft
   // Get USDC contract
-  const { data: usdcContract } = useContract(erc20Token?.USDC.chain.polygon.mumbai)
+  const { data: usdcContract } = useContract(MUMBAI_ERC20_TOKENS.TESTR)
 
   // NFT CONTRACT
   const { data: nftContract } = useContract(NFT_CONTRACT_ADDRESS)
@@ -148,10 +147,9 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         // }
 
         // claimIneligibilityReasons
-        const claimIneligibilityReasons = await nftContract?.erc1155.claimConditions.getClaimIneligibilityReasons(
-          tokenId,
+        const claimIneligibilityReasons = await nftContract?.erc721.claimConditions.getClaimIneligibilityReasons(
           qtyOfNftToMint,
-          connectedAddress
+          address || ''
         )
 
         // if (claimIneligibilityReasons?.length) {
@@ -322,7 +320,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
       // 1. Get estimationCost of the minting tnx
 
       const prepareTxn = await nftContract?.erc1155.claim.prepare(tokenId, qtyOfNftToMint, {
-        currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
+        currencyAddress: MUMBAI_ERC20_TOKENS.TESTR,
         checkERC20Allowance: true,
         pricePerToken: props?.assetData?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT,
       })
@@ -346,7 +344,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
 
   const getNativeTokenBalance = async () => {
     // NativeToken Balance
-    return await sdk.getBalance(String(connectedAddress))
+    return await sdk.getBalance(String(address))
   }
 
   const getUSDCBalance = async (userAddress: string) => {
@@ -367,14 +365,14 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   const claimNFT = async () => {
     const claimConditionInput = {
       startTime: new Date(),
-      currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
+      currencyAddress: MUMBAI_ERC20_TOKENS.TESTR,
       price: props?.assetData?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT,
-      snapshot: [{ address: String(connectedAddress), maxClaimable: 1 }],
+      snapshot: [{ address: String(address), maxClaimable: 1 }],
       maxClaimablePerWallet: 5,
     }
 
     // Is there a connect wallet address?
-    if (!signer || !connectedAddress) {
+    if (!signer || !address) {
       toast({
         title: 'User not signed in',
         description: 'Sign in to mint yout NFT',
@@ -386,7 +384,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
     }
     // const estimatedCostOfGasInWei = await estimateGasCostOfTxn()
 
-    const usdcBalance = await getUSDCBalance(connectedAddress)
+    const usdcBalance = await getUSDCBalance(address)
     const nftCreatorAddress = props.assetData.creatorId?.value
     const nativeTokenBalance = await getNativeTokenBalance()
     const nativeTokenBalanceInWei = Number(nativeTokenBalance.value)
@@ -424,7 +422,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         return
       }
 
-      if (nftCreatorAddress != connectedAddress) {
+      if (nftCreatorAddress != address) {
         const devAddress = '0x32466Aa64E0525E731b41b884DAB8fff3B9c5448'
 
         // set txn data
@@ -472,15 +470,15 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           // option2: claim
 
           // erc1155.claim(tokenId, quantity)
-          const tokenId = await nftContract?.erc1155.nextTokenIdToMint()
+          const tokenId = await nftContract?.erc721.nextTokenIdToMint()
 
-          const nftClaimTxn = await nftContract?.erc1155.claim(tokenId as any, qtyOfNftToMint, {
-            currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
+          const nftClaimTxn = await nftContract?.erc721.claim( qtyOfNftToMint, {
+            currencyAddress: MUMBAI_ERC20_TOKENS.TESTR,
             checkERC20Allowance: true,
             pricePerToken: props?.assetData?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT,
           })
 
-          console.log('receipt: ', nftClaimTxn?.receipt)
+          console.log('receipt: ', nftClaimTxn)
 
           // option3: claim
           {

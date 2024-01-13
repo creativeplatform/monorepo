@@ -17,10 +17,9 @@ import Image from "next/image"
 import { useRouter } from 'next/router'
 import { useSmartWallet, embeddedWallet } from '@thirdweb-dev/react'
 import { LIVEPEER_HERO_PLAYBACK_ID, ACCOUNT_FACTORY_TESTNET } from 'utils/config'
-import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS } from 'utils/context'
+import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS, CREATIVE_LOGO_BLK } from 'utils/context'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
-import { CREATIVE_LOGO_BLK } from 'utils/context'
 
 const PosterImage = () => {
   return (

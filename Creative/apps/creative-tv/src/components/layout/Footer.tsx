@@ -1,6 +1,6 @@
 import { Box, Container, Flex, Image, Link, SimpleGrid, Stack, Tag, Text, useColorModeValue } from '@chakra-ui/react'
 import { ReactNode } from 'react'
-import { SOCIAL_DISCORD, SOCIAL_EMAIL, SOCIAL_GITHUB, SOCIAL_LENS, SOCIAL_LINKEDIN, SOCIAL_TWITTER, siteMetadata } from 'utils/config'
+import { SOCIAL_DISCORD, SOCIAL_EMAIL, SOCIAL_GITHUB, SOCIAL_LENS, SOCIAL_LINKEDIN, SOCIAL_TWITTER, SITE_COPYRIGHT } from 'utils/config'
 import { CREATIVE_ICON, FOOTER_LINKS } from 'utils/context'
 
 interface Props {
@@ -102,7 +102,7 @@ export default function Footer(props: Props): JSX.Element {
           <Image src={CREATIVE_ICON} alt="Creative Logo" width={250} height={'auto'} boxSize="100px" objectFit="contain" />
         </Flex>
         <Text pt={6} fontSize={'sm'} textAlign={'center'}>
-          {siteMetadata.SITE_COPYRIGHT}
+          {SITE_COPYRIGHT}
         </Text>
       </Box>
     </Box>

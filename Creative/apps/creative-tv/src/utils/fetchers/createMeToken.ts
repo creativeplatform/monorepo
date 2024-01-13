@@ -1,9 +1,9 @@
 import { ethers,  Contract } from 'ethers'
 import { ThirdwebSDK } from '@thirdweb-dev/sdk';
-import { Goerli } from '@thirdweb-dev/chains';
+import { Mumbai } from '@thirdweb-dev/chains';
 import { Orbis } from '@orbisclub/orbis-sdk';
 import {
-  METOKENS_ADDRESS_GOERLI,
+  METOKENS_ADDRESS_MUMBAI,
   METOKENS_REGISTRY_ABI,
   ERC20_ABI,
   HUB_FACET_ABI,
@@ -16,15 +16,15 @@ interface CreateMeToken {
   hubId: number;
   assetsDeposited: number;
 }
-export const foundryFacet = `${METOKENS_ADDRESS_GOERLI.foundryFacet}`
+export const foundryFacet = `${METOKENS_ADDRESS_MUMBAI.foundryFacet}`
 export const daiAddress = '0x0c4f55df47b20c8fbb134494b45a7a01097849ff';
-export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
-export const meTokenDiamond = `${METOKENS_ADDRESS_GOERLI.meTokenDiamond}`
+export const meTokenRegistryFacet = `${METOKENS_ADDRESS_MUMBAI.meTokensRegistryFacet}`
+export const meTokenDiamond = `${METOKENS_ADDRESS_MUMBAI.meTokenDiamond}`
 export const meTokenApproval = '0x47fF07BfD0cdFaD6650177f661E8cC977FA8Bf36'
 
 
 export const getMeTokenContract = async (signer: any) => {
-  const sdkSigner = await ThirdwebSDK.fromSigner(signer, Goerli);
+  const sdkSigner = await ThirdwebSDK.fromSigner(signer, Mumbai);
   const meTokenRegistryFacetContract = await sdkSigner.getContractFromAbi(foundryFacet, METOKENS_REGISTRY_ABI)
   return meTokenRegistryFacetContract;
 }
