@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Card, Flex, Image, Text, useToast } from '@chakra-ui/react'
 import { useAddress, useContract, useContractRead, useContractWrite, useOwnedNFTs } from '@thirdweb-dev/react'
 import { MdAutorenew, MdCancel } from 'react-icons/md'
-import { CREATIVE_ADDRESS, UNLOCK_PROTOCOL } from '../utils/config'
+import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from '../utils/config'
 import Unlock from '../utils/fetchers/Unlock.json'
 
 export type MemberCardProps = {
@@ -18,7 +18,7 @@ const MemberCard = (props: MemberCardProps) => {
     contract: unlockContract,
     isLoading: loadingUnlockContract,
     error: unlockContractError,
-  } = useContract(UNLOCK_PROTOCOL.contracts.mumbai.address, Unlock.abi)
+  } = useContract(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
 
   const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(unlockContract, address)
 

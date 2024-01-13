@@ -7,7 +7,6 @@ import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { CREATIVE_LOGO_WHT } from '../utils/context'
 import { AssetData } from '../utils/fetchers/assets'
-import { parseTimestampToDate, formatString } from '../utils/helpers'
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
@@ -45,7 +44,7 @@ export default function MyAssets(props: MyAssetsProps) {
     videosQuery.data.data?.filter((video): video is AssetData['video'] => {
       return (
         video.status.phase === 'ready' &&
-        Number(video.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT) > 0 &&
+        Number(video.storage?.ipfs?.spec?.nftMetadata?.assetData?.properties?.pricePerNFT) > 0 &&
         video.creatorId?.value === connectedAddress
       )
     }) ?? []
@@ -71,11 +70,11 @@ export default function MyAssets(props: MyAssetsProps) {
                 <Tr key={i}>
                   <Td>
                     <Link as={NextLink} href={`${connectedAddress}/${video.id}?video=${JSON.stringify(video)}`}>
-                      {formatString.titleCase(video.name)}
+                      {video.name}
                     </Link>
                   </Td>
-                  <Td>{parseTimestampToDate(video.createdAt as any)}</Td>
-                  <Td>{parseTimestampToDate(video.status.updatedAt as any)}</Td>
+                  <Td>{video.createdAt as any}</Td>
+                  <Td>{video.status.updatedAt as any}</Td>
                   <Td isNumeric>{video.viewCount}</Td>
                   {/* TODO: Depict that the ClaimCondition is set */}
                   {/* <Td>{rQuery['isClaimConditionSet'] ? 'true' : 'false'}</Td> */}

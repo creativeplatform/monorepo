@@ -25,7 +25,7 @@ import { useAddress } from '@thirdweb-dev/react'
 import { motion } from 'framer-motion'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { useRouter } from 'next/router'
-import { siteMetadata } from 'utils/config'
+import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 import { AssetData } from 'utils/fetchers/assets'
 // import { Discussion } from "@orbisclub/components";
@@ -61,7 +61,7 @@ export default function AllAssets() {
     videosQuery.data.data?.filter((video): video is AssetData['video'] => {
       return (
         video.status.phase === 'ready' &&
-        Number(video.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT) > 0 &&
+        Number(video.storage?.ipfs?.spec?.nftMetadata?.assetData?.properties?.pricePerNFT) > 0 &&
         video.creatorId?.value != connectedAddress
       )
     }) ?? []
@@ -75,7 +75,7 @@ export default function AllAssets() {
               <CardHeader>
                 <Flex>
                   <Flex flex={1} gap={4} align="center" flexWrap={'wrap'}>
-                    <Avatar name="creative" src={siteMetadata.LOGO} />
+                    <Avatar name="creative" src={SITE_LOGO} />
                     <Box>
                       <Heading size="sm">thecreative.eth</Heading>
                       <Text>Creator</Text>
@@ -124,7 +124,7 @@ export default function AllAssets() {
                     <Heading>{video?.name}</Heading>
                     <Spacer />
                     <Text fontSize="1.5em" fontWeight={'medium'}>
-                      ${video.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT}
+                      ${video.storage?.ipfs?.spec?.nftMetadata?.assetData?.properties?.pricePerNFT}
                     </Text>
                   </HStack>
                   <Text>
