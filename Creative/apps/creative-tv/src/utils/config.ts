@@ -1,5 +1,6 @@
 import { ThemingProps, extendTheme } from '@chakra-ui/react'
-import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains'
+import { Mumbai, Polygon } from '@thirdweb-dev/chains'
+import { embeddedWallet, metamaskWallet, smartWallet } from '@thirdweb-dev/react'
 import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
@@ -9,19 +10,27 @@ export const SITE_URL = 'https://creativeplatform.xyz'
 export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
 
+export const ACCOUNT_FACTORY = {
+    mumbai: '0xc56eE04279171c9A2eA50D055082142d20A9dBf4', // Account Factory (MUMBAI)
+    mainnet: '', // FACTORY CONTRACT (POLYGON)
+}
+// This is the chain your dApp will work on.
+// Change this to the chain your app is built for.
+// You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
+// const activeChain = MUMBAI_CHAIN[0]
+export const activeChain = 'mumbai' // TODO: revert chain back to the top commented option
 
+export const THIRDWEB_AUTH_PRIVATE_KEY = process.env.THIRDWEB_AUTH_PRIVATE_KEY // for Thiredweb Auth
+export const THIRDWEB_API_SECRET = process.env.THIRDWEB_API_SECRET // for backend access
+export const DEV_TESTNET_PRIVATE_KEY = process.env.DEV_TESTNET_PRIVATE_KEY // dev private key
+export const NEXT_PUBLIC_AUTH_DOMAIN = process.env.NEXT_PUBLIC_AUTH_DOMAIN
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
 export const NODE_ENV = process.env.NODE_ENV
-export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
-export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
 export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
-export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
-export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT
 export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY
 export const WERT_PARTNER_ID = process.env.NEXT_PUBLIC_WERT_PARTNER_ID
@@ -87,13 +96,6 @@ export const EPISODE_DROP_ADDRESS = {
   testnet: '0xE675e85ccf7b8ADB2E466fc06662319628B75a9F',
 }
 
-// Unlock Contracts (POLYGON)
-export const LOCK_ADDRESS_CREATIVE_TV = {
-  creator: '0xb9c69af58109927cc2dcce8043f82158f7b96ca7',
-  fan: '0xe174caa294999ec622988242641a27c11e6c22d8',
-  brand: '0xb311afe316b004dbf569381ae174eaa897b757f6',
-}
-
 // Unlock Contracts (MUMBAI)
 export const LOCK_ADDRESS_MUMBAI_TESTNET = {
   address: '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
@@ -110,14 +112,11 @@ export const ACCOUNT_FACTORY_POLYGON = ''
 
 // Setup the Smart Wallet configuration
 export const SMART_WALLET_CONFIG = {
-  chain: Goerli, // the chain where your smart wallet will be or is deployed
+  chain: Mumbai, // the chain where your smart wallet will be or is deployed
   factoryAddress: ACCOUNT_FACTORY_TESTNET, // your own deployed account factory address
   clientId: THIRDWEB_API_KEY, // obtained from the thirdweb dashboard
   gasless: true, // enable or disable gasless transactions
 }
-
-// CREATIVE ADDRESS
-export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
 
 export const UNLOCK_API_URL = 'https://api.thegraph.com/subgraphs/name/unlock-protocol/polygon-v2'
 export const UNLOCK_QUERY_HOLDS_KEY = gql`
@@ -130,6 +129,14 @@ export const UNLOCK_QUERY_HOLDS_KEY = gql`
     }
   }
 `
+
+// CREATIVE ADDRESS
+export const CREATIVE_ADDRESS = '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260'
+
+// ERC20 TOKENS
+export const MUMBAI_ERC20_TOKENS = {
+  TESTR: '0xc0823427fE72cFD105c71BEAd0476412283B07c5',
+}
 
 // Livepeer API
 export const LIVEPEER_API_URL = 'https://livepeer.com/api'
@@ -144,12 +151,25 @@ export const SERVER_SESSION_SETTINGS = {
   },
 }
 
+export const NAME_OF_SAVED_CONTRACT_ADDRESS = 'JOHN_DOE' // The name used to save the deployed contract address to localStorage or remote Server.
+export const DEV_ENVIRONMENT = {
+  prod: 'production',
+  dev: 'development',
+  test: 'test',
+}
+
+// VIDEO NFT MUMBAI
+export const VIDEO_NFT_CONTRACT_ADDRESS = '0x205e06b24328b59e3846c3Fa4a55de7c1D6b227C'
+
+// 1. export the LENS contract address
+export const LENS_CONTRACT_ADDRESS = '0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d'
+
 // CREW3 API
 export const CREATIVE_CREW3 = 'thecreativedao'
 
 // METOKENS CONTRACT ADDRESS
 // METOKENS GOERLI
-export const METOKENS_ADDRESS_GOERLI = {
+export const METOKENS_ADDRESS_MUMBAI = {
   foundryFacet: '0x09a2e447ED411EaC76c5aff9168bde1f9D4B154f',
   hubFacet: '0xa6A9320205A290903DA361b8a2073284787acF7f',
   metokenFactory: '0x88B30Fe63473EeB33a0E2E8e46563c265AC3FD49',
@@ -159,7 +179,7 @@ export const METOKENS_ADDRESS_GOERLI = {
 }
 
 // METOKENS MAINNET
-export const METOKENS_ADDRESS_MAINNET = {
+export const METOKENS_ADDRESS_POLYGON = {
   foundryFacet: '0xA56AAF637b057a5EDf7b7252D0B7280042E71335',
   hubFacet: '0x4555cf6E984186F6C0dfeba1A26764b21553B39f',
   meTokenFactory: '0x8D4ee3599aF814bF3Aa884c161f0dE81d9e97225',
@@ -3074,12 +3094,6 @@ export const METOKENS_DIAMOND_ABI = [
   },
 ]
 
-// DAI ADDRESS
-export const DAI = {
-  goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
-  mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-}
-
 // ERC20 ABI
 export const ERC20_ABI = [
   {
@@ -3210,15 +3224,6 @@ export const ERC20_ABI = [
     type: 'function',
   },
 ]
-
-// ETH MAINNET THIRDWEB RPC
-export const MAINNET_RPC = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || 'https://ethereum.rpc.thirdweb.com'
-
-// VIDEO NFT MUMBAI
-export const VIDEO_NFT_CONTRACT_ADDRESS = '0x205e06b24328b59e3846c3Fa4a55de7c1D6b227C'
-
-// 1. export the LENS contract address
-export const LENS_CONTRACT_ADDRESS = '0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d'
 
 // 2. export the LENS contract abi
 export const LENS_CONTRACT_ABI = [
@@ -4408,3 +4413,6 @@ export const LENS_CONTRACT_ABI = [
     type: 'function',
   },
 ]
+
+
+

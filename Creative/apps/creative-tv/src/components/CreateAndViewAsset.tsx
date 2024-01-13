@@ -4,6 +4,7 @@ import {
   AlertIcon,
   Box,
   Button,
+  Center,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -14,7 +15,6 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react'
-
 import { Player, useCreateAsset } from '@livepeer/react'
 import { useAddress } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
@@ -22,18 +22,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { VideoPreview } from './videoPreview'
-
-export interface AssetData {
-  title: string
-  description: string
-  animation_url: string
-  external_url: string
-  image_url: string
-  properties: {
-    playbackId: string
-    videoIpfs: string
-  }
-}
+import { IAssetData } from '../utils/types'
 
 export interface MintDetail {
   nFTAmountToMint: number
@@ -41,6 +30,7 @@ export interface MintDetail {
 }
 
 // Add MintDetails to AssetData
+export interface AssetData extends IAssetData {}
 export interface AssetData extends Partial<MintDetail> {}
 
 // Note: This code contains a React component for creating and viewing assets.
@@ -64,8 +54,6 @@ const CreateAndViewAsset = () => {
 
   const [isFileSelected, setIsFileSelected] = useState<boolean>(false) // Note: The `isFileSelected` state variable indicates whether a video file has been selected.
 
-  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false) // Note: The `isUploadingToIPFS` state variable indicates whether the video file is currently being uploaded to IPFS.
-
   const [isProcessing, setIsProcessing] = useState<boolean>(false) // Note: The `isProcessing` state variable indicates whether the video file is currently being processed.
 
   const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false) // Note: The `showErrorMessage` state variable indicates whether an error message should be displayed.
@@ -78,7 +66,6 @@ const CreateAndViewAsset = () => {
 
   const [assetData, setAssetData] = useState<AssetData>({
     // Note: The `assetData` state variable stores the data related to the asset, including the title, description, animation URL, external URL, image URL, playback ID, and video IPFS.
-
     title: '',
     description: '',
     animation_url: '',
@@ -271,6 +258,7 @@ const CreateAndViewAsset = () => {
                         disabled={createAssetStatus === 'loading'}
                         mb={formErrors.description ? 0 : 4}
                         placeholder="Enter a description for the episode video"
+                        aria-invalid={formErrors.description ? 'true' : 'false'}
                       />
                     )}
                   />
@@ -293,19 +281,22 @@ const CreateAndViewAsset = () => {
                     </Box>
                   )
                 )}
-                <Button
-                  type="submit"
-                  className="upload-button"
-                  style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
-                  _hover={{
-                    color: 'gray.800',
-                    transform: isError && 'scale(1.015)',
-                    cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
-                  }}
-                  disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
-                  mb={20}>
-                  Upload Video
-                </Button>
+                <Center>
+                  <Button
+                    type="submit"
+                    className="upload-button"
+                    style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
+                    _hover={{
+                      color: 'gray.800',
+                      transform: isError && 'scale(1.015)',
+                      cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
+                    }}
+                    disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
+                    isLoading={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
+                    mb={20}>
+                      Upload Video
+                  </Button>
+                </Center>
               </form>
             )}
           </Box>
@@ -315,45 +306,54 @@ const CreateAndViewAsset = () => {
       {createdAsset?.[0]?.playbackId && (
         <>
           <div style={{ marginBottom: '32px' }}>
-            <Player 
-            title={createdAsset[0].name} 
-            playbackId={createdAsset[0].playbackId}
-            autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
-            showUploadingIndicator={true}
-            controls={{
-            autohide: 3000,
-            hotkeys: true
-            }}
-            theme={{
-            borderStyles: {
-                containerBorderStyle: 'solid',
-            },
-            colors: {
-                accent: '#EC407A',
-            },
-            space: {
-                controlsBottomMarginX: '10px',
-                controlsBottomMarginY: '5px',
-                controlsTopMarginX: '15px',
-                controlsTopMarginY: '10px',
-            },
-            radii: {
-                containerBorderRadius: '0px',
-            },
-            }} 
+            <Player
+              title={createdAsset[0].name}
+              playbackId={createdAsset[0].playbackId}
+              autoUrlUpload={{ fallback: true, ipfsGateway: 'https://w3s.link' }}
+              showUploadingIndicator={true}
+              controls={{
+                autohide: 3000,
+                hotkeys: true,
+              }}
+              theme={{
+                borderStyles: {
+                  containerBorderStyle: 'solid',
+                },
+                colors: {
+                  accent: '#EC407A',
+                },
+                space: {
+                  controlsBottomMarginX: '10px',
+                  controlsBottomMarginY: '5px',
+                  controlsTopMarginX: '15px',
+                  controlsTopMarginY: '10px',
+                },
+                radii: {
+                  containerBorderRadius: '0px',
+                },
+              }}
             />
           </div>
 
           <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }}>
-            <Text as={'h3'} style={{ fontWeight: '600', fontSize: 24, marginBottom: 24 }}>
-              Asset uploaded successfully.
+            <Text as={'h2'} style={{ fontWeight: '500', fontSize: 24, marginBottom: 24 }}>
+              Video Uploaded Successfully.
             </Text>
 
-            <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
-            <Box style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
-              <Text>Asset Name: {createdAsset?.[0]?.name}</Text>
-              <Text>Playback URL: {createdAsset?.[0]?.playbackUrl}</Text>
-              <Text>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
+            <Text as={'h3'} style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
+            <Box style={{ lineHeight: 1.75 }}>
+              <Text>
+                <span style={{ fontWeight: '700' }}>Asset Name: </span>{createdAsset?.[0]?.name}
+              </Text>
+              <Text>
+                <span style={{ fontWeight: '700' }}>Asset Description: </span>{assetData?.description}
+              </Text>
+              <Text>
+                <span style={{ fontWeight: '700' }}>Playback URL: </span>{createdAsset?.[0]?.playbackUrl}
+              </Text>
+              <Text>
+                <span style={{ fontWeight: '700' }}>IPFS CID: </span>{createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}
+              </Text>
             </Box>
           </Stack>
           <Box className="Proceed-button">
@@ -418,27 +418,29 @@ const CreateAndViewAsset = () => {
                     <FormHelperText mb={4}>The price can't be a negative value.</FormHelperText>
                   )}
                 </FormControl>
-
-                <Button
-                  type="submit"
-                  className="mint-button"
-                  bgColor="#EC407A"
-                  disabled={mintFormState.isLoading}
-                  _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
-                  // as={motion.div}
-                  onClick={() => {
-                    setAssetData((prev) => ({
-                      ...prev,
-                      nFTAmountToMint: nFTAmountToMint,
-                      pricePerNFT: pricePerNFT,
-                      properties: {
-                        playbackId: String(createdAsset?.[0]?.playbackId),
-                        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
-                      },
-                    }))
-                  }}>
-                  Proceed to Mint NFT
-                </Button>
+                <Center>
+                  <Button
+                    type="submit"
+                    className="mint-button"
+                    bgColor="#EC407A"
+                    isLoading={mintFormState.isLoading}
+                    disabled={mintFormState.isLoading}
+                    _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
+                    // as={motion.div}
+                    onClick={() => {
+                      setAssetData((prev) => ({
+                        ...prev,
+                        nFTAmountToMint: nFTAmountToMint,
+                        pricePerNFT: pricePerNFT,
+                        properties: {
+                          playbackId: String(createdAsset?.[0]?.playbackId),
+                          videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
+                        },
+                      }))
+                    }}>
+                    Update Data
+                  </Button>
+                </Center>
               </form>
             </Box>
           </Box>

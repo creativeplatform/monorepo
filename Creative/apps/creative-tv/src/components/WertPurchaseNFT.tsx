@@ -29,7 +29,8 @@ const WertPurchaseNFT: NextPage = () => {
             commodity: "MATIC",
             network: "mumbai",
             commodity_amount: 1,
-            sc_address: LOCK_ADDRESS_MUMBAI_TESTNET.address,
+            // sc_address: LOCK_ADDRESS_MUMBAI_TESTNET.address,
+            sc_address: LOCK_ADDRESS_MUMBAI_TESTNET.address ,
             sc_input_data: data,
         }, `${WERT_PRIVATE_KEY}`);
 

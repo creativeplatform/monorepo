@@ -30,7 +30,8 @@ function PurchaseKey() {
 
   // Connect to your NFT contract
   const { contract } = useContract( 
-    LOCK_ADDRESS_MUMBAI_TESTNET.address, 
+    // LOCK_ADDRESS_MUMBAI_TESTNET.address, 
+    LOCK_ADDRESS_MUMBAI_TESTNET.address,
     Unlock.abi,
   );
 

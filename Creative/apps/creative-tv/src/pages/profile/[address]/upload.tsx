@@ -17,10 +17,10 @@ const Upload: NextPage = () => {
       <Container maxW={'1200px'}>
         <Breadcrumb mt={10}>
           <BreadcrumbItem>
-            <BreadcrumbLink onClick={() => router.push('/')}>Home</BreadcrumbLink>
+            <BreadcrumbLink onClick={() => router.push('/')}><span role="img" aria-label="home">🏠</span> Home</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbItem isCurrentPage className="active-crumb">
-            <BreadcrumbLink>Upload Video Assets</BreadcrumbLink>
+            <BreadcrumbLink>Upload Video</BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
         <Heading mt={10}>Upload Video Content</Heading>
