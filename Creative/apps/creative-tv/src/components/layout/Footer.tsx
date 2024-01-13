@@ -57,10 +57,10 @@ export default function Footer(props: Props): JSX.Element {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Legal</ListHeader>
-            <Link href={FOOTER_LINKS.cookie_policy}>Cookies Policy</Link>
-            <Link href={FOOTER_LINKS.privacy_policy}>Privacy Policy</Link>
-            <Link href={FOOTER_LINKS.terms_and_conditions}>Terms of Service</Link>
-            <Link href={'#'}>Status</Link>
+            <Link href={FOOTER_LINKS.cookie_policy} target={'_blank'}>Cookies Policy</Link>
+            <Link href={FOOTER_LINKS.privacy_policy} target={'_blank'}>Privacy Policy</Link>
+            <Link href={FOOTER_LINKS.terms_and_conditions} target={'_blank'}>Terms of Service</Link>
+            <Link href={FOOTER_LINKS.status} target={'_blank'}>Status</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Follow Us</ListHeader>

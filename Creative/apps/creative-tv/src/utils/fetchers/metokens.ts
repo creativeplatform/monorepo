@@ -3,8 +3,6 @@ import { ethers, BigNumber, BigNumberish, Transaction } from 'ethers'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import {
     METOKENS_ADDRESS_GOERLI,
-    erc20Token,
-    MAINNET_RPC,
     FOUNDRY_FACET_ABI,
     HUB_FACET_ABI,
     METOKEN_FACTORY_ABI,

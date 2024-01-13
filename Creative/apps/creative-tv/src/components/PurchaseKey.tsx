@@ -18,7 +18,7 @@ import {
 import { useAddress, Web3Button, useContract, useNFT } from "@thirdweb-dev/react";
 import { utils } from "ethers";
 import { CrossmintPayButton } from '@crossmint/client-sdk-react-ui';
-import { CREATIVE_ADDRESS, UNLOCK_PROTOCOL } from "utils/config";
+import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from "utils/config";
 import Unlock from "utils/fetchers/Unlock.json";
 
 
@@ -31,7 +31,7 @@ function PurchaseKey() {
   // Connect to your NFT contract
   const { contract } = useContract( 
     // LOCK_ADDRESS_MUMBAI_TESTNET.address, 
-    UNLOCK_PROTOCOL.contracts.mumbai.address,
+    LOCK_ADDRESS_MUMBAI_TESTNET.address,
     Unlock.abi,
   );
 
@@ -60,7 +60,7 @@ function PurchaseKey() {
           <ModalFooter>
             <ButtonGroup>
             <Web3Button
-              contractAddress={UNLOCK_PROTOCOL.contracts.mumbai.address} // Your smart contract address
+              contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
               contractAbi={ Unlock.abi } // Your smart contract ABI
               action={async (contract) => {
                 await contract.call('purchase', [["100000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS, address], ['0x']], { value: utils.parseEther("0.0001")});

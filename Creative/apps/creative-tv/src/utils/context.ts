@@ -16,6 +16,7 @@ export const FOOTER_LINKS = {
   cookie_policy: 'https://creativeplatform.xyz/docs/cookie-policy',
   privacy_policy: 'https://creativeplatform.xyz/docs/privacy-policy',
   terms_and_conditions: 'https://creativeplatform.xyz/docs/terms-and-conditions',
+  status: 'https://thecreative.grafana.net/public-dashboards/0d59c3754efd4cf5be8298ff3b24b685?orgId=1'
 }
 
 export const HERO_NAME = {

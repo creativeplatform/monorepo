@@ -5,6 +5,16 @@ export type AssetData = {
   user: string
   title: string
   description: string
+  animation_url: string
+  external_url: string
+  image_url: string
+  properties: {
+    [idx: string]: any
+    nFTAmountToMint: number | string
+    pricePerNFT: number | string
+    playbackId: string
+    videoIpfs: string
+  }
   video: Video
   views: Views
 }
@@ -14,7 +24,13 @@ export type Video = {
   name: string
   status: { phase: string | null; updatedAt: bigint; progress: string | null; errorMessage: string | null }
   playbackId: string
+  videoIpfs: string
   creatorId: { [index: string]: string }
+  transcodingStatus: string
+  createdAt: bigint
+  updatedAt: bigint
+  downloadUrl?: string
+  viewCount: number
   storage: {
     ipfs: {
       cid: string
@@ -26,23 +42,12 @@ export type Video = {
         url: string
       }
       spec: {
-        nftMetadata: {
-          description: string
-          image: string
-          properties: {
-            [idx: string]: any
-            nFTAmountToMint: number | string
-            pricePerNFT: number | string
-          }
+        nftMetadata:{
+          assetData: AssetData
         }
       }
     }
   }
-  transcodingStatus: string
-  createdAt: bigint
-  updatedAt: bigint
-  downloadUrl?: string
-  viewCount: number
 }
 
 export type Views = {
@@ -72,10 +77,11 @@ export const fetchAssetId = async (id: any) => {
   return [asset]
 }
 
+
 export const updateAsset = async (id: any, data: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Updating asset')
-  const response = await videoApi.patch<AssetData['video']>(`/${assetId}`, data)
+  const response = await videoApi.patch<AssetData["video"]>(`/${assetId}`, data)
   const asset = response.data
 
   console.log('Asset: ', asset)

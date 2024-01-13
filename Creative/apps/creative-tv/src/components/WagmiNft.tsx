@@ -1,4 +1,13 @@
-import { Box, Button, Flex, IconButton, Stack, Text, useToast } from '@chakra-ui/react'
+import { 
+  Box,
+  IconButton, 
+  Button, 
+  Stack, 
+  Text, 
+  useToast, 
+  Flex, 
+  textDecoration
+} from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ConnectWallet, MediaRenderer, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
@@ -34,7 +43,7 @@ type ContractMetaData = {
   [idx: string]: any
 }
 const WagmiNft = (props: WagmiNftProps): JSX.Element => {
-  const connectedAddress = useAddress()
+  const address = useAddress()
   const router = useRouter()
   const signer = useSigner()
   const toast = useToast()
@@ -44,6 +53,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const [lazyMintTxStatus, setLazyMintTxStatus] = useState<number | undefined>(0)
   const [isClaimConditionsSet, setClaimConditions] = useState<boolean | undefined>(false)
   const [lazyMintTxHash, setLazyMintTxHash] = useState('')
+  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false)
   const [error, setError] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [showMetadataDetails, setMetadataDetails] = useState(false)
@@ -133,8 +143,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 animation_url: props.assetData.animation_url,
                 external_url: props.assetData.external_url,
                 image_url: props.assetData.image_url,
-                nFTAmountToMint: props.assetData.nFTAmountToMint,
-                pricePerNFT: props.assetData.pricePerNFT,
+                nFTAmountToMint: props.assetData.properties.nFTAmountToMint,
+                pricePerNFT: props.assetData.properties.pricePerNFT,
               },
             },
           },
@@ -168,14 +178,14 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
       const contractAddress = await deployEditionDropContract(signer, 'mumbai', {
         name: asset?.name,
-        primary_sale_recipient: connectedAddress,
+        primary_sale_recipient: address,
         app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
         symbol: 'EPISD', // Symbol of the edition drop
-        platform_fee_basis_points: 200,
+        platform_fee_basis_points: 100, // The address that will receive the proceeds from platform fees = 1%
         platform_fee_recipient: CREATIVE_ADDRESS,
-        fee_recipient: connectedAddress,
-        seller_fee_basis_points: 300,
-        image: props.assetData.image_url || 'Not available',
+        fee_recipient: address,
+        seller_fee_basis_points: 300, // The percentage (in basis points) of royalties for secondary sales for the seller = 3%
+        image: props.assetData.image_url || 'Not Available',
         description: props.assetData.description,
         trusted_forwarders: [CREATIVE_ADDRESS],
       })
@@ -227,6 +237,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
       ))
     }
   }
+
+
 
   // Copy string to clipboard
   const handleCopyString = () => {
@@ -427,16 +439,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
   return (
     <Box className="address-mint" minH={'600'}>
-      {!connectedAddress && (
-        <ConnectWallet
-          btnTitle={'Sign In'}
-          className="signIn-button"
-          style={{
-            marginBottom: '24px',
-            margin: '48px 0',
-            fontWeight: '600',
-          }}
-        />
+      {!address && (
+        <SignIn btnTitle='Sign In'/>
       )}
 
       {notification ? (
@@ -445,7 +449,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         </Text>
       ) : null}
 
-      {connectedAddress && props.assetId && (
+      {address && props.assetId && (
         <>
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
             <>
@@ -468,7 +472,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Button>
               </Stack>
             </>
-          ) : null}
+          ) : null
+        }
 
           {asset?.storage?.ipfs?.cid && (
             <Stack spacing="20px" my={12} style={{ border: '1px solid #aeaeae', padding: 24 }}>
@@ -608,5 +613,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     </Box>
   )
 }
+
 
 export default WagmiNft

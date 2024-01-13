@@ -1,7 +1,7 @@
 import { configureSIWE } from 'connectkit-next-siwe'
-import { SIWE_SESSION_SECRET } from './utils/config'
+import { SESSION_PASSWORD } from './utils/config'
 
 export const siwe = configureSIWE({
-  session: { password: SIWE_SESSION_SECRET },
+  session: { password: SESSION_PASSWORD },
   apiRoutePrefix: '/api/siwe',
 })

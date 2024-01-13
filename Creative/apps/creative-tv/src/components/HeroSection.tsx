@@ -15,8 +15,9 @@ import {
 } from '@chakra-ui/react'
 import Image from "next/image"
 import { useRouter } from 'next/router'
-import { LIVEPEER_HERO_PLAYBACK_ID } from 'utils/config'
-import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS, HERO_IMAGE } from 'utils/context'
+import { useSmartWallet, embeddedWallet } from '@thirdweb-dev/react'
+import { LIVEPEER_HERO_PLAYBACK_ID, ACCOUNT_FACTORY_TESTNET } from 'utils/config'
+import { HERO_NAME, HERO_DESCRIPTION, HERO_BUTTONS } from 'utils/context'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { CREATIVE_LOGO_BLK } from 'utils/context'
@@ -36,6 +37,31 @@ const PosterImage = () => {
 
 export default function HeroSection() {
   const router = useRouter()
+  const { connect } = useSmartWallet(embeddedWallet(), {
+    factoryAddress: ACCOUNT_FACTORY_TESTNET,
+    gasless: true,
+});
+
+const signIn = async () => {
+    try {
+    await connect({
+        connectPersonalWallet: async (embeddedWallet) => {
+        const authResult = await embeddedWallet.authenticate({
+            strategy: "iframe"
+        });
+        await embeddedWallet.connect({ authResult });
+        },
+    });
+    } catch (error) {
+    if (error) {
+        // Handle the specific 'user closed modal' error
+        console.log("Authentication process was not completed.");
+    } else {
+        // Handle other errors
+        console.log("Something went wrong.");
+    }
+    }
+};
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <Container maxW={'7xl'}>
@@ -64,7 +90,7 @@ export default function HeroSection() {
             </Heading>
             <Text color={'gray.500'}>{HERO_DESCRIPTION}</Text>
             <Stack spacing={{ base: 4, sm: 6 }} direction={{ base: 'column', sm: 'row' }}>
-              <Button rounded={'full'} size={'lg'} onClick={() => router.push(HERO_BUTTONS.primary.href)} fontWeight={'normal'} px={6} colorScheme={'orange'} bg={'#F2C57C'} _hover={{ bg: '#D9B06F' }}>
+              <Button rounded={'full'} size={'lg'} onClick={ signIn } fontWeight={'normal'} px={6} colorScheme={'orange'} bg={'#F2C57C'} _hover={{ bg: '#D9B06F' }}>
                 {HERO_BUTTONS.primary.text}
               </Button>
               <Button
