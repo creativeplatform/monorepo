@@ -13,7 +13,6 @@ import {
   Flex,
   HStack,
   Heading,
-  Image,
   SimpleGrid,
   Spacer,
   Stack,
@@ -28,16 +27,11 @@ import { useRouter } from 'next/router'
 import { siteMetadata } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 import { AssetData } from 'utils/fetchers/assets'
+import { PosterImage } from './PosterImage'
 // import { Discussion } from "@orbisclub/components";
 // import "@orbisclub/components/dist/index.modern.css";
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
-
-const PosterImage = () => {
-  return (
-    <Image src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
-  )
-}
 
 export default function AllAssets() {
   const router = useRouter()
@@ -88,7 +82,7 @@ export default function AllAssets() {
                   title={video?.name}
                   playbackId={video?.playbackId}
                   showTitle
-                  poster={<PosterImage />}
+                  poster={<PosterImage alt="Creative logo" imgSrc={`${CREATIVE_LOGO_WHT}`} />}
                   showLoadingSpinner
                   controls={{ autohide: 500, hotkeys: false }}
                   aspectRatio="16to9"
@@ -128,9 +122,8 @@ export default function AllAssets() {
                     </Text>
                   </HStack>
                   <Text>
-                    {/* {video.storage?.ipfs.spec.nftMetadata.description} */}
-                    With Creative TV, we wanted to sync the speed of creation with the speed of design. We wanted the creator to be just as excited as
-                    the designer to create new content.
+                    {video.storage?.ipfs.spec.nftMetadata.description ||
+                      'With Creative TV, we wanted to sync the speed of creation with the speed of design. We wanted the creator to be just as excited as                    the designer to create new content.'}
                   </Text>
                 </Stack>
               </CardBody>
