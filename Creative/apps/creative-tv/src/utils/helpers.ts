@@ -1,3 +1,4 @@
+import { CreateToastFnReturn } from '@chakra-ui/react'
 import { NetworkInput, ThirdwebSDK } from '@thirdweb-dev/react'
 import { ethers } from 'ethers'
 import { THIRDWEB_API_KEY, erc20Token } from './config'
@@ -165,9 +166,25 @@ export function parseTimestampToDate(ts: number) {
 }
 
 /**
+ * The function wrap a sentence at particular length of characters
+ * @param txt The sentence body
+ * @param wrapAfter The number of characters to start
+ * @returns The wrapped sentence
+ */
+const wordWrap = (txt: string, wrapAfter: number) => {
+  txt = txt.trim()
+  if (txt.length > wrapAfter) {
+    return txt.slice(0, wrapAfter) + '...'
+  }
+
+  return txt
+}
+
+/**
  * String formating functions
  */
 export const formatString = {
+  wordWrap,
   removeUnderScore: (str: string) => {
     if (!str.includes('_')) {
       return str.toUpperCase()
@@ -191,4 +208,15 @@ export const formatString = {
     }
     return str
   },
+}
+
+type HandleCopyStringArgs = {
+  txt: string | undefined
+  toast: CreateToastFnReturn | any
+}
+// Copy string to clipboard
+export const handleCopyString = (args: HandleCopyStringArgs) => {
+  navigator.clipboard.writeText(args.txt ?? '')
+  console.log('str copied:', args.txt)
+  args.toast
 }
