@@ -37,7 +37,7 @@ import { MdOutbound } from 'react-icons/md'
 import MemberCard from 'components/MemberCard'
 import Wert from './wert'
 import Unlock from '../../../utils/fetchers/Unlock.json'
-import MyAssets from 'components/my-assets'
+import MyAssets from 'components/MyAssets'
 
 
 const ProfilePage: NextPage = () => {
