@@ -43,8 +43,8 @@ import {
   MenuGroup,
 } from '@chakra-ui/react'
 import Unlock from '../../utils/fetchers/Unlock.json'
-import { ConnectWallet, useAddress, useSigner, useUser, useWallet } from '@thirdweb-dev/react'
-import { ThirdwebSDK } from '@thirdweb-dev/sdk'
+import { ConnectWallet, useAddress, useUser, useWallet, useSDK } from '@thirdweb-dev/react'
+import { Mumbai } from '@thirdweb-dev/chains'
 import { useScroll } from 'framer-motion'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { AiOutlineMenu } from 'react-icons/ai'
@@ -70,9 +70,14 @@ export function Header({ className, handleLoading }: Props) {
   const ref = useRef(null);
   const router = useRouter();
   const address = useAddress() || '';
-  const signer = useSigner();
   const { isLoggedIn } = useUser();
-  const emailLogin = useWallet("embeddedWallet"); 
+  const emailLogin = useWallet("embeddedWallet");
+  const sdk = useSDK();
+  const [subscribed, setSubscribed] = useState(false)
+  const connector = useColorModeValue('light', 'dark')
+
+  
+// GET EMAIL ADDRESS AFTER LOGIN
   useEffect(() => {
     const getEmail = async () => {
       if (emailLogin) {
@@ -84,34 +89,34 @@ export function Header({ className, handleLoading }: Props) {
     };
     getEmail();
   }, [address]);
+  
 
-  const [subscribed, setSubscribed] = useState(false)
-
-  const connector = useColorModeValue('light', 'dark')
-
-  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer);
   
   /*******  CONTRACT READING ********/
   useEffect(() => {
-    if (!address || !sdkSigner || !Unlock.abi) return
-    const getSubscribedData = async () => {
-        const unlockContract = await sdkSigner?.getContractFromAbi(
-          '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
-          Unlock.abi,
-        );
-        return await unlockContract?.call(
-          "getHasValidKey", // Name of your function as it is on the smart contract
-          // Arguments to your function, in the same order they are on your smart contract
-          [
-            address
-          ],
-        )
-      }
-      getSubscribedData().then((res) => {
-        console.log('Is your membership valid?', res)
-        setSubscribed(res)
-      })
-    }, [address, sdkSigner, Unlock.abi])
+  const getSubscribedData = async () => {
+    if (!address || !sdk || !Unlock.abi) return;
+
+    try {
+      const unlockContract = await sdk.getContractFromAbi(
+        '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
+        Unlock.abi,
+      );
+
+      const result = await unlockContract.call(
+        "getHasValidKey", 
+        [address]
+      );
+
+      console.log('Is your membership valid?', result);
+      setSubscribed(result);
+    } catch (error) {
+      console.error('Error getting subscription data:', error);
+    }
+  };
+
+  getSubscribedData();    
+}, [address, sdk, Unlock.abi]);
 
 
   const [y, setY] = useState(0)
