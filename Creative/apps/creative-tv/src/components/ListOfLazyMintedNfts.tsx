@@ -1,4 +1,6 @@
+import { AddIcon } from '@chakra-ui/icons'
 import {
+  Box,
   Button,
   HStack,
   Modal,
@@ -25,39 +27,44 @@ import {
   VStack,
   useDisclosure,
   useToast,
-  Box,
 } from '@chakra-ui/react'
-import { MediaRenderer, NFT } from '@thirdweb-dev/react'
+import { ClaimCondition, MediaRenderer, NFT } from '@thirdweb-dev/react'
 import { useState } from 'react'
 import { globalTheme } from 'utils/config'
 import { formatString } from 'utils/helpers'
+import { ListExistingClaimConditions } from './ListExistingClaimConditions'
 import { SetClaimConditions } from './SetClaimConditions'
 
 type ListOfLazyMintedNftsProps = {
   lazyMintedTokens: NFT[]
   nftMetadata: Record<string, any>
   handleSetClaimCondition: (data: any) => Promise<boolean | undefined>
+  getClaimConditionsById: (tokenId: string) => Promise<ClaimCondition[]>
 }
 export const ListOfLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
   const [nft, setNFT] = useState<NFT>()
-  const [nftIndex, setNftIndex] = useState(0)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [addPhase, setAddPhase] = useState(false)
   const [tabIndex, setTabIndex] = useState(0)
+  const [existingClaimConditions, setExistingClaimConditions] = useState<ClaimCondition[]>([])
   const toast = useToast()
 
   const tabList = ['Details', 'Claim Conditions', 'Claim']
 
-  const handleViewMore = (obj: NFT, index: number) => {
-    onOpen() // open modal
-
-    console.log(obj)
-    console.log('index: ', index)
-    setNFT(obj)
-    setNftIndex(index)
-  }
-
   const handleTabsChange = (idx: number) => {
     setTabIndex(idx)
+  }
+
+  const getClaimConditionsById = async (tokenId: string) => {
+    const existingClaims = await props.getClaimConditionsById(tokenId)
+    console.log('existing claims: ', existingClaims)
+    setExistingClaimConditions([...existingClaims])
+  }
+
+  const handleViewMore = (_nft: NFT) => {
+    onOpen() // open modal
+    getClaimConditionsById(_nft.metadata.id)
+    setNFT(_nft)
   }
 
   return (
@@ -68,16 +75,16 @@ export const ListOfLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
           <ModalHeader fontSize={24}>{nft?.metadata.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text pb={8} color={'gray.300'}>
+            <Text pb={8} color={'gray.300'} fontWeight={600}>
               {nft?.metadata.description}
             </Text>
             <Tabs index={tabIndex} onChange={handleTabsChange}>
               <TabList>
                 {tabList &&
                   tabList.length > 0 &&
-                  tabList.map((t, i) => (
+                  tabList.map((txt, i) => (
                     <Tab key={i} fontWeight={500}>
-                      {t}
+                      {txt}
                     </Tab>
                   ))}
               </TabList>
@@ -91,7 +98,7 @@ export const ListOfLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
                     </VStack>
                     <VStack spacing={4} alignItems={'flex-start'} style={{ fontWeight: 400 }} color={'gray.300'}>
                       <Text>{nft?.type}</Text>
-                      <Text>{nftIndex}</Text>
+                      <Text>{nft?.metadata.id}</Text>
                       <Text>{nft?.supply}</Text>
                     </VStack>
                   </HStack>
@@ -102,15 +109,20 @@ export const ListOfLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
                     <Text color={'gray.300'} fontStyle={'italic'}>
                       Condition how your NFTs can be claimed
                     </Text>
+                    {existingClaimConditions && existingClaimConditions.length > 0 && (
+                      <ListExistingClaimConditions nft={nft!} existingClaimConditions={existingClaimConditions} nftMetadata={props.nftMetadata} />
+                    )}
                   </VStack>
-                  <SetClaimConditions
-                    handleSetClaimCondition={props.handleSetClaimCondition}
-                    nftMetadata={props.nftMetadata}
-                  />
-                  <Button mt={8}>+ Add Phase</Button>
+                  {addPhase && <SetClaimConditions handleSetClaimCondition={props.handleSetClaimCondition} nftMetadata={props.nftMetadata} />}
+                  {existingClaimConditions.length == 0 && (
+                    <Button mt={8} leftIcon={<AddIcon />} onClick={() => setAddPhase(!addPhase)}>
+                      Add Phase
+                    </Button>
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <p>Oh, hello there. 3</p>
+                    {/* TODO: incorporate a claim form here */}
+                  <p>Claim form starts here</p>
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -136,17 +148,17 @@ export const ListOfLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
             </Tr>
           </Thead>
           <Tbody>
-            {props.lazyMintedTokens.map((nft, i) => {
+            {props.lazyMintedTokens.map((nft) => {
               return (
-                <Tr key={i}>
+                <Tr key={nft.metadata.id}>
                   <Td>
-                    <Text>{i}</Text>
+                    <Text>{nft.metadata.id}</Text>
                   </Td>
                   <Td>
                     <MediaRenderer src={nft.metadata.image} width="200px" height="" alt={String(nft.metadata.name)} />
                   </Td>
                   <Td>
-                    <Button onClick={() => handleViewMore(nft, i)} variant={'link'}>
+                    <Button onClick={() => handleViewMore(nft)} variant={'link'}>
                       {formatString.titleCase(String(nft.metadata.name))}
                     </Button>
                   </Td>
@@ -156,7 +168,7 @@ export const ListOfLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
 
                   <Td isNumeric>{nft.supply}</Td>
                   <Td>
-                    <Button onClick={() => handleViewMore(nft, i)} variant={'outline'}>
+                    <Button onClick={() => handleViewMore(nft)} variant={'outline'}>
                       View More / Configure
                     </Button>
                   </Td>
