@@ -2,8 +2,7 @@
 import { ethers, BigNumber, BigNumberish, Transaction } from 'ethers'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import {
-    METOKENS_ADDRESS_GOERLI,
-    DAI,
+    METOKENS_ADDRESS_MUMBAI,
     FOUNDRY_FACET_ABI,
     HUB_FACET_ABI,
     METOKEN_FACTORY_ABI,
@@ -12,18 +11,18 @@ import {
     ERC20_ABI,
 } from '../config'
 import { ThirdwebSDK, useAddress, useContract, useSigner, useContractRead } from '@thirdweb-dev/react'
-import { Goerli } from '@thirdweb-dev/chains';
+import { Mumbai } from '@thirdweb-dev/chains';
 import { Sign } from 'crypto';
 
 // Define constants for various contract addresses and token addresses
-export const meTokenRegistry = `${METOKENS_ADDRESS_GOERLI.metokensRegistryFactory}`
-export const meTokenFactory = `${METOKENS_ADDRESS_GOERLI.metokenFactory}`
-export const hubFacet = `${METOKENS_ADDRESS_GOERLI.hubFacet}`
-export const foundryFacet = `${METOKENS_ADDRESS_GOERLI.foundryFacet}`
-export const meTokenDiamond = `${METOKENS_ADDRESS_GOERLI.meTokenDiamond}`
-export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
+export const meTokenRegistry = `${METOKENS_ADDRESS_MUMBAI.metokensRegistryFactory}`
+export const meTokenFactory = `${METOKENS_ADDRESS_MUMBAI.metokenFactory}`
+export const hubFacet = `${METOKENS_ADDRESS_MUMBAI.hubFacet}`
+export const foundryFacet = `${METOKENS_ADDRESS_MUMBAI.foundryFacet}`
+export const meTokenDiamond = `${METOKENS_ADDRESS_MUMBAI.meTokenDiamond}`
+export const meTokenRegistryFacet = `${METOKENS_ADDRESS_MUMBAI.meTokensRegistryFacet}`
 export const nullToken = `0x${'0'.repeat(40)}`
-export const daiAddress = `${DAI.goerli}`
+//export const daiAddress = `${erc20Token.DAI.chain.ethereum.MUMBAI}`
 
 // Define an interface for BasicHubInfo
 interface BasicHubInfo {
@@ -44,13 +43,13 @@ export const getCollateralData = async (collateralTokenAddress: string) => {
     let id;
     // Metokens will have multiple options for collateral
     // When a new token can be used as collateral add a case to match token with ID for query.
-    switch (collateralTokenAddress) {
-        case daiAddress:
-            id = 'dai';
-            break;
-        default:
-            throw new Error('Only DAI is supported as collateral currently.');
-    }
+    // switch (collateralTokenAddress) {
+    //     case daiAddress:
+    //         id = 'dai';
+    //         break;
+    //     default:
+    //         throw new Error('Only DAI is supported as collateral currently.');
+    // }
 
     const tokenURL = `https://api.coingecko.com/api/v3/${id}?localization=false`;
     const tokenResponse = await fetch(tokenURL);
@@ -69,7 +68,7 @@ if (address === undefined) throw new Error('Wallet not detected');
 const signer = new ethers.providers.JsonRpcProvider().getSigner(address)
 
 // Create an SDK signer using the Thirdweb SDK
-const sdkSigner = ThirdwebSDK.fromSigner(signer, Goerli)
+const sdkSigner = ThirdwebSDK.fromSigner(signer, Mumbai)
 
 // Use the mainnet provider for reads, to ensure anyone can view the profile regardless of the network
 const registryContract = await sdkSigner.getContract(meTokenRegistry, METOKENS_REGISTRY_ABI)
@@ -238,4 +237,3 @@ export const burn = async (
     );
     return meTokenFoundry.call('burn', [meToken, amount, sender]);
 };
-
