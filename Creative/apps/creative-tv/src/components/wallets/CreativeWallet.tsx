@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 import { 
     Box, 
