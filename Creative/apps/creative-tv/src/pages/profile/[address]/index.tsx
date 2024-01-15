@@ -26,25 +26,26 @@ import {
 } from '@chakra-ui/react'
 import {
   ConnectWallet,
-  ThirdwebSDK,
   useAddress,
   useContract,
   useContractRead,
   useContractWrite,
   useNFTBalance,
   useOwnedNFTs,
-  useSigner,
+  EmbeddedWallet,
+  SmartWallet,
 } from '@thirdweb-dev/react'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
+import { Mumbai } from '@thirdweb-dev/chains'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
 import truncateEthAddress from 'truncate-eth-address'
-import { LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
+import { LOCK_ADDRESS_MUMBAI_TESTNET, THIRDWEB_API_KEY, ACCOUNT_FACTORY_TESTNET } from 'utils/config'
 //import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
-import Wert from './wert'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 import MyAssets from 'components/MyAssets'
 
@@ -56,17 +57,59 @@ const ProfilePage: NextPage = () => {
   const [lendingAddress, setLendingAddress] = useState('')
   const [subscribed, setSubscribed] = useState(false)
   const toast = useToast()
-  const address = useAddress()
-  const signer = useSigner()
-  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
+  const address = useAddress();
+    const [sdk, setSdk] = useState<ThirdwebSDK | null>(null);
+    const [isWalletConnected, setIsWalletConnected] = useState(false);
+    const [walletAddress, setWalletAddress] = useState('');
+
+    useEffect(() => {
+        if (sdk && isWalletConnected) {
+            sdk.wallet.getAddress().then(setWalletAddress);
+        }
+    }, [sdk, isWalletConnected]);
+
+    const connectSmartWallet = async () => {
+        if (isWalletConnected) return;
+    
+        try {
+          const personalWallet = new EmbeddedWallet({
+            chain: Mumbai,
+            clientId: THIRDWEB_API_KEY || '',
+          });
+    
+          const authResult = await personalWallet.authenticate({ strategy: "iframe" });
+          await personalWallet.connect({authResult});
+    
+          const config = {
+            chain: "mumbai",
+            factoryAddress: ACCOUNT_FACTORY_TESTNET,
+            clientId: THIRDWEB_API_KEY,
+            gasless: true,
+          };
+    
+          const wallet = new SmartWallet(config);
+          await wallet.connect({ personalWallet });
+    
+          const sdkInstance = await ThirdwebSDK.fromWallet(wallet, "mumbai", {
+            clientId: THIRDWEB_API_KEY,
+          });
+    
+          setSdk(sdkInstance);
+          setIsWalletConnected(true);
+        } catch (error) {
+          console.error('Error setting up wallet and SDK:', error);
+        }
+    };
+
+
 
   /*******  CONTRACT READING ********/
   useEffect(() => {
     // Skip if prerequisites aren't met
-    if (!address || !sdkSigner || !Unlock.abi) return
+    if (!address || !sdk || !Unlock.abi) return
     // Function to get subscription status from the contract
     const getSubscribedData = async () => {
-      const unlockContract = await sdkSigner?.getContractFromAbi(
+      const unlockContract = await sdk?.getContractFromAbi(
         LOCK_ADDRESS_MUMBAI_TESTNET.address,
         Unlock.abi
       )
@@ -81,7 +124,7 @@ const ProfilePage: NextPage = () => {
       console.log(res)
       setSubscribed(res)
     })
-  }, [address, sdkSigner, Unlock.abi])
+  }, [address, sdk, Unlock.abi])
 
   // Hooks to interact with the contract
   const {
