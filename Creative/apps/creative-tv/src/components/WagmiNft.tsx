@@ -5,8 +5,7 @@ import {
   Stack, 
   Text, 
   useToast, 
-  Flex, 
-  textDecoration
+  Flex,
 } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { 
@@ -320,7 +319,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} width="100%" alt={`${asset.name}`} />
 
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Congrats, your asset was uploaded to IPFS.
+                  Congrats, your asset was uploaded to IPFS!
                 </Text>
 
                 <Button
