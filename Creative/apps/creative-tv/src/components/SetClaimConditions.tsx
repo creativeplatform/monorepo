@@ -17,7 +17,8 @@ type SetClaimConditionsProps = {
   nftContractAddress?: string
   nftMetadata: Record<string, any>
   contractMetadata?: string
-  handleSetClaimCondition: (data: any) => Promise<boolean | undefined>
+  handleSetClaimCondition: (data: any, tokenId:string) => Promise<boolean | undefined>
+  tokenId: string
 }
 
 //
@@ -52,7 +53,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
 
     try {
       setIsSubmitting(true)
-      const ans = await props.handleSetClaimCondition(formData)
+      const ans = await props.handleSetClaimCondition(formData, props.tokenId)
       if (ans) {
         setIsSubmitting(false)
       }
@@ -91,7 +92,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                     size={'lg'}
                     {...register('phaseName')}
                     mb={formState.errors.phaseName ? 0 : 4}
-                    placeholder="Enter numbers of nft for sale"
+                    placeholder="Enter name to for this phase (Phase One)"
                     aria-invalid={formState.errors.phaseName ? 'true' : 'false'}
                     value={field.value}
                   />
