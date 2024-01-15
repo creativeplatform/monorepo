@@ -4468,10 +4468,16 @@ export const LENS_CONTRACT_ABI = [
   },
 ]
 
-
 export const NAME_OF_SAVED_CONTRACT_ADDRESS = 'JOHN_DOE' // The name used to save the deployed contract address to localStorage or remote Server.
 export const DEV_ENVIRONMENT = {
   prod: 'production',
   dev: 'development',
   test: 'test',
+}
+
+// Global Colors
+export const globalTheme = {
+  colors: {
+    primary: '#EC407A',
+  }
 }

@@ -220,3 +220,39 @@ export const handleCopyString = (args: HandleCopyStringArgs) => {
   console.log('str copied:', args.txt)
   args.toast
 }
+
+/**
+ *
+ * @param price The price in BigNumber
+ * @param decimals The decimals uint
+ * @returns Human readable figure
+ *
+ * @example const res = parseCurrencyDecimals(25000000000, 1_000_000)
+ * console.log(res) => 2.5
+ */
+export const parseCurrencyDecimals = (price: number, decimals: number) => {
+  console.log('parseCurrencyDecimals: ', decimals)
+  if (decimals) {
+    return price / decimals
+  }
+  return price / 10 ** 6
+}
+
+/**
+ * This functions accepts a ERC20 token address that is contained the
+ * `claimConditions.currency` and returns the symbol of the token.
+ * 
+ * @param currencyAddress The contract address to the token
+ * @returns The symbol of the token
+ * 
+ * 
+ * @example const symbol = parseCurrencyAddressToSymbol('0x0245944939948844')
+ * console.log(symbol) => USDC
+ */
+export const parseCurrencyAddressToSymbol = (currencyAddress: string) => {
+  return Object.values(claimConditions.currency).map((d, i) => {
+    if (parseInt(d) == parseInt(currencyAddress)) {
+      return Object.keys(claimConditions.currency)[i]
+    }
+  })
+}
