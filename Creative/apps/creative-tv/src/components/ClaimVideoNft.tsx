@@ -4,9 +4,11 @@ import { useAddress, useContract, useContractMetadata, useSigner } from '@thirdw
 import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { erc20Token } from '../utils/config'
-import { thirdwebSDK } from '../utils/helpers'
+import { NAME_OF_SAVED_CONTRACT_ADDRESS, erc20Token } from '../utils/config'
+import { thirdwebSDK, windowStorage } from '../utils/helpers'
 import { IAssetData, IReturnedAssetData } from '../utils/types'
+
+
 
 // Milestone
 
@@ -34,13 +36,8 @@ import { IAssetData, IReturnedAssetData } from '../utils/types'
 //   )
 // }
 
-// Replace this with your contract address
-// export const HIGH_LANDER_CONTRACT_ADDRESS: string = '0x367E9Cedd79bB473B42540dB526f3b1f6840B214'
-
-export const NFT_CONTRACT_ADDRESS: string = '0xd5f81Ab154fD12A9f99Eb819aC3dFdA91494d3d5'
-
 // Replace this with your token id
-export const tokenId = 1
+export const tokenId = 0
 
 interface AssetData extends IAssetData {
   storage?: {
@@ -92,6 +89,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   const [qtyOfNftToMint, setQtyOfNftToMint] = useState(1)
   const [isMintingNFT, setIsMintingNFT] = useState(false)
   const [mintingError, setMintingError] = useState('')
+  const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
   const [isActiveClaimConditionLoading, setIsActiveClaimConditionLoading] = useState(false)
   const [accountBalanceError, setAccountBalanceError] = useState('')
   const [accountBalanceToLow, setIsAccountBalanceToLow] = useState(false)
@@ -107,19 +105,28 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   const { data: usdcContract } = useContract(erc20Token?.USDC.chain.polygon.mumbai)
 
   // NFT CONTRACT
-  const { data: nftContract } = useContract(NFT_CONTRACT_ADDRESS)
+  const { data: nftContract } = useContract(deployedContractAddress)
 
   const { data: contractMetadata } = useContractMetadata(nftContract)
 
   useEffect(() => {
- 
+    // windowStorage.set({ name: NAME_OF_SAVED_CONTRACT_ADDRESS, value: '0x6171a3DfAcd25802079137d5D69db51D64E025a1' })
+
+    /////////////////////////////////////////////
+    // Fetch contractAddress if user already deployed
+    /////////////////////////////////////////////
+    const savedContractAddress = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
+
+    if (savedContractAddress) {
+      // set contractAddress to state
+      setDeployedContractAddress(savedContractAddress)
+    }
+
     // set price of nft
     setPriceOfNft(Number(props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT))
     // console.log('assetData', props.assetData);
 
     const initClaimConditions = async () => {
-      console.log('tokenId: ', tokenId)
-
       try {
         const allClaimCondition = await nftContract?.erc1155.claimConditions.getAll(tokenId)
 
@@ -132,10 +139,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         } else {
           setClaimConditions([])
           setIsActiveClaimConditionLoading(false)
-          
-          console.log('allClaimCondition: ', allClaimCondition || 'No conditions')
         }
- 
 
         // ActiveClaimConditions
         // const activeClaimCondition = await nftContract?.erc1155.claimConditions.getActive(tokenId)
@@ -148,6 +152,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         // }
 
         // claimIneligibilityReasons
+       
         const claimIneligibilityReasons = await nftContract?.erc1155.claimConditions.getClaimIneligibilityReasons(
           tokenId,
           qtyOfNftToMint,
@@ -180,6 +185,28 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
     }
 
     initClaimConditions()
+
+    const tokenMetadata = async () => {
+      try {
+        const tMeta = await nftContract?.erc1155.getTokenMetadata(tokenId)
+        console.log('tokenMetadata: ', tMeta)
+        // const updateTokenMetadata = await nftContract?.erc1155.
+      } catch (err: any) {
+        console.error('ERROR 101: ', err)
+      }
+    }
+    tokenMetadata()
+
+    const claimCondition = async () => {
+      const c = await nftContract?.call('claimCondition', [tokenId]);
+      console.log('claim condition: ', c);
+      
+      const nextTokenIdToMint = await nftContract?.erc1155.nextTokenIdToMint()
+      console.log('nextTokenIdToMint: ', nextTokenIdToMint?.toNumber())
+
+    }
+    claimCondition()
+
   }, [props.assetData.name])
 
   const totalAvailableSupply = useMemo(() => {
@@ -324,7 +351,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
       const prepareTxn = await nftContract?.erc1155.claim.prepare(tokenId, qtyOfNftToMint, {
         currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
         checkERC20Allowance: true,
-        pricePerToken: props.assetData.storage.ipfs.spec.nftMetadata.properties.pricePerNFT,
+        pricePerToken: props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
       })
       const estimateTxnCost = await prepareTxn?.estimateGasCost()
 
@@ -368,7 +395,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
     const claimConditionInput = {
       startTime: new Date(),
       currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
-      price: props.assetData.storage.ipfs.spec.nftMetadata.properties.pricePerNFT,
+      price: props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
       snapshot: [{ address: String(connectedAddress), maxClaimable: 1 }],
       maxClaimablePerWallet: 5,
     }
@@ -462,7 +489,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           //     tokenId?.toString(),
           //     qtyOfNftToMint,
           //     erc20Token?.USDC.chain.polygon.mumbai,
-          //     props.assetData.storage.ipfs.spec.nftMetadata.properties.pricePerNFT,
+          //     props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
           //     [],
           //     ethers.utils.formatBytes32String('0'),
           //   ],
@@ -477,7 +504,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           const nftClaimTxn = await nftContract?.erc1155.claim(tokenId as any, qtyOfNftToMint, {
             currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
             checkERC20Allowance: true,
-            pricePerToken: props.assetData.storage.ipfs.spec.nftMetadata.properties.pricePerNFT,
+            pricePerToken: props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
           })
 
           console.log('receipt: ', nftClaimTxn?.receipt)
