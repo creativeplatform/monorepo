@@ -44,8 +44,10 @@ import truncateEthAddress from 'truncate-eth-address'
 import { LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 //import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
-import MyAssets from 'components/my-assets'
+import Wert from './wert'
 import Unlock from '../../../utils/fetchers/Unlock.json'
+import MyAssets from 'components/MyAssets'
+
 
 const ProfilePage: NextPage = () => {
   // State and hooks setup

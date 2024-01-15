@@ -1,47 +1,24 @@
-import { ChatIcon, DownloadIcon, LinkIcon } from '@chakra-ui/icons'
-import {
-  Avatar,
-  Badge,
-  Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
-  Flex,
-  HStack,
-  Heading,
-  Image,
-  SimpleGrid,
-  Spacer,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
-import { LivepeerConfig, Player } from '@livepeer/react'
-import { useQuery } from '@tanstack/react-query'
-import { useAddress } from '@thirdweb-dev/react'
-import { motion } from 'framer-motion'
-import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { useRouter } from 'next/router'
+import { useQuery } from '@tanstack/react-query'
+import { Card, CardBody, CardFooter, Stack, Heading, Divider, Button, Box, SimpleGrid, Badge, CardHeader, Flex, Avatar, Text, Image, Spacer, ButtonGroup } from '@chakra-ui/react'
+import { DownloadIcon, LinkIcon, ChatIcon } from '@chakra-ui/icons'
+import { motion } from 'framer-motion'
+import { LivepeerConfig, Player } from '@livepeer/react'
+import { useLivepeerClient } from 'hooks/useLivepeerClient'
+import { AssetData } from 'utils/fetchers/assets'
 import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
-import { AssetData } from 'utils/fetchers/assets'
 // import { Discussion } from "@orbisclub/components";
 // import "@orbisclub/components/dist/index.modern.css";
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
 const PosterImage = () => {
-  return (
-    <Image src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
-  )
+  return <Image src={`${CREATIVE_LOGO_WHT}`} objectFit="contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" alt="Creative Logo" />
 }
 
 export default function AllAssets() {
   const router = useRouter()
-  const connectedAddress = useAddress()
   const videosQuery = useQuery<ApiResponse<AssetData['video'][]>>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,
   })
@@ -49,29 +26,22 @@ export default function AllAssets() {
   if (videosQuery.isLoading) {
     console.log('loading...')
     // loading state
-    return <Box mb={24}>Loading...</Box>
+    return <Box>Loading...</Box>
   }
 
   if (videosQuery.isError || videosQuery.data.errors) {
     console.log('error', videosQuery.error)
-    return <Box children="Error loading resource." mb={24} />
+    return <Box children="error" />
   }
 
-  const readyVideos =
-    videosQuery.data.data?.filter((video): video is AssetData['video'] => {
-      return (
-        video.status.phase === 'ready' &&
-        Number(video.storage?.ipfs?.spec?.nftMetadata?.assetData?.properties?.pricePerNFT) > 0 &&
-        video.creatorId?.value != connectedAddress
-      )
-    }) ?? []
+  const readyVideos = videosQuery.data.data?.filter((video): video is AssetData['video'] => video.status.phase === 'ready') ?? []
 
   return (
     <LivepeerConfig client={useLivepeerClient}>
-      <SimpleGrid spacing={4} minChildWidth={350} mb={12}>
+      <SimpleGrid spacing={4} minChildWidth={350}>
         {readyVideos.map((video) => {
           return (
-            <Card key={video.id} maxW="md" variant={'elevated'} mb={12}>
+            <Card key={video.id} maxW="md" variant={'elevated'}>
               <CardHeader>
                 <Flex>
                   <Flex flex={1} gap={4} align="center" flexWrap={'wrap'}>
@@ -120,17 +90,9 @@ export default function AllAssets() {
                   <Text>Views: {video?.viewCount.toString()}</Text> {/* Displaying the view count */}
                 </Flex>
                 <Stack mt="6" spacing="3">
-                  <HStack>
-                    <Heading>{video?.name}</Heading>
-                    <Spacer />
-                    <Text fontSize="1.5em" fontWeight={'medium'}>
-                      ${video.storage?.ipfs?.spec?.nftMetadata?.assetData?.properties?.pricePerNFT}
-                    </Text>
-                  </HStack>
+                  <Heading size={'md'}>{video?.name}</Heading>
                   <Text>
-                    {/* {video.storage?.ipfs.spec.nftMetadata.description} */}
-                    With Creative TV, we wanted to sync the speed of creation with the speed of design. We wanted the creator to be just as excited as
-                    the designer to create new content.
+                    With Creative TV, we wanted to sync the speed of creation with the speed of design. We wanted the creator to be just as excited as the designer to create new content.
                   </Text>
                 </Stack>
               </CardBody>
@@ -142,55 +104,43 @@ export default function AllAssets() {
                   '& > button': {
                     minW: '136px',
                   },
-                }}>
+                }}
+              >
                 {video.status.phase === 'ready' ? (
                   <>
-                    <ButtonGroup mb={5} spacing={10}>
-                      <Button
-                        as={motion.div}
-                        _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-                        flex="1"
-                        variant="ghost"
-                        leftIcon={<ChatIcon />}
-                        onClick={() => router.push(`discover/${encodeURIComponent(video?.id)}`)}>
-                        Comment
-                      </Button>
-                      <Button
-                        as={motion.div}
-                        _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-                        flex="1"
-                        variant="ghost"
-                        leftIcon={<LinkIcon />}>
-                        Share
-                      </Button>
-                      <Button
-                        backgroundColor={'#EC407A'}
-                        onClick={() =>
-                          router.push({
-                            pathname: `discover/mint-nft`,
-                            query: {
-                              assetData: JSON.stringify(video),
-                            },
-                          })
-                        }
-                        className="card-mint-button"
-                        as={motion.div}
-                        _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
-                        flex="1"
-                        variant="ghost"
-                        leftIcon={<DownloadIcon />}>
-                        Collect
-                      </Button>
-                    </ButtonGroup>
+                  <ButtonGroup mb={5} spacing={10}>
+                  <Button as={motion.div}
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<ChatIcon />} onClick={() => router.push(`discover/${encodeURIComponent(video?.id)}`)}>
+                      Comment
+                    </Button>
+                    <Button as={motion.div}
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }} flex="1" variant="ghost" leftIcon={<LinkIcon />}>
+                      Share
+                    </Button>
+                    <Button
+                      backgroundColor={'#EC407A'}
+                      onClick={() => router.push(`/mint-nft-video?assetId=${video?.id}`)}
+                      className="card-mint-button"
+                      as={motion.div}
+                      _hover={{ transform: 'scale(1.1)', cursor: 'pointer' }}
+                      flex="1"
+                      variant="ghost"
+                      leftIcon={<DownloadIcon />}
+                    >
+                      Collect
+                    </Button>
+                  </ButtonGroup>
                   </>
                 ) : (
-                  <>{''}</>
+                  <>
+                  {''}
+                  </>
                 )}
               </CardFooter>
             </Card>
-          )
+          );
         })}
       </SimpleGrid>
     </LivepeerConfig>
-  )
+  );
 }

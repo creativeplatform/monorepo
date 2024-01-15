@@ -1,4 +1,12 @@
-import { Box, Button, Stack, Text, useToast, Flex, VStack } from '@chakra-ui/react'
+import { 
+  Box,
+  IconButton, 
+  Button, 
+  Stack, 
+  Text, 
+  useToast, 
+  Flex,
+} from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRenderer } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
@@ -257,7 +265,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 />
 
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Congrats, your asset was uploaded to IPFS.
+                  Congrats, your asset was uploaded to IPFS!
                 </Text>
 
                 <Button

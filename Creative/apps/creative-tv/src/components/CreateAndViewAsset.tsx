@@ -4,7 +4,6 @@ import {
   AlertIcon,
   Box,
   Button,
-  Center,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -15,14 +14,15 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react'
+
 import { Player, useCreateAsset } from '@livepeer/react'
 import { useAddress } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { VideoPreview } from './videoPreview'
 import { IAssetData } from '../utils/types'
+import { VideoPreview } from './videoPreview'
 
 export interface MintDetail {
   nFTAmountToMint: number
@@ -53,6 +53,8 @@ const CreateAndViewAsset = () => {
   const [isUpdateAsset, setIsUpdateAsset] = useState<boolean>() // Note: The `isUpdateAsset` state variable indicates whether an asset update operation is in progress.
 
   const [isFileSelected, setIsFileSelected] = useState<boolean>(false) // Note: The `isFileSelected` state variable indicates whether a video file has been selected.
+
+  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false) // Note: The `isUploadingToIPFS` state variable indicates whether the video file is currently being uploaded to IPFS.
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false) // Note: The `isProcessing` state variable indicates whether the video file is currently being processed.
 
@@ -258,7 +260,6 @@ const CreateAndViewAsset = () => {
                         disabled={createAssetStatus === 'loading'}
                         mb={formErrors.description ? 0 : 4}
                         placeholder="Enter a description for the episode video"
-                        aria-invalid={formErrors.description ? 'true' : 'false'}
                       />
                     )}
                   />
@@ -281,22 +282,20 @@ const CreateAndViewAsset = () => {
                     </Box>
                   )
                 )}
-                <Center>
-                  <Button
-                    type="submit"
-                    className="upload-button"
-                    style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
-                    _hover={{
-                      color: 'gray.800',
-                      transform: isError && 'scale(1.015)',
-                      cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
-                    }}
-                    disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
-                    isLoading={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
-                    mb={20}>
-                      Upload Video
-                  </Button>
-                </Center>
+                <Button
+                  type="submit"
+                  className="upload-button"
+                  style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
+                  _hover={{
+                    color: 'gray.800',
+                    transform: isError && 'scale(1.015)',
+                    cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
+                  }}
+                  disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
+                  isLoading={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
+                  mb={20}>
+                  Upload Video
+                </Button>
               </form>
             )}
           </Box>
@@ -336,24 +335,15 @@ const CreateAndViewAsset = () => {
           </div>
 
           <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }}>
-            <Text as={'h2'} style={{ fontWeight: '500', fontSize: 24, marginBottom: 24 }}>
-              Video Uploaded Successfully.
+            <Text as={'h3'} style={{ fontWeight: '600', fontSize: 24, marginBottom: 24 }}>
+              Asset uploaded successfully.
             </Text>
 
-            <Text as={'h3'} style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
-            <Box style={{ lineHeight: 1.75 }}>
-              <Text>
-                <span style={{ fontWeight: '700' }}>Asset Name: </span>{createdAsset?.[0]?.name}
-              </Text>
-              <Text>
-                <span style={{ fontWeight: '700' }}>Asset Description: </span>{assetData?.description}
-              </Text>
-              <Text>
-                <span style={{ fontWeight: '700' }}>Playback URL: </span>{createdAsset?.[0]?.playbackUrl}
-              </Text>
-              <Text>
-                <span style={{ fontWeight: '700' }}>IPFS CID: </span>{createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}
-              </Text>
+            <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
+            <Box style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
+              <Text>Asset Name: {createdAsset?.[0]?.name}</Text>
+              <Text>Playback URL: {createdAsset?.[0]?.playbackUrl}</Text>
+              <Text>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
             </Box>
           </Stack>
           <Box className="Proceed-button">
@@ -418,29 +408,28 @@ const CreateAndViewAsset = () => {
                     <FormHelperText mb={4}>The price can't be a negative value.</FormHelperText>
                   )}
                 </FormControl>
-                <Center>
-                  <Button
-                    type="submit"
-                    className="mint-button"
-                    bgColor="#EC407A"
-                    isLoading={mintFormState.isLoading}
-                    disabled={mintFormState.isLoading}
-                    _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
-                    // as={motion.div}
-                    onClick={() => {
-                      setAssetData((prev) => ({
-                        ...prev,
-                        nFTAmountToMint: nFTAmountToMint,
-                        pricePerNFT: pricePerNFT,
-                        properties: {
-                          playbackId: String(createdAsset?.[0]?.playbackId),
-                          videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
-                        },
-                      }))
-                    }}>
-                    Update Data
-                  </Button>
-                </Center>
+
+                <Button
+                  type="submit"
+                  className="mint-button"
+                  bgColor="#EC407A"
+                  disabled={mintFormState.isLoading}
+                  isLoading={mintFormState.isLoading}
+                  _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
+                  // as={motion.div}
+                  onClick={() => {
+                    setAssetData((prev) => ({
+                      ...prev,
+                      nFTAmountToMint: nFTAmountToMint,
+                      pricePerNFT: pricePerNFT,
+                      properties: {
+                        playbackId: String(createdAsset?.[0]?.playbackId),
+                        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
+                      },
+                    }))
+                  }}>
+                  Update Metadata
+                </Button>
               </form>
             </Box>
           </Box>

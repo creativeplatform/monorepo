@@ -28,9 +28,14 @@ export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
 export const SESSION_PASSWORD = process.env.NEXT_SESSION_PASSWORD
 export const NODE_ENV = process.env.NODE_ENV
+export const SIWE_SESSION_SECRET = process.env.NEXT_PUBLIC_SIWE_SESSION_SECRET
+export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
 export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
+export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
+export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT
 export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY
 export const WERT_PARTNER_ID = process.env.NEXT_PUBLIC_WERT_PARTNER_ID
@@ -3093,6 +3098,46 @@ export const METOKENS_DIAMOND_ABI = [
     type: 'function',
   },
 ]
+
+export const erc20Token = {
+  TESTR: {
+    chain: {
+      polygon: {
+        mumbai: '0xc0823427fE72cFD105c71BEAd0476412283B07c5',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  USDC: {
+    chain: {
+      polygon: {
+        mumbai: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  DAI: {
+    chain: {
+      polygon: {
+        mumbai: '0xcB1e72786A6eb3b44C2a2429e317c8a2462CFeb1',
+        mainnet: '',
+      },
+      ethereum: {
+        sepolia: '',
+        goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
+        mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      },
+    },
+  },
+}
 
 // ERC20 ABI
 export const ERC20_ABI = [
