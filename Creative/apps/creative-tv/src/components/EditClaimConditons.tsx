@@ -1,4 +1,5 @@
 import { Box, Button, FormControl, FormHelperText, FormLabel, Input, Select, Stack, Text, VStack, useToast } from '@chakra-ui/react'
+import { NFT } from '@thirdweb-dev/react'
 import { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { claimConditions } from 'utils/helpers'
@@ -14,14 +15,13 @@ type ClaimFormData = {
 }
 
 type SetClaimConditionsProps = {
-  nftContractAddress?: string
-  nftMetadata: Record<string, any>
-  contractMetadata?: string
-  handleSetClaimCondition: (data: any) => Promise<boolean | undefined>
+  nft: NFT
+  handleEditClaimCondition: (data: any) => Promise<boolean | undefined>
+  setCanEditClaim: (data: any) => Promise<any>
 }
-
+ 
 //
-export function SetClaimConditions(props: SetClaimConditionsProps) {
+export function EditClaimConditions(props: SetClaimConditionsProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
@@ -45,14 +45,14 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
 
     const formData = {
       ...data,
-      maxClaimableSupply: props.nftMetadata?.properties?.nFTAmountToMint,
-      startTime: new Date(data.startTime).getTime(),
-      price: props.nftMetadata['properties']['pricePerNFT'],
+    //   maxClaimableSupply: props.nftMetadata?.properties?.nFTAmountToMint,
+    //   startTime: new Date(data.startTime).getTime(),
+    //   price: props.nftMetadata['properties']['pricePerNFT'],
     }
 
     try {
       setIsSubmitting(true)
-      const ans = await props.handleSetClaimCondition(formData)
+      const ans = await props.handleEditClaimCondition(formData)
       if (ans) {
         setIsSubmitting(false)
       }
@@ -69,7 +69,6 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
     }
   }
 
- 
   return (
     <Box my={8} style={{ border: '1px solid #b2b2b2', borderRadius: '8px', padding: '24px' }}>
       <Text as={'h4'} style={{ paddingTop: '12px', paddingBottom: '42px', fontSize: 24 }}>
@@ -198,12 +197,13 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
                     type="number"
                     {...register('maxClaimablePerWallet')}
                     min={1}
-                    max={props.nftMetadata['properties']['amountOfNftToMint'] - 1}
+                    // max={props.nftMetadata['properties']['amountOfNftToMint'] - 1}
                     size={'lg'}
                     mb={formState.errors.maxClaimablePerWallet ? 0 : 4}
                     placeholder="The maximum number of tokens a wallet can claim"
                     aria-invalid={formState.errors.maxClaimablePerWallet ? 'true' : 'false'}
                     value={field.value}
+                    // defaultValue={props.nft}
                   />
                 )}
               />
