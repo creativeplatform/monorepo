@@ -23,6 +23,7 @@ import {
   Text,
   VStack,
   useToast,
+  Skeleton,
 } from '@chakra-ui/react'
 import {
   ConnectWallet,
@@ -58,13 +59,12 @@ const ProfilePage: NextPage = () => {
   const [subscribed, setSubscribed] = useState(false)
   const toast = useToast()
   const address = useAddress();
-    const [sdk, setSdk] = useState<ThirdwebSDK | null>(null);
-    const [isWalletConnected, setIsWalletConnected] = useState(false);
-    const [walletAddress, setWalletAddress] = useState('');
+  const [sdk, setSdk] = useState<ThirdwebSDK | null>(null);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
 
     useEffect(() => {
         if (sdk && isWalletConnected) {
-            sdk.wallet.getAddress().then(setWalletAddress);
+            sdk.wallet.getAddress();
         }
     }, [sdk, isWalletConnected]);
 
@@ -239,11 +239,11 @@ const ProfilePage: NextPage = () => {
       <Heading mt={10} mb={6} fontSize={{ base: '2xl', md: '3xl' }}>
         My Creative Profile
       </Heading>
-      {!address ? (
+      {!address && !subscribed ? (
         <Flex flexDirection="column" alignItems="center" gap={5} my={10}>
           <Text textAlign="center">Sign in to see your profile or create a new account</Text>
           <Box w={{ base: '100%', sm: '75%', md: '50%' }}>
-            <ConnectWallet btnTitle={'Sign In'} />
+            <Button onClick={connectSmartWallet}> Connect Email </Button>
           </Box>
         </Flex>
       ) : (
@@ -357,8 +357,7 @@ const ProfilePage: NextPage = () => {
                         <Text>You need to obtain a membership NFT.</Text>
                       ) : (
                         <>
-                          <Text>Loading membership </Text>
-                          <Spinner />
+                          <Skeleton />
                         </>
                       )}
                     </Box>
