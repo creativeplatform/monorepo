@@ -122,7 +122,7 @@ export async function deployEditionDropContract(signer: ethers.Signer, network: 
   }
 }
 
-export const claimConditions = {
+export const claimConditionsOptions = {
   phase: {
     'Select phase': '',
     'Phase 1': 'Phase 1',
@@ -150,7 +150,16 @@ export const claimConditions = {
   },
 }
 
-export function parseTimestampToDate(ts: number) {
+/**
+ * Function to parse timestamp to readable date
+ * @param dateString The date object to parse
+ * @returns Form input date
+ *
+ * @example
+ * const date = parseDate('Tue Jan 16 2024 13:13:32')
+ *  =>  16/01/2024 13:13
+ */
+function parseTimestampToDate(ts: number) {
   if (!ts) {
     return 'Not available'
   } else {
@@ -165,6 +174,37 @@ export function parseTimestampToDate(ts: number) {
   }
 }
 
+/**
+ * Function to parse `Date` string
+ * @param dateString The date object to parse
+ * @returns Form input date
+ *
+ * @example
+ * const date = parseDate('Tue Jan 16 2024 13:13:32')
+ *  =>  // '2024-01-16T13:13'
+ */
+function parseDate(dateString: Date) {
+  const d = new Date(dateString)
+
+  const hour = d.getHours()
+  const minutes = d.getMinutes()
+  const date = d.getDate()
+  const month = d.getMonth()
+  const year = d.getFullYear()
+
+  const dd = date > 10 ? date : `0${date}`
+  const mm = month > 10 ? month : `0${month + 1}`
+  const hh = hour > 10 ? hour : `0${hour}`
+  const min = minutes > 10 ? minutes : `0${minutes}`
+
+  // '2024-01-16T11:45'
+  return `${year}-${mm}-${dd}T${hh}:${min}`
+}
+
+export const date = {
+  parseDate,
+  parseTimestampToDate,
+}
 /**
  * The function wrap a sentence at particular length of characters
  * @param txt The sentence body
@@ -248,9 +288,9 @@ export const parseCurrencyDecimals = (price: number, decimals: number) => {
  * console.log(symbol) => USDC
  */
 export const parseCurrencyAddressToSymbol = (currencyAddress: string) => {
-  return Object.values(claimConditions.currency).map((d, i) => {
+  return Object.values(claimConditionsOptions.currency).map((d, i) => {
     if (parseInt(d) == parseInt(currencyAddress)) {
-      return Object.keys(claimConditions.currency)[i]
+      return Object.keys(claimConditionsOptions.currency)[i]
     }
   })
 }
