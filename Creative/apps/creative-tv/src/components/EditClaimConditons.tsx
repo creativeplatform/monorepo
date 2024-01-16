@@ -1,8 +1,9 @@
-import { Box, Button, FormControl, FormHelperText, FormLabel, Input, Select, Stack, Text, VStack, useToast } from '@chakra-ui/react'
-import { NFT } from '@thirdweb-dev/react'
-import { useState } from 'react'
+import { Box, Button, FormControl, FormHelperText, FormLabel, Input, Select, Stack, VStack, useToast } from '@chakra-ui/react'
+import { ClaimCondition, NFT, SmartContract } from '@thirdweb-dev/react'
+import { ethers } from 'ethers'
+import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { claimConditions } from 'utils/helpers'
+import { claimConditionsOptions, date } from 'utils/helpers'
 
 type ClaimFormData = {
   price?: string
@@ -14,20 +15,77 @@ type ClaimFormData = {
   waitInSeconds: string
 }
 
-type SetClaimConditionsProps = {
+type EditClaimConditionsProps = {
   nft: NFT
-  handleEditClaimCondition: (data: any) => Promise<boolean | undefined>
-  setCanEditClaim: (data: any) => Promise<any>
+  claimCondition: ClaimCondition
+  nftContract: SmartContract<ethers.BaseContract> | undefined
+  handleClaimConditionUpdateById: (tokenId: string, idx: number, claimInput: any) => Promise<void>
 }
- 
-//
-export function EditClaimConditions(props: SetClaimConditionsProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
+//
+export function EditClaimConditions(props: EditClaimConditionsProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isErrorFree, setIsErrorFree] = useState(false)
   const toast = useToast()
 
-  const submithandleClaimConditions: SubmitHandler<ClaimFormData> = async (data) => {
+  const cc = props.claimCondition
+  console.log('cc: ', cc)
+
+  useEffect(() => {
+    // TODO: decide Form appearance on when the `Modal` gets closed
+    //////////////////////////
+    // listen to the events
+    props.nftContract?.events.listenToAllEvents(async (e) => {
+      if (e.eventName == 'ClaimConditionsUpdated') {
+        console.log('eventData::ClaimConditionsUpdated ', e.data)
+      }
+    })
+    return () => {
+      props.nftContract?.events.removeAllListeners()
+    }
+  }, [props.nftContract])
+
+  const handleUpdateClaimCondition = async (formData: any, tokenId: string): Promise<boolean | undefined> => {
+    try {
+      const tx = await props.nftContract?.erc1155.claimConditions.set(tokenId, [
+        {
+          startTime: formData.startTime, // When the phase starts (i.e. when users can start claiming tokens)
+          maxClaimableSupply: formData.maxClaimableSupply, // limit how many mints for this presale
+          price: formData.price, // presale price
+          currencyAddress: formData.currencyAddress, // The address of the currency you want users to pay in
+          maxClaimablePerWallet: formData.maxClaimablePerWallet, // The maximum number of tokens a wallet can claim
+          metadata: {
+            name: formData.phaseName, // Name of the sale's phase
+          },
+          waitInSeconds: formData.waitInSeconds, // How long a buyer waits before another purchase is possible
+        },
+      ])
+
+      console.log('SetClaimConditions tx: ', tx?.receipt)
+
+      toast({
+        title: 'Set Claim Conditions',
+        description: `Successful with status: ${tx?.receipt.status}`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      return Number(tx?.receipt.status) > 0
+    } catch (err) {
+      console.log('claimConditions txError: ', err)
+
+      toast({
+        title: 'Set Claim Conditions',
+        description: `Failed to set claim conditions`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  const sumbitUpdatedClaimConditions: SubmitHandler<ClaimFormData> = async (data) => {
     const { errors } = formState
 
     const isRequiredFields =
@@ -42,20 +100,27 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
     if (isRequiredFields) {
       return
     }
+    console.log('data: ', data)
+    const dateObj = new Date(data.startTime)
 
     const formData = {
       ...data,
-    //   maxClaimableSupply: props.nftMetadata?.properties?.nFTAmountToMint,
-    //   startTime: new Date(data.startTime).getTime(),
-    //   price: props.nftMetadata['properties']['pricePerNFT'],
+      maxClaimablePerWallet: +data.maxClaimablePerWallet,
+      waitInSeconds: +data.waitInSeconds,
+      startTime: dateObj.getTime(),
+      // maxClaimableSupply: +props.nftMetadata?.properties?.nFTAmountToMint,
     }
+    console.log('formData: ', formData)
 
     try {
+      setIsErrorFree(true)
       setIsSubmitting(true)
-      const ans = await props.handleEditClaimCondition(formData)
-      if (ans) {
-        setIsSubmitting(false)
-      }
+
+      // TODO: remove after debugging
+      // const ans = await handleUpdateClaimCondition(formData, 'props.tokenId')
+      // if (ans) {
+      //   setIsSubmitting(false)
+      // }
     } catch (err: any) {
       setIsSubmitting(false)
       console.error(err)
@@ -69,13 +134,12 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
     }
   }
 
+  const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
+
   return (
-    <Box my={8} style={{ border: '1px solid #b2b2b2', borderRadius: '8px', padding: '24px' }}>
-      <Text as={'h4'} style={{ paddingTop: '12px', paddingBottom: '42px', fontSize: 24 }}>
-        Set conditions for the sale/claim of your NFT(s)
-      </Text>
-      <form onSubmit={handleSubmit(submithandleClaimConditions)} id="setClaimCondtion">
-        <FormControl mb={8}>
+    <Box my={8}>
+      <form onSubmit={handleSubmit(sumbitUpdatedClaimConditions)} id="updateClaimCondtion">
+        <FormControl mb={8} isDisabled={isErrorFree && isSubmitting}>
           <Stack direction={'column'} spacing={4} mb={4}>
             <VStack alignItems={'flex-start'}>
               <FormLabel>Name of Phase</FormLabel>
@@ -86,11 +150,11 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
                 render={({ field }) => (
                   <Input
                     color={'gray.300'}
-                    defaultValue={'Phase One'} // TODO: Check the number of claim already set and use that number to default the name of a phase
+                    defaultValue={cc.metadata?.name}
                     size={'lg'}
                     {...register('phaseName')}
                     mb={formState.errors.phaseName ? 0 : 4}
-                    placeholder="Enter numbers of nft for sale"
+                    placeholder="Enter name to for this phase (Phase 1)"
                     aria-invalid={formState.errors.phaseName ? 'true' : 'false'}
                     value={field.value}
                   />
@@ -101,6 +165,7 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
                   Select a name for the phase of sales.
                 </FormHelperText>
               )}
+              {/* "yyyy-MM-ddThh:mm" */}
             </VStack>
             <VStack alignItems={'flex-start'}>
               <FormLabel>Start time of Phase</FormLabel>
@@ -110,10 +175,11 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
                 rules={{ required: true }}
                 render={({ field }) => (
                   <Input
+                    defaultValue={date.parseDate(cc.startTime)}
                     color={'gray.300'}
                     minW={200}
                     {...register('startTime')}
-                    type="date"
+                    type="datetime-local"
                     size={'lg'}
                     mb={formState.errors.startTime ? 0 : 4}
                     placeholder="Start time of Phase"
@@ -134,22 +200,26 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
                 name="currencyAddress"
                 control={ctrl}
                 rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    color={'gray.300'}
-                    placeholder=""
-                    size={'lg'}
-                    {...register('currencyAddress')}
-                    aria-invalid={formState.errors.currencyAddress ? 'true' : 'false'}>
-                    <option value="">Select currency</option>
-                    {Object.keys(claimConditions.currency).map((c, i) => (
-                      <option key={i} value={Object.values(claimConditions.currency)[i]}>
-                        {c}
-                      </option>
-                    ))}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  return (
+                    <Select
+                      defaultValue={parseInt(cc.currencyAddress) > 0 ? cc.currencyAddress : ''}
+                      color={'gray.300'}
+                      placeholder=""
+                      size={'lg'}
+                      {...register('currencyAddress')}
+                      aria-invalid={formState.errors.currencyAddress ? 'true' : 'false'}>
+                      <option value="">Select currency</option>
+                      {Object.keys(claimConditionsOptions.currency).map((c, i) => (
+                        <option key={i} value={Object.values(claimConditionsOptions.currency)[i]}>
+                          {c}
+                        </option>
+                      ))}
+                    </Select>
+                  )
+                }}
               />
+
               {formState.errors.phaseName?.type === 'required' && (
                 <FormHelperText mb="32px" color={'red.500'}>
                   Select a name for the phase of sales.
@@ -163,20 +233,23 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
                 name="waitInSeconds"
                 control={ctrl}
                 rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    placeholder=""
-                    color={'gray.300'}
-                    size={'lg'}
-                    {...register('waitInSeconds')}
-                    aria-invalid={formState.errors.waitInSeconds ? 'true' : 'false'}>
-                    {Object.keys(claimConditions.waitInSecondsOptions).map((time, i) => (
-                      <option key={i} value={Object.values(claimConditions.waitInSecondsOptions)[i]}>
-                        {time}
-                      </option>
-                    ))}
-                  </Select>
-                )}
+                render={({ field }) => {
+                  return (
+                    <Select
+                      defaultValue={parseInt(cc.waitInSeconds.toString()) == 0 ? 300 : ''}
+                      placeholder=""
+                      color={'gray.300'}
+                      size={'lg'}
+                      {...register('waitInSeconds')}
+                      aria-invalid={formState.errors.waitInSeconds ? 'true' : 'false'}>
+                      {Object.keys(claimConditionsOptions.waitInSecondsOptions).map((time, i) => (
+                        <option key={i} value={Object.values(claimConditionsOptions.waitInSecondsOptions)[i]}>
+                          {time}
+                        </option>
+                      ))}
+                    </Select>
+                  )
+                }}
               />
               {formState.errors.waitInSeconds?.type === 'required' && (
                 <FormHelperText mb="32px" color={'red.500'}>
@@ -203,7 +276,7 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
                     placeholder="The maximum number of tokens a wallet can claim"
                     aria-invalid={formState.errors.maxClaimablePerWallet ? 'true' : 'false'}
                     value={field.value}
-                    // defaultValue={props.nft}
+                    defaultValue={cc.maxClaimablePerWallet}
                   />
                 )}
               />
@@ -224,8 +297,9 @@ export function EditClaimConditions(props: SetClaimConditionsProps) {
           }}
           style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}
           isLoading={isSubmitting}
+          loadingText={isSubmitting ? 'Saving' : ''}
           mb={20}>
-          Set Conditions
+          Save
         </Button>
       </form>
     </Box>
