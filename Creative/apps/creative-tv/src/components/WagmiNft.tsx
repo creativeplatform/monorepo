@@ -10,7 +10,7 @@ import { CREATIVE_ADDRESS, NAME_OF_SAVED_CONTRACT_ADDRESS } from '../utils/confi
 import { windowStorage } from '../utils/helpers'
 import { AssetData } from './CreateAndViewAsset'
 import { LazyMinting } from './LazyMinting'
-import { ListOfLazyMintedNfts } from './ListOfLazyMintedNfts'
+import { ListLazyMintedNfts } from './ListLazyMintedNfts'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
 
 interface WagmiNftProps {
@@ -94,14 +94,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     nftContract?.events.listenToAllEvents(async (e) => {
       //  when lazyMint is done
       if (e.eventName == 'TokensLazyMinted') {
-        console.log('eventData: ', e.data)
+        console.log('eventData::TokensLazyMinted ', e.data)
         fetchNFTs()
-      }
-
-      // TODO:   ClaimConditions is set (delete after)
-      if (e.eventName == 'ClaimConditionsUpdated') {
-        // TODO: Call a function to update when this event happens
-        console.log('eventData: ', e.data)
       }
     })
 
@@ -114,20 +108,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const fetchNFTs = async () => {
     const lazyMintedTokens = await nftContract?.erc1155.getAll()
     setLazyMintedTokens(lazyMintedTokens as any)
-  }
-
-  const getClaimConditionsById = async (tokenId: string) => {
-    // fetch all existing claim conditions
-    try {
-      const claimConditions = await nftContract?.erc1155.claimConditions.getAll(tokenId)
-
-      if (claimConditions?.length) {
-        return claimConditions
-      }
-      return []
-    } catch (err: any) {
-      throw Error(err.message)
-    }
   }
 
   // Getting asset and refreshing for the status
@@ -337,51 +317,6 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
       })
     }
   }
-  // Promise<typeof nftContract | undefined>
-  const handleSetClaimCondition = async (formData: any, tokenId: string): Promise<boolean | undefined> => {
-    try {
-      const claimConditions = await nftContract?.erc1155.claimConditions.set(tokenId, [
-        {
-          startTime: formData.startTime, // When the phase starts (i.e. when users can start claiming tokens)
-          maxClaimableSupply: formData.maxClaimableSupply, // limit how many mints for this presale
-          price: formData.price, // presale price
-          currencyAddress: formData.currencyAddress, // The address of the currency you want users to pay in
-          maxClaimablePerWallet: formData.maxClaimablePerWallet, // The maximum number of tokens a wallet can claim
-          metadata: {
-            name: formData.phaseName, // Name of the sale's phase
-          },
-          waitInSeconds: formData.waitInSeconds, // How long a buyer waits before another purchase is possible
-        },
-      ])
-
-      console.log('SetClaimConditions tx: ', claimConditions?.receipt)
-
-      toast({
-        title: 'Set Claim Conditions',
-        description: `Status: ${claimConditions?.receipt.status}`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
-
-      if (Number(claimConditions?.receipt.status) > 0) {
-        // return nftContract
-        return Number(claimConditions?.receipt.status) > 0
-      }
-
-      return undefined
-    } catch (err) {
-      console.log('claimConditions txError: ', err)
-
-      toast({
-        title: 'Set Claim Conditions',
-        description: `Status: 0`,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      })
-    }
-  }
 
   const handleUpdateAsset = (e: any) => {
     e.preventDefault()
@@ -528,11 +463,10 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           )}
 
           {lazyMintedTokens && lazyMintedTokens.length > 0 && (
-            <ListOfLazyMintedNfts
+            <ListLazyMintedNfts
+              nftContract={nftContract}
               lazyMintedTokens={lazyMintedTokens}
-              handleSetClaimCondition={handleSetClaimCondition}
               nftMetadata={asset?.storage?.ipfs?.spec?.nftMetadata as any}
-              getClaimConditionsById={getClaimConditionsById}
             />
           )}
         </>
