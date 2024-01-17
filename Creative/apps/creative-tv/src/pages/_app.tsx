@@ -1,13 +1,12 @@
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThirdwebProvider, smartWallet, embeddedWallet} from '@thirdweb-dev/react'
-import {
-  LivepeerConfig,
-} from "@livepeer/react"
+import { LivepeerConfig } from "@livepeer/react"
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import type { AppProps } from 'next/app'
+import { Analytics } from '@vercel/analytics/react'
 import { ACCOUNT_FACTORY_TESTNET, MUMBAI_CHAIN, THIRDWEB_API_KEY } from '../utils/config'
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 
@@ -70,6 +69,7 @@ export default function App({
             clientId={THIRDWEB_API_KEY}>
             <Layout>
               <Component {...pageProps} />
+              <Analytics />
             </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
           </ThirdwebProvider>
