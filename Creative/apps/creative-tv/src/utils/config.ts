@@ -1,12 +1,11 @@
 import { ThemingProps, extendTheme } from '@chakra-ui/react'
-import { Goerli, Mumbai, Polygon } from '@thirdweb-dev/chains'
+import { Mumbai, Polygon } from '@thirdweb-dev/chains'
 import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way content should be.'
 export const SITE_IMAGE = '/creative-membership.png'
 export const SITE_URL = 'https://creativeplatform.xyz'
-export const SITE_COPYRIGHT = '© 2023 Creative Organization DAO, LLC. All rights reserved.'
 export const SITE_LOGO = '/grant-logo.png'
 
 
@@ -47,14 +46,6 @@ export const EXPLORER_API_URL = {
   GOERLI: 'https://api-goerli.etherscan.io/',
   POLYGON: 'https://api.polygonscan.com/',
 }
-
-// LINKS
-export const SOCIAL_TWITTER = 'https://twitter.com/creativecrtv'
-export const SOCIAL_GITHUB = 'https://github.com/creativeplatform/creative-tv'
-export const SOCIAL_DISCORD = 'https://discord.gg/creativeplatform'
-export const SOCIAL_EMAIL = 'mailto:creatives@creativeplatform.xyz'
-export const SOCIAL_LENS = 'https://lensfrens.xyz/thecreative'
-export const SOCIAL_LINKEDIN = 'https://www.linkedin.com/company/creativeplatform'
 
 // FEATURED CAROUSEL PLAYLISTS
 export const CAROUSEL_PLAYLISTS = {
@@ -110,7 +101,7 @@ export const ACCOUNT_FACTORY_POLYGON = ''
 
 // Setup the Smart Wallet configuration
 export const SMART_WALLET_CONFIG = {
-  chain: Goerli, // the chain where your smart wallet will be or is deployed
+  chain: Mumbai, // the chain where your smart wallet will be or is deployed
   factoryAddress: ACCOUNT_FACTORY_TESTNET, // your own deployed account factory address
   clientId: THIRDWEB_API_KEY, // obtained from the thirdweb dashboard
   gasless: true, // enable or disable gasless transactions

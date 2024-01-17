@@ -1,7 +1,8 @@
-import { Flex, Image, Button, ButtonGroup, Card, Text, useToast } from '@chakra-ui/react'
+import { Flex, Image, Button, ButtonGroup, Card, Text, useToast, SkeletonText } from '@chakra-ui/react'
 import { MdAutorenew, MdCancel } from 'react-icons/md'
 import { useAddress, useContract, useOwnedNFTs, useContractWrite, useContractRead } from '@thirdweb-dev/react'
 import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
+import { fromTimestampToDate } from 'utils/formatString'
 import Unlock from '../utils/fetchers/Unlock.json'
 
 
@@ -103,8 +104,8 @@ const MemberCard = (props: MemberCardProps) => {
       <Text fontSize="xs">
         Expires in {
           expirationDuration
-          ? new Date(expirationDuration?.toNumber() * 1000).toISOString().slice(11, 16)
-          : "Loading..."
+          ? fromTimestampToDate(expirationDuration)
+          : <SkeletonText />
         } hour(s).
       </Text>
       </Flex>

@@ -1,3 +1,4 @@
+import { link } from 'fs'
 import { SITE_NAME } from './config'
 
 // CREATIVE TV
@@ -5,6 +6,8 @@ import { SITE_NAME } from './config'
 // This file contains the context for the Creative TV app.
 // It is used to populate the homepage and other pages with
 // the correct text and images.
+
+const currentYear = new Date().getFullYear();
 
 export const FOOTER_LINKS = {
   whitepaper: 'https://creativeplatform.xyz/docs/resources/whitepaper',
@@ -16,6 +19,22 @@ export const FOOTER_LINKS = {
   cookie_policy: 'https://creativeplatform.xyz/docs/cookie-policy',
   privacy_policy: 'https://creativeplatform.xyz/docs/privacy-policy',
   terms_and_conditions: 'https://creativeplatform.xyz/docs/terms-and-conditions',
+  status: 'https://thecreative.grafana.net/public-dashboards/0d59c3754efd4cf5be8298ff3b24b685?orgId=1',
+  terminal: 'https://app.creativeplatform.xyz'
+}
+
+export const SITE_COPYRIGHT = `© ${currentYear} Creative Organization DAO, LLC. All rights reserved.`
+
+// LINKS
+export const SOCIAL_LINKS ={
+  twitter: 'https://twitter.com/creativecrtv',
+  github: 'https://github.com/creativeplatform',
+  discord: 'https://discord.com/servers/creative-779364937503604777',
+  lens: 'https://lensfrens.xyz/thecreative',
+  linkedin: 'https://www.linkedin.com/company/creativeplatform',
+  instagram: 'https://www.instagram.com/creativecrtv/',
+  warpcast: 'https://warpcast.com/thecreative.eth',
+  email: 'mailto:creatives@creativeplatform.xyz',
 }
 
 export const HERO_NAME = {
@@ -27,7 +46,7 @@ export const HERO_DESCRIPTION = `${SITE_NAME} is a decentralized live streaming 
 
 export const HERO_BUTTONS = {
   primary: { text: 'Get Started', href: 'https://app.unlock-protocol.com/checkout?id=bbbcff5f-835d-4fa3-9761-988d5da9da18' },
-  secondary: { text: 'How It Works', href: 'https://creativeplatform.xyz/docs/intro' },
+  secondary: { text: 'How It Works', href: 'https://creativeplatform.xyz/docs/intro', target: '_blank' },
 }
 
 export const HERO_IMAGE = 'https://bafybeiefwmq6zykvyhwih5qbhucxrc34zbtxjbwboz7hdgkyh3u6p2ykfa.ipfs.nftstorage.link'

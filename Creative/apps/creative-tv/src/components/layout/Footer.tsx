@@ -1,7 +1,6 @@
 import { Box, Container, Flex, Image, Link, SimpleGrid, Stack, Tag, Text, useColorModeValue } from '@chakra-ui/react'
 import { ReactNode } from 'react'
-import { SOCIAL_DISCORD, SOCIAL_EMAIL, SOCIAL_GITHUB, SOCIAL_LENS, SOCIAL_LINKEDIN, SOCIAL_TWITTER, SITE_COPYRIGHT } from 'utils/config'
-import { CREATIVE_ICON, FOOTER_LINKS } from 'utils/context'
+import { CREATIVE_ICON, FOOTER_LINKS, SOCIAL_LINKS, SITE_COPYRIGHT } from 'utils/context'
 
 interface Props {
   className?: string
@@ -23,37 +22,19 @@ export default function Footer(props: Props): JSX.Element {
         <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
           <Stack align={'flex-start'}>
             <ListHeader>Product</ListHeader>
-            <Link href={FOOTER_LINKS.whitepaper} target={'_blank'}>
-              Overview
-            </Link>
+            <Link href={FOOTER_LINKS.whitepaper} target={'_blank'}>Overview</Link>
             <Stack direction={'row'} align={'center'} spacing={2}>
               <Link href={FOOTER_LINKS.releases}>Features</Link>
-              <Tag size={'sm'} bg={useColorModeValue('green.300', 'green.800')} ml={2} color={'white'}>
-                New
-              </Tag>
+              <Tag size={'sm'} bg={useColorModeValue('green.300', 'green.800')} ml={2} color={'white'}>New</Tag>
             </Stack>
-            <Link href={FOOTER_LINKS.tutorial} target={'_blank'}>
-              Tutorials
-            </Link>
-            <Link href={FOOTER_LINKS.pricing} target={'_blank'}>
-              Pricing
-            </Link>
+            <Link href={FOOTER_LINKS.terminal}>Exit App</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Company</ListHeader>
-            <Link href={FOOTER_LINKS.about_us} target={'_blank'}>
-              About Us
-            </Link>
-            <Link href={FOOTER_LINKS.blog} target={'_blank'}>
-              Blog
-            </Link>
-            <Link href={SOCIAL_LINKEDIN} target={'_blank'}>
-              Careers
-            </Link>
-            <Link href={SOCIAL_EMAIL} target={'_blank'}>
-              Contact Us
-            </Link>
-            <Link href={'#'}>Partners</Link>
+            <Link href={FOOTER_LINKS.about_us} target={'_blank'}>About Us</Link>
+            <Link href={FOOTER_LINKS.blog} target={'_blank'}>Blog</Link>
+            <Link href={SOCIAL_LINKS.linkedin} target={'_blank'}>Careers</Link>
+            <Link href={SOCIAL_LINKS.email} target={'_blank'}>Contact Us</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Legal</ListHeader>
@@ -64,21 +45,11 @@ export default function Footer(props: Props): JSX.Element {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Follow Us</ListHeader>
-            <Link href={SOCIAL_LENS} target={'_blank'}>
-              Lens
-            </Link>
-            <Link href={SOCIAL_TWITTER} target={'_blank'}>
-              Twitter
-            </Link>
-            <Link href={SOCIAL_GITHUB} target={'_blank'}>
-              Github
-            </Link>
-            <Link href={SOCIAL_DISCORD} target={'_blank'}>
-              Discord
-            </Link>
-            <Link href={SOCIAL_LINKEDIN} target={'_blank'}>
-              LinkedIn
-            </Link>
+            <Link href={SOCIAL_LINKS.lens} target={'_blank'}>Lens</Link>
+            <Link href={SOCIAL_LINKS.warpcast} target={'_blank'}>Warpcast</Link>
+            <Link href={SOCIAL_LINKS.instagram} target={'_blank'}>Instagram</Link>
+            <Link href={SOCIAL_LINKS.discord} target={'_blank'}>Discord</Link>
+            <Link href={SOCIAL_LINKS.linkedin} target={'_blank'}>LinkedIn</Link>
           </Stack>
         </SimpleGrid>
       </Container>
@@ -101,9 +72,7 @@ export default function Footer(props: Props): JSX.Element {
           }}>
           <Image src={CREATIVE_ICON} alt="Creative Logo" width={250} height={'auto'} boxSize="100px" objectFit="contain" />
         </Flex>
-        <Text pt={6} fontSize={'sm'} textAlign={'center'}>
-          {SITE_COPYRIGHT}
-        </Text>
+        <Text pt={6} fontSize={'sm'} textAlign={'center'}>{SITE_COPYRIGHT}</Text>
       </Box>
     </Box>
   )
