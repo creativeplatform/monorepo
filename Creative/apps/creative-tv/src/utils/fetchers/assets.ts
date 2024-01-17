@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export type assetData = {
+export type AssetData = {
   id: number
   user: string
   title: string
@@ -44,7 +44,7 @@ export const videoApi = axios.create({
 export const fetchAssetId = async (id: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Fetching asset')
-  const response = await videoApi.get<assetData['video']>(`/${assetId}?details=true`)
+  const response = await videoApi.get<AssetData['video']>(`/${assetId}?details=true`)
   const asset = response.data
 
   console.log('Asset: ', asset)
@@ -56,7 +56,7 @@ export const fetchAssetId = async (id: any) => {
 export const updateAsset = async (id: any, data: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Updating asset')
-  const response = await videoApi.patch<assetData["video"]>(`/${assetId}`, data)
+  const response = await videoApi.patch<AssetData["video"]>(`/${assetId}`, data)
   const asset = response.data
 
   console.log('Asset: ', asset)

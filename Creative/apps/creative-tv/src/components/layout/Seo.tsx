@@ -1,5 +1,6 @@
 import React from 'react'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from 'utils/config'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from 'utils/config'
+import { SOCIAL_LINKS } from 'utils/context'
 import { DefaultSeo } from 'next-seo'
 
 export function Seo() {
@@ -25,8 +26,8 @@ export function Seo() {
         ],
       }}
       twitter={{
-        handle: `@${SOCIAL_TWITTER}`,
-        site: `@${SOCIAL_TWITTER}`,
+        handle: `@${SOCIAL_LINKS.twitter}`,
+        site: `@${SOCIAL_LINKS.twitter}`,
         cardType: 'summary_large_image',
       }}
     />
