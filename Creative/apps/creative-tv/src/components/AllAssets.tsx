@@ -5,7 +5,7 @@ import { DownloadIcon, LinkIcon, ChatIcon } from '@chakra-ui/icons'
 import { motion } from 'framer-motion'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
-import { assetData } from 'utils/fetchers/assets'
+import { AssetData } from 'utils/fetchers/assets'
 import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 // import { Discussion } from "@orbisclub/components";
@@ -19,7 +19,7 @@ const PosterImage = () => {
 
 export default function AllAssets() {
   const router = useRouter()
-  const videosQuery = useQuery<ApiResponse<assetData['video'][]>>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
+  const videosQuery = useQuery<ApiResponse<AssetData['video'][]>>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,
   })
 
@@ -34,7 +34,7 @@ export default function AllAssets() {
     return <Box children="error" />
   }
 
-  const readyVideos = videosQuery.data.data?.filter((video): video is assetData['video'] => video.status.phase === 'ready') ?? []
+  const readyVideos = videosQuery.data.data?.filter((video): video is AssetData['video'] => video.status.phase === 'ready') ?? []
 
   return (
     <LivepeerConfig client={useLivepeerClient}>

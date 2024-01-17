@@ -1,6 +1,14 @@
-import { Box, Button, Stack, Text, useToast, Flex } from '@chakra-ui/react'
+import { 
+  Box,
+  IconButton, 
+  Button, 
+  Stack, 
+  Text, 
+  useToast, 
+  Flex,
+} from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRenderer } from '@thirdweb-dev/react'
+import { ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRenderer } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
@@ -8,6 +16,7 @@ import { removeUnderScore } from 'utils/formatString'
 import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
+import SignIn from './SignIn'
 
 interface WagmiNftProps {
   assetId: string
@@ -125,7 +134,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     try {
       setIsDeploying(true)
 
-      const contractAddress = await sdk.deployer.deployEditionDrop({
+      const contractAddress = await sdk.deployer.deployNFTDrop({
         name: asset?.name,
         primary_sale_recipient: address,
         app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
@@ -162,7 +171,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
       return keys.map((k, i) => (
         <div key={i}>
           <p>
-            {removeUnderScore(k)}: <span style={{ fontWeight: '700' }}>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}</span>
+          <span style={{ fontWeight: '700' }}>{removeUnderScore(k)}: </span>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}
           </p>
         </div>
       ))
@@ -209,15 +218,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   return (
     <Box className="address-mint" minH={'600'}>
       {!address && (
-        <ConnectWallet
-          btnTitle={'Sign In'}
-          className="signIn-button"
-          style={{
-            marginBottom: '24px',
-            margin: '48px 0',
-            fontWeight: '600',
-          }}
-        />
+        <SignIn btnTitle={'Sign In'} />
       )}
 
       {notification ? (
@@ -230,7 +231,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         <>
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
             <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <Text my={4} style={{ fontWeight: '600', fontSize: 24 }}>
                   Your asset is ready to be uploaded to IPFS.
                 </Text>
@@ -255,13 +256,16 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
           {!contract?.getAddress() && asset?.storage?.ipfs?.cid ? (
             <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <MediaRenderer
                   src={`${asset?.storage?.ipfs?.url}`}
+                  alt={asset?.name}
+                  width={'1920'}
+                  height={'1080'}
                 />
 
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Congrats, your asset was uploaded to IPFS.
+                  Congrats, your asset was uploaded to IPFS!
                 </Text>
 
                 <Button
@@ -279,22 +283,21 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   </Text>
                   <Box style={{ lineHeight: 2.75 }}>
                     <Text>
-                      Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
+                    <span style={{ fontWeight: '700' }}>Asset Name: </span>{asset?.name}{' '}
                     </Text>
                     <Text>
-                      Playback URL: <span style={{ fontWeight: '700' }}>{asset?.playbackUrl}</span>
+                    <span style={{ fontWeight: '700' }}>Playback URL: </span>{asset?.playbackUrl}
                     </Text>
                     <Text>
-                      IPFS CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.cid ?? 'None'}</span>
+                    <span style={{ fontWeight: '700' }}>IPFS CID: </span>{asset?.storage?.ipfs?.cid ?? 'None'}
                     </Text>
                   </Box>
                 </Box>
               </Stack>
 
               <ErrorBoundary fallback={<p>Failed to load...</p>}>
-                <Box my={16} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
-                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
-                  <br />
+                <Box my={16} style={{ padding: 24 }} maxWidth="700px">
+                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded asset</Text>
                   <Button
                     className="deploy-button"
                     my={4}
@@ -308,7 +311,12 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                     disabled={isDeploying}>
                     {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                   </Button>
-                  <div>{!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>}</div>
+                  <Box>
+                    { !isDeploying && (
+                        <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>
+                      )
+                    }
+                  </Box>
                 </Box>
               </ErrorBoundary>
             </>
@@ -316,11 +324,10 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
           {asset?.storage?.ipfs?.cid && contract?.getAddress() && (
             <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
                   Contract deployed succesfully!
                 </Text>
-
                 <Button
                   width={160}
                   className="show-details-button"
@@ -335,28 +342,31 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
                   <Flex style={{ lineHeight: 2.75 }}>
                     <Text>
-                      Address: <span style={{ fontWeight: '700' }}>{contract.getAddress()}</span>
+                      <span style={{ fontWeight: '700' }}>Address: </span>{contract.getAddress()}
                     </Text>
-                    {getContractMetaData()}
+                  </Flex>
+                  <Flex>
+                    <Text>
+                      {getContractMetaData()}
+                    </Text>
                   </Flex>
                 </Box>
               </Stack>
-
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
-                <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Time to mint your NFTs!
-                </Text>
-
-                <Button
-                  onClick={mintNFT}
-                  disabled={isMinting}
-                  _hover={{ cursor: isMinting ? 'progress' : 'pointer' }}
-                  style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}>
-                  {isMinting ? 'Minting...' : 'Mint NFT'}
-                </Button>
-              </Stack>
             </>
           )}
+          <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
+            <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+              Time to mint your NFTs!
+            </Text>
+
+            <Button
+              onClick={mintNFT}
+              disabled={isMinting}
+              _hover={{ cursor: isMinting ? 'progress' : 'pointer' }}
+              style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}>
+                {isMinting ? 'Minting...' : 'Mint NFT'}
+            </Button>
+          </Stack>
         </>
       )}
     </Box>
