@@ -43,8 +43,8 @@ export const THEME_CONFIG = {
 }
 
 export const EXPLORER_API_URL = {
-  GOERLI: 'https://api-goerli.etherscan.io/',
-  POLYGON: 'https://api.polygonscan.com/',
+  mumbai: 'https://api.mumbai.polygonscan.com/',
+  polygon: 'https://api.polygonscan.com/',
 }
 
 // FEATURED CAROUSEL PLAYLISTS
