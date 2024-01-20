@@ -105,7 +105,7 @@ const MemberCard = (props: MemberCardProps) => {
         Expires in {
           expirationDuration
           ? fromTimestampToDate(expirationDuration)
-          : <SkeletonText />
+          : <SkeletonText noOfLines={1} skeletonHeight={'2'}/>
         } hour(s).
       </Text>
       </Flex>

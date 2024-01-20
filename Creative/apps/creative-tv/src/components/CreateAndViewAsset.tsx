@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { VideoPreview } from './videoPreview'
+import  VideoPreview from './VideoPreview'
 import { IAssetData } from '../utils/types'
 
 export interface MintDetail {
@@ -316,10 +316,10 @@ const CreateAndViewAsset = () => {
             </Text>
 
             <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
-            <Box style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
-              <Text>Asset Name: {createdAsset?.[0]?.name}</Text>
-              <Text>Playback URL: {createdAsset?.[0]?.playbackUrl}</Text>
-              <Text>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
+            <Box style={{ lineHeight: 1.75 }}>
+              <Text><span style={{ fontWeight: '700' }}>Asset Name: </span>{createdAsset?.[0]?.name}</Text>
+              <Text><span style={{ fontWeight: '700' }}>Playback URL: </span>{createdAsset?.[0]?.playbackUrl}</Text>
+              <Text><span style={{ fontWeight: '700' }}>IPFS CID: </span>{createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
             </Box>
           </Stack>
           <Box className="Proceed-button">
