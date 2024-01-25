@@ -24,7 +24,7 @@
     "@superfluid-finance/sdk-core": "^0.6.12",
     "@thirdweb-dev/auth": "^4.1.18",
     "@thirdweb-dev/chains": "^0.1.61",
-    "@thirdweb-dev/react": "^4.1.16",
+    "@thirdweb-dev/react": "^4.4.0",
     "@thirdweb-dev/sdk": "^4.0.22",
     "@uniswap/widgets": "^2.59.0",
     "@unlock-protocol/networks": "0.0.15",
