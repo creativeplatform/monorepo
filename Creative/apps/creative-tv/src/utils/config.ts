@@ -1,5 +1,6 @@
 import { ThemingProps, extendTheme } from '@chakra-ui/react'
 import { Mumbai, Polygon } from '@thirdweb-dev/chains'
+import { embeddedWallet, metamaskWallet, smartWallet } from '@thirdweb-dev/react'
 import gql from 'graphql-tag'
 
 export const SITE_NAME = 'CREATIVE TV'
@@ -98,6 +99,28 @@ export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2
 
 // FACTORY CONTRACT (POLYGON)
 export const ACCOUNT_FACTORY_POLYGON = ''
+
+// This is the chain your dApp will work on.
+// Change this to the chain your app is built for.
+// You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
+// const activeChain = MUMBAI_CHAIN[0]
+export const activeChain = 'mumbai' // TODO: revert chain back to the top commented option
+
+// Setup the Smart Wallet configuration
+const personalWallet =
+  process.env.NODE_ENV !== 'production'
+    ? metamaskWallet() // set Metamask wallet for development purpose only
+    : embeddedWallet({
+        auth: {
+          options: ['email', 'google', 'apple', 'facebook'],
+        },
+      })
+
+export const smartWalletInit = smartWallet(personalWallet, {
+  factoryAddress: ACCOUNT_FACTORY_TESTNET,
+  gasless: true,
+})
+
 
 // Setup the Smart Wallet configuration
 export const SMART_WALLET_CONFIG = {
