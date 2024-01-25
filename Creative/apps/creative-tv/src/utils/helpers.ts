@@ -294,3 +294,15 @@ export const parseCurrencyAddressToSymbol = (currencyAddress: string) => {
     }
   })
 }
+
+type LogErrorType = {
+  description: string
+  err: any
+}
+export const logError = ({ description, err }: LogErrorType) => {
+  if (process.env.NODE_ENV != 'production') {
+    console.error(`${description}`, err)
+  } else {
+    // TODO: send to Error Service
+  }
+}
