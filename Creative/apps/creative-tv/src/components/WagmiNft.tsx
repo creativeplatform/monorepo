@@ -12,6 +12,7 @@ import { AssetData } from './CreateAndViewAsset'
 import { LazyMinting } from './LazyMinting'
 import { ListLazyMintedNfts } from './ListLazyMintedNfts'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
+import SignIn from './SignIn'
 
 interface WagmiNftProps {
   assetId: string
@@ -182,7 +183,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     try {
       setIsDeploying(true)
 
-      const contractAddress = await deployEditionDropContract(signer, 'mumbai', {
+      const contractAddress = await sdk.deployer.deployEditionDrop({
         name: asset?.name,
         primary_sale_recipient: connectedAddress,
         app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp

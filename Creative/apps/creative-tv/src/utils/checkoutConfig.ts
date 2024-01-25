@@ -1,4 +1,4 @@
-import { siteMetadata, CREATIVE_ADDRESS, UNLOCK_PROTOCOL } from "./config"
+import { SITE_LOGO, CREATIVE_ADDRESS } from "./config"
 
 const baseUrl = 'https://app.unlock-protocol.com/checkout?'
 const redirectUri: string = 'https://tv.creativeplatform.xyz'

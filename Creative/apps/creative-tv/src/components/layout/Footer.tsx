@@ -1,7 +1,6 @@
 import { Box, Container, Flex, Image, Link, SimpleGrid, Stack, Tag, Text, useColorModeValue } from '@chakra-ui/react'
 import { ReactNode } from 'react'
-import { SOCIAL_DISCORD, SOCIAL_EMAIL, SOCIAL_GITHUB, SOCIAL_LENS, SOCIAL_LINKEDIN, SOCIAL_TWITTER, siteMetadata } from 'utils/config'
-import { CREATIVE_ICON, FOOTER_LINKS } from 'utils/context'
+import { CREATIVE_ICON, FOOTER_LINKS, SOCIAL_LINKS, SITE_COPYRIGHT } from 'utils/context'
 
 interface Props {
   className?: string
@@ -28,9 +27,7 @@ export default function Footer(props: Props): JSX.Element {
             </Link>
             <Stack direction={'row'} align={'center'} spacing={2}>
               <Link href={FOOTER_LINKS.releases}>Features</Link>
-              <Tag size={'sm'} bg={useColorModeValue('green.300', 'green.800')} ml={2} color={'white'}>
-                New
-              </Tag>
+              <Tag size={'sm'} bg={useColorModeValue('green.300', 'green.800')} ml={2} color={'white'}>New</Tag>
             </Stack>
             <Link href={FOOTER_LINKS.tutorial} target={'_blank'}>
               Tutorials
@@ -57,28 +54,18 @@ export default function Footer(props: Props): JSX.Element {
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Legal</ListHeader>
-            <Link href={FOOTER_LINKS.cookie_policy}>Cookies Policy</Link>
-            <Link href={FOOTER_LINKS.privacy_policy}>Privacy Policy</Link>
-            <Link href={FOOTER_LINKS.terms_and_conditions}>Terms of Service</Link>
-            <Link href={'#'}>Status</Link>
+            <Link href={FOOTER_LINKS.cookie_policy} target={'_blank'}>Cookies Policy</Link>
+            <Link href={FOOTER_LINKS.privacy_policy} target={'_blank'}>Privacy Policy</Link>
+            <Link href={FOOTER_LINKS.terms_and_conditions} target={'_blank'}>Terms of Service</Link>
+            <Link href={FOOTER_LINKS.status} target={'_blank'}>Status</Link>
           </Stack>
           <Stack align={'flex-start'}>
             <ListHeader>Follow Us</ListHeader>
-            <Link href={SOCIAL_LENS} target={'_blank'}>
-              Lens
-            </Link>
-            <Link href={SOCIAL_TWITTER} target={'_blank'}>
-              Twitter
-            </Link>
-            <Link href={SOCIAL_GITHUB} target={'_blank'}>
-              Github
-            </Link>
-            <Link href={SOCIAL_DISCORD} target={'_blank'}>
-              Discord
-            </Link>
-            <Link href={SOCIAL_LINKEDIN} target={'_blank'}>
-              LinkedIn
-            </Link>
+            <Link href={SOCIAL_LINKS.lens} target={'_blank'}>Lens</Link>
+            <Link href={SOCIAL_LINKS.warpcast} target={'_blank'}>Warpcast</Link>
+            <Link href={SOCIAL_LINKS.instagram} target={'_blank'}>Instagram</Link>
+            <Link href={SOCIAL_LINKS.discord} target={'_blank'}>Discord</Link>
+            <Link href={SOCIAL_LINKS.linkedin} target={'_blank'}>LinkedIn</Link>
           </Stack>
         </SimpleGrid>
       </Container>
@@ -100,10 +87,9 @@ export default function Footer(props: Props): JSX.Element {
             ml: 8,
           }}>
           <Image src={CREATIVE_ICON} alt="Creative Logo" width={250} height={'auto'} boxSize="100px" objectFit="contain" />
+          <Image src={CREATIVE_ICON} alt="Creative Logo" width={250} height={'auto'} boxSize="100px" objectFit="contain" />
         </Flex>
-        <Text pt={6} fontSize={'sm'} textAlign={'center'}>
-          {siteMetadata.SITE_COPYRIGHT}
-        </Text>
+        <Text pt={6} fontSize={'sm'} textAlign={'center'}>{SITE_COPYRIGHT}</Text>
       </Box>
     </Box>
   )
