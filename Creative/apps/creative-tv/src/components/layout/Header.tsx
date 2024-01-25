@@ -52,7 +52,7 @@ import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
 import { windowStorage } from 'utils/helpers'
-import { DEV_ENVIRONMENT, UNLOCK_PROTOCOL, siteMetadata } from '../../utils/config'
+import { DEV_ENVIRONMENT, LOCK_ADDRESS_MUMBAI_TESTNET, SITE_LOGO, SITE_NAME, } from '../../utils/config'
 import Unlock from '../../utils/fetchers/Unlock.json'
 import { ThemeSwitcher } from './ThemeSwitcher'
 
@@ -108,7 +108,7 @@ export function Header({ className, handleLoading }: Props) {
   useEffect(() => {
     if (!address || !sdkSigner || !Unlock.abi) return
     const getSubscribedData = async () => {
-      const unlockContract = await sdkSigner?.getContractFromAbi(UNLOCK_PROTOCOL.contracts.mumbai.address, Unlock.abi)
+      const unlockContract = await sdkSigner?.getContractFromAbi(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
       return await unlockContract?.call(
         'getHasValidKey', // Name of your function as it is on the smart contract
         // Arguments to your function, in the same order they are on your smart contract
@@ -490,9 +490,9 @@ export function Header({ className, handleLoading }: Props) {
                 _hover={{ color: 'black' }}
                 _focus={{ boxShadow: 'none', color: 'black.500' }}
                 onClick={() => router.push('/')}>
-                <Image src={siteMetadata.LOGO} alt="Creative Logo" boxSize={'4rem'} objectFit="contain" />
+                <Image src={SITE_LOGO} alt="Creative Logo" boxSize={'4rem'} objectFit="contain" />
                 <Heading color={useColorModeValue('black.900', 'white')} as="h1" size="16px" fontWeight={900} gap={5}>
-                  {siteMetadata.NAME}
+                  {SITE_NAME}
                 </Heading>
               </Button>
             </HStack>

@@ -2,14 +2,13 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThirdwebProvider, smartWallet, embeddedWallet} from '@thirdweb-dev/react'
-import { LivepeerConfig } from "@livepeer/react"
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import type { AppProps } from 'next/app'
 import { Analytics } from '@vercel/analytics/react'
-import { smartWalletInit, THIRDWEB_API_KEY, activeChain, siteMetadata } from '../utils/config'
+import { smartWalletInit, THIRDWEB_API_KEY, activeChain, SITE_NAME, SITE_DESCRIPTION, SITE_LOGO, SITE_URL } from '../utils/config'
 
 // Call `extendTheme` and pass your custom values
 const theme = extendTheme({
@@ -34,10 +33,10 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
         {isMounted && (
           <ThirdwebProvider
             dAppMeta={{
-              name: siteMetadata.NAME,
-              description: siteMetadata.DESCRIPTION,
-              logoUrl: siteMetadata.LOGO_URL,
-              url: siteMetadata.URL,
+              name: SITE_NAME,
+              description: SITE_DESCRIPTION,
+              logoUrl: SITE_LOGO,
+              url: SITE_URL,
               isDarkMode: true,
             }}
             authConfig={{

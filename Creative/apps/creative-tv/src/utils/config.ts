@@ -128,7 +128,7 @@ export const LIVEPEER_HERO_PLAYBACK_ID = 'cbd1dw72qst9xmps' // Welcome To Creati
 export const LIVEPEER_FEATURED_PLAYBACK_ID = '5c2bzf537qbq0r7o' // The Creative Podcast Episode 03
 
 export const SERVER_SESSION_SETTINGS = {
-  cookieName: siteMetadata.NAME,
+  cookieName: SITE_NAME,
   password: process.env.NEXT_SESSION_PASSWORD ?? 'UPDATE_TO_complex_password_at_least_32_characters_long',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',

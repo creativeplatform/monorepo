@@ -19,7 +19,7 @@ const MemberCard = (props: MemberCardProps) => {
     contract: unlockContract,
     isLoading: loadingUnlockContract,
     error: unlockContractError,
-  } = useContract(UNLOCK_PROTOCOL.contracts.mumbai.address, Unlock.abi)
+  } = useContract(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
 
   const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(unlockContract, address)
 

@@ -12,7 +12,6 @@ import { AssetData } from './CreateAndViewAsset'
 import { LazyMinting } from './LazyMinting'
 import { ListLazyMintedNfts } from './ListLazyMintedNfts'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
-import SignIn from './SignIn'
 
 interface WagmiNftProps {
   assetId: string
@@ -183,7 +182,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     try {
       setIsDeploying(true)
 
-      const contractAddress = await sdk.deployer.deployEditionDrop({
+      const contractAddress = await deployEditionDropContract(signer, 'mumbai', {
         name: asset?.name,
         primary_sale_recipient: connectedAddress,
         app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
@@ -196,6 +195,20 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         description: props.assetData.description,
         trusted_forwarders: [CREATIVE_ADDRESS],
       })
+
+      // const contractAddress = await sdk.deployer.deployEditionDrop({
+      //   name: asset?.name,
+      //   primary_sale_recipient: connectedAddress,
+      //   app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
+      //   symbol: 'EPISD', // Symbol of the edition drop
+      //   platform_fee_basis_points: 200,
+      //   platform_fee_recipient: CREATIVE_ADDRESS,
+      //   fee_recipient: connectedAddress,
+      //   seller_fee_basis_points: 300,
+      //   image: props.assetData.image_url || 'Not available',
+      //   description: props.assetData.description,
+      //   trusted_forwarders: [CREATIVE_ADDRESS],
+      // })
 
       // save CONTRACT_ADDRESS to localStorage
       windowStorage.set({ name: NAME_OF_SAVED_CONTRACT_ADDRESS, value: contractAddress! })
