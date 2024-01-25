@@ -1,232 +1,147 @@
-import { AddIcon, CloseIcon } from '@chakra-ui/icons'
-import {
-  Box,
-  Button,
-  HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Table,
-  TableContainer,
-  Tabs,
-  Tbody,
-  Td,
-  Text,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
-  VStack,
-  useDisclosure,
-  useToast,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Spinner, Table, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useDisclosure, useToast } from '@chakra-ui/react'
 import { ClaimCondition, MediaRenderer, NFT, SmartContract } from '@thirdweb-dev/react'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { globalTheme } from 'utils/config'
 import { formatString } from 'utils/helpers'
-import { ListClaimConditions } from './ListClaimConditions'
-import { SetClaimConditions } from './SetClaimConditions'
+import { ShowNFTDetailsInModal } from './ShowNFTDetailsInModal'
 
 type ListOfLazyMintedNftsProps = {
-  lazyMintedTokens: NFT[]
+  assetData: any
   nftMetadata: Record<string, any>
   nftContract: SmartContract<ethers.BaseContract> | undefined
+  lazyMintedTokens?: NFT[]
+  refetchNFTs?: () => void
 }
 export const ListLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
   const [nft, setNFT] = useState<NFT>()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [addClaimPhase, setAddClaimPhase] = useState(false)
-  const [tabIndex, setTabIndex] = useState(0)
+  const [isFetching, setIsFetching] = useState(false)
+  const [isFetchingLazyMintedTokens, setIsFetchingFetchingLazyMintedTokens] = useState(false)
   const [claimConditions, setClaimConditions] = useState<ClaimCondition[]>([])
+  const [lazyMintedTokens, setLazyMintedTokens] = useState<NFT[]>([])
   const toast = useToast()
-  const tabList = ['Details', 'Claim Conditions', 'Claim']
 
   useEffect(() => {
-    //////////////////////////
-    // listen to the events
-    props.nftContract?.events.listenToAllEvents(async (e) => {
-      if (e.eventName == 'ClaimConditionsUpdated') {
-        console.log('eventData::ClaimConditionsUpdated ', e.data)
-        await getClaimConditionsById(String(nft?.metadata.id))
-        setAddClaimPhase(!addClaimPhase)
-      }
-    })
-    return () => {
-      props.nftContract?.events.removeAllListeners()
-    }
-  }, [props.nftContract])
+    const fetchNFTs = async () => {
+      setIsFetchingFetchingLazyMintedTokens(true)
+      const lzMintedTokens = await props.nftContract?.erc1155.getAll()
+      console.log('ListLazyMintedNfts::fetchNFTs: ', lzMintedTokens)
 
-  const handleTabsChange = (idx: number) => {
-    setTabIndex(idx)
-  }
+      if (lzMintedTokens) {
+        setLazyMintedTokens([...lzMintedTokens])
+        setIsFetchingFetchingLazyMintedTokens(false)
+      }
+    }
+    fetchNFTs()
+  }, [lazyMintedTokens.length])
 
   const handleViewMore = async (_nft: NFT) => {
     onOpen() // open modal
     setNFT(_nft)
-    await getClaimConditionsById(_nft.metadata.id)
+    getClaimConditionsById(_nft.metadata.id)
   }
 
   const getClaimConditionsById = async (tokenId: string) => {
     try {
+      setIsFetching(true)
       // fetch all existing claim conditions
       const cc = await props.nftContract?.erc1155.claimConditions.getAll(tokenId)
+      console.log('getClaimConditionsById: ', tokenId)
+
+      console.log('getAllById cc: ', cc)
 
       if (cc && cc?.length > 0) {
-        setClaimConditions(cc as any)
-      } else {
-        setClaimConditions([])
+        setClaimConditions([...cc]) // TODO: check out this spread of array for later clean up
+        setIsFetching(false)
       }
     } catch (err: any) {
+      setIsFetching(false)
+      setClaimConditions([])
       throw Error(err.message)
     }
   }
 
   return (
-    <Box my={16}>
-      <TableContainer>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Token Id</Th>
-              <Th>Media</Th>
-              <Th>Name</Th>
-              <Th>Description</Th>
-              <Th>Supply</Th>
-              <Th>More Details</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {props.lazyMintedTokens.map((nft) => {
-              return (
-                <Tr key={nft.metadata.id}>
-                  <Td>
-                    <Text>{nft.metadata.id}</Text>
-                  </Td>
-                  <Td>
-                    <MediaRenderer src={nft.metadata.image} width="200px" height="" alt={String(nft.metadata.name)} />
-                  </Td>
-                  <Td>
-                    <Button onClick={async () => await handleViewMore(nft)} variant={'link'}>
-                      {formatString.titleCase(String(nft.metadata.name))}
-                    </Button>
-                  </Td>
-                  <Td>
-                    <Text>{formatString.wordWrap(String(nft.metadata.description), 38)}</Text>
-                  </Td>
+    <>
+      {isFetchingLazyMintedTokens ? (
+        <Flex justifyContent={'center'}>
+          <Spinner my={12} size="md" thickness="3px" speed="0.5s" emptyColor="gray.200" color={globalTheme.colors.primary} />
+        </Flex>
+      ) : (
+        <Box my={12} style={{ border: '1px solid #a4a4a4', padding: 24 }}>
+          <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+            List of lazy minted NFT{lazyMintedTokens.length > 1 ? <span style={{ fontSize: '14px' }}>(s)</span> : ''}:{' '}
+            {lazyMintedTokens.length > 0 ? lazyMintedTokens.length : 0}
+          </Text>
 
-                  <Td isNumeric>{nft.supply}</Td>
-                  <Td>
-                    <Button onClick={async () => await handleViewMore(nft)} variant={'outline'}>
-                      View More / Configure
-                    </Button>
-                  </Td>
+          <TableContainer my={8}>
+            <Table variant="simple">
+              <Thead>
+                <Tr>
+                  <Th>Token Id</Th>
+                  <Th>Media</Th>
+                  <Th>Name</Th>
+                  <Th>Description</Th>
+                  <Th>Supply</Th>
+                  <Th>More Details</Th>
                 </Tr>
-              )
-            })}
-          </Tbody>
-          <Tfoot>
-            <Tr></Tr>
-          </Tfoot>
-        </Table>
-      </TableContainer>
+              </Thead>
+              <Tbody>
+                {lazyMintedTokens && lazyMintedTokens.length > 0 ? (
+                  lazyMintedTokens.map((tkn) => {
+                    return (
+                      <Tr
+                        key={tkn.metadata.id}
+                        onClick={async () => await handleViewMore(tkn)}
+                        _hover={{ backgroundColor: 'gray.700', cursor: 'pointer' }}>
+                        <Td>
+                          <Text>{tkn.metadata.id}</Text>
+                        </Td>
+                        <Td>
+                          <MediaRenderer src={tkn.metadata.image} width="200px" height="" alt={String(tkn.metadata.name)} />
+                        </Td>
+                        <Td>{formatString.titleCase(String(tkn.metadata.name))}</Td>
+                        <Td>
+                          <Text>{formatString.wordWrap(String(tkn.metadata.description), 38)}</Text>
+                        </Td>
 
-      {/* Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size={'xl'}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader fontSize={24}>{nft?.metadata.name}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text pb={8} color={'gray.300'} fontWeight={600}>
-              {nft?.metadata.description}
-            </Text>
-            <Tabs index={tabIndex} onChange={handleTabsChange}>
-              <TabList>
-                {tabList &&
-                  tabList.length > 0 &&
-                  tabList.map((txt, i) => (
-                    <Tab key={i} fontWeight={500}>
-                      {txt}
-                    </Tab>
-                  ))}
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  <HStack spacing={12} my={4}>
-                    <VStack spacing={4} alignItems={'flex-start'} style={{ fontWeight: 600 }}>
-                      <span>Token Type: </span>
-                      <span>Token ID: </span>
-                      <span>Suppy: </span>
-                    </VStack>
-                    <VStack spacing={4} alignItems={'flex-start'} style={{ fontWeight: 400 }} color={'gray.300'}>
-                      <Text>{nft?.type}</Text>
-                      <Text>{nft?.metadata.id}</Text>
-                      <Text>{nft?.supply}</Text>
-                    </VStack>
-                  </HStack>
-                </TabPanel>
-                <TabPanel>
-                  <VStack spacing={0} alignItems={'flex-start'} my={4}>
-                    <Text style={{ fontSize: '24px' }}>Set Claim Conditions</Text>
-                    <Text color={'gray.300'} fontStyle={'italic'}>
-                      Condition how your NFTs can be claimed
-                    </Text>
+                        <Td isNumeric>{tkn.supply}</Td>
+                        <Td>
+                          <Button onClick={async () => await handleViewMore(tkn)} variant={'outline'}>
+                            View More / Configure
+                          </Button>
+                        </Td>
+                      </Tr>
+                    )
+                  })
+                ) : (
+                  <div>No minted token at the moment</div>
+                )}
+              </Tbody>
+              <Tfoot>
+                <Tr></Tr>
+              </Tfoot>
+            </Table>
+          </TableContainer>
 
-                    {claimConditions && claimConditions.length > 0 && (
-                      <ListClaimConditions
-                        nftContract={props.nftContract}
-                        nft={nft!}
-                        claimConditions={claimConditions}
-                        nftMetadata={props.nftMetadata}
-                      />
-                    )}
-                  </VStack>
-
-                  {addClaimPhase && (
-                    <SetClaimConditions
-                      numberOfClaimsConditonsAvailable={claimConditions.length}
-                      tokenId={String(nft?.metadata.id)}
-                      nftMetadata={props.nftMetadata}
-                      nftContract={props.nftContract}
-                      setAddClaimPhase={setAddClaimPhase}
-                    />
-                  )}
-
-                  {true && (
-                    <Button
-                      variant="outline"
-                      fontSize={12}
-                      colorScheme={addClaimPhase ? 'red' : ''}
-                      leftIcon={!addClaimPhase ? <AddIcon fontSize={10} /> : <CloseIcon fontSize={10} />}
-                      onClick={() => setAddClaimPhase(!addClaimPhase)}>
-                      {!addClaimPhase ? 'Add Phase' : 'Cancel'}
-                    </Button>
-                  )}
-                </TabPanel>
-                <TabPanel>
-                  {/* TODO: incorporate a claim form here */}
-                  <p>Claim form starts here</p>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button style={{ backgroundColor: globalTheme.colors.primary }} mr={3} variant="ghost" onClick={onClose}>
-              Close
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+          {/* Modal */}
+          <ShowNFTDetailsInModal
+            addClaimPhase={addClaimPhase}
+            setAddClaimPhase={setAddClaimPhase}
+            claimConditions={claimConditions}
+            getClaimConditionsById={getClaimConditionsById}
+            isFetching={isFetching}
+            isOpen={isOpen}
+            nft={nft!}
+            nftContract={props.nftContract}
+            nftMetadata={props.nftMetadata}
+            onClose={onClose}
+            assetData={props.assetData}
+          />
+        </Box>
+      )}
+    </>
   )
 }
