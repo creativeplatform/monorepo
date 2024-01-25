@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, MediaRenderer, NFT, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
+import { ConnectWallet, MediaRenderer, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
@@ -47,7 +47,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const [showMetadataDetails, setMetadataDetails] = useState(false)
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
   const [txCount, setTxCount] = useState(0)
-  const [lazyMintedTokens, setLazyMintedTokens] = useState<NFT[]>([])
+  // const [lazyMintedTokens, setLazyMintedTokens] = useState<NFT[]>([])
   const { contract: nftContract } = useContract(deployedContractAddress)
   const { data: contractMetadata, isLoading } = useMetadata(nftContract)
 
@@ -86,29 +86,26 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     getLazyMintTxHash()
 
     return () => {}
-  }, [deployedContractAddress])
+  }, [deployedContractAddress, isMinting])
 
   useEffect(() => {
+    // fetchNFTs()
+
     //////////////////////////
     // listen to the events
     nftContract?.events.listenToAllEvents(async (e) => {
       //  when lazyMint is done
       if (e.eventName == 'TokensLazyMinted') {
-        console.log('eventData::TokensLazyMinted ', e.data)
-        fetchNFTs()
+        console.log('TokensLazyMinted::eventData ', e.data)
+        setIsMinting(false)
+        // fetchNFTs()
       }
     })
 
-    fetchNFTs()
     return () => {
       nftContract?.events.removeAllListeners()
     }
-  }, [nftContract])
-
-  const fetchNFTs = async () => {
-    const lazyMintedTokens = await nftContract?.erc1155.getAll()
-    setLazyMintedTokens(lazyMintedTokens as any)
-  }
+  })
 
   // Getting asset and refreshing for the status
   const {
@@ -462,13 +459,13 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
             <LazyMinting handleLazyMintNFT={handleLazyMintNFT} isMinting={isMinting} lazyMintTxHash={lazyMintTxHash} />
           )}
 
-          {lazyMintedTokens && lazyMintedTokens.length > 0 && (
-            <ListLazyMintedNfts
-              nftContract={nftContract}
-              lazyMintedTokens={lazyMintedTokens}
-              nftMetadata={asset?.storage?.ipfs?.spec?.nftMetadata as any}
-            />
-          )}
+          <ListLazyMintedNfts
+            nftContract={nftContract}
+            nftMetadata={asset?.storage?.ipfs?.spec?.nftMetadata as any}
+            assetData={asset}
+            // lazyMintedTokens={lazyMintedTokens}
+            // refetchNFTs={fetchNFTs}
+          />
         </>
       )}
     </Box>
