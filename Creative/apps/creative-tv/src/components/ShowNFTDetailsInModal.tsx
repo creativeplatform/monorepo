@@ -23,7 +23,7 @@ import { ethers } from 'ethers'
 import { useState } from 'react'
 import { globalTheme } from 'utils/config'
 import { logError } from 'utils/helpers'
-import { ClaimNFT } from './ClaimNFT'
+import { ClaimNFTForCreator } from './ClaimNFTForCreator'
 import { ListClaimConditions } from './ListClaimConditions'
 import { SetClaimConditions } from './SetClaimConditions'
 
@@ -139,9 +139,9 @@ export function ShowNFTDetailsInModal(props: ShowNFTDetailsInModalProps) {
                   />
                 )}
               </TabPanel>
-              
+
               <TabPanel>
-                <ClaimNFT nftContract={props.nftContract} tokenId={props.nft?.metadata.id} nftMetadata={props.nftMetadata} />
+                <ClaimNFTForCreator nftContract={props.nftContract} tokenId={props.nft?.metadata.id} nftMetadata={props.nftMetadata} />
               </TabPanel>
             </TabPanels>
           </Tabs>
