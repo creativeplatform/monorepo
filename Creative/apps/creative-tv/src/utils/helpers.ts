@@ -8,6 +8,12 @@ export const thirdwebSDK = (network: NetworkInput) =>
     clientId: THIRDWEB_API_KEY,
   })
 
+export const thirdwebSDKFromSigner = (signer: ethers.Signer, network: NetworkInput) => {
+  return ThirdwebSDK.fromSigner(signer, network as any, {
+    clientId: THIRDWEB_API_KEY,
+  })
+}
+
 // Use as the name of contract saved for temporal or permanent storage
 /**
  *
@@ -94,9 +100,7 @@ type DeployEditionDropContractType = {
  * This function helps to deploy the parseEditionDropContract by Thirdweb
  */
 export async function deployEditionDropContract(signer: ethers.Signer, network: NetworkInput, args: DeployEditionDropContractType) {
-  const sdk = ThirdwebSDK.fromSigner(signer, network as any, {
-    clientId: THIRDWEB_API_KEY,
-  })
+  const sdk = thirdwebSDKFromSigner(signer, network)
 
   // Is there an sdk found?
   if (!sdk) return
@@ -296,12 +300,34 @@ export const parseCurrencyAddressToSymbol = (currencyAddress: string) => {
 }
 
 type LogErrorType = {
-  description: string
-  err: any
+  title: string
+  description: string | number | any
+  type: 'error' | 'warning' | 'info' | 'log'
 }
-export const logError = ({ description, err }: LogErrorType) => {
+/**
+ * A simple logger
+ * @param param0
+ */
+export const logger = ({ title, description, type }: LogErrorType) => {
+  if (typeof description === 'object') {
+    description = JSON.stringify(description)
+  }
+
   if (process.env.NODE_ENV != 'production') {
-    console.error(`${description}`, err)
+    switch (type) {
+      case 'error':
+        console.error(`${title} : ${description}`)
+        break
+      case 'warning':
+        console.warn(`${title} : ${description}`)
+        break
+      case 'info':
+        console.info(`${title} : ${description}`)
+        break
+
+      default:
+        console.log(`${title} : ${description}`)
+    }
   } else {
     // TODO: send to Error Service
   }
