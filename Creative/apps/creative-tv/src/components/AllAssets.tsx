@@ -15,8 +15,10 @@ import {
   Heading,
   SimpleGrid,
   Spacer,
+  Spinner,
   Stack,
   Text,
+  VStack,
 } from '@chakra-ui/react'
 import { LivepeerConfig, Player } from '@livepeer/react'
 import { useQuery } from '@tanstack/react-query'
@@ -24,9 +26,10 @@ import { useAddress } from '@thirdweb-dev/react'
 import { motion } from 'framer-motion'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import { useRouter } from 'next/router'
-import { SITE_LOGO } from 'utils/config'
+import { SITE_LOGO, globalTheme } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
 import { AssetData } from 'utils/fetchers/assets'
+import { logger } from 'utils/helpers'
 import { PosterImage } from './PosterImage'
 // import { Discussion } from "@orbisclub/components";
 // import "@orbisclub/components/dist/index.modern.css";
@@ -41,13 +44,15 @@ export default function AllAssets() {
   })
 
   if (videosQuery.isLoading) {
-    console.log('loading...')
-    // loading state
-    return <Box mb={24}>Loading...</Box>
+    return (
+      <VStack spacing={0} alignItems={'flex-start'} my={4}>
+        <Spinner my={12} alignSelf={'center'} size="md" thickness="3px" speed="0.5s" emptyColor="gray.200" color={globalTheme.colors.primary} />
+      </VStack>
+    )
   }
 
   if (videosQuery.isError || videosQuery.data.errors) {
-    console.log('error', videosQuery.error)
+    logger({ title: 'videosQueryError', description: videosQuery.error, type: 'error' })
     return <Box children="Error loading resource." mb={24} />
   }
 
@@ -160,7 +165,7 @@ export default function AllAssets() {
                         backgroundColor={'#EC407A'}
                         onClick={() =>
                           router.push({
-                            pathname: `discover/mint-nft`,
+                            pathname: `discover/claim-nft`,
                             query: {
                               assetData: JSON.stringify(video),
                             },

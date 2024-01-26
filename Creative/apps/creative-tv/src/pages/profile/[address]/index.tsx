@@ -41,10 +41,10 @@ import { useEffect, useState } from 'react'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
 import truncateEthAddress from 'truncate-eth-address'
-import { UNLOCK_PROTOCOL } from 'utils/config'
+import {   LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 //import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
-import MyAssets from 'components/my-assets'
+import MyAssets from 'components/MyAssets'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 
 const ProfilePage: NextPage = () => {
@@ -65,8 +65,7 @@ const ProfilePage: NextPage = () => {
     // Function to get subscription status from the contract
     const getSubscribedData = async () => {
       const unlockContract = await sdkSigner?.getContractFromAbi(
-        // LOCK_ADDRESS_MUMBAI_TESTNET.address,
-        UNLOCK_PROTOCOL.contracts.mumbai.address,
+        LOCK_ADDRESS_MUMBAI_TESTNET.address,
         Unlock.abi
       )
       return await unlockContract?.call(
@@ -87,7 +86,7 @@ const ProfilePage: NextPage = () => {
     contract: unlockContract,
     isLoading: loadingUnlockContract,
     error: unlockContractError,
-  } = useContract(UNLOCK_PROTOCOL.contracts.mumbai.address, Unlock.abi)
+  } = useContract(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
 
   const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(unlockContract, address)
 
