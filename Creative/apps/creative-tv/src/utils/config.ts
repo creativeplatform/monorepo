@@ -3,12 +3,14 @@ import { Mumbai, Polygon } from '@thirdweb-dev/chains'
 import { embeddedWallet, metamaskWallet, smartWallet } from '@thirdweb-dev/react'
 import gql from 'graphql-tag'
 
+export const SITE_DOMAIN = process.env.NEXT_PUBLIC_AUTH_DOMAIN || 'creativeplatform.xyz'
 export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way content should be.'
 export const SITE_IMAGE = '/creative-membership.png'
-export const SITE_URL = 'https://creativeplatform.xyz'
+export const SITE_URL = `https://${SITE_DOMAIN}`
 export const SITE_LOGO = '/grant-logo.png'
-
+export const NEXT_PUBLIC_AUTH_DOMAIN = SITE_DOMAIN;
+export const THIRDWEB_AUTH_PRIVATE_KEY = process.env.THIRDWEB_AUTH_PRIVATE_KEY
 
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
@@ -107,20 +109,22 @@ export const ACCOUNT_FACTORY_POLYGON = ''
 export const activeChain = 'mumbai' // TODO: revert chain back to the top commented option
 
 // Setup the Smart Wallet configuration
-const personalWallet =
-  process.env.NODE_ENV !== 'production'
-    ? metamaskWallet() // set Metamask wallet for development purpose only
-    : embeddedWallet({
-        auth: {
-          options: ['email', 'google', 'apple', 'facebook'],
-        },
-      })
+const personalWallet = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    return metamaskWallet() // set Metamask wallet for development purpose only
+  } else {
+    return embeddedWallet({
+      auth: {
+        options: ['email', 'google', 'apple', 'facebook'],
+      },
+    })
+  }
+}
 
-export const smartWalletInit = smartWallet(personalWallet, {
+export const smartWalletInit = smartWallet(personalWallet(), {
   factoryAddress: ACCOUNT_FACTORY_TESTNET,
   gasless: true,
 })
-
 
 // Setup the Smart Wallet configuration
 export const SMART_WALLET_CONFIG = {
@@ -4468,5 +4472,5 @@ export const DEV_ENVIRONMENT = {
 export const globalTheme = {
   colors: {
     primary: '#EC407A',
-  }
+  },
 }

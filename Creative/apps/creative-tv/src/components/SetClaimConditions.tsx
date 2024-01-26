@@ -3,7 +3,7 @@ import { ClaimCondition, SmartContract, useSetClaimConditions } from '@thirdweb-
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { claimConditionsOptions, logError } from 'utils/helpers'
+import { claimConditionsOptions, logger } from 'utils/helpers'
 
 type ClaimFormData = {
   price?: string | ethers.BigNumber | undefined
@@ -90,12 +90,13 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         // price: 15,
       },
     ]
-    console.log('updated claimConditions: ', newClaimConditionsPhase)
+
+    logger({ title: 'updated claimConditions', description: newClaimConditionsPhase, type: 'log' })
 
     try {
-      console.log('formData.price: ', formData.price)
+      logger({ title: 'formData.price', description: formData.price, type: 'log' })
 
-      const txn = await props.nftContract?.erc1155.claimConditions.set(
+      const tx = await props.nftContract?.erc1155.claimConditions.set(
         tokenId,
         [
           ...previousClaimConditions,
@@ -114,22 +115,17 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         false
       )
 
-      
-      console.log('txn: ', txn)
-      
       // const tx = await setClaimConditions({
       //   phases: newClaimConditionsPhase,
       //   reset: false,
       // })
 
+      logger({ title: 'SetClaimConditions tx ', description: tx, type: 'log' })
+
       // console.log('SetClaimConditions tx: ', tx.receipt)
-      // return tx.receipt
-
-
+      return tx?.receipt
     } catch (err) {
-      logError({ description: 'claimConditions txError', err })
-
-      return undefined
+      throw err
     }
   }
 
@@ -149,7 +145,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
       return
     }
 
-    console.log('Raw data: ', data)
+    logger({ title: 'Raw data', description: data, type: 'log' })
 
     const formatData: ClaimFormData = {
       ...data,
@@ -178,7 +174,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         })
       }
     } catch (err: any) {
-      logError({ description: '', err })
+      logger({ title: 'handleSetClaimCondition', description: err, type: 'error' })
       setIsSubmitting(false)
 
       toast({

@@ -205,7 +205,7 @@ function parseDate(dateString: Date) {
   return `${year}-${mm}-${dd}T${hh}:${min}`
 }
 
-export const date = {
+export const dateFnc = {
   parseDate,
   parseTimestampToDate,
 }
