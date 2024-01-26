@@ -3,7 +3,7 @@ import { ClaimCondition, MediaRenderer, NFT, SmartContract } from '@thirdweb-dev
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { globalTheme } from 'utils/config'
-import { formatString } from 'utils/helpers'
+import { formatString, logger } from 'utils/helpers'
 import { ShowNFTDetailsInModal } from './ShowNFTDetailsInModal'
 
 type ListOfLazyMintedNftsProps = {
@@ -27,7 +27,7 @@ export const ListLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
     const fetchNFTs = async () => {
       setIsFetchingFetchingLazyMintedTokens(true)
       const lzMintedTokens = await props.nftContract?.erc1155.getAll()
-      console.log('ListLazyMintedNfts::fetchNFTs: ', lzMintedTokens)
+      logger({ title: 'ListLazyMintedNfts::fetchNFTs', description: lzMintedTokens, type: 'log' })
 
       if (lzMintedTokens) {
         setLazyMintedTokens([...lzMintedTokens])
@@ -97,14 +97,14 @@ export const ListLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
                         onClick={async () => await handleViewMore(tkn)}
                         _hover={{ backgroundColor: 'gray.700', cursor: 'pointer' }}>
                         <Td>
-                          <Text>{tkn.metadata.id}</Text>
+                          {tkn.metadata.id} 
                         </Td>
                         <Td>
                           <MediaRenderer src={tkn.metadata.image} width="200px" height="" alt={String(tkn.metadata.name)} />
                         </Td>
                         <Td>{formatString.titleCase(String(tkn.metadata.name))}</Td>
                         <Td>
-                          <Text>{formatString.wordWrap(String(tkn.metadata.description), 38)}</Text>
+                       {formatString.wordWrap(String(tkn.metadata.description), 38)} 
                         </Td>
 
                         <Td isNumeric>{tkn.supply}</Td>
@@ -117,7 +117,7 @@ export const ListLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
                     )
                   })
                 ) : (
-                  <div>No minted token at the moment</div>
+                  <Tr>No minted token at the moment</Tr>
                 )}
               </Tbody>
               <Tfoot>

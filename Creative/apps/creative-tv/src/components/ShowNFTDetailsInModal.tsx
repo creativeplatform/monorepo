@@ -22,7 +22,7 @@ import { ClaimCondition, NFT, SmartContract } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import { globalTheme } from 'utils/config'
-import { logError } from 'utils/helpers'
+import { logger } from 'utils/helpers'
 import { ClaimNFTForCreator } from './ClaimNFTForCreator'
 import { ListClaimConditions } from './ListClaimConditions'
 import { SetClaimConditions } from './SetClaimConditions'
@@ -52,7 +52,7 @@ export function ShowNFTDetailsInModal(props: ShowNFTDetailsInModalProps) {
 
   const handleTabsChange = (idx: number) => {
     if (tabList[tabList.length - 1].toLowerCase() == 'Claim'.toLowerCase() && activeClaimCondition === undefined) {
-      logError({ description: 'activeClaimCondition not available', err: '' })
+      logger({ title: 'activeClaimCondition', description: 'activeClaimCondition not available', type: 'log' })
       return
     }
     setTabIndex(idx)
