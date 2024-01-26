@@ -51,7 +51,7 @@ import { AiOutlineMenu } from 'react-icons/ai'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import { windowStorage } from 'utils/helpers'
+import { thirdwebSDKFromSigner } from 'utils/helpers'
 import { DEV_ENVIRONMENT, LOCK_ADDRESS_MUMBAI_TESTNET, SITE_LOGO, SITE_NAME, } from '../../utils/config'
 import Unlock from '../../utils/fetchers/Unlock.json'
 import { ThemeSwitcher } from './ThemeSwitcher'
@@ -102,7 +102,7 @@ export function Header({ className, handleLoading }: Props) {
 
   const connector = useColorModeValue('light', 'dark')
 
-  const sdkSigner = signer && ThirdwebSDK.fromSigner(signer)
+  const sdkSigner = signer && thirdwebSDKFromSigner(signer, 'mumbai') // ThirdwebSDK.fromSigner(signer)
 
   /*******  CONTRACT READING ********/
   useEffect(() => {
@@ -400,7 +400,7 @@ export function Header({ className, handleLoading }: Props) {
                   modalSize={'wide'}
                   theme={connector}
                   btnTitle={'Sign In/Up'}
-                  modalTitle={'Login'}
+                  modalTitle={'Login'}                
                   dropdownPosition={{
                     side: 'bottom', // "top" | "bottom" | "left" | "right";
                     align: 'end', // "start" | "center" | "end";
