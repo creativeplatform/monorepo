@@ -9,7 +9,7 @@ import { IAssetData, IReturnedAssetData } from '../../utils/types'
 
 interface AssetData extends IAssetData, IReturnedAssetData {}
 
-const MintClaimVideoNFTPage: NextPage = () => {
+const ClaimVideoNFTPage: NextPage = () => {
   const router = useRouter()
 
   const assetData = useMemo<AssetData>(() => (router?.query?.assetData ? JSON.parse(router?.query?.assetData as any) : {}), [router?.query])
@@ -35,4 +35,4 @@ const MintClaimVideoNFTPage: NextPage = () => {
   )
 }
 
-export default MintClaimVideoNFTPage
+export default ClaimVideoNFTPage
