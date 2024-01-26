@@ -1,13 +1,15 @@
 import { Box, Button, FormControl, FormHelperText, FormLabel, Input, Stack, Text, VStack, useToast } from '@chakra-ui/react'
-import { SmartContract, useActiveClaimCondition, useAddress, useClaimNFT } from '@thirdweb-dev/react'
+import { ClaimNFTReturnType, SmartContract, useActiveClaimCondition, useAddress, useClaimNFT } from '@thirdweb-dev/react'
 import { ethers } from 'ethers'
+import { usePurchaseCurrency } from 'hooks/usePurchaseCurrency'
 
 import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { logger } from 'utils/helpers'
 
 type ClaimFormData = {
   qty: number
-  reciepientAddress: string | undefined
+  recipientAddress: string | undefined
 }
 
 type ClaimNFTProps = {
@@ -16,9 +18,8 @@ type ClaimNFTProps = {
   nftMetadata: Record<string, any>
 }
 export function ClaimNFTForCreator(props: ClaimNFTProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isClaiming, setIsClaiming] = useState(false)
   const [isErrorFree, setIsErrorFree] = useState(false)
-  const [txStatus, setTxStatus] = useState<number | undefined>(0)
   const toast = useToast()
   const connectedAddress = useAddress()
 
@@ -30,16 +31,40 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
 
   const { mutateAsync: claimNft, isLoading, error } = useClaimNFT(props.nftContract)
 
-  const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
+  useEffect(() => {
+    //////////////////////////
+    // listen to the events
+    props.nftContract?.events.listenToAllEvents(async (e) => {
+      if (e.eventName == 'TokensClaimed') {
+        setIsClaiming(false)
+        console.log('TokensClaimed::eventData ', e.data)
+      }
+    })
+
+    return () => {
+      props.nftContract?.events.removeAllListeners()
+    }
+  })
 
   useEffect(() => {
-    console.log('activeClaimCondition: ', activeClaimCondition)
+    logger({ title: 'activeClaimCondition', description: activeClaimCondition, type: 'log' })
   }, [isActiveClaimLoading])
 
-  const handleClaimNFT = async (data: ClaimFormData, tokenId: string): Promise<ethers.providers.TransactionReceipt | undefined> => {
+  const {
+    balance: buyerBalance,
+    error: balanceError,
+    isFetching,
+  } = usePurchaseCurrency({
+    erc20Address: activeClaimCondition?.currencyAddress!,
+    walletAddress: connectedAddress!,
+  })
+
+  const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
+
+  const handleClaimNFT = async (data: ClaimFormData, tokenId: string): Promise<ClaimNFTReturnType | undefined> => {
     const claimNftData = {
       tokenId: props.tokenId,
-      to: data.reciepientAddress,
+      to: data.recipientAddress,
       quantity: data.qty,
       options: {
         currencyAddress: activeClaimCondition?.currencyAddress,
@@ -48,29 +73,43 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
       },
     }
 
-    console.log(claimNftData)
-
-    const price = activeClaimCondition?.price.toNumber()! / 10 ** activeClaimCondition?.currencyMetadata.decimals!
-    console.log('price: ', price)
+    logger({ title: 'claimNftData', description: claimNftData, type: 'log' })
 
     try {
-      const tx = await claimNft({
-        tokenId: props.tokenId,
-        to: data.reciepientAddress,
-        quantity: data.qty,
-        options: {
-          checkERC20Allowance: true,
-          currencyAddress: activeClaimCondition?.currencyAddress,
-          pricePerToken: price,
-        },
-      })
+      // checkout maxClaimablePerWallet
+      const maxClaimablePerWallet = activeClaimCondition?.maxClaimablePerWallet
+      const recipientAddressBalance = await props.nftContract?.erc1155.balanceOf(data.recipientAddress!, props.tokenId)
 
-      if (tx) {
-        console.log(tx.toString())
+      if (Number(maxClaimablePerWallet) === recipientAddressBalance?.toNumber()) {
+        throw Error('Recipient has gotten maximium number of nft for the phase')
       }
 
-      return undefined
-    } catch (err) {
+      // checkout user balance for payment
+      const priceOfNFT = activeClaimCondition?.currencyMetadata.displayValue!
+      if (Number(priceOfNFT) > buyerBalance) {
+        throw Error(`Your ${activeClaimCondition?.currencyMetadata.name} balance is below the price of this nft`)
+      }
+
+      const tx = await claimNft({
+        tokenId: props.tokenId,
+        to: data.recipientAddress,
+        quantity: data.qty,
+      })
+
+      // TODO: awaiting response from support to resolve this
+      // const tx = await claimNft({
+      //   tokenId: props.tokenId,
+      //   to: data.recipientAddress,
+      //   quantity: data.qty,
+      //   options: {
+      //     checkERC20Allowance: true,
+      //     currencyAddress: activeClaimCondition?.currencyAddress,
+      //     pricePerToken: activeClaimCondition?.currencyMetadata.displayValue
+      //   },
+      // })
+
+      return tx
+    } catch (err: any) {
       throw err
     }
   }
@@ -84,7 +123,7 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
       isClosable: true,
     }
 
-    const isRequiredFields = errors.reciepientAddress?.type === 'required' || errors.qty?.type === 'required'
+    const isRequiredFields = errors.recipientAddress?.type === 'required' || errors.qty?.type === 'required'
 
     if (isRequiredFields) {
       return
@@ -92,28 +131,28 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
 
     try {
       setIsErrorFree(true)
-      setIsSubmitting(true)
+      setIsClaiming(true)
 
-      const receipt = await handleClaimNFT(data, props.tokenId)
-      if (receipt) {
-        setIsSubmitting(false)
-        setTxStatus(receipt.status)
+      const tx = await handleClaimNFT(data, props.tokenId)
+      if (tx) {
+        setIsClaiming(false)
+        logger({ title: 'ClaimNFTReturnType', description: tx, type: 'log' })
 
         toast({
           title: toastOptions.title,
-          description: `Successful with status: ${receipt.status}`,
+          description: `Claim was successful!`,
           status: 'success',
           duration: toastOptions.duration,
           isClosable: toastOptions.isClosable,
         })
       }
     } catch (err: any) {
-      console.error(err)
-      setIsSubmitting(false)
+      setIsClaiming(false)
+      logger({ title: 'ClaimError', description: err.message, type: 'error' })
 
       toast({
         title: toastOptions.title,
-        description: `Claiming NFT failed!`,
+        description: err.message,
         status: 'error',
         duration: toastOptions.duration,
         isClosable: toastOptions.isClosable,
@@ -130,12 +169,12 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
           </Text>
 
           <form onSubmit={handleSubmit(submithandleClaimConditions)} id="setClaimCondtion">
-            <FormControl mb={8} isDisabled={isErrorFree && isSubmitting}>
+            <FormControl mb={8} isDisabled={isErrorFree && isClaiming}>
               <Stack direction={'column'} spacing={4} mb={4}>
                 <VStack alignItems={'flex-start'}>
                   <FormLabel>Claim to address</FormLabel>
                   <Controller
-                    name="reciepientAddress"
+                    name="recipientAddress"
                     control={ctrl}
                     rules={{ required: true }}
                     render={({ field }) => (
@@ -143,15 +182,15 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
                         color={'gray.300'}
                         defaultValue={connectedAddress || ''}
                         size={'lg'}
-                        {...register('reciepientAddress')}
-                        mb={formState.errors.reciepientAddress ? 0 : 4}
+                        {...register('recipientAddress')}
+                        mb={formState.errors.recipientAddress ? 0 : 4}
                         placeholder="Enter address the nft is claimed to"
-                        aria-invalid={formState.errors.reciepientAddress ? 'true' : 'false'}
+                        aria-invalid={formState.errors.recipientAddress ? 'true' : 'false'}
                         value={field.value}
                       />
                     )}
                   />
-                  {formState.errors.reciepientAddress?.type === 'required' && (
+                  {formState.errors.recipientAddress?.type === 'required' && (
                     <FormHelperText mb="32px" color={'red.500'}>
                       Enter address to claim to
                     </FormHelperText>
@@ -170,6 +209,7 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
                         {...register('qty')}
                         type="number"
                         size={'lg'}
+                        min={1}
                         mb={formState.errors.qty ? 0 : 4}
                         placeholder="Number of nft to claim"
                         aria-invalid={formState.errors.qty ? 'true' : 'false'}
@@ -189,11 +229,11 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
               type="submit"
               _hover={{
                 color: 'gray.300',
-                cursor: isSubmitting ? 'progress' : 'pointer',
+                cursor: isClaiming ? 'progress' : 'pointer',
               }}
               style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}
-              isLoading={isSubmitting}
-              loadingText={isSubmitting ? 'Submitting...' : ''}
+              isLoading={isClaiming}
+              loadingText={isClaiming ? 'Claiming...' : ''}
               mb={20}>
               Claim
             </Button>
