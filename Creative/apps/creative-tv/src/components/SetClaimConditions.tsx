@@ -132,7 +132,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
           title: 'Set Claim Conditions',
           description: `Successful with status: ${receipt.status}`,
           status: 'success',
-          duration: 3000,
+          duration: 5000,
           isClosable: true,
         })
       }
@@ -144,7 +144,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         title: 'Set Claim Conditions',
         description: `Setting claim conditions failed!`,
         status: 'error',
-        duration: 4000,
+        duration: 5000,
         isClosable: true,
       })
     }

@@ -251,7 +251,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         title: `Estimating cost of txn`,
         description: 'Estimation failed',
         status: 'error',
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       })
       return 0
@@ -293,7 +293,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         title: 'User not signed in',
         description: 'Sign in to mint yout NFT',
         status: 'error',
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       })
       return
@@ -317,7 +317,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           title: `Checking USDC balance`,
           description: 'Insufficient USDC balance to mint NFT',
           status: 'error',
-          duration: 3000,
+          duration: 5000,
           isClosable: true,
         })
         return
@@ -332,7 +332,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           title: `Checking ${nativeTokenBalance.name} balance`,
           description: `${nativeTokenBalance.name} balance is too low to pay for txn fee!`,
           status: 'error',
-          duration: 3000,
+          duration: 5000,
           isClosable: true,
         })
         return
@@ -425,7 +425,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
         title: `Error minting NFT`,
         description: mintingError,
         status: 'error',
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       })
       console.error('Error minting NFT:', err.message)

@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, Text, Box } from '@chakra-ui/react'
 
 interface VideoPreviewProps {
   video: Blob | any
@@ -10,7 +10,7 @@ const VideoPreview = (props: VideoPreviewProps) => {
       <Text fontSize="lg" fontWeight="bold" mb={4}>
         Video Preview:
       </Text>
-      <div style={{ width: '100%' }}>{props.video && <video style={{ margin: 'auto' }} src={URL.createObjectURL(props.video)} controls />}</div>
+      <Box style={{ width: '100%' }}>{props.video && <video style={{ margin: 'auto' }} src={URL.createObjectURL(props.video)} controls />}</Box>
     </Flex>
   )
 }

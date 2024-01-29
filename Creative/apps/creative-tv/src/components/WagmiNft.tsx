@@ -1,4 +1,14 @@
-import { Box, Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
+import { 
+  Box, 
+  Button, 
+  Stack, 
+  Text, 
+  useToast, 
+  Flex,
+  Skeleton,
+  Heading,
+  Spinner,
+} from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ConnectWallet, MediaRenderer, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useEffect, useState } from 'react'
@@ -205,138 +215,155 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   }
 
   return (
-    <Box className="address-mint" minH={'600'}>
+    <Box className="address-mint" minH="600px"> {/* Corrected minH value to include px for consistency */}
       {!connectedAddress && (
         <ConnectWallet
-          btnTitle={'Sign In'}
+          btnTitle="Sign In"
           className="signIn-button"
           style={{
             marginBottom: '24px',
-            margin: '48px 0',
+            margin: '48px 0', // This might be overridden by marginBottom, consider adjusting
             fontWeight: '600',
           }}
         />
       )}
 
-      {notification ? (
-        <Text as={'h3'} my={8} style={{ fontWeight: '600', fontSize: 24 }}>
+      {notification && (
+        <Text as="h3" my={8} style={{ fontWeight: '600', fontSize: '24px' }}> {/* Ensure notification is a function or adjust accordingly */}
           {notification()}
         </Text>
-      ) : null}
+      )}
 
       {connectedAddress && props.assetId && (
         <>
-          {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
-            <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid #a4a4a4', padding: 24 }}>
-                <Text my={4} style={{ fontWeight: '600', fontSize: 24 }}>
-                  Your asset is ready to be saved to IPFS.
-                </Text>
-                <Button
-                  my={8}
-                  w={'160px'}
-                  className="upload-button"
-                  bgColor="#EC407A"
-                  isLoading={updateStatus === 'loading'}
-                  disabled={updateStatus === 'loading'}
-                  _hover={{
-                    transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
-                    cursor: asset?.storage?.status?.phase === 'processing' ? 'progress' : 'pointer',
-                  }}
-                  onClick={handleUpdateAssetToIPFS}>
-                  {updateStatus === 'loading' ? 'Saving to IPFS...' : 'Save to IPFS'}{' '}
-                </Button>
-              </Stack>
-            </>
-          ) : null}
-
-          {asset?.storage?.ipfs?.cid && (
-            <Stack spacing="20px" my={12} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-              <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                Congrats, your asset was uploaded to IPFS.
-              </Text>
-
+          {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' && (
+            <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: '24px' }} maxWidth="1200px">
+              <Heading as="h2" size="lg" my={4}>
+                Your video is now ready to be uploaded to IPFS.
+              </Heading>
               <Button
-                width={160}
-                className="show-details-button"
-                my={4}
-                onClick={() => setShowDetails(!showDetails)}
-                style={{ backgroundColor: '#EC407A' }}>
-                {showDetails ? 'Hide ' : 'Show '}Details
+                my={8}
+                w="160px"
+                className="upload-button"
+                bgColor="#EC407A"
+                isLoading={updateStatus === 'loading'}
+                disabled={updateStatus === 'loading'}
+                _hover={{
+                  transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
+                  cursor: asset?.storage?.status?.phase === 'processing' ? 'progress' : 'pointer',
+                }}
+                onClick={handleUpdateAssetToIPFS}
+              >
+                {updateStatus === 'loading' ? 'Saving to IPFS...' : 'Save to IPFS'}
               </Button>
-
-              <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
-                  Asset details:
-                </Text>
-                <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} width="300px" alt={`${asset.name}`} />
-                <Box style={{ lineHeight: 2.75 }}>
-                  <Text>
-                    Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
-                  </Text>
-                  <Text>
-                    Metadata CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.nftMetadata?.url ?? 'None'}</span>
-                  </Text>
-                </Box>
-              </Box>
             </Stack>
           )}
 
+          {!nftContract && asset?.storage?.ipfs?.cid && (
+            <>
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: '24px' }} maxWidth="1200px">
+                {(!asset || isLoading) ? (
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="brand.300"
+                    size="xl"
+                  />
+                ) : (
+                  <MediaRenderer
+                    src={`${asset?.storage?.ipfs?.url}`}
+                    alt={asset?.name}
+                    width="1920"
+                    height="1080"
+                  />
+                )}
+                <Heading as="h2" size="lg" my={2}>
+                  Congrats, Your Asset Was Uploaded To IPFS!
+                </Heading>
+                <Button
+                  width="160px"
+                  className="show-details-button"
+                  my={4}
+                  onClick={() => setShowDetails(!showDetails)}
+                  style={{ backgroundColor: '#EC407A' }}
+                >
+                  {showDetails ? 'Hide ' : 'Show '}Details
+                </Button>
+
+                <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
+                  <Heading as="h3" size="md" mb={8}>
+                    Asset details:
+                  </Heading>
+                  <Box style={{ lineHeight: '2.75' }}>
+                    <Text>
+                      <span style={{ fontWeight: '700' }}>Asset Name: </span>{asset?.name}
+                    </Text>
+                    <Text>
+                      <span style={{ fontWeight: '700' }}>Playback URL: </span>{asset?.playbackUrl}
+                    </Text>
+                    <Text>
+                      <span style={{ fontWeight: '700' }}>IPFS CID: </span>{asset?.storage?.ipfs?.cid ?? 'None'}
+                    </Text>
+                  </Box>
+                </Box>
+              </Stack>
+            </>
+          )}
+
           {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid && (
-            <ErrorBoundary fallback={() => <p>Failed to load...</p>}>
-              <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-                <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
-                <br />
+            <ErrorBoundary fallback={() => <p>Failed to load...</p>}> {/* Ensure ErrorBoundary is correctly implemented */}
+              <Box my={16} style={{ border: '1px solid #aeaeae', padding: '24px' }}>
+                <Text style={{ fontWeight: '500', fontSize: '20px', marginBottom: '4px' }}>Now deploy the contract for your uploaded Asset</Text>
                 <Button
                   className="deploy-button"
                   my={4}
-                  // as={motion.div}
                   bgColor="#EC407A"
                   isLoading={isDeploying}
                   _hover={{ transform: isDeploying ? '' : 'scale(1.02)', cursor: isDeploying ? 'progress' : 'pointer' }}
-                  onClick={deployNftCollection}>
+                  onClick={deployNftCollection}
+                >
                   {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                 </Button>
 
-                {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 400, marginLeft: 24 }}>{deployError}</span>}
+                {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 400, marginLeft: '24px' }}>{deployError}</span>}
               </Box>
             </ErrorBoundary>
           )}
 
           {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
-            <Stack spacing="20px" style={{ border: '1px solid #a4a4a4', padding: 24 }}>
-              <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                Contract deployed succesfully!
-              </Text>
+            <>
+              <Stack spacing="20px" style={{ border: '1px solid #a4a4a4', padding: '24px' }}>
+                <Text as="h4" my={2} style={{ fontWeight: '500', fontSize: '22px' }}>
+                  Contract deployed successfully!
+                </Text>
 
-              <Button
-                className="show-details-button"
-                onClick={() => {
-                  setMetadataDetails(!showMetadataDetails)
-                }}
-                style={{ maxWidth: 240, margin: '12px 0', backgroundColor: '#EC407A', marginTop: 4 }}>
-                {showMetadataDetails ? 'Hide ' : 'Show '}Contract MetaData
-              </Button>
+                <Button
+                  className="show-details-button"
+                  onClick={() => setMetadataDetails(!showMetadataDetails)}
+                  style={{ maxWidth: '240px', margin: '12px 0', backgroundColor: '#EC407A', marginTop: '4px' }}
+                >
+                  {showMetadataDetails ? 'Hide ' : 'Show '}Contract MetaData
+                </Button>
 
-              <Box my={8} style={{ display: showMetadataDetails ? 'block' : 'none' }}>
-                <Flex direction={'column'} style={{ lineHeight: 2.75 }}>
-                  <Text>
-                    <span style={{ fontWeight: '700' }}>Contract Address: </span>
-                    <span>{nftContract.getAddress()}</span>
-                  </Text>
-                  {getContractMetaData()}
-                </Flex>
-              </Box>
-            </Stack>
-          )}
+                <Box my={8} style={{ display: showMetadataDetails ? 'block' : 'none' }}>
+                  <Flex direction="column" style={{ lineHeight: '2.75' }}>
+                    <Text>
+                      <span style={{ fontWeight: '700' }}>Contract Address: </span>
+                      <span>{nftContract.getAddress()}</span>
+                    </Text>
+                    {getContractMetaData()}
+                  </Flex>
+                </Box>
+              </Stack>
 
-          {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
-            <LazyMintNft asset={asset} assetData={props.assetData} nftContract={nftContract} />
+              <LazyMintNft asset={asset} assetData={props.assetData} nftContract={nftContract} />
+            </>
           )}
         </>
       )}
     </Box>
-  )
-}
+  );
+};
 
 export default WagmiNft
