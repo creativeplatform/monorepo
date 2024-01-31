@@ -1,14 +1,14 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThirdwebProvider, smartWallet, embeddedWallet} from '@thirdweb-dev/react'
+import { ThirdwebProvider } from '@thirdweb-dev/react'
+import { Analytics } from '@vercel/analytics/react'
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import type { AppProps } from 'next/app'
-import { Analytics } from '@vercel/analytics/react'
-import { smartWalletInit, THIRDWEB_API_KEY, activeChain, SITE_NAME, SITE_DESCRIPTION, SITE_LOGO, SITE_URL } from '../utils/config'
+import { SITE_DESCRIPTION, SITE_LOGO, SITE_NAME, SITE_URL, THIRDWEB_API_KEY, activeChain, smartWalletInit } from '../utils/config'
 
 // Call `extendTheme` and pass your custom values
 const theme = extendTheme({
@@ -48,7 +48,7 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
             clientId={THIRDWEB_API_KEY}>
             <Layout>
               <Component {...pageProps} />
-              <Analytics />
+              {process.env.NODE_ENV != 'development' && <Analytics />}
             </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
           </ThirdwebProvider>
