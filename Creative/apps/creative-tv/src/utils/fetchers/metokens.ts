@@ -12,7 +12,7 @@ import {
     METOKENS_DIAMOND_ABI,
     ERC20_ABI,
 } from '../config'
-import { ThirdwebSDK, useAddress, useContract, useSigner, useContractRead } from '@thirdweb-dev/react'
+import { ThirdwebSDK, useAddress } from '@thirdweb-dev/react'
 import { Goerli } from '@thirdweb-dev/chains';
 import { Sign } from 'crypto';
 
@@ -24,7 +24,7 @@ export const foundryFacet = `${METOKENS_ADDRESS_GOERLI.foundryFacet}`
 export const meTokenDiamond = `${METOKENS_ADDRESS_GOERLI.meTokenDiamond}`
 export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
 export const nullToken = `0x${'0'.repeat(40)}`
-export const daiAddress = `${erc20Token.DAI.chain.ethereum.goerli}`
+//export const daiAddress = `${erc20Token.DAI.chain.ethereum[Goerli].address}`
 
 // Define an interface for BasicHubInfo
 interface BasicHubInfo {
@@ -41,26 +41,26 @@ interface CreateMeToken {
 
 
 // Define a function to get collateral data based on the collateral token address
-export const getCollateralData = async (collateralTokenAddress: string) => {
-    let id;
-    // Metokens will have multiple options for collateral
-    // When a new token can be used as collateral add a case to match token with ID for query.
-    switch (collateralTokenAddress) {
-        case daiAddress:
-            id = 'dai';
-            break;
-        default:
-            throw new Error('Only DAI is supported as collateral currently.');
-    }
+// export const getCollateralData = async (collateralTokenAddress: string) => {
+//     let id;
+//     // Metokens will have multiple options for collateral
+//     // When a new token can be used as collateral add a case to match token with ID for query.
+//     switch (collateralTokenAddress) {
+//         case daiAddress:
+//             id = 'dai';
+//             break;
+//         default:
+//             throw new Error('Only DAI is supported as collateral currently.');
+//     }
 
-    const tokenURL = `https://api.coingecko.com/api/v3/${id}?localization=false`;
-    const tokenResponse = await fetch(tokenURL);
-    const tokenInfo = await tokenResponse.json();
-    return {
-        image: tokenInfo.image.small,
-        currentPrice: tokenInfo.market_data.current_price.usd,
-    };
-};
+//     const tokenURL = `https://api.coingecko.com/api/v3/${id}?localization=false`;
+//     const tokenResponse = await fetch(tokenURL);
+//     const tokenInfo = await tokenResponse.json();
+//     return {
+//         image: tokenInfo.image.small,
+//         currentPrice: tokenInfo.market_data.current_price.usd,
+//     };
+// };
 
 // Get the user's address using the Thirdweb SDK
 const address = useAddress()

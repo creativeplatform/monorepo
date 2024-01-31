@@ -14,7 +14,6 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react'
-
 import { Player, useCreateAsset } from '@livepeer/react'
 import { useAddress } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
@@ -31,39 +30,19 @@ export interface MintDetail {
 
 // Add MintDetails to AssetData
 export interface AssetData extends IAssetData {}
+export interface AssetData extends IAssetData {}
 export interface AssetData extends Partial<MintDetail> {}
 
 // Note: This code contains a React component for creating and viewing assets.
 const CreateAndViewAsset = () => {
   // Note: This component relies on several external libraries and custom hooks for asset management, file uploading, UI components, and routing.
   // Note: The component uses the `useState` hook to manage various state variables.
-
   const [video, setVideo] = useState<File | null>(null) // Note: The `video` state variable stores the selected video file.
-
   const [assetName, setAssetName] = useState<string>('') // Note: The `assetName` state variable stores the name of the asset entered by the user.
-
   const [nFTAmountToMint, setnFTAmountToMint] = useState(0) // Note: The `nFTAmountToMint` state variable stores the amount of nft to mint.
-
   const [pricePerNFT, setPricePerNFT] = useState(0) // Note: The `pricePerNFT` state variable stores the price of an nft being minted.
-
   const [description, setDescription] = useState<string>('') // Note: The `description` state variable stores the description of the asset entered by the user.
-
-  const [isWriteInProgress, setIsWriteInProgress] = useState<boolean>() // Note: The `isWriteInProgress` state variable indicates whether an asset write operation is in progress.
-
-  const [isUpdateAsset, setIsUpdateAsset] = useState<boolean>() // Note: The `isUpdateAsset` state variable indicates whether an asset update operation is in progress.
-
-  const [isFileSelected, setIsFileSelected] = useState<boolean>(false) // Note: The `isFileSelected` state variable indicates whether a video file has been selected.
-
-  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false) // Note: The `isUploadingToIPFS` state variable indicates whether the video file is currently being uploaded to IPFS.
-
-  const [isProcessing, setIsProcessing] = useState<boolean>(false) // Note: The `isProcessing` state variable indicates whether the video file is currently being processed.
-
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false) // Note: The `showErrorMessage` state variable indicates whether an error message should be displayed.
-
-  const [buttonClicked, setButtonClicked] = useState<boolean>(false) // Note: The `buttonClicked` state variable indicates whether a button has been clicked.
-
   const address = useAddress() // Note: The `address` variable stores the address of the user.
-
   const router = useRouter() // Note: The `router` variable provides routing functionality.
 
   const [assetData, setAssetData] = useState<AssetData>({
@@ -108,22 +87,20 @@ const CreateAndViewAsset = () => {
 
     if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
       setVideo(acceptedFiles[0])
-      setIsFileSelected(true)
 
       // Update the assetData state with relevant properties
       setAssetData((prevData) => ({
         ...prevData,
-        animation_url: assetData.animation_url, // Set the animation URL
-        external_url: assetData.external_url, // Set the external URL
-        image_url: assetData.image_url, // Set the image URL
+        animation_url: assetData?.animation_url, // Set the animation URL
+        external_url: assetData?.external_url, // Set the external URL
+        image_url: assetData?.image_url, // Set the image URL
         properties: {
-          playbackId: assetData.properties.playbackId, // Set the playback ID
-          videoIpfs: assetData.properties.videoIpfs, // Set the video IPFS
+          playbackId: assetData?.properties?.playbackId, // Set the playback ID
+          videoIpfs: assetData?.properties?.videoIpfs, // Set the video IPFS
         },
       }))
     } else {
       setVideo(null)
-      setIsFileSelected(false)
     }
   }, [])
 
@@ -142,7 +119,7 @@ const CreateAndViewAsset = () => {
     // Note: The `progressFormatted` variable formats the progress of the video upload and processing.
 
     if (progress?.[0]?.phase === 'failed') {
-      return <p>Failed to process video.</p>
+      return <Text>Failed to process video.</Text>
     } else if (progress?.[0]?.phase === 'waiting') {
       return <Spinner thickness="4px" color="#EC407A" size={'md'} emptyColor="gray.200" />
     } else if (progress?.[0]?.phase === 'uploading') {
@@ -154,7 +131,7 @@ const CreateAndViewAsset = () => {
     }
   }, [progress])
 
-  /** The renderVideoPreview is use to memoize a component   */
+  /** The renderVideoPreview is used to memorize a component   */
   const renderVideoPreview = useMemo(() => <VideoPreview video={video} />, [video])
 
   const {
@@ -182,7 +159,7 @@ const CreateAndViewAsset = () => {
   const { handleSubmit: handleMintSubmit, control: handleMintControl, formState: mintFormState } = useForm<MintDetail>()
   const isRequiredFields = mintFormState.errors.nFTAmountToMint?.type === 'required' || mintFormState.errors.pricePerNFT?.type === 'required'
 
-  const handleAssetMint: SubmitHandler<MintDetail> = (data) => {
+  const handleAssetMint: SubmitHandler<MintDetail> = () => {
     if (isRequiredFields) {
       return
     }
@@ -211,7 +188,7 @@ const CreateAndViewAsset = () => {
 
       {createAssetError?.message && <Text> {createAssetError.message} </Text>}
 
-      {isFileSelected && (
+      {video && (
         <>
           {/* The preview of uploaded video */}
           {!createdAsset?.[0]?.id && renderVideoPreview}
@@ -340,10 +317,10 @@ const CreateAndViewAsset = () => {
             </Text>
 
             <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
-            <Box style={{ color: 'whitesmoke', lineHeight: 1.75 }}>
-              <Text>Asset Name: {createdAsset?.[0]?.name}</Text>
-              <Text>Playback URL: {createdAsset?.[0]?.playbackUrl}</Text>
-              <Text>IPFS CID: {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
+            <Box style={{ lineHeight: 1.75 }}>
+              <Text><span style={{ fontWeight: '700' }}>Asset Name: </span>{createdAsset?.[0]?.name}</Text>
+              <Text><span style={{ fontWeight: '700' }}>Playback URL: </span>{createdAsset?.[0]?.playbackUrl}</Text>
+              <Text><span style={{ fontWeight: '700' }}>IPFS CID: </span>{createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
             </Box>
           </Stack>
           <Box className="Proceed-button">

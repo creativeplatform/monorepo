@@ -1,4 +1,4 @@
-import { Flex, Image, Button, ButtonGroup, Card, Text, useToast } from '@chakra-ui/react'
+import { Flex, Image, Button, ButtonGroup, Card, Text, useToast, SkeletonText } from '@chakra-ui/react'
 import { MdAutorenew, MdCancel } from 'react-icons/md'
 import { useAddress, useContract, useOwnedNFTs, useContractWrite, useContractRead } from '@thirdweb-dev/react'
 import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
@@ -95,9 +95,13 @@ const MemberCard = (props: MemberCardProps) => {
         <Text fontSize="xs">{nft?.metadata?.description}</Text>
       </Flex>
       <Flex justifyContent={'center'} direction={'column'} mb={4}>
-        <Text fontSize="xs">
-          Expires in {expirationDuration ? new Date(expirationDuration?.toNumber() * 1000).toISOString().slice(11, 16) : 'Loading...'} hour(s).
-        </Text>
+      <Text fontSize="xs">
+        Expires in {
+          expirationDuration
+          ? fromTimestampToDate(expirationDuration)
+          : <SkeletonText noOfLines={1} skeletonHeight={'2'}/>
+        } hour(s).
+      </Text>
       </Flex>
       <ButtonGroup justifyContent={'center'}>
         <Button

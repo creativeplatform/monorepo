@@ -11,7 +11,7 @@ type ClaimFormData = {
   phaseName: string | undefined
   maxClaimablePerWallet: string
   maxClaimableSupply: number
-  startTime: number | Date | undefined
+  startTime: number | string | undefined
   waitInSeconds: string | number | bigint | ethers.BigNumber | undefined
 }
 

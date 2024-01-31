@@ -1,14 +1,13 @@
-import { Box, Image, Link, Spinner, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, VStack } from '@chakra-ui/react'
+import { Box, Image, Link, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, Skeleton } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
 import { useQuery } from '@tanstack/react-query'
 import { useAddress } from '@thirdweb-dev/react'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { globalTheme } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from '../utils/context'
 import { AssetData } from '../utils/fetchers/assets'
-import { dateFnc, formatString, logger } from '../utils/helpers'
+import { parseTimestampToDate, formatString } from '../utils/helpers'
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
@@ -31,30 +30,27 @@ export default function MyAssets(props: MyAssetsProps) {
     staleTime: 3000,
   })
 
-  if (videosQuery.isLoading) {
+  if (videosQuery?.isLoading) {
+    console.log('loading...')
     // loading state
-    return (
-      <VStack spacing={0} alignItems={'flex-start'} my={4}>
-        <Spinner my={12} alignSelf={'center'} size="md" thickness="3px" speed="0.5s" emptyColor="gray.200" color={globalTheme.colors.primary} />
-      </VStack>
-    )
+    return <Skeleton height={'20px'}/>
   }
 
-  if (videosQuery.isError || videosQuery.data.errors) {
-    logger({ title: 'videosQuery.isError: ', description: videosQuery.error, type: 'error' })
+  if (videosQuery?.isError || videosQuery?.data?.errors) {
+    console.log('error', videosQuery?.error)
     return <Box children="Error loading resource." mb={24} />
   }
 
   const readyVideos =
-    videosQuery.data.data?.filter((video): video is AssetData['video'] => {
+    videosQuery?.data?.data?.filter((video): video is AssetData['video'] => {
       return (
-        video.status.phase === 'ready' &&
-        Number(video.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT) > 0 &&
-        video.creatorId?.value === connectedAddress
+        video?.status?.phase === 'ready' &&
+        Number(video?.storage?.ipfs.spec?.nftMetadata?.properties?.pricePerNFT) > 0 &&
+        video?.creatorId?.value === connectedAddress
       )
     }) ?? []
 
-  logger({ title: 'readyVideos: ', description: readyVideos, type: 'log' })
+  console.log('readyVideos: ', readyVideos)
 
   return (
     <LivepeerConfig client={useLivepeerClient}>
@@ -75,12 +71,12 @@ export default function MyAssets(props: MyAssetsProps) {
                 <Tr key={i}>
                   <Td>
                     <Link as={NextLink} href={`${connectedAddress}/${video.id}?video=${JSON.stringify(video)}`}>
-                      {formatString.titleCase(video.name)}
+                      {formatString.titleCase(video?.name)}
                     </Link>
                   </Td>
-                  <Td>{dateFnc.parseTimestampToDate(video.createdAt as any)}</Td>
-                  <Td>{dateFnc.parseTimestampToDate(video.status.updatedAt as any)}</Td>
-                  <Td isNumeric>{video.viewCount}</Td>
+                  <Td>{parseTimestampToDate(video?.createdAt as any)}</Td>
+                  <Td>{parseTimestampToDate(video?.status?.updatedAt as any)}</Td>
+                  <Td isNumeric>{video?.viewCount}</Td>
                   {/* TODO: Depict that the ClaimCondition is set */}
                   {/* <Td>{rQuery['isClaimConditionSet'] ? 'true' : 'false'}</Td> */}
                   <Td>{'true/false'}</Td>
@@ -96,3 +92,15 @@ export default function MyAssets(props: MyAssetsProps) {
     </LivepeerConfig>
   )
 }
+
+// {
+//   isMinting && txHash ? (
+//     <div>
+//       <SetClaimConditions
+//         nftContractAddress={nftContract?.getAddress() as any}
+//         currencyAddress={''}
+//         price={Number(props.assetData.pricePerNFT)}
+//       />
+//     </div>
+//   ) : null
+// }

@@ -1,17 +1,17 @@
-import { Box, Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
+import { Box, Button, Stack, Text, useToast, Flex, Skeleton } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ConnectWallet, MediaRenderer, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
-import { ethers } from 'ethers'
-import { deployEditionDropContract, formatString } from 'utils/helpers'
-import { CREATIVE_ADDRESS, NAME_OF_SAVED_CONTRACT_ADDRESS } from '../utils/config'
-import { windowStorage } from '../utils/helpers'
+import { removeUnderScore } from 'utils/formatString'
+import { CREATIVE_ADDRESS, NAME_OF_SAVED_CONTRACT_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { LazyMinting } from './LazyMinting'
 import { ListLazyMintedNfts } from './ListLazyMintedNfts'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
+import { deployEditionDropContract, formatString, windowStorage } from 'utils/helpers'
+import { ethers } from 'ethers'
 
 interface WagmiNftProps {
   assetId: string
@@ -191,7 +191,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         platform_fee_recipient: CREATIVE_ADDRESS,
         fee_recipient: connectedAddress,
         seller_fee_basis_points: 300,
-        image: props.assetData.image_url || 'Not available',
+        image: asset?.storage?.ipfs?.nftMetadata?.url || 'Not available',
         description: props.assetData.description,
         trusted_forwarders: [CREATIVE_ADDRESS],
       })
@@ -374,6 +374,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   w={'160px'}
                   className="upload-button"
                   bgColor="#EC407A"
+                  isLoading={updateStatus === 'loading'}
                   disabled={updateStatus === 'loading'}
                   _hover={{
                     transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
@@ -419,8 +420,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           )}
 
           {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid && (
-            <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-              <ErrorBoundary fallback={<p>Failed to load...</p>}>
+            <ErrorBoundary fallback={<p>Failed to load...</p>}>
+              <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
                 <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
                 <br />
                 <Button
@@ -438,8 +439,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Button>
 
                 {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>}
-              </ErrorBoundary>
-            </Box>
+              </Box>
+            </ErrorBoundary>
           )}
 
           {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
