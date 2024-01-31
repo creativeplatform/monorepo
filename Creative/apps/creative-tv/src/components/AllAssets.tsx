@@ -39,7 +39,6 @@ type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
 export default function AllAssets() {
 
-  const address = useAddress()
   const connectedAddress = useAddress()
   const videosQuery = useQuery<ApiResponse<AssetData['video'][]>>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,

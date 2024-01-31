@@ -4,11 +4,9 @@ import { useAddress, useContract, useContractMetadata, useSigner } from '@thirdw
 import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { NAME_OF_SAVED_CONTRACT_ADDRESS, erc20Token } from '../utils/config'
+import { NAME_OF_SAVED_CONTRACT_ADDRESS, ERC20_TOKEN } from '../utils/config'
 import { thirdwebSDK, windowStorage } from '../utils/helpers'
 import { IAssetData, IReturnedAssetData } from '../utils/types'
-
-
 
 // Milestone
 
@@ -102,7 +100,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
 
   // TODO: map out DAI & USDC as only token accepted for purchasing nft
   // Get USDC contract
-  const { data: usdcContract } = useContract(erc20Token?.USDC.chain.polygon.mumbai)
+  const { data: usdcContract } = useContract(ERC20_TOKEN?.USDC.chain.polygon.mumbai)
 
   // NFT CONTRACT
   const { data: nftContract } = useContract(deployedContractAddress)
@@ -349,7 +347,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
       // 1. Get estimationCost of the minting tnx
 
       const prepareTxn = await nftContract?.erc1155.claim.prepare(tokenId, qtyOfNftToMint, {
-        currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
+        currencyAddress: ERC20_TOKEN?.USDC.chain.polygon.mumbai,
         checkERC20Allowance: true,
         pricePerToken: props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
       })
@@ -394,7 +392,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   const claimNFT = async () => {
     const claimConditionInput = {
       startTime: new Date(),
-      currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
+      currencyAddress: ERC20_TOKEN?.USDC.chain.polygon.mumbai,
       price: props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
       snapshot: [{ address: String(connectedAddress), maxClaimable: 1 }],
       maxClaimablePerWallet: 5,
@@ -488,7 +486,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           //     connectedAddress,
           //     tokenId?.toString(),
           //     qtyOfNftToMint,
-          //     erc20Token?.USDC.chain.polygon.mumbai,
+          //     ERC20_TOKEN?.USDC.chain.polygon.mumbai,
           //     props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
           //     [],
           //     ethers.utils.formatBytes32String('0'),
@@ -502,7 +500,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           const tokenId = await nftContract?.erc1155.nextTokenIdToMint()
 
           const nftClaimTxn = await nftContract?.erc1155.claim(tokenId as any, qtyOfNftToMint, {
-            currencyAddress: erc20Token?.USDC.chain.polygon.mumbai,
+            currencyAddress: ERC20_TOKEN?.USDC.chain.polygon.mumbai,
             checkERC20Allowance: true,
             pricePerToken: props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT,
           })

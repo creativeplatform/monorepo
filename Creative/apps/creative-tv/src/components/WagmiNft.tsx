@@ -420,7 +420,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           )}
 
           {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid && (
-            <ErrorBoundary fallback={<p>Failed to load...</p>}>
+            <ErrorBoundary fallback={() => <p>Failed to load...</p>}>
               <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
                 <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
                 <br />

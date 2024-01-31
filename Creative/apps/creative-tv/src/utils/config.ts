@@ -3074,6 +3074,46 @@ export const DAI = {
   mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 }
 
+export const ERC20_TOKEN = {
+  TESTR: {
+    chain: {
+      polygon: {
+        mumbai: '0xc0823427fE72cFD105c71BEAd0476412283B07c5',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  USDC: {
+    chain: {
+      polygon: {
+        mumbai: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  DAI: {
+    chain: {
+      polygon: {
+        mumbai: '0xcB1e72786A6eb3b44C2a2429e317c8a2462CFeb1',
+        mainnet: '',
+      },
+      ethereum: {
+        sepolia: '',
+        goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
+        mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      },
+    },
+  },
+}
+
 // ERC20 ABI
 export const ERC20_ABI = [
   {
