@@ -8,7 +8,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -22,17 +21,16 @@ import { ClaimCondition, NFT, SmartContract } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import { useState } from 'react'
 import { globalTheme } from 'utils/config'
-import { logger } from 'utils/helpers'
 import { ClaimNFTForCreator } from './ClaimNFTForCreator'
-import { ListClaimConditions } from './ListClaimConditions'
 import { SetClaimConditions } from './SetClaimConditions'
+import { ListClaimConditions } from './ListClaimConditions'
 
 type ShowNFTDetailsInModalProps = {
   isOpen: boolean
   onClose: () => void
   nft: NFT
   claimConditions: ClaimCondition[]
-  isFetching: boolean
+  isFetchingClaimConditions: boolean
   nftContract: SmartContract<ethers.BaseContract> | undefined
   nftMetadata: Record<string, any>
   addClaimPhase: boolean
@@ -42,19 +40,16 @@ type ShowNFTDetailsInModalProps = {
 }
 export function ShowNFTDetailsInModal(props: ShowNFTDetailsInModalProps) {
   const [tabIndex, setTabIndex] = useState(0)
+
   const {
     data: activeClaimCondition,
     isLoading: isActiveClaimLoading,
     error: activeClaimError,
-  } = useActiveClaimCondition(props.nftContract, props.nft?.metadata.id)
+  } = useActiveClaimCondition(props.nftContract as any, props.nft?.metadata.id)
 
   const tabList = ['Details', 'Claim Conditions', 'Claim']
-
+  
   const handleTabsChange = (idx: number) => {
-    if (tabList[tabList.length - 1].toLowerCase() == 'Claim'.toLowerCase() && activeClaimCondition === undefined) {
-      logger({ title: 'activeClaimCondition', description: 'activeClaimCondition not available', type: 'log' })
-      return
-    }
     setTabIndex(idx)
   }
 
@@ -102,28 +97,15 @@ export function ShowNFTDetailsInModal(props: ShowNFTDetailsInModalProps) {
               </TabPanel>
               <TabPanel>
                 <VStack spacing={0} alignItems={'flex-start'} my={4}>
-                  {props.isFetching ? (
-                    <Spinner
-                      my={12}
-                      alignSelf={'center'}
-                      size="md"
-                      thickness="3px"
-                      speed="0.5s"
-                      emptyColor="gray.200"
-                      color={globalTheme.colors.primary}
-                    />
-                  ) : (
-                    props.claimConditions.length > 0 && (
-                      <ListClaimConditions
-                        nftContract={props.nftContract}
-                        nft={props.nft!}
-                        claimConditions={props.claimConditions}
-                        nftMetadata={props.nftMetadata}
-                        addClaimPhase={props.addClaimPhase}
-                        setAddClaimPhase={props.setAddClaimPhase}
-                      />
-                    )
-                  )}
+                  <ListClaimConditions
+                    isFetchingClaimConditions={props.isFetchingClaimConditions}
+                    nftContract={props.nftContract}
+                    nft={props.nft!}
+                    claimConditions={props.claimConditions}
+                    nftMetadata={props.nftMetadata}
+                    addClaimPhase={props.addClaimPhase}
+                    setAddClaimPhase={props.setAddClaimPhase}
+                  />
                 </VStack>
 
                 {props.addClaimPhase && (
@@ -131,24 +113,22 @@ export function ShowNFTDetailsInModal(props: ShowNFTDetailsInModalProps) {
                     numberOfClaimsConditonsAvailable={props.claimConditions.length}
                     tokenId={String(props.nft?.metadata.id)}
                     nftMetadata={props.nftMetadata}
-                    nftContract={props.nftContract}
+                    nftContract={props.nftContract as any}
                     setAddClaimPhase={props.setAddClaimPhase}
                     claimConditions={props.claimConditions}
-                    // onModalOpen={props.isOpen}
-                    // getClaimConditionsById={props.getClaimConditionsById}
                   />
                 )}
               </TabPanel>
 
               <TabPanel>
-                <ClaimNFTForCreator nftContract={props.nftContract} tokenId={props.nft?.metadata.id} nftMetadata={props.nftMetadata} />
+                <ClaimNFTForCreator nftContract={props.nftContract as any} tokenId={props.nft?.metadata.id} nftMetadata={props.nftMetadata} />
               </TabPanel>
             </TabPanels>
           </Tabs>
         </ModalBody>
 
         <ModalFooter>
-          <Button style={{ backgroundColor: globalTheme.colors.primary }} mr={3} variant="ghost" onClick={props.onClose}>
+          <Button style={{ backgroundColor: globalTheme.colors.primary }} mb={12} mr={3} variant="ghost" onClick={props.onClose}>
             Close
           </Button>
         </ModalFooter>

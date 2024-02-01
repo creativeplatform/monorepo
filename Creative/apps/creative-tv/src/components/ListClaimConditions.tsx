@@ -24,21 +24,23 @@ type ListClaimConditionsProps = {
   nft: NFT
   claimConditions: ClaimCondition[]
   nftMetadata: Record<string, any>
-  nftContract: SmartContract<ethers.BaseContract> | undefined
-  addClaimPhase: boolean
-  setAddClaimPhase: (arg: boolean) => void
+  nftContract: SmartContract<ethers.BaseContract> | undefined | any
+  addClaimPhase?: boolean
+  setAddClaimPhase?: (arg: boolean) => void
+  isFetchingClaimConditions: boolean
 }
 
 export const ListClaimConditions = (props: ListClaimConditionsProps) => {
   const [canEditClaim, setCanEditClaim] = useState(false)
 
   useEffect(() => {
+    // TODO: Listen to  `updateClaimCondition` event and refetch latest `claimConditions`
+
     //////////////////////////
     // listen to the events
-    props.nftContract?.events.listenToAllEvents(async (e) => {
+    props.nftContract?.events.listenToAllEvents(async (e: any) => {
       if (e.eventName == 'ClaimConditionsUpdated') {
         /* TODO: Remember to clear form fields after successful tx */
-
         // setCanEditClaim(false)
         console.log('ListClaimConditions::eventData ', e.data)
       }
@@ -59,6 +61,9 @@ export const ListClaimConditions = (props: ListClaimConditionsProps) => {
 
   return (
     <>
+      {/* {props.isFetchingClaimConditions && (
+        <Spinner my={12} alignSelf={'center'} size="md" thickness="3px" speed="0.5s" emptyColor="gray.200" color={globalTheme.colors.primary} />
+      )} */}
       <Box>
         <Text style={{ fontSize: '24px' }}>Set Claim Conditions</Text>
         <Text color={'gray.300'} fontStyle={'italic'}>
@@ -140,40 +145,49 @@ export const ListClaimConditions = (props: ListClaimConditionsProps) => {
             ))}
           </>
         ) : (
-          <VStack spacing={8}>
-            <Alert
-              status="error"
-              variant="subtle"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              textAlign="center"
-              height="200px"
-              borderRadius={4}>
-              <AlertIcon boxSize="40px" mr={0} />
-              <AlertTitle mt={4} mb={1} fontSize="lg">
-                Claim Conditions not set
-              </AlertTitle>
-              <AlertDescription maxWidth="sm">You need to set at least one claim condition to enable persons to claim this nft.</AlertDescription>
-            </Alert>
+          <>
+            {/* {props.addClaimPhase && ( */}
+            <VStack spacing={8}>
+              <Alert
+                status="error"
+                variant="subtle"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                height="200px"
+                borderRadius={4}>
+                <AlertIcon boxSize="40px" mr={0} />
+                <AlertTitle mt={4} mb={1} fontSize="lg">
+                  Claim Conditions not set
+                </AlertTitle>
+                <AlertDescription maxWidth="sm">You need to set at least one claim condition to enable persons to claim this nft.</AlertDescription>
+              </Alert>
 
-            <Button
-              variant="outline"
-              fontSize={12}
-              colorScheme={props.addClaimPhase ? 'red' : ''}
-              leftIcon={!props.addClaimPhase ? <AddIcon fontSize={10} /> : <CloseIcon fontSize={10} />}
-              onClick={() => props.setAddClaimPhase(!props.addClaimPhase)}>
-              {!props.addClaimPhase ? 'Add Claim Phase' : 'Cancel'}
-            </Button>
-          </VStack>
+              <Button
+                variant="outline"
+                fontSize={12}
+                colorScheme={props.addClaimPhase ? 'red' : ''}
+                leftIcon={!props.addClaimPhase ? <AddIcon fontSize={10} /> : <CloseIcon fontSize={10} />}
+                onClick={() => {
+                  console.log('props.addClaimPhase: ', props.addClaimPhase)
+                  props.setAddClaimPhase!(!props.addClaimPhase)
+                }}>
+                {!props.addClaimPhase ? 'Add Claim Phase' : 'Cancel'}
+              </Button>
+            </VStack>
+            {/* )} */}
+          </>
         )}
 
-        <AddClaimPhaseButton
-          styles={{ marginTop: '20px', marginBottom: '12px' }}
-          addClaimPhase={props.addClaimPhase}
-          children={!props.addClaimPhase ? 'Add Claim Phase' : 'Cancel'}
-          setAddClaimPhase={props.setAddClaimPhase}
-        />
+        {props.claimConditions.length > 0 && (
+          <AddClaimPhaseButton
+            styles={{ marginTop: '20px', marginBottom: '12px' }}
+            children={!props.addClaimPhase ? 'Add Claim Phase' : 'Cancel'}
+            addClaimPhase={props.addClaimPhase!}
+            setAddClaimPhase={props.setAddClaimPhase!}
+          />
+        )}
       </VStack>
     </>
   )
@@ -199,5 +213,3 @@ function AddClaimPhaseButton(props: AddClaimPhaseButtonProps) {
     </Button>
   )
 }
-
-// TODO: Listen to  `updateClaimCondition` event and refetch latest `claimConditions`

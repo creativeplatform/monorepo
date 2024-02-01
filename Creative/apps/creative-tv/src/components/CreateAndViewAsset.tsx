@@ -21,7 +21,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { IAssetData } from '../utils/types'
-import { VideoPreview } from './videoPreview'
+import VideoPreview from './videoPreview'
 
 export interface MintDetail {
   nFTAmountToMint: number
@@ -29,7 +29,6 @@ export interface MintDetail {
 }
 
 // Add MintDetails to AssetData
-export interface AssetData extends IAssetData {}
 export interface AssetData extends IAssetData {}
 export interface AssetData extends Partial<MintDetail> {}
 
@@ -74,8 +73,17 @@ const CreateAndViewAsset = () => {
               name: assetName,
               description: description,
               file: video,
-              data: assetData,
+              // data: assetData,
               creatorId: address,
+              data: {
+                animation_url: '',
+                external_url: '',
+                image_url: '',
+                properties: {
+                  playbackId: '',
+                  videoIpfs: '',
+                },
+              },
             },
           ] as const,
         }
@@ -143,10 +151,7 @@ const CreateAndViewAsset = () => {
   const isError = assetName === '' || description === '' // Note: The `isError` variable checks if the asset name and description are empty and determines if an error should be displayed.
 
   const handleAssetUpload: SubmitHandler<AssetData> = (data) => {
-    if (isError) {
-      return
-    }
-
+ 
     setAssetData((prev) => ({
       ...prev,
       title: data.title,
@@ -159,11 +164,12 @@ const CreateAndViewAsset = () => {
   const { handleSubmit: handleMintSubmit, control: handleMintControl, formState: mintFormState } = useForm<MintDetail>()
   const isRequiredFields = mintFormState.errors.nFTAmountToMint?.type === 'required' || mintFormState.errors.pricePerNFT?.type === 'required'
 
-  const handleAssetMint: SubmitHandler<MintDetail> = () => {
+  const handleSubmitAssetForMint: SubmitHandler<MintDetail> = () => {
+
     if (isRequiredFields) {
       return
     }
-
+ 
     router.push({
       pathname: '/mint-nft-video',
       query: {
@@ -171,6 +177,18 @@ const CreateAndViewAsset = () => {
         assetData: JSON.stringify(assetData),
       },
     })
+  }
+
+  const handleUpdateMetadata = () => {
+    setAssetData((prev) => ({
+      ...prev,
+      nFTAmountToMint: nFTAmountToMint,
+      pricePerNFT: pricePerNFT,
+      properties: {
+        playbackId: String(createdAsset?.[0]?.playbackId),
+        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
+      },
+    }))
   }
 
   return (
@@ -318,14 +336,23 @@ const CreateAndViewAsset = () => {
 
             <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
             <Box style={{ lineHeight: 1.75 }}>
-              <Text><span style={{ fontWeight: '700' }}>Asset Name: </span>{createdAsset?.[0]?.name}</Text>
-              <Text><span style={{ fontWeight: '700' }}>Playback URL: </span>{createdAsset?.[0]?.playbackUrl}</Text>
-              <Text><span style={{ fontWeight: '700' }}>IPFS CID: </span>{createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}</Text>
+              <Text>
+                <span style={{ fontWeight: '700' }}>Asset Name: </span>
+                {createdAsset?.[0]?.name}
+              </Text>
+              <Text>
+                <span style={{ fontWeight: '700' }}>Playback URL: </span>
+                {createdAsset?.[0]?.playbackUrl}
+              </Text>
+              <Text>
+                <span style={{ fontWeight: '700' }}>IPFS CID: </span>
+                {createdAsset?.[0]?.storage?.ipfs?.cid ?? 'None'}
+              </Text>
             </Box>
           </Stack>
           <Box className="Proceed-button">
             <Box my={12} maxWidth={400} mx={'auto'}>
-              <form onSubmit={handleMintSubmit(handleAssetMint)}>
+              <form onSubmit={handleMintSubmit(handleSubmitAssetForMint)}>
                 <FormControl id="assetMintDetail" mb={8}>
                   <FormLabel>Number of NFTs to mint?</FormLabel>
                   <Controller
@@ -394,17 +421,8 @@ const CreateAndViewAsset = () => {
                   isLoading={mintFormState.isLoading}
                   _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
                   // as={motion.div}
-                  onClick={() => {
-                    setAssetData((prev) => ({
-                      ...prev,
-                      nFTAmountToMint: nFTAmountToMint,
-                      pricePerNFT: pricePerNFT,
-                      properties: {
-                        playbackId: String(createdAsset?.[0]?.playbackId),
-                        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
-                      },
-                    }))
-                  }}>
+                  onClick={handleUpdateMetadata}
+                >
                   Update Metadata
                 </Button>
               </form>

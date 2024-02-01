@@ -11,10 +11,6 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
-  Text,
-  Input,
-  useToast,
-  ButtonGroup,
   IconButton,
   Input,
   Link,
@@ -47,7 +43,6 @@ import { MdOutbound } from 'react-icons/md'
 import truncateEthAddress from 'truncate-eth-address'
 import {   LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 import MemberCard from 'components/MemberCard'
-import MyAssets from 'components/MyAssets'
 import MyAssets from 'components/MyAssets'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 

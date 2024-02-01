@@ -1,17 +1,14 @@
-import { Box, Button, Stack, Text, useToast, Flex, Skeleton } from '@chakra-ui/react'
+import { Box, Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ConnectWallet, MediaRenderer, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 // import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
-import { removeUnderScore } from 'utils/formatString'
-import { CREATIVE_ADDRESS, NAME_OF_SAVED_CONTRACT_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
+import { useContractAddress } from 'hooks/useContractAddress'
+import { deployEditionDropContract, formatString } from 'utils/helpers'
+import { CREATIVE_ADDRESS } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
-import { LazyMinting } from './LazyMinting'
-import { ListLazyMintedNfts } from './ListLazyMintedNfts'
+import { LazyMintNft } from './LazyMintNft'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
-import { deployEditionDropContract, formatString, windowStorage } from 'utils/helpers'
-import { ethers } from 'ethers'
 
 interface WagmiNftProps {
   assetId: string
@@ -34,78 +31,28 @@ type ContractMetaData = {
 }
 const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   const connectedAddress = useAddress()
-  const router = useRouter()
   const signer = useSigner()
   const toast = useToast()
   const [deployError, setDeployError] = useState('')
   const [isDeploying, setIsDeploying] = useState(false)
-  const [isMinting, setIsMinting] = useState(false)
-  const [lazyMintTxStatus, setLazyMintTxStatus] = useState<number | undefined>(0)
-  const [lazyMintTxHash, setLazyMintTxHash] = useState('')
-  const [error, setError] = useState(false)
-  const [showDetails, setShowDetails] = useState(false)
   const [showMetadataDetails, setMetadataDetails] = useState(false)
   const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
-  const [txCount, setTxCount] = useState(0)
-  // const [lazyMintedTokens, setLazyMintedTokens] = useState<NFT[]>([])
+  const { error: errContractAddress, isFetching, nftContractAddress: savedContractAddress, postContractAddress } = useContractAddress()
   const { contract: nftContract } = useContract(deployedContractAddress)
   const { data: contractMetadata, isLoading } = useMetadata(nftContract)
+  const [showDetails, setShowDetails] = useState(false)
+
+  // const router = useRouter()
+  // const [isMinting, setIsMinting] = useState(false)
+  // const [lazyMintTxStatus, setLazyMintTxStatus] = useState<number | undefined>(0)
+  // const [lazyMintTxHash, setLazyMintTxHash] = useState('')
+  // const [error, setError] = useState(false)
+  // const [txCount, setTxCount] = useState(0)
+  // const [lazyMintedTokens, setLazyMintedTokens] = useState<NFT[]>([])
 
   useEffect(() => {
-    /////////////////////////////////////////////
-    // Fetch contractAddress if user already deployed
-    /////////////////////////////////////////////
-    const savedContractAddress = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
-
-    if (savedContractAddress) {
-      // set contractAddress to state
-      setDeployedContractAddress(savedContractAddress)
-    }
-
-    /////////////////////////////////////////////
-    // Fetch lazyMint txHash if user already lazy minted
-    /////////////////////////////////////////////
-
-    async function getLazyMintTxHash() {
-      const txCount = await signer?.getTransactionCount()
-      setTxCount(txCount!)
-
-      // EditionDrop::LAZY_MINT_TX_HASH:1
-      const savedLazyTxHas = windowStorage.get({ name: `LAZY_MINT_TX_HASH:${1}` })
-
-      // TODO:
-      // Try to get the txn hash from localhost
-      //////////////////////
-      console.log('savedLazyTxHas: ', savedLazyTxHas)
-
-      if (savedLazyTxHas) {
-        // set contractAddress to state
-        setLazyMintTxHash(savedLazyTxHas)
-      }
-    }
-    getLazyMintTxHash()
-
-    return () => {}
-  }, [deployedContractAddress, isMinting])
-
-  useEffect(() => {
-    // fetchNFTs()
-
-    //////////////////////////
-    // listen to the events
-    nftContract?.events.listenToAllEvents(async (e) => {
-      //  when lazyMint is done
-      if (e.eventName == 'TokensLazyMinted') {
-        console.log('TokensLazyMinted::eventData ', e.data)
-        setIsMinting(false)
-        // fetchNFTs()
-      }
-    })
-
-    return () => {
-      nftContract?.events.removeAllListeners()
-    }
-  })
+    setDeployedContractAddress(savedContractAddress)
+  }, [])
 
   // Getting asset and refreshing for the status
   const {
@@ -172,7 +119,9 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   }
 
   // Function to deploy the edition drop contract
-  const deployNftCollection = async () => {
+  const deployNftCollection = async (e: any) => {
+    e.preventDefault()
+
     // Is there an sdk found and is there a connect wallet address?
     if (!signer || !connectedAddress) return
 
@@ -196,25 +145,11 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         trusted_forwarders: [CREATIVE_ADDRESS],
       })
 
-      // const contractAddress = await sdk.deployer.deployEditionDrop({
-      //   name: asset?.name,
-      //   primary_sale_recipient: connectedAddress,
-      //   app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
-      //   symbol: 'EPISD', // Symbol of the edition drop
-      //   platform_fee_basis_points: 200,
-      //   platform_fee_recipient: CREATIVE_ADDRESS,
-      //   fee_recipient: connectedAddress,
-      //   seller_fee_basis_points: 300,
-      //   image: props.assetData.image_url || 'Not available',
-      //   description: props.assetData.description,
-      //   trusted_forwarders: [CREATIVE_ADDRESS],
-      // })
-
-      // save CONTRACT_ADDRESS to localStorage
-      windowStorage.set({ name: NAME_OF_SAVED_CONTRACT_ADDRESS, value: contractAddress! })
-      console.log('Contract deployed: ', contractAddress)
-
-      setDeployedContractAddress(contractAddress!)
+      // post to server
+      const res = await postContractAddress({ contractAddress: contractAddress!, userAddress: connectedAddress! })
+      if (res.status === 201) {
+        setDeployedContractAddress(contractAddress!)
+      }
 
       toast({
         title: 'Contract deployment',
@@ -258,86 +193,14 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     }
   }
 
-  // lazyMint nft - uploads and creates the NFTs on chain
-  const handleLazyMintNFT = async () => {
-    try {
-      setIsMinting(true)
-
-      console.log('nftAmount: %s, nftCID: %s', ethers.BigNumber.from(props.assetData.nFTAmountToMint), JSON.stringify(asset?.storage?.ipfs?.url))
-
-      const nftMetadata = [
-        {
-          name: `${asset?.name}`,
-          description: String(asset?.storage?.ipfs?.spec?.nftMetadata?.description),
-          image: asset?.storage?.ipfs?.url,
-          animation_url: '',
-          attributes: [
-            {
-              trait_type: 'Background',
-              value: 'Black',
-            },
-          ],
-          properties: {
-            image_url: '',
-            pricePerNFT: '2.5',
-            external_url: '',
-            animation_url: '',
-            nFTAmountToMint: 80,
-          },
-        },
-      ]
-      console.log('nftMetadata: ', nftMetadata)
-
-      let receipt: ethers.providers.TransactionReceipt
-      const lazyMint = await nftContract?.erc1155.lazyMint(nftMetadata)
-
-      if (lazyMint && lazyMint.length) {
-        receipt = lazyMint[0].receipt
-        setLazyMintTxStatus(receipt!.status)
-        setLazyMintTxHash(receipt.transactionHash)
-
-        // save to localStorage
-        windowStorage.set({
-          name: `LAZY_MINT_TX_HASH:${txCount}`,
-          value: receipt.transactionHash,
-        })
-
-        console.log('[handleLazyMintNFT: tx.receipt] ', receipt)
-      } else {
-        setIsMinting(false)
-      }
-
-      toast({
-        title: 'Lazy Minting',
-        description: `Minting was successfully with txHash: ${lazyMintTxHash}`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      })
-    } catch (err: any) {
-      console.error(err)
-      setIsMinting(false)
-      setError(err.message)
-
-      toast({
-        status: 'error',
-        title: 'NFT not minted',
-        description: err.message,
-        duration: 5000,
-        isClosable: true,
-      })
-    }
-  }
-
-  const handleUpdateAsset = (e: any) => {
+  const handleUpdateAssetToIPFS = async (e: any) => {
     e.preventDefault()
-    // Check if contract was already deployed
-    const deployContract = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
-    console.log('deployContract: ', deployContract)
-    if (deployContract !== undefined) {
-      setDeployedContractAddress(deployContract)
-    }
 
+    // const deployContract = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
+    // console.log('deployContract: ', deployContract)
+    // if (deployContract !== undefined) {
+    //   setDeployedContractAddress(deployContract)
+    // }
     updateAsset?.() // Function to upload asset to IPFS
   }
 
@@ -380,7 +243,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                     transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
                     cursor: asset?.storage?.status?.phase === 'processing' ? 'progress' : 'pointer',
                   }}
-                  onClick={handleUpdateAsset}>
+                  onClick={handleUpdateAssetToIPFS}>
                   {updateStatus === 'loading' ? 'Saving to IPFS...' : 'Save to IPFS'}{' '}
                 </Button>
               </Stack>
@@ -431,14 +294,11 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   bgColor="#EC407A"
                   isLoading={isDeploying}
                   _hover={{ transform: isDeploying ? '' : 'scale(1.02)', cursor: isDeploying ? 'progress' : 'pointer' }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    deployNftCollection?.() // Function to deploy edition drop contract
-                  }}>
+                  onClick={deployNftCollection}>
                   {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                 </Button>
 
-                {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>}
+                {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 400, marginLeft: 24 }}>{deployError}</span>}
               </Box>
             </ErrorBoundary>
           )}
@@ -471,16 +331,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           )}
 
           {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
-            <LazyMinting handleLazyMintNFT={handleLazyMintNFT} isMinting={isMinting} lazyMintTxHash={lazyMintTxHash} />
+            <LazyMintNft asset={asset} assetData={props.assetData} nftContract={nftContract} />
           )}
-
-          <ListLazyMintedNfts
-            nftContract={nftContract}
-            nftMetadata={asset?.storage?.ipfs?.spec?.nftMetadata as any}
-            assetData={asset}
-            // lazyMintedTokens={lazyMintedTokens}
-            // refetchNFTs={fetchNFTs}
-          />
         </>
       )}
     </Box>

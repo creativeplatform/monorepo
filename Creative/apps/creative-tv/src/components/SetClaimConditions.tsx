@@ -22,13 +22,13 @@ type SetClaimConditionsProps = {
   numberOfClaimsConditonsAvailable: number
   tokenId: string
   setAddClaimPhase: (arg: boolean) => void
-  claimConditions: ClaimCondition[] // needed to be included with the new claimCondition
-  // getClaimConditionsById?: (tokenId: string) => void
+  claimConditions?: ClaimCondition[] // needed to be included with the new claimCondition
+  getClaimConditionsById?: (tokenId: string) => void
 }
 
 //
 export function SetClaimConditions(props: SetClaimConditionsProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSettingClaim, setIsSettingClaim] = useState(false)
   const [isErrorFree, setIsErrorFree] = useState(false)
   const [txStatus, setTxStatus] = useState<number | undefined>(0)
 
@@ -45,9 +45,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
       if (e.eventName == 'ClaimConditionsUpdated') {
         console.log('SetClaimConditions::ClaimConditionsUpdated::eventData ', e.data)
         props.setAddClaimPhase(false)
-        // props.getClaimConditionsById(props.tokenId)
-
-        setIsSubmitting(false)
+        setIsSettingClaim(false)
       }
     })
 
@@ -58,7 +56,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
 
   const handleSetClaimCondition = async (formData: any, tokenId: string): Promise<ethers.providers.TransactionReceipt | undefined> => {
     // Parse `price` field from `BigNumber` to string
-    const previousClaimConditions = props.claimConditions.map((cc) => {
+    const previousClaimConditions = props.claimConditions?.map((cc) => {
       return {
         ...cc,
         price: cc.price.toString(),
@@ -68,7 +66,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
     // At the moment; to add new claimCondition, you must batch the
     // previous claimConditions with the new claimCondition
     const newClaimConditionsPhase = [
-      ...previousClaimConditions,
+      ...previousClaimConditions!,
       {
         metadata: {
           name: formData.phaseName,
@@ -79,27 +77,17 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         startTime: formData.startTime,
         waitInSeconds: formData.waitInSeconds,
         price: formData.price,
-
-        // currencyAddress: formData.currencyAddress,
-        // maxClaimablePerWallet: 2,
-        // maxClaimableSupply: 100,
-        // startTime: new Date(),
-        // waitInSeconds: 60 * 60 * 24 * 7,
-        // snapshot: [],
-        // merkleRootHash: '',
-        // price: 15,
       },
     ]
 
-    logger({ title: 'updated claimConditions', description: newClaimConditionsPhase, type: 'log' })
-
     try {
-      logger({ title: 'formData.price', description: formData.price, type: 'log' })
+      setIsSettingClaim(true)
+      console.log({ title: 'formData.price', description: formData.price })
 
       const tx = await props.nftContract?.erc1155.claimConditions.set(
         tokenId,
         [
-          ...previousClaimConditions,
+          ...previousClaimConditions!,
           {
             currencyAddress: formData.currencyAddress,
             maxClaimablePerWallet: formData.maxClaimablePerWallet,
@@ -114,17 +102,10 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         ],
         false
       )
-
-      // const tx = await setClaimConditions({
-      //   phases: newClaimConditionsPhase,
-      //   reset: false,
-      // })
-
-      logger({ title: 'SetClaimConditions tx ', description: tx, type: 'log' })
-
-      // console.log('SetClaimConditions tx: ', tx.receipt)
+      console.log({ title: 'SetClaimConditions tx ', description: tx })
       return tx?.receipt
     } catch (err) {
+      setIsSettingClaim(false)
       throw err
     }
   }
@@ -145,24 +126,24 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
       return
     }
 
-    logger({ title: 'Raw data', description: data, type: 'log' })
+    console.log({ title: 'Raw data', description: data, type: 'log' })
 
     const formatData: ClaimFormData = {
       ...data,
       maxClaimablePerWallet: data.maxClaimablePerWallet,
       maxClaimableSupply: props.nftMetadata?.properties?.nFTAmountToMint,
       waitInSeconds: data.waitInSeconds,
-      startTime: new Date(data.startTime?.toString()!),
-      price: props.nftMetadata['properties']['pricePerNFT'] /** * tokenDecimal */, // TODO: get the erc20Contract and fetch its decimal
+      startTime: new Date(data.startTime?.toString()!) as any,
+      price: props.nftMetadata['properties']['pricePerNFT'] 
     }
 
     try {
       setIsErrorFree(true)
-      setIsSubmitting(true)
+      setIsSettingClaim(true)
 
       const receipt = await handleSetClaimCondition(formatData, props.tokenId)
       if (receipt) {
-        setIsSubmitting(false)
+        setIsSettingClaim(false)
         setTxStatus(receipt.status)
 
         toast({
@@ -174,8 +155,8 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         })
       }
     } catch (err: any) {
-      logger({ title: 'handleSetClaimCondition', description: err, type: 'error' })
-      setIsSubmitting(false)
+      console.log({ title: 'handleSetClaimCondition', description: err, type: 'error' })
+      setIsSettingClaim(false)
 
       toast({
         title: 'Set Claim Conditions',
@@ -193,7 +174,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         Set conditions for the sale/claim of your NFT(s)
       </Text>
       <form onSubmit={handleSubmit(handleSubmitClaimConditions)} id="setClaimCondtion">
-        <FormControl mb={8} isDisabled={isErrorFree && isSubmitting}>
+        <FormControl mb={8} isDisabled={isErrorFree && isSettingClaim}>
           <Stack direction={'column'} spacing={4} mb={4}>
             <VStack alignItems={'flex-start'}>
               <FormLabel>Name of Phase</FormLabel>
@@ -337,11 +318,11 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
           type="submit"
           _hover={{
             color: 'gray.300',
-            cursor: isSubmitting ? 'progress' : 'pointer',
+            cursor: isSettingClaim ? 'progress' : 'pointer',
           }}
           style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}
-          isLoading={isSubmitting}
-          loadingText={isSubmitting ? 'Submitting...' : ''}
+          isLoading={isSettingClaim}
+          loadingText={isSettingClaim ? 'Submitting...' : ''}
           mb={20}>
           Set Conditions
         </Button>

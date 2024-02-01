@@ -5,7 +5,6 @@ import { usePurchaseCurrency } from 'hooks/usePurchaseCurrency'
 
 import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { logger } from 'utils/helpers'
 
 type ClaimFormData = {
   qty: number
@@ -47,7 +46,7 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
   })
 
   useEffect(() => {
-    logger({ title: 'activeClaimCondition', description: activeClaimCondition, type: 'log' })
+    console.log({ title: 'activeClaimCondition', description: activeClaimCondition })
   }, [isActiveClaimLoading])
 
   const {
@@ -73,7 +72,7 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
       },
     }
 
-    logger({ title: 'claimNftData', description: claimNftData, type: 'log' })
+    console.log({ title: 'claimNftData', description: claimNftData })
 
     try {
       // checkout maxClaimablePerWallet
@@ -95,18 +94,6 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
         to: data.recipientAddress,
         quantity: data.qty,
       })
-
-      // TODO: awaiting response from support to resolve this
-      // const tx = await claimNft({
-      //   tokenId: props.tokenId,
-      //   to: data.recipientAddress,
-      //   quantity: data.qty,
-      //   options: {
-      //     checkERC20Allowance: true,
-      //     currencyAddress: activeClaimCondition?.currencyAddress,
-      //     pricePerToken: activeClaimCondition?.currencyMetadata.displayValue
-      //   },
-      // })
 
       return tx
     } catch (err: any) {
@@ -136,7 +123,7 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
       const tx = await handleClaimNFT(data, props.tokenId)
       if (tx) {
         setIsClaiming(false)
-        logger({ title: 'ClaimNFTReturnType', description: tx, type: 'log' })
+        console.log({ title: 'ClaimNFTReturnType', description: tx })
 
         toast({
           title: toastOptions.title,
@@ -148,7 +135,7 @@ export function ClaimNFTForCreator(props: ClaimNFTProps) {
       }
     } catch (err: any) {
       setIsClaiming(false)
-      logger({ title: 'ClaimError', description: err.message, type: 'error' })
+      console.log({ title: 'ClaimError', description: err.message })
 
       toast({
         title: toastOptions.title,
