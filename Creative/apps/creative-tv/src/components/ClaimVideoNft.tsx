@@ -5,7 +5,7 @@ import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@third
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
 import { NAME_OF_SAVED_CONTRACT_ADDRESS, ERC20_TOKEN } from '../utils/config'
-import { thirdwebSDK, windowStorage } from '../utils/helpers'
+import { thirdwebSDK,} from '../utils/helpers'
 import { IAssetData, IReturnedAssetData } from '../utils/types'
 
 // Milestone
@@ -113,12 +113,12 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
     /////////////////////////////////////////////
     // Fetch contractAddress if user already deployed
     /////////////////////////////////////////////
-    const savedContractAddress = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
+    // const savedContractAddress = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
 
-    if (savedContractAddress) {
-      // set contractAddress to state
-      setDeployedContractAddress(savedContractAddress)
-    }
+    // if (savedContractAddress) {
+    //   // set contractAddress to state
+    //   setDeployedContractAddress(savedContractAddress)
+    // }
 
     // set price of nft
     setPriceOfNft(Number(props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT))

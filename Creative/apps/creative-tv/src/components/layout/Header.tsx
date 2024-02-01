@@ -401,10 +401,10 @@ export function Header({ className, handleLoading }: Props) {
                   theme={connector}
                   btnTitle={'Sign In/Up'}
                   modalTitle={'Login'}                
-                  dropdownPosition={{
-                    side: 'bottom', // "top" | "bottom" | "left" | "right";
-                    align: 'end', // "start" | "center" | "end";
-                  }}
+                  // dropdownPosition={{ // commented out for error of non-existence
+                  //   side: 'bottom', // "top" | "bottom" | "left" | "right";
+                  //   align: 'end', // "start" | "center" | "end";
+                  // }}
                 />
               ) : (
                 <ButtonGroup>
@@ -603,10 +603,10 @@ export function Header({ className, handleLoading }: Props) {
                 modalTitle={'Login'}
                 switchToActiveChain={true}
                 modalSize={'wide'}
-                dropdownPosition={{
-                  side: 'bottom', // "top" | "bottom" | "left" | "right";
-                  align: 'end', // "start" | "center" | "end";
-                }}
+                // dropdownPosition={{ // commented out for error of non-existence
+                //   side: 'bottom', // "top" | "bottom" | "left" | "right";
+                //   align: 'end', // "start" | "center" | "end";
+                // }}
               />
             ) : (
               <ButtonGroup>

@@ -1,11 +1,11 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
-import { ClaimVideoNFT } from 'components/ClaimVideoNft'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { useLivepeerClient } from '../../hooks/useLivepeerClient'
 import { IAssetData, IReturnedAssetData } from '../../utils/types'
+import { ClaimVideoNFT } from 'components/ClaimVideoNFT'
 
 interface AssetData extends IAssetData, IReturnedAssetData {}
 

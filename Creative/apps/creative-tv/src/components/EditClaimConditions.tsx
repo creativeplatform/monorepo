@@ -3,7 +3,7 @@ import { ClaimCondition, NFT, SmartContract } from '@thirdweb-dev/react'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { claimConditionsOptions, date } from 'utils/helpers'
+import { claimConditionsOptions, date, } from 'utils/helpers'
 
 type EditClaimFormData = {
   currencyAddress: string
@@ -23,7 +23,7 @@ type EditClaimConditionsProps = {
 }
 
 //
-function EditClaimConditions(props: EditClaimConditionsProps) {
+export function EditClaimConditions(props: EditClaimConditionsProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isErrorFree, setIsErrorFree] = useState(false)
   const [isExecuted, setIsExecuted] = useState(false) // to clear form data
@@ -31,7 +31,6 @@ function EditClaimConditions(props: EditClaimConditionsProps) {
   const toast = useToast()
 
   const cc = props.claimCondition
-  // console.log('cc: ', cc)
 
   useEffect(() => {
     // TODO: decide Form appearance on when the `Modal` gets closed
@@ -54,8 +53,6 @@ function EditClaimConditions(props: EditClaimConditionsProps) {
 
   const handleUpdateClaimCondition = async (tokenId: string, ccIndex: number, formData: EditClaimFormData): Promise<boolean | undefined> => {
     // update an existing claimCondition by its id
-    console.log('id: ', tokenId)
-    console.log('formData: ', formData)
 
     try {
       await props.nftContract?.erc1155.claimConditions.update(tokenId, ccIndex, {
@@ -71,7 +68,7 @@ function EditClaimConditions(props: EditClaimConditionsProps) {
 
       return true
     } catch (err) {
-      console.log('claimConditions txError: ', err)
+      console.log({ description: 'claimConditions txError: ', err })
 
       toast({
         title: 'Set Claim Conditions',
@@ -114,6 +111,7 @@ function EditClaimConditions(props: EditClaimConditionsProps) {
       await handleUpdateClaimCondition(props.nft.metadata.id, props.ccIndex, formData)
     } catch (err: any) {
       setIsSubmitting(false)
+
       console.error(err)
       toast({
         title: 'Set Claim Conditions',
@@ -299,4 +297,3 @@ function EditClaimConditions(props: EditClaimConditionsProps) {
     </Box>
   )
 }
-export default EditClaimConditions;

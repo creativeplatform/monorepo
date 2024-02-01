@@ -14,72 +14,6 @@ export const thirdwebSDKFromSigner = (signer: ethers.Signer, network: NetworkInp
   })
 }
 
-// Use as the name of contract saved for temporal or permanent storage
-/**
- *
- * @param name A name to identify the contract address
- * @returns editionContract::name
- *
- * @example const res = parseEditionDropContract('John')
- * console.log(res) = 'EditionDrop::John'
- */
-const parseEditionDropContract = (name: string) => {
-  return `EditionDrop::${name}`
-}
-
-type LocalStateSetArgs = {
-  name: string
-  value: string
-}
- 
-/**
- * This object holds functions that works with the browser localStrage API
- */
-export const windowStorage = {
-  /**
-   * This function saves data to the web browser local store
-   * @param key This represent the name to save the item on
-   * @param value This is the item to save
-   * @example
-   *
-   * set({key: 'bat', value: 'man mobile'})
-   * or
-   * set({ key: 'user', value: JSON.stringify({ firstName: 'bat', lastName: 'man' }) })
-   *
-   */
-  set: ({ name, value }: LocalStateSetArgs) => {
-    name = parseEditionDropContract(name)
-    const res = windowStorage.get({ name })
-    if (res) {
-      throw Error('Key already in use; try another key name')
-    } else {
-      if (typeof value == 'object') {
-        throw Error('Value needs to be stringified')
-      } else {
-        localStorage.setItem(name, value)
-      }
-    }
-  },
-  /**
-   *
-   * @param key This represent the name to the item to retrieve
-   * @returns item saved
-   */
-  get: ({ name }: LocalStateGetArgs) => {
-    name = parseEditionDropContract(name)
-    console.log('name: ', name)
-
-    // 0x6171a3DfAcd25802079137d5D69db51D64E025a1
-    const exists = localStorage.getItem(name)
-    if (exists) {
-      return exists
-    } else {
-      // throw new Error('Key not found!')
-      console.log('Key not found!')
-    }
-  },
-}
-
 type DeployEditionDropContractType = {
   name: string
   primary_sale_recipient: string //connectedAddress
@@ -293,40 +227,6 @@ export const parseCurrencyAddressToSymbol = (currencyAddress: string) => {
   })
 }
 
-type LogErrorType = {
-  title: string
-  description: string | number | any
-  type: 'error' | 'warning' | 'info' | 'log'
-}
-/**
- * A simple logger
- * @param param0
- */
-export const logger = ({ title, description, type }: LogErrorType) => {
-  if (typeof description === 'object') {
-    description = JSON.stringify(description)
-  }
-
-  if (process.env.NODE_ENV != 'production') {
-    switch (type) {
-      case 'error':
-        console.error(`${title} : ${description}`)
-        break
-      case 'warning':
-        console.warn(`${title} : ${description}`)
-        break
-      case 'info':
-        console.info(`${title} : ${description}`)
-        break
-
-      default:
-        console.log(`${title} : ${description}`)
-    }
-  } else {
-    // TODO: send to Error Service
-  }
-}
- 
 export const date = {
   parseDate,
   parseTimestampToDate,

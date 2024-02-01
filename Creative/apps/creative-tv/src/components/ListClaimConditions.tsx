@@ -18,7 +18,7 @@ import { ClaimCondition, NFT, SmartContract } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { parseCurrencyDecimals } from 'utils/helpers'
-import { EditClaimConditions } from './EditClaimConditons'
+import { EditClaimConditions } from './EditClaimConditions'
 
 type ListClaimConditionsProps = {
   nft: NFT

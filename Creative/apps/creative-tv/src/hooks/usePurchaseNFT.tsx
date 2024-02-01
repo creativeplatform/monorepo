@@ -3,7 +3,7 @@ import { useToast } from '@chakra-ui/react'
 import { ThirdwebSDK, embeddedWallet, useAddress, useSigner, useSmartWallet } from '@thirdweb-dev/react'
 import { mumbai, networks } from '@unlock-protocol/networks'
 import { Paywall } from '@unlock-protocol/paywall'
-import { ACCOUNT_FACTORY, UNLOCK_PROTOCOL } from '../utils/config'
+import { ACCOUNT_FACTORY_TESTNET, LOCK_ADDRESS_MUMBAI_TESTNET } from '../utils/config'
 // Main hook for purchasing NFTs
 export default function usePurchaseNFT() {
   // Initialize toast for user feedback
@@ -12,12 +12,12 @@ export default function usePurchaseNFT() {
   // Get user's wallet address
   const address = useAddress()
   const { connect } = useSmartWallet(embeddedWallet(), {
-    factoryAddress: ACCOUNT_FACTORY.polygon.mumbai,
+    factoryAddress: ACCOUNT_FACTORY_TESTNET,
     gasless: true,
   })
 
   // Predefined contract addresses and purchase price
-  const LOCK_ADDRESS = UNLOCK_PROTOCOL.contracts.mumbai.address
+  const LOCK_ADDRESS = LOCK_ADDRESS_MUMBAI_TESTNET.address
   const TOKEN_ADDRESS = '0x0000000000000000000000000000000000001010'
   const PURCHASE_PRICE = 1000000000000000000
 
@@ -41,7 +41,7 @@ export default function usePurchaseNFT() {
         const paywallConfig = {
           // Your paywall configuration here
           locks: {
-            [UNLOCK_PROTOCOL.contracts.mumbai.address]: {
+            [LOCK_ADDRESS_MUMBAI_TESTNET.address]: {
               network: mumbai,
             },
           },

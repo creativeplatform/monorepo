@@ -3,7 +3,7 @@ import { ClaimCondition, SmartContract, useSetClaimConditions } from '@thirdweb-
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { claimConditionsOptions, logger } from 'utils/helpers'
+import { claimConditionsOptions } from 'utils/helpers'
 
 type ClaimFormData = {
   price?: string | ethers.BigNumber | undefined

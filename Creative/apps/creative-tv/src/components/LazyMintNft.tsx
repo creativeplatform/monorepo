@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { formatString, handleCopyString } from 'utils/helpers'
 import { AssetData } from './CreateAndViewAsset'
-import { ListLazyMintedNfts } from './ListLazyMintedNFTs'
+import {  ListLazyMintedNFTs } from './ListLazyMintedNFTs'
 
 type LazyMintProps = {
   // lazyMintTxHash?: string
@@ -194,7 +194,7 @@ export function LazyMintNft(props: LazyMintProps) {
       </Stack>
 
       {lazyMintedTokens.length > 0 && (
-        <ListLazyMintedNfts
+        <ListLazyMintedNFTs
           nftContract={props.nftContract}
           nftMetadata={props.asset?.storage?.ipfs?.spec?.nftMetadata as any}
           assetData={props.asset}

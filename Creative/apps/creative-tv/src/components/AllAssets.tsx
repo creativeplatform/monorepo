@@ -1,44 +1,17 @@
-import { ChatIcon, DownloadIcon, LinkIcon } from '@chakra-ui/icons'
-import {
-  Avatar,
-  Badge,
-  Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
-  Flex,
-  HStack,
-  Heading,
-  SimpleGrid,
-  Spacer,
-  Spinner,
-  Stack,
-  Text,
-  VStack,
-} from '@chakra-ui/react'
-import { LivepeerConfig, Player } from '@livepeer/react'
+import { Box, SimpleGrid, Spinner, VStack } from '@chakra-ui/react'
+import { LivepeerConfig } from '@livepeer/react'
 import { useQuery } from '@tanstack/react-query'
 import { useAddress } from '@thirdweb-dev/react'
-import { motion } from 'framer-motion'
 import { useLivepeerClient } from 'hooks/useLivepeerClient'
-import { useRouter } from 'next/router'
-import { SITE_LOGO, globalTheme } from 'utils/config'
-import { CREATIVE_LOGO_WHT } from 'utils/context'
+import { globalTheme } from 'utils/config'
 import { AssetData } from 'utils/fetchers/assets'
 import VideoCard from './VideoCard'
-import { logger } from 'utils/helpers'
-import { PosterImage } from './PosterImage'
 // import { Discussion } from "@orbisclub/components";
 // import "@orbisclub/components/dist/index.modern.css";
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
 export default function AllAssets() {
-
   const connectedAddress = useAddress()
   const videosQuery = useQuery<ApiResponse<AssetData['video'][]>>(['allVideos'], () => fetch('/api/livepeer/assets').then((res) => res.json()), {
     staleTime: 3000,
@@ -53,7 +26,7 @@ export default function AllAssets() {
   }
 
   if (videosQuery.isError || videosQuery.data.errors) {
-    logger({ title: 'videosQueryError', description: videosQuery.error, type: 'error' })
+    console.log({ title: 'videosQueryError', description: videosQuery.error, type: 'error' })
     return <Box children="Error loading resource." mb={24} />
   }
 
