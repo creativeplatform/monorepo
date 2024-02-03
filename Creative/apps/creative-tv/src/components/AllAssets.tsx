@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Spinner, VStack } from '@chakra-ui/react'
+import { Box, SimpleGrid, Spinner, Text, VStack } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
 import { useQuery } from '@tanstack/react-query'
 import { useAddress } from '@thirdweb-dev/react'
@@ -17,7 +17,7 @@ export default function AllAssets() {
     staleTime: 3000,
   })
 
-  if (videosQuery.isLoading) {
+  if (videosQuery?.isLoading) {
     return (
       <VStack spacing={0} alignItems={'flex-start'} my={4}>
         <Spinner my={12} alignSelf={'center'} size="md" thickness="3px" speed="0.5s" emptyColor="gray.200" color={globalTheme.colors.primary} />
@@ -25,15 +25,19 @@ export default function AllAssets() {
     )
   }
 
-  if (videosQuery.isError || videosQuery.data.errors) {
-    console.log({ title: 'videosQueryError', description: videosQuery.error, type: 'error' })
+  if (videosQuery?.isError || videosQuery?.data.errors) {
+    console.error('videosQueryError', videosQuery.error)
+    return <Box children="Error loading resource." mb={24} />
+  }
+
+  if (videosQuery?.data.data === undefined) {
     return <Box children="Error loading resource." mb={24} />
   }
 
   const readyVideos =
     videosQuery.data.data?.filter((video): video is AssetData['video'] => {
       return (
-        video.status.phase === 'ready' &&
+        video?.status.phase === 'ready' &&
         Number(video.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT) > 0 &&
         video.creatorId?.value != connectedAddress
       )
@@ -42,9 +46,21 @@ export default function AllAssets() {
   return (
     <LivepeerConfig client={useLivepeerClient}>
       <SimpleGrid spacing={4} minChildWidth={350} mb={12}>
-        {readyVideos.map((video) => {
-          return <VideoCard key={video.id} video={video} />
-        })}
+        {readyVideos && readyVideos.length > 0 ? (
+          readyVideos.map((video) => {
+            return <VideoCard key={video.id} video={video} />
+          })
+        ) : (
+          <Box
+            style={{
+              textAlign: 'center',
+              width: '50%',
+              margin: 'auto',
+              padding: '8px',
+            }}>
+            <Text>No video at the moment!</Text>
+          </Box>
+        )}
       </SimpleGrid>
     </LivepeerConfig>
   )
