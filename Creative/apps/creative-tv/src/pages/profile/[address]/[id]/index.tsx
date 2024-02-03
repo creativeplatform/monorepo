@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router'
-
+import { Text } from '@chakra-ui/react'
 export default function AssetDetails() {
-  const router = useRouter()
 
-  console.log('video: ', JSON.parse(router.query.video as any))
+  const router = useRouter()
 
   const setPermission = () => {
     //          <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} />
   }
-  return <p>Post: {router.query.id}</p>
+  return <Text>Post: {router.query.id}</Text>
 }
