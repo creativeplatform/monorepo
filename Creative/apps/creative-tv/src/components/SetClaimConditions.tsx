@@ -1,5 +1,5 @@
 import { Box, Button, FormControl, FormHelperText, FormLabel, Input, Select, Stack, Text, VStack, useToast } from '@chakra-ui/react'
-import { ClaimCondition, SmartContract, useSetClaimConditions } from '@thirdweb-dev/react'
+import { ClaimCondition, SmartContract } from '@thirdweb-dev/react'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
@@ -32,13 +32,10 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
   const [isErrorFree, setIsErrorFree] = useState(false)
   const [txStatus, setTxStatus] = useState<number | undefined>(0)
 
-  const { mutateAsync: setClaimConditions, isLoading, error } = useSetClaimConditions(props.nftContract, props.tokenId)
-
   const { handleSubmit, control: ctrl, formState, register } = useForm<ClaimFormData>()
   const toast = useToast()
 
   useEffect(() => {
-    // TODO: decide Form appearance on when the `Modal` gets closed
     //////////////////////////
     // listen to the events
     props.nftContract?.events.listenToAllEvents(async (e) => {
@@ -63,30 +60,15 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
       }
     })
 
-    // At the moment; to add new claimCondition, you must batch the
-    // previous claimConditions with the new claimCondition
-    const newClaimConditionsPhase = [
-      ...previousClaimConditions!,
-      {
-        metadata: {
-          name: formData.phaseName,
-        },
-        currencyAddress: formData.currencyAddress,
-        maxClaimablePerWallet: formData.maxClaimablePerWallet,
-        maxClaimableSupply: formData.maxClaimableSupply,
-        startTime: formData.startTime,
-        waitInSeconds: formData.waitInSeconds,
-        price: formData.price,
-      },
-    ]
-
     try {
       setIsSettingClaim(true)
-      console.log({ title: 'formData.price', description: formData.price })
+      console.log('formData.price', formData.price)
 
       const tx = await props.nftContract?.erc1155.claimConditions.set(
         tokenId,
         [
+          // At the moment; to add new claimCondition, you must batch the
+          // previous claimConditions with the new claimCondition
           ...previousClaimConditions!,
           {
             currencyAddress: formData.currencyAddress,
@@ -102,9 +84,10 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         ],
         false
       )
-      console.log({ title: 'SetClaimConditions tx ', description: tx })
+      console.log('SetClaimConditions tx', tx)
       return tx?.receipt
     } catch (err) {
+      console.error('SetClaimConditionsError', err)
       setIsSettingClaim(false)
       throw err
     }
@@ -126,16 +109,15 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
       return
     }
 
-    console.log({ title: 'Raw data', description: data, type: 'log' })
-
     const formatData: ClaimFormData = {
       ...data,
       maxClaimablePerWallet: data.maxClaimablePerWallet,
       maxClaimableSupply: props.nftMetadata?.properties?.nFTAmountToMint,
       waitInSeconds: data.waitInSeconds,
       startTime: new Date(data.startTime?.toString()!) as any,
-      price: props.nftMetadata['properties']['pricePerNFT'] 
+      price: props.nftMetadata['properties']['pricePerNFT'],
     }
+    console.error('handleSetClaimCondition::formatData', formatData)
 
     try {
       setIsErrorFree(true)
@@ -155,7 +137,7 @@ export function SetClaimConditions(props: SetClaimConditionsProps) {
         })
       }
     } catch (err: any) {
-      console.log({ title: 'handleSetClaimCondition', description: err, type: 'error' })
+      console.error('handleSetClaimCondition', err)
       setIsSettingClaim(false)
 
       toast({
