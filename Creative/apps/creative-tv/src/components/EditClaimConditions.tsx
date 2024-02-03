@@ -3,7 +3,7 @@ import { ClaimCondition, NFT, SmartContract } from '@thirdweb-dev/react'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { claimConditionsOptions, date, } from 'utils/helpers'
+import { claimConditionsOptions, date } from 'utils/helpers'
 
 type EditClaimFormData = {
   currencyAddress: string
