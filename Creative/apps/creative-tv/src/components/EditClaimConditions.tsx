@@ -111,7 +111,6 @@ export function EditClaimConditions(props: EditClaimConditionsProps) {
       await handleUpdateClaimCondition(props.nft.metadata.id, props.ccIndex, formData)
     } catch (err: any) {
       setIsSubmitting(false)
-
       console.error(err)
       toast({
         title: 'Set Claim Conditions',
