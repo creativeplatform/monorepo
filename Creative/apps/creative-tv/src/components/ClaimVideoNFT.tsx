@@ -1,11 +1,11 @@
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
 import { Player } from '@livepeer/react'
-import { useAddress, useContract, useContractMetadata, useSigner } from '@thirdweb-dev/react'
-import { ClaimCondition, ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
+import { useActiveClaimCondition, useAddress, useClaimConditions, useContract, useContractMetadata, useSigner } from '@thirdweb-dev/react'
+import { ClaimEligibility, SnapshotEntryWithProof } from '@thirdweb-dev/sdk'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useState } from 'react'
-import { NAME_OF_SAVED_CONTRACT_ADDRESS, ERC20_TOKEN } from '../utils/config'
-import { thirdwebSDK,} from '../utils/helpers'
+import { ERC20_TOKEN } from '../utils/config'
+import { thirdwebSDK } from '../utils/helpers'
 import { IAssetData, IReturnedAssetData } from '../utils/types'
 
 // Milestone
@@ -76,6 +76,8 @@ type MintVideoNFTProps = {
   assetData: AssetData & IReturnedAssetData
 }
 
+const isNftSoldOut = false // TODO: fix after pending review
+
 export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   // const router = useRouter()
   const connectedAddress = useAddress()
@@ -91,121 +93,47 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
   const [isActiveClaimConditionLoading, setIsActiveClaimConditionLoading] = useState(false)
   const [accountBalanceError, setAccountBalanceError] = useState('')
   const [accountBalanceToLow, setIsAccountBalanceToLow] = useState(false)
-  const [claimConditions, setClaimConditions] = useState<ClaimCondition[]>([])
-  const [activeClaimCondition, setActiveClaimCondition] = useState<ClaimCondition>()
+  // const [claimConditions, setClaimConditions] = useState<ClaimCondition[]>([])
+  // const [activeClaimCondition, setActiveClaimCondition] = useState<ClaimCondition>()
   const [claimerProofs, setClaimerProofs] = useState<SnapshotEntryWithProof | null>()
   const [claimIneligibilityReasons, setClaimIneligibilityReasons] = useState<ClaimEligibility[]>()
   const [isClaimIneligibilityReasonsLoading, setIsClaimIneligibilityReasonsLoading] = useState(false)
   const [claimedSupply, setClaimedSupply] = useState<ethers.BigNumber | undefined>()
+  const [tokenMetadata, setTokenMetadata] = useState<any>()
 
   // TODO: map out DAI & USDC as only token accepted for purchasing nft
   // Get USDC contract
   const { data: usdcContract } = useContract(ERC20_TOKEN?.USDC.chain.polygon.mumbai)
 
   // NFT CONTRACT
-  const { data: nftContract } = useContract(deployedContractAddress)
+  const { data: nftContract } = useContract('0x914B872Ce6Da4cc7523B768a3cef8b472F2d2511')
 
   const { data: contractMetadata } = useContractMetadata(nftContract)
 
+  const { data: claimConditions, isLoading, error } = useClaimConditions(nftContract, tokenId)
+  const { data: activeClaimCondition, isLoading: isActiveClaimLoading, error: isActiveClaimError } = useActiveClaimCondition(nftContract, tokenId)
+
   useEffect(() => {
-    // windowStorage.set({ name: NAME_OF_SAVED_CONTRACT_ADDRESS, value: '0x6171a3DfAcd25802079137d5D69db51D64E025a1' })
-
-    /////////////////////////////////////////////
-    // Fetch contractAddress if user already deployed
-    /////////////////////////////////////////////
-    // const savedContractAddress = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
-
-    // if (savedContractAddress) {
-    //   // set contractAddress to state
-    //   setDeployedContractAddress(savedContractAddress)
-    // }
-
-    // set price of nft
-    setPriceOfNft(Number(props.assetData.storage?.ipfs.spec.nftMetadata.properties.pricePerNFT))
-    // console.log('assetData', props.assetData);
-
-    const initClaimConditions = async () => {
+    const tknMetadata = async () => {
       try {
-        const allClaimCondition = await nftContract?.erc1155.claimConditions.getAll(tokenId)
-
-        if (allClaimCondition?.length) {
-          console.log('allClaimCondition: ', allClaimCondition)
-
-          setIsActiveClaimConditionLoading(true)
-          setClaimConditions([...allClaimCondition])
-          setActiveClaimCondition(allClaimCondition as any) // TODO: delete this out
-        } else {
-          setClaimConditions([])
-          setIsActiveClaimConditionLoading(false)
-        }
-
-        // ActiveClaimConditions
-        // const activeClaimCondition = await nftContract?.erc1155.claimConditions.getActive(tokenId)
-        // if (activeClaimCondition) {
-        // setIsActiveClaimConditionLoading(true)
-        // setActiveClaimCondition(allClaimCondition as any) // TODO: delete this out
-        //   console.log('activeClaimCondition: ', activeClaimCondition)
-        // }else {
-        //  setIsActiveClaimConditionLoading(true)
-        // }
-
-        // claimIneligibilityReasons
-       
-        const claimIneligibilityReasons = await nftContract?.erc1155.claimConditions.getClaimIneligibilityReasons(
-          tokenId,
-          qtyOfNftToMint,
-          connectedAddress
-        )
-
-        // if (claimIneligibilityReasons?.length) {
-        //   setClaimIneligibilityReasons(claimIneligibilityReasons)
-        //   setIsClaimIneligibilityReasonsLoading(true)
-        //   console.log('claimIneligibilityReasons: ', claimIneligibilityReasons || 'no claimIneligibilityReasons')
-        // } else {
-        //   setIsClaimIneligibilityReasonsLoading(false)
-        // }
-
-        // ClaimerProof
-        // const claimerProofs = await nftContract?.erc1155.claimConditions.getClaimerProofs(tokenId, connectedAddress || '')
-        // console.log('claimerProofs: ', claimerProofs || 'no claimerProofs')
-
-        // SupplyClaimedByWallet
-        // const supplyClaimedByWallet = await nftContract?.erc1155.claimConditions.getSupplyClaimedByWallet(tokenId, connectedAddress!)
-        // console.log('supplyClaimedByWallet: ', supplyClaimedByWallet || 'no supplyClaimedByWallet')
-
-        // claimedSupply
-        // const claimedSupply = await nftContract?.erc1155.totalCirculatingSupply(tokenId)
-        // setClaimedSupply(claimedSupply)
-        // console.log('claimedSupply: ', claimedSupply?.toString() || 'no claimedSupply')
+        const tokenMeta = await nftContract?.erc1155.getTokenMetadata(tokenId)
+        setTokenMetadata(tokenMeta)
       } catch (err: any) {
         console.error('ERROR 101: ', err)
       }
     }
+    tknMetadata()
 
-    initClaimConditions()
-
-    const tokenMetadata = async () => {
-      try {
-        const tMeta = await nftContract?.erc1155.getTokenMetadata(tokenId)
-        console.log('tokenMetadata: ', tMeta)
-        // const updateTokenMetadata = await nftContract?.erc1155.
-      } catch (err: any) {
-        console.error('ERROR 101: ', err)
-      }
+    const getClaimedSupply = async () => {
+      const totalCount = await nftContract?.erc1155.totalCount()
+      setClaimedSupply(totalCount)
     }
-    tokenMetadata()
-
-    const claimCondition = async () => {
-      const c = await nftContract?.call('claimCondition', [tokenId]);
-      console.log('claim condition: ', c);
-      
-      const nextTokenIdToMint = await nftContract?.erc1155.nextTokenIdToMint()
-      console.log('nextTokenIdToMint: ', nextTokenIdToMint?.toNumber())
-
-    }
-    claimCondition()
-
+    getClaimedSupply()
+    console.log('props.assetData:', props.assetData)
   }, [props.assetData.name])
+  console.log('claimConditions:', claimConditions)
+  console.log('activeClaimCondition:', activeClaimCondition)
+  console.log('tokenMetadata: ', tokenMetadata)
 
   const totalAvailableSupply = useMemo(() => {
     try {
@@ -214,10 +142,16 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
       return ethers.BigNumber.from(1_000_000)
     }
   }, [activeClaimCondition?.availableSupply])
+  console.log('totalAvailableSupply: ', totalAvailableSupply?.toNumber())
 
   const numberClaimed = useMemo(() => {
-    return ethers.BigNumber.from(claimedSupply || 0).toString()
+    try {
+      return ethers.BigNumber.from(claimedSupply || 0)
+    } catch (err: any) {
+      console.error('ERROR 101: ', err)
+    }
   }, [claimedSupply])
+  console.log('numberClaimed: ', numberClaimed?.toNumber())
 
   const numberTotal = useMemo(() => {
     const totalSupply = totalAvailableSupply.add(ethers.BigNumber.from(claimedSupply || 0))
@@ -228,78 +162,33 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
 
     return totalSupply.toString()
   }, [totalAvailableSupply, claimedSupply])
+  console.log('numberTotal: ', numberTotal)
 
   const priceToMint = useMemo(() => {
     const bnPrice = ethers.BigNumber.from(activeClaimCondition?.currencyMetadata?.value || 0)
 
-    return `${ethers.utils.formatUnits(
-      bnPrice.mul(qtyOfNftToMint).toString(),
-      activeClaimCondition?.currencyMetadata?.decimals || 18
-    )} ${activeClaimCondition?.currencyMetadata?.symbol}`
+    return `${ethers.utils.formatUnits(bnPrice, activeClaimCondition?.currencyMetadata?.decimals || 18)} ${
+      activeClaimCondition?.currencyMetadata?.symbol
+    }`
   }, [
     activeClaimCondition?.currencyMetadata?.decimals,
     activeClaimCondition?.currencyMetadata?.symbol,
     activeClaimCondition?.currencyMetadata?.value,
-    qtyOfNftToMint,
   ])
+  console.log('priceToMint: ', priceToMint.toString())
 
   const maxClaimable = useMemo(() => {
-    let maxClaimableBN
+    let maxClaimable_ = ethers.BigNumber.from(activeClaimCondition?.maxClaimableSupply || 0)
 
-    try {
-      maxClaimableBN = ethers.BigNumber.from(activeClaimCondition?.maxClaimableSupply || 0)
-    } catch (e) {
-      maxClaimableBN = ethers.BigNumber.from(1_000_000)
+    let perTransactionClaimable = ethers.BigNumber.from(activeClaimCondition?.maxClaimablePerWallet || 0)
+
+    if (perTransactionClaimable.lte(maxClaimable_)) {
+      maxClaimable_ = perTransactionClaimable
     }
 
-    let perTransactionClaimable
-    try {
-      perTransactionClaimable = ethers.BigNumber.from(activeClaimCondition?.maxClaimablePerWallet || 0)
-    } catch (e) {
-      perTransactionClaimable = ethers.BigNumber.from(1_000_000)
-    }
-
-    if (perTransactionClaimable.lte(maxClaimableBN)) {
-      maxClaimableBN = perTransactionClaimable
-    }
-
-    const snapshotClaimable = claimerProofs?.maxClaimable
-
-    if (snapshotClaimable) {
-      if (snapshotClaimable === '0') {
-        // allowed unlimited for the snapshot
-        maxClaimableBN = ethers.BigNumber.from(1_000_000)
-      } else {
-        try {
-          maxClaimableBN = ethers.BigNumber.from(snapshotClaimable)
-        } catch (e) {
-          // fall back to default case
-        }
-      }
-    }
-
-    let maxBN
-    if (totalAvailableSupply.lt(maxClaimableBN)) {
-      maxBN = totalAvailableSupply
-    } else {
-      maxBN = maxClaimableBN
-    }
-
-    if (maxBN.gte(1_000_000)) {
-      return 1_000_000
-    }
-    return maxBN.toNumber()
+    return maxClaimable_.toNumber()
   }, [claimerProofs?.maxClaimable, totalAvailableSupply, activeClaimCondition?.maxClaimableSupply, activeClaimCondition?.maxClaimablePerWallet])
-
-  const isNftSoldOut = useMemo(() => {
-    try {
-      return (
-        (activeClaimCondition?.startTime && ethers.BigNumber.from(activeClaimCondition?.availableSupply || 0).lte(0)) || numberClaimed === numberTotal
-      )
-    } catch (e) {
-      return false
-    }
-  }, [activeClaimCondition?.availableSupply, activeClaimCondition?.startTime, numberClaimed, numberTotal])
+  console.log('maxClaimable: ', maxClaimable)
 
   const canClaim = useMemo(() => {
     return activeClaimCondition?.startTime && claimIneligibilityReasons?.length === 0 && !isNftSoldOut
@@ -586,13 +475,7 @@ export const ClaimVideoNFT: React.FC<MintVideoNFTProps> = (props) => {
           <Stack direction={'row'} spacing={8} style={{ paddingTop: 12, paddingBottom: 12 }}>
             {/* The amount of NFT that has been claimed */}
             <Text>Total Minted:</Text>
-            <Text>
-              {claimedSupply && (
-                <span>
-                  {numberClaimed} / {numberTotal}
-                </span>
-              )}
-            </Text>
+            <Text>{claimedSupply && numberClaimed?.div(numberTotal).toNumber()}</Text>
           </Stack>
 
           {claimConditions?.length === 0 || claimConditions?.every((c) => c.maxClaimableSupply === '0') ? (
