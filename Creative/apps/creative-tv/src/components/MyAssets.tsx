@@ -1,4 +1,4 @@
-import { Box, Image, Link, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, Skeleton } from '@chakra-ui/react'
+import { Box, Flex, Image, Link, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, Text, Skeleton, Button, VStack } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
 import { useQuery } from '@tanstack/react-query'
 import { useAddress } from '@thirdweb-dev/react'
@@ -7,7 +7,7 @@ import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import { CREATIVE_LOGO_WHT } from '../utils/context'
 import { AssetData } from '../utils/fetchers/assets'
-import { parseTimestampToDate, formatString } from '../utils/helpers'
+import { date, formatString } from '../utils/helpers'
 
 type ApiResponse<TData> = { data?: TData; errors?: any[] }
 
@@ -33,7 +33,7 @@ export default function MyAssets(props: MyAssetsProps) {
   if (videosQuery?.isLoading) {
     console.log('loading...')
     // loading state
-    return <Skeleton height={'20px'}/>
+    return <Skeleton height={'20px'} />
   }
 
   if (videosQuery?.isError || videosQuery?.data?.errors) {
@@ -54,53 +54,48 @@ export default function MyAssets(props: MyAssetsProps) {
 
   return (
     <LivepeerConfig client={useLivepeerClient}>
-      <TableContainer>
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              <Th>Name</Th>
-              <Th>Created</Th>
-              <Th>Updated</Th>
-              <Th isNumeric>Views</Th>
-              <Th>Claims Permissions set</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {readyVideos.map((video, i) => {
-              return (
-                <Tr key={i}>
-                  <Td>
-                    <Link as={NextLink} href={`${connectedAddress}/${video.id}?video=${JSON.stringify(video)}`}>
-                      {formatString.titleCase(video?.name)}
-                    </Link>
-                  </Td>
-                  <Td>{parseTimestampToDate(video?.createdAt as any)}</Td>
-                  <Td>{parseTimestampToDate(video?.status?.updatedAt as any)}</Td>
-                  <Td isNumeric>{video?.viewCount}</Td>
-                  {/* TODO: Depict that the ClaimCondition is set */}
-                  {/* <Td>{rQuery['isClaimConditionSet'] ? 'true' : 'false'}</Td> */}
-                  <Td>{'true/false'}</Td>
-                </Tr>
-              )
-            })}
-          </Tbody>
-          <Tfoot>
-            <Tr></Tr>
-          </Tfoot>
-        </Table>
-      </TableContainer>
+      {readyVideos.length == 0 ? (
+        <VStack style={{ padding: 24, gap: 48 }}>
+          <Text>You are yet to upload a video.</Text>
+          <Button onClick={() => router.push(`/profile/${connectedAddress}/upload`)}>Upload Now</Button>
+        </VStack>
+      ) : (
+        <TableContainer>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+                <Th>Created</Th>
+                <Th>Updated</Th>
+                <Th isNumeric>Views</Th>
+                <Th>Claims Permissions set</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {readyVideos.map((video, i) => {
+                return (
+                  <Tr key={i}>
+                    <Td>
+                      <Link as={NextLink} href={`${connectedAddress}/${video.id}?video=${JSON.stringify(video)}`}>
+                        {formatString.titleCase(video?.name)}
+                      </Link>
+                    </Td>
+                    <Td>{date.parseTimestampToDate(video?.createdAt as any)}</Td>
+                    <Td>{date.parseTimestampToDate(video?.status?.updatedAt as any)}</Td>
+                    <Td isNumeric>{video?.viewCount}</Td>
+                    {/* TODO: Depict that the ClaimCondition is set */}
+                    {/* <Td>{rQuery['isClaimConditionSet'] ? 'true' : 'false'}</Td> */}
+                    <Td>{'true/false'}</Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
+            <Tfoot>
+              <Tr></Tr>
+            </Tfoot>
+          </Table>
+        </TableContainer>
+      )}
     </LivepeerConfig>
   )
 }
-
-// {
-//   isMinting && txHash ? (
-//     <div>
-//       <SetClaimConditions
-//         nftContractAddress={nftContract?.getAddress() as any}
-//         currencyAddress={''}
-//         price={Number(props.assetData.pricePerNFT)}
-//       />
-//     </div>
-//   ) : null
-// }

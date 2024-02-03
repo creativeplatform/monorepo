@@ -8,73 +8,10 @@ export const thirdwebSDK = (network: NetworkInput) =>
     clientId: THIRDWEB_API_KEY,
   })
 
-// Use as the name of contract saved for temporal or permanent storage
-/**
- *
- * @param name A name to identify the contract address
- * @returns editionContract::name
- *
- * @example const res = parseEditionDropContract('John')
- * console.log(res) = 'EditionDrop::John'
- */
-const parseEditionDropContract = (name: string) => {
-  return `EditionDrop::${name}`
-}
-
-type LocalStateSetArgs = {
-  name: string
-  value: string
-}
-type LocalStateGetArgs = {
-  name: string
-}
-
-/**
- * This object holds functions that works with the browser localStrage API
- */
-export const windowStorage = {
-  /**
-   * This function saves data to the web browser local store
-   * @param key This represent the name to save the item on
-   * @param value This is the item to save
-   * @example
-   *
-   * set({key: 'bat', value: 'man mobile'})
-   * or
-   * set({ key: 'user', value: JSON.stringify({ firstName: 'bat', lastName: 'man' }) })
-   *
-   */
-  set: ({ name, value }: LocalStateSetArgs) => {
-    name = parseEditionDropContract(name)
-    const res = windowStorage.get({ name })
-    if (res) {
-      throw Error('Key already in use; try another key name')
-    } else {
-      if (typeof value == 'object') {
-        throw Error('Value needs to be stringified')
-      } else {
-        localStorage.setItem(name, value)
-      }
-    }
-  },
-  /**
-   *
-   * @param key This represent the name to the item to retrieve
-   * @returns item saved
-   */
-  get: ({ name }: LocalStateGetArgs) => {
-    name = parseEditionDropContract(name)
-    console.log('name: ', name)
-
-    // 0x6171a3DfAcd25802079137d5D69db51D64E025a1
-    const exists = localStorage.getItem(name)
-    if (exists) {
-      return exists
-    } else {
-      // throw new Error('Key not found!')
-      console.log('Key not found!')
-    }
-  },
+export const thirdwebSDKFromSigner = (signer: ethers.Signer, network: NetworkInput) => {
+  return ThirdwebSDK.fromSigner(signer, network as any, {
+    clientId: THIRDWEB_API_KEY,
+  })
 }
 
 type DeployEditionDropContractType = {
@@ -94,9 +31,7 @@ type DeployEditionDropContractType = {
  * This function helps to deploy the parseEditionDropContract by Thirdweb
  */
 export async function deployEditionDropContract(signer: ethers.Signer, network: NetworkInput, args: DeployEditionDropContractType) {
-  const sdk = ThirdwebSDK.fromSigner(signer, network as any, {
-    clientId: THIRDWEB_API_KEY,
-  })
+  const sdk = thirdwebSDKFromSigner(signer, network)
 
   // Is there an sdk found?
   if (!sdk) return
@@ -145,8 +80,8 @@ export const claimConditionsOptions = {
   },
   currency: {
     // The tokens accepted for payment by the buyer
-    USDC: "0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97",
-    TESTR: "0xc0823427fE72cFD105c71BEAd0476412283B07c5",
+    USDC: ERC20_TOKEN.USDC.chain.polygon.mumbai,
+    TESTR: ERC20_TOKEN.TESTR.chain.polygon.mumbai,
   },
 }
 
@@ -159,7 +94,7 @@ export const claimConditionsOptions = {
  * const date = parseDate('Tue Jan 16 2024 13:13:32')
  *  =>  16/01/2024 13:13
  */
-export function parseTimestampToDate(ts: number) {
+function parseTimestampToDate(ts: number) {
   if (!ts) {
     return 'Not available'
   } else {
@@ -201,10 +136,7 @@ function parseDate(dateString: Date) {
   return `${year}-${mm}-${dd}T${hh}:${min}`
 }
 
-export const date = {
-  parseDate,
-  parseTimestampToDate,
-}
+
 /**
  * The function wrap a sentence at particular length of characters
  * @param txt The sentence body
@@ -293,4 +225,9 @@ export const parseCurrencyAddressToSymbol = (currencyAddress: string) => {
       return Object.keys(claimConditionsOptions.currency)[i]
     }
   })
+}
+
+export const date = {
+  parseDate,
+  parseTimestampToDate,
 }

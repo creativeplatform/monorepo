@@ -5,7 +5,6 @@ import { CREATIVE_ADDRESS, LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 import { fromTimestampToDate } from 'utils/formatString'
 import Unlock from '../utils/fetchers/Unlock.json'
 
-
 export type MemberCardProps = {
   member: any
   nft: any
@@ -16,23 +15,19 @@ const MemberCard = (props: MemberCardProps) => {
   const toast = useToast()
   const address = useAddress()
 
-  const { 
-      contract: unlockContract,
-      isLoading: loadingUnlockContract,
-      error: unlockContractError,
-    } = useContract(
-      LOCK_ADDRESS_MUMBAI_TESTNET.address, 
-      Unlock.abi
-    )
+  const {
+    contract: unlockContract,
+    isLoading: loadingUnlockContract,
+    error: unlockContractError,
+  } = useContract(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
 
-  const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs( unlockContract, address)
+  const { data: ownedNFTs, isLoading: loadingOwnedNFTs } = useOwnedNFTs(unlockContract, address)
 
   // SET PROPS
   const { nft, balance } = props
 
-
   // READ FROM CONTRACT
-  const { data: expirationDuration, isLoading: expirationLoading } = useContractRead(unlockContract, "expirationDuration");
+  const { data: expirationDuration, isLoading: expirationLoading } = useContractRead(unlockContract, 'expirationDuration')
 
   /****** WRITE TO CONTRACT *******/
 
@@ -86,7 +81,6 @@ const MemberCard = (props: MemberCardProps) => {
     }
   }
 
-
   return (
     <Card overflow={'hidden'} p={8} mb={4} alignItems="center" boxShadow="2xl">
       <Image src={`${nft?.metadata?.image}`} height={250} width={200} mb={4} />
@@ -95,7 +89,7 @@ const MemberCard = (props: MemberCardProps) => {
         <Text fontWeight={'bold'}>Qty: {balance}</Text>
       </Flex>
       <Flex justify={'space-between'} alignItems={'center'} direction={'row'} width="100%" mb={4}>
-        <Text fontWeight={'bold'}>Member No. { nft?.metadata?.id }</Text>
+        <Text fontWeight={'bold'}>Member No. {nft?.metadata?.id}</Text>
       </Flex>
       <Flex justifyContent={'center'} direction={'row'} mb={4}>
         <Text fontSize="xs">{nft?.metadata?.description}</Text>
@@ -110,10 +104,22 @@ const MemberCard = (props: MemberCardProps) => {
       </Text>
       </Flex>
       <ButtonGroup justifyContent={'center'}>
-        <Button colorScheme={'green'} leftIcon={<MdAutorenew />} onClick={() => {renew()}} isLoading={renewMembershipForIsLoading}>
+        <Button
+          colorScheme={'green'}
+          leftIcon={<MdAutorenew />}
+          onClick={() => {
+            renew()
+          }}
+          isLoading={renewMembershipForIsLoading}>
           RENEW
         </Button>
-        <Button colorScheme={'red'} leftIcon={<MdCancel />} onClick={() => {cancelMembership()}} isLoading={cancelAndRefundIsLoading}>
+        <Button
+          colorScheme={'red'}
+          leftIcon={<MdCancel />}
+          onClick={() => {
+            cancelMembership()
+          }}
+          isLoading={cancelAndRefundIsLoading}>
           CANCEL
         </Button>
       </ButtonGroup>

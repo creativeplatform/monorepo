@@ -1,21 +1,14 @@
-import { 
-  Box, 
-  Button, 
-  Stack, 
-  Text, 
-  useToast, 
-  Flex,
-  Skeleton,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRenderer } from '@thirdweb-dev/react'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { removeUnderScore } from 'utils/formatString'
-import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
+import { ConnectWallet, MediaRenderer, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
+import { useEffect, useState } from 'react'
+// import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
+import { useContractAddress } from 'hooks/useContractAddress'
+import { deployEditionDropContract, formatString } from 'utils/helpers'
+import { CREATIVE_ADDRESS } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
+import { LazyMintNft } from './LazyMintNft'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
-import SignIn from './SignIn'
 
 interface WagmiNftProps {
   assetId: string
@@ -37,19 +30,29 @@ type ContractMetaData = {
   [idx: string]: any
 }
 const WagmiNft = (props: WagmiNftProps): JSX.Element => {
-  const address = useAddress()
-  const router = useRouter()
+  const connectedAddress = useAddress()
   const signer = useSigner()
   const toast = useToast()
   const [deployError, setDeployError] = useState('')
   const [isDeploying, setIsDeploying] = useState(false)
-  const [isMinting, setIsMinting] = useState(false)
-  const [error, setError] = useState(false)
+  const [showMetadataDetails, setMetadataDetails] = useState(false)
+  const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
+  const { error: errContractAddress, isFetching, nftContractAddress: savedContractAddress, postContractAddress } = useContractAddress()
+  const { contract: nftContract } = useContract(deployedContractAddress)
+  const { data: contractMetadata, isLoading } = useMetadata(nftContract)
   const [showDetails, setShowDetails] = useState(false)
 
-  const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
-  const { contract } = useContract(deployedContractAddress)
-  const { data: contractMetadata, isLoading } = useMetadata(contract)
+  // const router = useRouter()
+  // const [isMinting, setIsMinting] = useState(false)
+  // const [lazyMintTxStatus, setLazyMintTxStatus] = useState<number | undefined>(0)
+  // const [lazyMintTxHash, setLazyMintTxHash] = useState('')
+  // const [error, setError] = useState(false)
+  // const [txCount, setTxCount] = useState(0)
+  // const [lazyMintedTokens, setLazyMintedTokens] = useState<NFT[]>([])
+
+  useEffect(() => {
+    setDeployedContractAddress(savedContractAddress)
+  }, [])
 
   // Getting asset and refreshing for the status
   const {
@@ -116,16 +119,11 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
   }
 
   // Function to deploy the edition drop contract
-  const deployNftCollection = async ({ image_url }: NFTCollection) => {
+  const deployNftCollection = async (e: any) => {
+    e.preventDefault()
+
     // Is there an sdk found and is there a connect wallet address?
-    if (!signer || !address) return
-
-    const sdk = new ThirdwebSDK(signer, {
-       clientId: THIRDWEB_API_KEY,
-    })
-
-    // Is there an sdk found?
-    if (!sdk) return
+    if (!signer || !connectedAddress) return
 
     // Is there a name and description?
     if (!props.assetData.description || !asset?.name) return
@@ -133,29 +131,46 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     try {
       setIsDeploying(true)
 
-      const contractAddress = await sdk.deployer.deployNFTDrop({
+      const contractAddress = await deployEditionDropContract(signer, 'mumbai', {
         name: asset?.name,
-        primary_sale_recipient: address,
+        primary_sale_recipient: connectedAddress,
         app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
         symbol: 'EPISD', // Symbol of the edition drop
         platform_fee_basis_points: 200,
         platform_fee_recipient: CREATIVE_ADDRESS,
-        fee_recipient: address,
+        fee_recipient: connectedAddress,
         seller_fee_basis_points: 300,
-        image: asset?.storage?.ipfs?.nftMetadata?.url,
-        description: props.assetData?.description,
+        image: asset?.storage?.ipfs?.nftMetadata?.url || 'Not available',
+        description: props.assetData.description,
         trusted_forwarders: [CREATIVE_ADDRESS],
       })
 
-      console.log('Contract deployed', contractAddress)
+      // post to server
+      const res = await postContractAddress({ contractAddress: contractAddress!, userAddress: connectedAddress! })
+      if (res.status === 201) {
+        setDeployedContractAddress(contractAddress!)
+      }
 
-      setDeployedContractAddress(contractAddress)
+      toast({
+        title: 'Contract deployment',
+        description: `Deployed successfully at: ${contractAddress}`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      })
     } catch (err: any) {
       setIsDeploying(false)
 
       // TODO: send err to ErrorService
-      console.log(err)
+      console.log(err.message)
       setDeployError('Contract deployment failed!')
+      toast({
+        title: 'Contract deployment',
+        description: `Deployment failed with: ${err.message}`,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
     }
   }
 
@@ -170,54 +185,37 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
       return keys.map((k, i) => (
         <div key={i}>
           <p>
-          <span style={{ fontWeight: '700' }}>{removeUnderScore(k)}: </span>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}
+            <span style={{ fontWeight: '700' }}>{formatString.removeUnderScore(k)}: </span>
+            <span>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}</span>
           </p>
         </div>
       ))
     }
   }
 
-  // mint nft
-  const mintNFT = async () => {
-    try {
-      setIsMinting(true)
+  const handleUpdateAssetToIPFS = async (e: any) => {
+    e.preventDefault()
 
-      const txn = await contract?.call('lazyMint', [props?.assetData?.nFTAmountToMint, asset?.storage?.ipfs?.cid, []])
-
-      if (!txn.receipt) {
-        setIsMinting(false)
-      }
-
-      console.log('[Minted] ', txn.receipt)
-
-      toast({
-        title: 'NFT Minted',
-        description: 'Successfully minted',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
-      const timeout = setTimeout(() => {
-        router.replace(`/profile/${address}`)
-        clearTimeout(timeout)
-      }, 1000)
-    } catch (err: any) {
-      setIsMinting(false)
-      setError(err.message)
-      toast({
-        status: 'error',
-        title: 'NFT not minted',
-        description: err.message,
-        duration: 5000,
-        isClosable: true,
-      })
-    }
+    // const deployContract = windowStorage.get({ name: NAME_OF_SAVED_CONTRACT_ADDRESS })
+    // console.log('deployContract: ', deployContract)
+    // if (deployContract !== undefined) {
+    //   setDeployedContractAddress(deployContract)
+    // }
+    updateAsset?.() // Function to upload asset to IPFS
   }
 
   return (
     <Box className="address-mint" minH={'600'}>
-      {!address && (
-        <SignIn btnTitle={'Sign In'} />
+      {!connectedAddress && (
+        <ConnectWallet
+          btnTitle={'Sign In'}
+          className="signIn-button"
+          style={{
+            marginBottom: '24px',
+            margin: '48px 0',
+            fontWeight: '600',
+          }}
+        />
       )}
 
       {notification ? (
@@ -226,13 +224,13 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         </Text>
       ) : null}
 
-      {address && props.assetId && (
+      {connectedAddress && props.assetId && (
         <>
           {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
             <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
+              <Stack spacing="20px" my={12} style={{ border: '1px solid #a4a4a4', padding: 24 }}>
                 <Text my={4} style={{ fontWeight: '600', fontSize: 24 }}>
-                  Your asset is ready to be uploaded to IPFS.
+                  Your asset is ready to be saved to IPFS.
                 </Text>
                 <Button
                   my={8}
@@ -245,134 +243,96 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                     transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
                     cursor: asset?.storage?.status?.phase === 'processing' ? 'progress' : 'pointer',
                   }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    updateAsset?.() // Function to upload asset to IPFS
-                  }}>
-                  {updateStatus === 'loading' ? 'Uploading...' : 'Upload to IPFS'}{' '}
+                  onClick={handleUpdateAssetToIPFS}>
+                  {updateStatus === 'loading' ? 'Saving to IPFS...' : 'Save to IPFS'}{' '}
                 </Button>
               </Stack>
             </>
           ) : null}
 
-          {!contract?.getAddress() && asset?.storage?.ipfs?.cid ? (
-            <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
-                {!asset ? (
-                  <Skeleton height={1080} />
-                ):(
-                  <MediaRenderer
-                  src={`${asset?.storage?.ipfs?.url}`}
-                  alt={asset?.name}
-                  width={'1920'}
-                  height={'1080'}
-                />
-                )} 
+          {asset?.storage?.ipfs?.cid && (
+            <Stack spacing="20px" my={12} style={{ border: '1px solid #aeaeae', padding: 24 }}>
+              <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+                Congrats, your asset was uploaded to IPFS.
+              </Text>
 
-                <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Congrats, Your Asset Was Uploaded To IPFS!
+              <Button
+                width={160}
+                className="show-details-button"
+                my={4}
+                onClick={() => setShowDetails(!showDetails)}
+                style={{ backgroundColor: '#EC407A' }}>
+                {showDetails ? 'Hide ' : 'Show '}Details
+              </Button>
+
+              <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
+                <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
+                  Asset details:
                 </Text>
-
-                <Button
-                  width={160}
-                  className="show-details-button"
-                  my={4}
-                  onClick={() => setShowDetails(!showDetails)}
-                  style={{ backgroundColor: '#EC407A' }}>
-                  {showDetails ? 'Hide ' : 'Show '}Details
-                </Button>
-
-                <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                  <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
-                    Asset details:
+                <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} width="300px" alt={`${asset.name}`} />
+                <Box style={{ lineHeight: 2.75 }}>
+                  <Text>
+                    Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
                   </Text>
-                  <Box style={{ lineHeight: 2.75 }}>
-                    <Text>
-                    <span style={{ fontWeight: '700' }}>Asset Name: </span>{asset?.name}{' '}
-                    </Text>
-                    <Text>
-                    <span style={{ fontWeight: '700' }}>Playback URL: </span>{asset?.playbackUrl}
-                    </Text>
-                    <Text>
-                    <span style={{ fontWeight: '700' }}>IPFS CID: </span>{asset?.storage?.ipfs?.cid ?? 'None'}
-                    </Text>
-                  </Box>
+                  <Text>
+                    Metadata CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.nftMetadata?.url ?? 'None'}</span>
+                  </Text>
                 </Box>
-              </Stack>
+              </Box>
+            </Stack>
+          )}
 
-              <ErrorBoundary fallback={(error) => <p>Failed to load...</p>}>
-                <Box my={16} style={{ padding: 24 }} maxWidth="700px">
-                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded asset</Text>
-                  <Button
-                    className="deploy-button"
-                    my={4}
-                    // as={motion.div}
-                    bgColor="#EC407A"
-                    _hover={{ transform: isDeploying ? '' : 'scale(1.02)', cursor: isDeploying ? 'progress' : 'pointer' }}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      deployNftCollection?.({ image_url: String(asset?.storage?.ipfs?.cid) }) // Function to deploy edition drop contract
-                    }}
-                    isLoading={isDeploying}
-                    disabled={isDeploying}>
-                    {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
-                  </Button>
-                  <Box>
-                    { !isDeploying && (
-                        <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>
-                      )
-                    }
-                  </Box>
-                </Box>
-              </ErrorBoundary>
-            </>
-          ) : null }
-
-          {asset?.storage?.ipfs?.cid && contract?.getAddress() && (
-            <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
-                <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Contract Deployed Succesfully!
-                </Text>
+          {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid && (
+            <ErrorBoundary fallback={() => <p>Failed to load...</p>}>
+              <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
+                <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
+                <br />
                 <Button
-                  width={160}
-                  className="show-details-button"
+                  className="deploy-button"
                   my={4}
-                  onClick={() => {
-                    setShowDetails(!showDetails)
-                  }}
-                  style={{ backgroundColor: '#EC407A' }}>
-                  {showDetails ? 'Hide ' : 'Show '}Details
+                  // as={motion.div}
+                  bgColor="#EC407A"
+                  isLoading={isDeploying}
+                  _hover={{ transform: isDeploying ? '' : 'scale(1.02)', cursor: isDeploying ? 'progress' : 'pointer' }}
+                  onClick={deployNftCollection}>
+                  {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                 </Button>
 
-                <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                  <Flex style={{ lineHeight: 2.75 }}>
-                    <Text>
-                      <span style={{ fontWeight: '700' }}>Address: </span>{contract.getAddress()}
-                    </Text>
-                  </Flex>
-                  <Flex>
-                    <Text>
-                      {getContractMetaData()}
-                    </Text>
-                  </Flex>
-                </Box>
-              </Stack>
-            </>
+                {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 400, marginLeft: 24 }}>{deployError}</span>}
+              </Box>
+            </ErrorBoundary>
           )}
-          <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
-            <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-              Time to mint your NFTs!
-            </Text>
 
-            <Button
-              onClick={mintNFT}
-              disabled={isMinting}
-              _hover={{ cursor: isMinting ? 'progress' : 'pointer' }}
-              style={{ width: 160, margin: '12px 0', backgroundColor: '#EC407A' }}>
-                {isMinting ? 'Minting...' : 'Mint NFT'}
-            </Button>
-          </Stack>
+          {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
+            <Stack spacing="20px" style={{ border: '1px solid #a4a4a4', padding: 24 }}>
+              <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+                Contract deployed succesfully!
+              </Text>
+
+              <Button
+                className="show-details-button"
+                onClick={() => {
+                  setMetadataDetails(!showMetadataDetails)
+                }}
+                style={{ maxWidth: 240, margin: '12px 0', backgroundColor: '#EC407A', marginTop: 4 }}>
+                {showMetadataDetails ? 'Hide ' : 'Show '}Contract MetaData
+              </Button>
+
+              <Box my={8} style={{ display: showMetadataDetails ? 'block' : 'none' }}>
+                <Flex direction={'column'} style={{ lineHeight: 2.75 }}>
+                  <Text>
+                    <span style={{ fontWeight: '700' }}>Contract Address: </span>
+                    <span>{nftContract.getAddress()}</span>
+                  </Text>
+                  {getContractMetaData()}
+                </Flex>
+              </Box>
+            </Stack>
+          )}
+
+          {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
+            <LazyMintNft asset={asset} assetData={props.assetData} nftContract={nftContract} />
+          )}
         </>
       )}
     </Box>

@@ -2,14 +2,15 @@
 import { ethers, BigNumber, BigNumberish, Transaction } from 'ethers'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import {
-    METOKENS_ADDRESS_GOERLI,
-    MAINNET_RPC,
-    FOUNDRY_FACET_ABI,
-    HUB_FACET_ABI,
-    METOKEN_FACTORY_ABI,
-    METOKENS_REGISTRY_ABI,
-    METOKENS_DIAMOND_ABI,
-    ERC20_ABI,
+  METOKENS_ADDRESS_GOERLI,
+  ERC20_TOKEN,
+  MAINNET_RPC,
+  FOUNDRY_FACET_ABI,
+  HUB_FACET_ABI,
+  METOKEN_FACTORY_ABI,
+  METOKENS_REGISTRY_ABI,
+  METOKENS_DIAMOND_ABI,
+  ERC20_ABI,
 } from '../config'
 import { ThirdwebSDK, useAddress } from '@thirdweb-dev/react'
 import { Goerli } from '@thirdweb-dev/chains';
@@ -23,7 +24,7 @@ export const foundryFacet = `${METOKENS_ADDRESS_GOERLI.foundryFacet}`
 export const meTokenDiamond = `${METOKENS_ADDRESS_GOERLI.meTokenDiamond}`
 export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
 export const nullToken = `0x${'0'.repeat(40)}`
-//export const daiAddress = `${DAI[Goerli].address}`
+//export const daiAddress = `${erc20Token.DAI.chain.ethereum[Goerli].address}`
 
 // Define an interface for BasicHubInfo
 interface BasicHubInfo {
@@ -238,4 +239,3 @@ export const burn = async (
     );
     return meTokenFoundry.call('burn', [meToken, amount, sender]);
 };
-
