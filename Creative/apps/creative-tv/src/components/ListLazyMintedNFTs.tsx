@@ -36,7 +36,7 @@ export const ListLazyMintedNFTs = (props: ListOfLazyMintedNftsProps) => {
       }
     }
     fetchNFTs()
-  }, [lazyMintedTokens.length])
+  }, [lazyMintedTokens])
 
 
   const handleViewMore = async (_nft: NFT) => {
