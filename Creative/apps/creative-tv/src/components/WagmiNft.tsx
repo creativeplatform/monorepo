@@ -6,7 +6,6 @@ import {
   Text, 
   useToast, 
   Flex,
-  Skeleton,
   Heading,
   Spinner,
 } from '@chakra-ui/react'
@@ -18,7 +17,6 @@ import { Emoji }  from 'ui/emoji'
 import { useContractAddress } from 'hooks/useContractAddress'
 import useDeployEditionDrop from 'hooks/useDeployDrop'
 import { deployEditionDropContract, formatString } from 'utils/helpers'
-import { CREATIVE_ADDRESS } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { LazyMintNft } from './LazyMintNft'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
@@ -210,7 +208,7 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
                   className="upload-button"
                   bgColor="#EC407A"
                   isLoading={updateStatus === 'loading'}
-                  disabled={updateStatus === 'loading'}
+                  disabled={ updateStatus === 'loading' || asset?.storage?.status?.phase === 'processing'}
                   _hover={{
                     transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
                     cursor: asset?.storage?.status?.phase === 'processing' ? 'progress' : 'pointer',
