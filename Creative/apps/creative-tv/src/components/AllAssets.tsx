@@ -38,8 +38,7 @@ export default function AllAssets() {
     videosQuery?.data?.data?.filter((video): video is AssetData['video'] => {
       return (
         video?.status?.phase === 'ready' &&
-        Number(video.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT) > 0 &&
-        video.creatorId?.value != connectedAddress
+        Number(video.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT) > 0
       )
     }) ?? []
 
