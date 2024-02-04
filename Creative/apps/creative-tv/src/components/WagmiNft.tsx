@@ -1,14 +1,28 @@
-import { Box, Button, Flex, Stack, Text, useToast } from '@chakra-ui/react'
+import { useState } from 'react'
+import { 
+  Box, 
+  Button, 
+  Stack, 
+  Text, 
+  useToast, 
+  Flex,
+  Heading,
+  Spinner,
+} from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
-import { ConnectWallet, MediaRenderer, useAddress, useContract, useMetadata, useSigner } from '@thirdweb-dev/react'
-import { useEffect, useState } from 'react'
-// import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
+import { MediaRenderer, useAddress, useContract, useMetadata } from '@thirdweb-dev/react'
+import { LinkComponent } from './layout/LinkComponent'
+import { Emoji }  from 'ui/emoji'
 import { useContractAddress } from 'hooks/useContractAddress'
+import useDeployEditionDrop from 'hooks/useDeployDrop'
 import { deployEditionDropContract, formatString } from 'utils/helpers'
-import { CREATIVE_ADDRESS } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { LazyMintNft } from './LazyMintNft'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
+import { set } from 'react-hook-form'
+import SignIn from './SignIn'
+
 
 interface WagmiNftProps {
   assetId: string
@@ -18,6 +32,7 @@ interface WagmiNftProps {
 interface NFTCollection {
   image_url: string
 }
+
 type ContractMetaData = {
   name: string
   description: string
@@ -29,170 +44,122 @@ type ContractMetaData = {
   symbol: string
   [idx: string]: any
 }
-const WagmiNft = (props: WagmiNftProps): JSX.Element => {
-  const connectedAddress = useAddress()
-  const signer = useSigner()
-  const toast = useToast()
-  const [deployError, setDeployError] = useState('')
-  const [isDeploying, setIsDeploying] = useState(false)
-  const [showMetadataDetails, setMetadataDetails] = useState(false)
-  const [deployedContractAddress, setDeployedContractAddress] = useState<string>('')
-  const { error: errContractAddress, isFetching, nftContractAddress: savedContractAddress, postContractAddress } = useContractAddress()
-  const { contract: nftContract } = useContract(deployedContractAddress)
-  const { data: contractMetadata, isLoading } = useMetadata(nftContract)
-  const [showDetails, setShowDetails] = useState(false)
 
-  // const router = useRouter()
-  // const [isMinting, setIsMinting] = useState(false)
-  // const [lazyMintTxStatus, setLazyMintTxStatus] = useState<number | undefined>(0)
-  // const [lazyMintTxHash, setLazyMintTxHash] = useState('')
-  // const [error, setError] = useState(false)
-  // const [txCount, setTxCount] = useState(0)
-  // const [lazyMintedTokens, setLazyMintedTokens] = useState<NFT[]>([])
+const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
+  const address = useAddress();
+  const router = useRouter();
+  const toast = useToast();
+  const [isMinting, setIsMinting] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setDeployedContractAddress(savedContractAddress)
-  }, [])
+  // Custom hook for deploying contract
+  const { deployedContractAddress, isDeploying, deploy } = useDeployEditionDrop({ assetId, assetData });
 
-  // Getting asset and refreshing for the status
-  const {
-    data: asset,
-    error: assetError,
-    status: assetStatus,
-  } = useAsset({
-    assetId: props.assetId,
-    refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false),
-  })
+  // Function to initiate the deployment manually
+  const handleDeployClick = () => {
+    deploy();
+  };
 
-  let notification = (): React.ReactNode => {
-    if (assetStatus === 'loading') {
-      // Render loading state
-      return 'Loading asset data...'
-      // console.log('Loading asset data to IPFS...', assetStatus)
-    } else if (assetError) {
-      // Render error state
-      // console.log('Loading asset data to IPFS...', assetError)
-      return 'Error fetching asset data'
-    }
-  }
-
-  // Storing asset to IPFS with metadata by updating the asset
-  const {
-    mutate: updateAsset,
-    status: updateStatus,
-    error: updateError,
-  } = useUpdateAsset(
-    // asset
-    assetStatus === 'success'
-      ? {
-          name: String(asset?.name),
-          assetId: String(asset?.id),
-          storage: {
-            ipfs: true,
-            metadata: {
-              description: props.assetData.description,
-              image: props.assetData.image_url, // clear the default thumbnail
-              properties: {
-                animation_url: props.assetData.animation_url,
-                external_url: props.assetData.external_url,
-                image_url: props.assetData.image_url,
-                nFTAmountToMint: props.assetData.nFTAmountToMint,
-                pricePerNFT: props.assetData.pricePerNFT,
-              },
-            },
+  // Asset fetching and updating logic
+  const { data: asset, error: assetError, status: assetStatus } = useAsset({ assetId, refetchInterval: (asset) => (asset?.storage?.status?.phase !== 'ready' ? 5000 : false), });
+  const { mutate: updateAsset, status: updateStatus, error: updateError } = useUpdateAsset(assetStatus === 'success' ? {
+      name: String(asset?.name),
+      assetId: String(asset?.id),
+      storage: {
+        ipfs: true,
+        metadata: {
+          description: assetData.description,
+          image: assetData.image_url,
+          properties: {
+            animation_url: assetData.animation_url,
+            external_url: assetData.external_url,
+            image_url: assetData.image_url,
+            nFTAmountToMint: assetData.nFTAmountToMint,
+            pricePerNFT: assetData.pricePerNFT,
           },
-        }
-      : undefined
-  )
+        },
+      },
+    } : undefined
+  );
 
-  notification = () => {
-    // if (updateStatus === 'loading') {
-    //   // Render loading state
-    //   return 'Loading asset data to IPFS...'
-    // }
-
-    if (updateError) {
-      // console.log('Error fetching asset data for IPFS...', updateError)
-      // Render error state
-      return 'Error fetching asset data for IPFS'
+  const handleNotification = () => {
+    if (assetStatus === 'loading') {
+      return 'Loading asset data...';
+    } else if (assetError) {
+      console.log("We've hit a snag", assetError);
+      setError('Error loading asset data.');
+      return 'Error loading asset data.';
+    } else if (updateError) {
+      console.log('Error updating asset data', updateError);
+      setError('Error updating asset data.');
+      return 'Error updating asset data.';
     }
-  }
+    return null; // No notification needed
+  };
 
-  // Function to deploy the edition drop contract
-  const deployNftCollection = async (e: any) => {
-    e.preventDefault()
+  // Contract fetching and metadata handling
+  const { contract: fetchedContract } = useContract(deployedContractAddress);
+  const { data: metadata } = useMetadata(fetchedContract);
 
-    // Is there an sdk found and is there a connect wallet address?
-    if (!signer || !connectedAddress) return
+  // Metadata display logic
+  const getContractMetaData = () => {
+    if (metadata) {
+      let keys = Object.keys(metadata);
+      let values = Object.values(metadata);
 
-    // Is there a name and description?
-    if (!props.assetData.description || !asset?.name) return
+      return (
+        <div>
+          {keys.map((k, i) => (
+            <div key={i}>
+              <p>
+                <span style={{ fontWeight: '700' }}>{formatString?.removeUnderScore(k)}: </span>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };
 
+  // Minting NFTs
+  const mintNFT = async () => {
+    if (!fetchedContract) {
+      console.error("Contract is not available");
+      setIsMinting(false);
+      setError('Contract not available.');
+      return;
+    }
     try {
-      setIsDeploying(true)
-
-      const contractAddress = await deployEditionDropContract(signer, 'mumbai', {
-        name: asset?.name,
-        primary_sale_recipient: connectedAddress,
-        app_uri: 'https://tv.creativeplatform.xyz', // Website of your contract dApp
-        symbol: 'EPISD', // Symbol of the edition drop
-        platform_fee_basis_points: 200,
-        platform_fee_recipient: CREATIVE_ADDRESS,
-        fee_recipient: connectedAddress,
-        seller_fee_basis_points: 300,
-        image: asset?.storage?.ipfs?.nftMetadata?.url || 'Not available',
-        description: props.assetData.description,
-        trusted_forwarders: [CREATIVE_ADDRESS],
-      })
-
-      // post to server
-      const res = await postContractAddress({ contractAddress: contractAddress!, userAddress: connectedAddress! })
-      if (res.status === 201) {
-        setDeployedContractAddress(contractAddress!)
-      }
-
+      setIsMinting(true);
+      // Assuming `lazyMint` is a method in your contract
+      const txn = await fetchedContract.call('lazyMint', [assetData.nFTAmountToMint, asset?.storage?.ipfs?.cid, []]);
+      // Handling transaction receipt or confirmation
+      console.log('[Minted] ', txn.receipt);
       toast({
-        title: 'Contract deployment',
-        description: `Deployed successfully at: ${contractAddress}`,
+        title: 'NFT Minted',
+        description: 'Successfully minted',
         status: 'success',
         duration: 5000,
         isClosable: true,
-      })
-    } catch (err: any) {
-      setIsDeploying(false)
-
-      // TODO: send err to ErrorService
-      console.log(err.message)
-      setDeployError('Contract deployment failed!')
+      });
+      // Redirect or update UI after minting
+      router.replace(`/profile/${address}`);
+    } catch (err) {
+      console.error(err);
+      setIsMinting(false);
+      setError('Minting failed.');
       toast({
-        title: 'Contract deployment',
-        description: `Deployment failed with: ${err.message}`,
         status: 'error',
+        title: 'NFT not minted',
+        description: 'Minting failed. Please try again.',
         duration: 5000,
         isClosable: true,
-      })
+      });
     }
-  }
+  };
 
-  const getContractMetaData = () => {
-    const data: ContractMetaData = contractMetadata as unknown as any
-    let keys: string[], values: string[]
-
-    if (data?.name) {
-      keys = Object.keys(data)
-      values = Object.values(data)
-
-      return keys.map((k, i) => (
-        <div key={i}>
-          <p>
-            <span style={{ fontWeight: '700' }}>{formatString.removeUnderScore(k)}: </span>
-            <span>{typeof values[i] === 'string' ? values[i] : JSON.stringify(values[i])}</span>
-          </p>
-        </div>
-      ))
-    }
-  }
-
+  // Update asset to IPFS
   const handleUpdateAssetToIPFS = async (e: any) => {
     e.preventDefault()
 
@@ -204,41 +171,44 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     updateAsset?.() // Function to upload asset to IPFS
   }
 
+
   return (
-    <Box className="address-mint" minH={'600'}>
-      {!connectedAddress && (
-        <ConnectWallet
-          btnTitle={'Sign In'}
-          className="signIn-button"
-          style={{
-            marginBottom: '24px',
-            margin: '48px 0',
-            fontWeight: '600',
-          }}
-        />
-      )}
-
-      {notification ? (
-        <Text as={'h3'} my={8} style={{ fontWeight: '600', fontSize: 24 }}>
-          {notification()}
-        </Text>
-      ) : null}
-
-      {connectedAddress && props.assetId && (
+    <Box className="address-mint" minH="600px">
+      { !address ? (
+        <SignIn btnTitle="Sign In" />
+      ) : (
         <>
-          {asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
-            <>
-              <Stack spacing="20px" my={12} style={{ border: '1px solid #a4a4a4', padding: 24 }}>
-                <Text my={4} style={{ fontWeight: '600', fontSize: 24 }}>
-                  Your asset is ready to be saved to IPFS.
-                </Text>
+          { handleNotification() && (
+            <Text as="h3" my={8} style={{ fontWeight: '600', fontSize: '24px' }}>
+              { handleNotification() }
+            </Text>
+          )}
+  
+          { assetStatus === 'loading' && (
+            <Flex justifyContent="center" my={8}>
+              <Spinner size="xl" />
+            </Flex>
+          )}
+  
+          { error && (
+            <Text color="red.500" my={4}>
+              Error: {error}
+            </Text>
+          )}
+  
+          { asset?.status?.phase === 'ready' && asset?.storage?.status?.phase !== 'ready' ? (
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
+                <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} alt={asset?.name} width="100%" height="auto" />
+                <Heading as="h2" size="lg" my={4}>
+                  Your video is now ready to be saved to IPFS.
+                </Heading>
                 <Button
                   my={8}
-                  w={'160px'}
+                  w={160}
                   className="upload-button"
                   bgColor="#EC407A"
                   isLoading={updateStatus === 'loading'}
-                  disabled={updateStatus === 'loading'}
+                  disabled={ updateStatus === 'loading' || asset?.storage?.status?.phase === 'processing'}
                   _hover={{
                     transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
                     cursor: asset?.storage?.status?.phase === 'processing' ? 'progress' : 'pointer',
@@ -247,14 +217,13 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   {updateStatus === 'loading' ? 'Saving to IPFS...' : 'Save to IPFS'}{' '}
                 </Button>
               </Stack>
-            </>
-          ) : null}
+          ) : null }
 
           {asset?.storage?.ipfs?.cid && (
             <Stack spacing="20px" my={12} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-              <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                Congrats, your asset was uploaded to IPFS.
-              </Text>
+              <Heading as={'h2'} size={'lg'} my={2}>
+                <Emoji symbol={'🔥'}></Emoji> Congrats, your asset was uploaded to IPFS!
+              </Heading>
 
               <Button
                 width={160}
@@ -266,77 +235,82 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
               </Button>
 
               <Box my={8} style={{ display: showDetails ? 'block' : 'none' }}>
-                <Text as="h4" mb={8} style={{ fontWeight: '700', fontSize: 22 }}>
+                <Heading as="h3" size={'lg'} mb={8}>
                   Asset details:
-                </Text>
+                </Heading>
                 <MediaRenderer src={`${asset?.storage?.ipfs?.url}`} width="300px" alt={`${asset.name}`} />
                 <Box style={{ lineHeight: 2.75 }}>
                   <Text>
-                    Asset Name: <span style={{ fontWeight: '700' }}>{asset?.name}</span>{' '}
+                  <span style={{ fontWeight: '700' }}>Asset Name: </span>{asset?.name}{' '}
                   </Text>
                   <Text>
-                    Metadata CID: <span style={{ fontWeight: '700' }}>{asset?.storage?.ipfs?.nftMetadata?.url ?? 'None'}</span>
+                  <span style={{ fontWeight: '700' }}>Asset Description: </span>{assetData.description ?? 'None'}
+                  </Text>
+                  <Text>
+                  <span style={{ fontWeight: '700' }}>Metadata CID: </span><LinkComponent href={`${asset?.storage?.ipfs?.nftMetadata?.gatewayUrl}`}>{asset?.storage?.ipfs?.nftMetadata?.cid ?? 'None'}</LinkComponent>
                   </Text>
                 </Box>
               </Box>
             </Stack>
           )}
-
-          {!nftContract?.getAddress() && asset?.storage?.ipfs?.cid && (
-            <ErrorBoundary fallback={() => <p>Failed to load...</p>}>
-              <Box my={16} style={{ border: '1px solid #aeaeae', padding: 24 }}>
-                <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded Asset</Text>
-                <br />
+  
+          { !deployedContractAddress ? (
+            <Button
+            my={8}
+            w={160}
+            bgColor="#EC407A"
+            isLoading={isDeploying}
+            disabled={isDeploying || !asset || updateStatus === 'loading'}
+            onClick={() => { handleDeployClick() }}>
+              Deploy Contract
+            </Button>
+          ) : (
+              <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }}>
+                <Heading as="h2" size='lg' my={2}>
+                  <Emoji symbol='🎉'></Emoji> Contract Deployed Successfully! 
+                </Heading>
                 <Button
-                  className="deploy-button"
                   my={4}
-                  // as={motion.div}
+                  width={160}
                   bgColor="#EC407A"
-                  isLoading={isDeploying}
-                  _hover={{ transform: isDeploying ? '' : 'scale(1.02)', cursor: isDeploying ? 'progress' : 'pointer' }}
-                  onClick={deployNftCollection}>
-                  {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
+                  onClick={() => setShowDetails(!showDetails)}>
+                  {showDetails ? 'Hide Details' : 'Show Details'}
                 </Button>
-
-                {!isDeploying && <span style={{ color: '#c1c1c1', fontWeight: 400, marginLeft: 24 }}>{deployError}</span>}
-              </Box>
-            </ErrorBoundary>
+  
+                {showDetails && (
+                  <Box my={8}>
+                    <Text><span style={{ fontWeight: '700' }}>View Deployed Contract: </span><LinkComponent href={`https://mumbai.polygonscan.com/address/${deployedContractAddress}`} >{deployedContractAddress}</LinkComponent></Text>
+                    {getContractMetaData()}
+                  </Box>
+                )}
+              </Stack>
           )}
-
-          {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
-            <Stack spacing="20px" style={{ border: '1px solid #a4a4a4', padding: 24 }}>
-              <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                Contract deployed succesfully!
+  
+          {isDeploying && (
+            <Flex justifyContent="center" my={8}>
+              <Spinner size="xl" label="Deploying contract..." />
+              <Text ml={4}>Deploying contract...</Text>
+            </Flex>
+          )}
+  
+          {deployedContractAddress && (
+            <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
+              <Text as="h4" my={2} style={{ fontWeight: '500', fontSize: 22 }}>
+                Time to mint your NFTs!
               </Text>
-
               <Button
-                className="show-details-button"
-                onClick={() => {
-                  setMetadataDetails(!showMetadataDetails)
-                }}
-                style={{ maxWidth: 240, margin: '12px 0', backgroundColor: '#EC407A', marginTop: 4 }}>
-                {showMetadataDetails ? 'Hide ' : 'Show '}Contract MetaData
+                bgColor="#EC407A"
+                onClick={mintNFT}
+                isLoading={isMinting}
+                disabled={isMinting}>
+                {isMinting ? 'Minting...' : 'Mint NFT'}
               </Button>
-
-              <Box my={8} style={{ display: showMetadataDetails ? 'block' : 'none' }}>
-                <Flex direction={'column'} style={{ lineHeight: 2.75 }}>
-                  <Text>
-                    <span style={{ fontWeight: '700' }}>Contract Address: </span>
-                    <span>{nftContract.getAddress()}</span>
-                  </Text>
-                  {getContractMetaData()}
-                </Flex>
-              </Box>
             </Stack>
-          )}
-
-          {asset?.storage?.ipfs?.nftMetadata?.cid && nftContract?.getAddress() && (
-            <LazyMintNft asset={asset} assetData={props.assetData} nftContract={nftContract} />
           )}
         </>
       )}
     </Box>
-  )
-}
+  );  
+};
 
 export default WagmiNft

@@ -58,48 +58,36 @@ function PurchaseKey() {
 
           <ModalFooter>
             <ButtonGroup>
-              <Web3Button
-                contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
-                contractAbi={Unlock.abi} // Your smart contract ABI
-                action={async (contract) => {
-                  await contract.call('purchase', [['100000000000000'], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS, address], ['0x']], {
-                    value: utils.parseEther('0.0001'),
-                  })
-                }}
-                onSuccess={(result) =>
-                  toast({
-                    title: 'Congratulations, Trailblazer!',
-                    description: "🚀 You've just unlocked a universe of creativity." + result,
-                    status: 'success',
-                    duration: 9000,
-                    isClosable: true,
-                  })
-                }
-                onError={(error) =>
-                  toast({
-                    title: 'Error',
-                    description: error.message,
-                    status: 'error',
-                    duration: 9000,
-                    isClosable: true,
-                  })
-                }
-                theme={connector}>
-                Buy with Crypto
-              </Web3Button>
-              <CrossmintPayButton
-                collectionId="3e5b47d7-a89f-4ae6-8f0e-fd8e7478d550"
-                projectId="75feb281-8149-40fc-a8ce-a10793656a76"
-                mintConfig={{
-                  totalPrice: '0.0001',
-                  _values: ['100000000000000'],
-                  _recipients: address,
-                  _referrers: [CREATIVE_ADDRESS],
-                  _keyManagers: [CREATIVE_ADDRESS, address],
-                  _data: ['0x'],
-                }}
-                environment="staging"
-              />
+            <Web3Button
+              contractAddress={LOCK_ADDRESS_MUMBAI_TESTNET.address} // Your smart contract address
+              contractAbi={ Unlock.abi } // Your smart contract ABI
+              action={async (contract) => {
+                await contract.call('purchase', [["100000000000000"], [address], [CREATIVE_ADDRESS], [CREATIVE_ADDRESS, address], ['0x']], { value: utils.parseEther("0.0001")});
+              }}
+              onSuccess={(result) => toast({
+                title: "Congratulations, Trailblazer!",
+                description: "🚀 You've just unlocked a universe of creativity." + result,
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+              })}
+              onError={(error) => toast({
+                title: "Error",
+                description: error.message,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+              })} 
+              theme={connector}
+            >
+              Buy with Crypto
+            </Web3Button>
+            <CrossmintPayButton
+              collectionId="3e5b47d7-a89f-4ae6-8f0e-fd8e7478d550"
+              projectId="75feb281-8149-40fc-a8ce-a10793656a76"
+              mintConfig={{"totalPrice": "0.0001", "_values": ["100000000000000"], "_recipients": address, "_referrers": [CREATIVE_ADDRESS], "_keyManagers": [CREATIVE_ADDRESS, address], "_data": ["0x"]}}
+              environment="staging"
+            />
             </ButtonGroup>
           </ModalFooter>
         </ModalContent>

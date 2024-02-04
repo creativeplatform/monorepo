@@ -7,6 +7,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   Progress,
   Spinner,
@@ -232,6 +233,8 @@ const CreateAndViewAsset = () => {
                         mb={formErrors.title ? 0 : 4}
                         disabled={createAssetStatus === 'loading'}
                         placeholder="Enter the name of the video"
+                        color='brand.300'
+                        _placeholder={{ opacity: 0.4, color: 'inherit' }}
                         aria-invalid={formErrors.title ? 'true' : 'false'}
                       />
                     )}
@@ -255,6 +258,8 @@ const CreateAndViewAsset = () => {
                         disabled={createAssetStatus === 'loading'}
                         mb={formErrors.description ? 0 : 4}
                         placeholder="Enter a description for the episode video"
+                        color='brand.300'
+                        _placeholder={{ opacity: 0.4, color: 'inherit' }}
                       />
                     )}
                   />
@@ -299,7 +304,7 @@ const CreateAndViewAsset = () => {
 
       {createdAsset?.[0]?.playbackId && (
         <>
-          <div style={{ marginBottom: '32px' }}>
+          <Box mb={'32px'}>
             <Player
               title={createdAsset[0].name}
               playbackId={createdAsset[0].playbackId}
@@ -327,14 +332,14 @@ const CreateAndViewAsset = () => {
                 },
               }}
             />
-          </div>
+          </Box>
 
           <Stack spacing="20px" my={12} style={{ border: '1px solid whitesmoke', padding: 24 }}>
-            <Text as={'h3'} style={{ fontWeight: '600', fontSize: 24, marginBottom: 24 }}>
-              Asset uploaded successfully.
-            </Text>
+            <Heading as={'h2'} size={'lg'} mb={24}>
+              Asset Uploaded Successfully.
+            </Heading>
 
-            <Text style={{ fontWeight: '500' }}>Asset Details is as follows:</Text>
+            <Heading as="h3" size={'md'}> Details Is As Follows:</Heading>
             <Box style={{ lineHeight: 1.75 }}>
               <Text>
                 <span style={{ fontWeight: '700' }}>Asset Name: </span>
@@ -370,13 +375,15 @@ const CreateAndViewAsset = () => {
                         value={field.value}
                         mb={formErrors.nFTAmountToMint ? 0 : 4}
                         disabled={mintFormState.isLoading}
-                        placeholder="Enter number of nft(s) to mint"
+                        color="brand.300"
+                        placeholder="25"
+                        _placeholder={{opacity: 0.4, color: 'inherit'}}
                         aria-invalid={formErrors.nFTAmountToMint ? 'true' : 'false'}
                       />
                     )}
                   />
                   {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'required' && (
-                    <FormHelperText mb="32px">Numbers of NFT to mint is required.</FormHelperText>
+                    <FormHelperText mb="32px">The number of copies to mint is required.</FormHelperText>
                   )}
                   {mintFormState.errors.nFTAmountToMint && mintFormState.errors.nFTAmountToMint.type === 'min' && (
                     <FormHelperText mb="32px">You can't mint 0 nft. Try 1 - 100.</FormHelperText>
@@ -400,13 +407,15 @@ const CreateAndViewAsset = () => {
                         value={field.value}
                         mb={mintFormState.errors.pricePerNFT ? 0 : 4}
                         disabled={mintFormState.isLoading}
-                        placeholder="Enter price per NFT"
+                        color='brand.300'
+                        placeholder='1.0'
+                        _placeholder={{ opacity: 0.4, color: 'inherit' }}
                         aria-invalid={formErrors.nFTAmountToMint ? 'true' : 'false'}
                       />
                     )}
                   />
                   {mintFormState.errors.pricePerNFT && mintFormState.errors.pricePerNFT.type == 'required' && (
-                    <FormHelperText mb={4}>Price per NFT is required.</FormHelperText>
+                    <FormHelperText mb={4}>The price that you want to charge is required.</FormHelperText>
                   )}
                   {mintFormState.errors.pricePerNFT && mintFormState.errors.pricePerNFT.type === 'min' && (
                     <FormHelperText mb={4}>The price can't be a negative value.</FormHelperText>
