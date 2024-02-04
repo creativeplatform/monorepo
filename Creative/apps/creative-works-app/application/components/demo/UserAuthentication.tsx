@@ -28,7 +28,7 @@ export default function UserAuthentication() {
         2. Access user wallet information on the server:
       </p>
       <div className="flex flex-col">
-        <Button variant="outline" onClick={getSecret} className="w-72 mt-2">
+        <Button onClick={getSecret} className="w-72 mt-2">
           Get address on server-side function
         </Button>
 
