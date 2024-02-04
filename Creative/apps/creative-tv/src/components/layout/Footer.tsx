@@ -108,7 +108,6 @@ export default function Footer(props: Props): JSX.Element {
             ml: 8,
           }}>
           <Image src={CREATIVE_ICON} alt="Creative Logo" width={250} height={'auto'} boxSize="100px" objectFit="contain" />
-          <Image src={CREATIVE_ICON} alt="Creative Logo" width={250} height={'auto'} boxSize="100px" objectFit="contain" />
         </Flex>
         <Text pt={6} fontSize={'sm'} textAlign={'center'}>
           {SITE_COPYRIGHT}
