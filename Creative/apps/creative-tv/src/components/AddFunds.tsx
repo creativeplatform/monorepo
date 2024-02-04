@@ -5,7 +5,7 @@ import { Button } from '@chakra-ui/react';
 import { TbMoneybag } from 'react-icons/tb'
 import { useAddress } from '@thirdweb-dev/react';
 
-const AddFunds: NextPage = () => {
+const AddFunds: React.FC = () => {
     const address = useAddress() || '';
 
     if (address) {

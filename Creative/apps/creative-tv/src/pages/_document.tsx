@@ -1,5 +1,6 @@
 import { ColorModeScript } from '@chakra-ui/react'
-import NextDocument, { Head, Html, Main, NextScript } from 'next/document'
+import NextDocument, { Html, Main, Head, NextScript } from 'next/document'
+import Script from 'next/script'
 import theme from '../theme/theme'
 import { getCssText } from "@livepeer/react";
 
@@ -32,6 +33,7 @@ export default class Document extends NextDocument {
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
         <Main />
         <NextScript />
+        <Script src="https://_vercel/speed-insights/script.js" />
       </body>
     </Html>
   )

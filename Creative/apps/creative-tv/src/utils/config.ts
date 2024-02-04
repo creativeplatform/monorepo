@@ -1,13 +1,16 @@
 import { ThemingProps, extendTheme } from '@chakra-ui/react'
 import { Mumbai, Polygon } from '@thirdweb-dev/chains'
+import { embeddedWallet, metamaskWallet, smartWallet } from '@thirdweb-dev/react'
 import gql from 'graphql-tag'
 
+export const SITE_DOMAIN = process.env.NEXT_PUBLIC_AUTH_DOMAIN || 'creativeplatform.xyz'
 export const SITE_NAME = 'CREATIVE TV'
 export const SITE_DESCRIPTION = 'The way content should be.'
 export const SITE_IMAGE = '/creative-membership.png'
-export const SITE_URL = 'https://creativeplatform.xyz'
+export const SITE_URL = `https://${SITE_DOMAIN}`
 export const SITE_LOGO = '/grant-logo.png'
-
+export const NEXT_PUBLIC_AUTH_DOMAIN = SITE_DOMAIN;
+export const THIRDWEB_AUTH_PRIVATE_KEY = process.env.THIRDWEB_AUTH_PRIVATE_KEY
 
 export const NEXT_PUBLIC_STUDIO_API_KEY = process.env.NEXT_PUBLIC_STUDIO_API_KEY
 export const NEXT_PUBLIC_THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
@@ -19,11 +22,19 @@ export const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
 export const POLYGONSCAN_API_KEY = process.env.NEXT_PUBLIC_POLYGONSCAN_API_KEY
 export const HOST = process.env.NEXT_PUBLIC_HOST
 export const THIRDWEB_API_KEY = process.env.NEXT_PUBLIC_THIRDWEB_API_KEY
+export const THIRDWEB_CLIENT_ID = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID
 export const EXPLORER_KEY = process.env.NEXT_PUBLIC_EXPLORER_KEY
 export const PAPER_CLIENT_ID = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID
 export const WALLET_CONNECT = process.env.NEXT_PUBLIC_WALLET_CONNECT
 export const WERT_PRIVATE_KEY = process.env.NEXT_PUBLIC_WERT_PRIVATE_KEY
 export const WERT_PARTNER_ID = process.env.NEXT_PUBLIC_WERT_PARTNER_ID
+
+// MONGO_DB
+export const MONGO_DB_CONNECTION_STRING_DEV =
+  process.env.MONGO_DB_CONNECTION_STRING_DEV || '';
+export const MONGO_DB_CONNECTION_STRING_PROD =
+  process.env.MONGO_DB_CONNECTION_STRING_PROD || '';
+
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_MODES = extendTheme({
@@ -43,8 +54,8 @@ export const THEME_CONFIG = {
 }
 
 export const EXPLORER_API_URL = {
-  GOERLI: 'https://api-goerli.etherscan.io/',
-  POLYGON: 'https://api.polygonscan.com/',
+  mumbai: 'https://api.mumbai.polygonscan.com/',
+  polygon: 'https://api.polygonscan.com/',
 }
 
 // FEATURED CAROUSEL PLAYLISTS
@@ -98,6 +109,37 @@ export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2
 
 // FACTORY CONTRACT (POLYGON)
 export const ACCOUNT_FACTORY_POLYGON = ''
+
+// This is the chain your dApp will work on.
+// Change this to the chain your app is built for.
+// You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
+// const activeChain = MUMBAI_CHAIN[0]
+export const activeChain = 'mumbai' // TODO: revert chain back to the top commented option
+
+// Setup the Smart Wallet configuration
+const personalWallet = () => {
+  if (process.env.NODE_ENV !== 'production') {
+    return metamaskWallet() // set Metamask wallet for development purpose only
+  } else {
+    return embeddedWallet({
+      auth: {
+        options: ['email', 'google', 'apple', 'facebook'],
+      },
+    })
+  }
+}
+
+export const smartWalletInit = smartWallet(
+  embeddedWallet({
+    auth: {
+      options: ['email', 'google', 'apple', 'facebook'],
+    },
+  }),
+  {
+    factoryAddress: ACCOUNT_FACTORY_TESTNET,
+    gasless: true,
+  }
+)
 
 // Setup the Smart Wallet configuration
 export const SMART_WALLET_CONFIG = {
@@ -3071,6 +3113,46 @@ export const DAI = {
   mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
 }
 
+export const ERC20_TOKEN = {
+  TESTR: {
+    chain: {
+      polygon: {
+        mumbai: '0xc0823427fE72cFD105c71BEAd0476412283B07c5',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  USDC: {
+    chain: {
+      polygon: {
+        mumbai: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  DAI: {
+    chain: {
+      polygon: {
+        mumbai: '0xcB1e72786A6eb3b44C2a2429e317c8a2462CFeb1',
+        mainnet: '',
+      },
+      ethereum: {
+        sepolia: '',
+        goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
+        mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      },
+    },
+  },
+}
+
 // ERC20 ABI
 export const ERC20_ABI = [
   {
@@ -4399,3 +4481,17 @@ export const LENS_CONTRACT_ABI = [
     type: 'function',
   },
 ]
+
+export const NAME_OF_SAVED_CONTRACT_ADDRESS = 'JOHN_DOE' // The name used to save the deployed contract address to localStorage or remote Server.
+export const DEV_ENVIRONMENT = {
+  prod: 'production',
+  dev: 'development',
+  test: 'test',
+}
+
+// Global Colors
+export const globalTheme = {
+  colors: {
+    primary: '#EC407A',
+  },
+}

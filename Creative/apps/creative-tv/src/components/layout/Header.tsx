@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/router'
-import NextLink from 'next/link'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Accordion,
   AccordionButton,
@@ -28,6 +26,7 @@ import {
   Menu,
   MenuButton,
   MenuDivider,
+  MenuGroup,
   MenuItem,
   MenuList,
   Popover,
@@ -39,23 +38,23 @@ import {
   chakra,
   useColorModeValue,
   useDisclosure,
-  useToast,
-  MenuGroup,
 } from '@chakra-ui/react'
-import Unlock from '../../utils/fetchers/Unlock.json'
-import { ConnectWallet, useAddress, useUser, useWallet, useSDK } from '@thirdweb-dev/react'
-import { Mumbai } from '@thirdweb-dev/chains'
+import { ConnectWallet, useAddress, useSigner, useUser, useWallet } from '@thirdweb-dev/react'
+import { ThirdwebSDK } from '@thirdweb-dev/sdk'
+import AddFunds from 'components/AddFunds'
+import PurchaseKey from 'components/PurchaseKey'
 import { useScroll } from 'framer-motion'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useEffect, useRef, useState } from 'react'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdOutlineAccountCircle } from 'react-icons/md'
 import { RiVideoUploadFill } from 'react-icons/ri'
-import { SITE_LOGO, SITE_NAME } from '../../utils/config'
+import { thirdwebSDKFromSigner } from 'utils/helpers'
+import { DEV_ENVIRONMENT, LOCK_ADDRESS_MUMBAI_TESTNET, SITE_LOGO, SITE_NAME, } from '../../utils/config'
+import Unlock from '../../utils/fetchers/Unlock.json'
 import { ThemeSwitcher } from './ThemeSwitcher'
-import AddFunds from 'components/AddFunds'
-import PurchaseKey from 'components/PurchaseKey'
-
 
 interface Props {
   className?: string
@@ -66,58 +65,61 @@ interface Props {
 }
 
 export function Header({ className, handleLoading }: Props) {
-  const styleName = className ?? '';
-  const ref = useRef(null);
-  const router = useRouter();
-  const address = useAddress() || '';
-  const { isLoggedIn } = useUser();
-  const emailLogin = useWallet("embeddedWallet");
-  const sdk = useSDK();
+  const styleName = className ?? ''
+  const ref = useRef(null)
+  const router = useRouter()
+  const address = useAddress() || ''
+  const signer = useSigner()
+  const { isLoggedIn } = useUser()
+  const emailLogin = useWallet('embeddedWallet')
+  const metamaskLogin = useWallet('metamask')
+
+  useEffect(() => {
+    // Init wallet base on working environment
+    if (process.env.NODE_ENV !== DEV_ENVIRONMENT.prod) {
+      const getMetaMaskAddress = async () => {
+        if (metamaskLogin) {
+          const meta = await metamaskLogin?.getAddress()
+          console.log('metamask: ', meta)
+          return meta
+        }
+      }
+      getMetaMaskAddress()
+    } else {
+      const getEmail = async () => {
+        if (emailLogin) {
+          const email = await emailLogin.getEmail()
+          // Use the email address here
+          console.log('email: ', email)
+          return email
+        }
+      }
+      getEmail()
+    }
+  }, [address])
+
   const [subscribed, setSubscribed] = useState(false)
+
   const connector = useColorModeValue('light', 'dark')
 
-  
-// GET EMAIL ADDRESS AFTER LOGIN
-  useEffect(() => {
-    const getEmail = async () => {
-      if (emailLogin) {
-        const email = await emailLogin.getEmail();
-        // Use the email address here
-        console.log(email);
-        return email;
-      }
-    };
-    getEmail();
-  }, [address]);
-  
+  const sdkSigner = signer && thirdwebSDKFromSigner(signer, 'mumbai') // ThirdwebSDK.fromSigner(signer)
 
-  
   /*******  CONTRACT READING ********/
   useEffect(() => {
-  const getSubscribedData = async () => {
-    if (!address || !sdk || !Unlock.abi) return;
-
-    try {
-      const unlockContract = await sdk.getContractFromAbi(
-        '0x9a9280897c123b165e23f77cf4c58292d6ab378d',
-        Unlock.abi,
-      );
-
-      const result = await unlockContract.call(
-        "getHasValidKey", 
+    if (!address || !sdkSigner || !Unlock.abi) return
+    const getSubscribedData = async () => {
+      const unlockContract = await sdkSigner?.getContractFromAbi(LOCK_ADDRESS_MUMBAI_TESTNET.address, Unlock.abi)
+      return await unlockContract?.call(
+        'getHasValidKey', // Name of your function as it is on the smart contract
+        // Arguments to your function, in the same order they are on your smart contract
         [address]
-      );
-
-      console.log('Is your membership valid?', result);
-      setSubscribed(result);
-    } catch (error) {
-      console.error('Error getting subscription data:', error);
+      )
     }
-  };
-
-  getSubscribedData();    
-}, [address, sdk, Unlock.abi]);
-
+    getSubscribedData().then((res) => {
+      console.log('Is your membership valid?', res)
+      setSubscribed(res)
+    })
+  }, [address, sdkSigner, Unlock.abi])
 
   const [y, setY] = useState(0)
   const { scrollY } = useScroll()
@@ -280,190 +282,184 @@ export function Header({ className, handleLoading }: Props) {
     const connector = useColorModeValue('light', 'dark')
     return (
       <Drawer isOpen={mobileNav.isOpen} placement="top" onClose={mobileNav.onClose} size={{ base: 'full', sm: 'full', md: 'xs' }}>
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerCloseButton />
-        </DrawerHeader>
-        <DrawerBody>
-          <p>
-            <Accordion allowToggle px="0px" my={4}>
-              <AccordionItem>
-                <AccordionButton>
-                  <Button
-                    color="black.700"
-                    display="inline-flex"
-                    alignItems="center"
-                    px="0"
-                    fontSize="sm"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}>
-                    Free Channels
-                  </Button>
-                  <AccordionIcon display={{ base: 'none', sm: 'none', md: 'block' }} />
-                </AccordionButton>
-                <AccordionPanel>
-                  <LinkBox as='article' maxW='sm' p='4' borderWidth='1px' rounded='md'>
-                    <Box as='time' dateTime='2023-11-09 15:30:00 +0000 UTC'>
-                      Exclusive
-                    </Box>
-                    <Heading size='md' my='2'>
-                      <LinkOverlay as={NextLink} href='https://kidz.creativeplatform.xyz' target='_blank'>
-                        New Year, New Beginnings: Creative Kidz
-                      </LinkOverlay>
-                    </Heading>
-                    <Text>
-                      Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
-                    </Text>
-                  </LinkBox>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </p>
-          <chakra.p paddingLeft={15.9}>
-            <Button
-              color="black.700"
-              display="inline-flex"
-              alignItems="center"
-              fontSize="14px"
-              px="0"
-              my={4}
-              fontWeight={700}
-              _hover={{ color: cl }}
-              _focus={{ boxShadow: 'none' }}
-              onClick={() => {
-                mobileNav.onClose()
-                router.push('/discover')
-              }}>
-              Discover
-            </Button>
-          </chakra.p>
-          <chakra.p paddingLeft={15.9}>
-            <Button
-              color="black.700"
-              display="inline-flex"
-              alignItems="center"
-              fontSize="14px"
-              px="0"
-              my={4}
-              fontWeight={700}
-              _hover={{ color: cl }}
-              _focus={{ boxShadow: 'none' }}
-              onClick={() => {
-                mobileNav.onClose()
-                router.push('/events')
-              }}>
-              Events
-            </Button>
-          </chakra.p>
-          <p>
-            <Accordion allowToggle my={4}>
-              <AccordionItem>
-                <AccordionButton>
-                  <Button
-                    display="inline-flex"
-                    alignItems="center"
-                    fontSize="14px"
-                    px="0"
-                    fontWeight={700}
-                    _hover={{ color: cl }}
-                    _focus={{ boxShadow: 'none' }}>
-                    Community
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerCloseButton />
+          </DrawerHeader>
+          <DrawerBody>
+            <p>
+              <Accordion allowToggle px="0px" my={4}>
+                <AccordionItem>
+                  <AccordionButton>
+                    <Button
+                      color="black.700"
+                      display="inline-flex"
+                      alignItems="center"
+                      px="0"
+                      fontSize="sm"
+                      fontWeight={700}
+                      _hover={{ color: cl }}
+                      _focus={{ boxShadow: 'none' }}>
+                      Free Channels
+                    </Button>
                     <AccordionIcon display={{ base: 'none', sm: 'none', md: 'block' }} />
-                  </Button>
-                </AccordionButton>
-                <AccordionPanel>
-                  <Features />
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </p>
-          <chakra.p my={4}>
-            {!address && !isLoggedIn ? (
-              <ConnectWallet
-                welcomeScreen={{
-                  title: "CREATIVE TV",
-                  subtitle: "The Way Content Should Be",
-                  img: {
-                    src: "https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif",
-                    width: 250,
-                    height: 250,
-                  },
-                }}
-                termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
-                privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
-                switchToActiveChain={true}
-                modalSize={"wide"}
-                theme={connector} 
-                btnTitle={'Sign In/Up'}
-                modalTitle={'Login'}
-                dropdownPosition={{
-                  side: "bottom", // "top" | "bottom" | "left" | "right";
-                  align: "end", // "start" | "center" | "end";
-                }} 
-              />
-            ) : (
-              <ButtonGroup>
-              <ConnectWallet
-                theme={connector}  
-              />
-              <Menu>
-                <MenuButton mx={4} mb={2} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  User Menu
-                </MenuButton>
-                {!subscribed ? (
-                  <MenuList>
-                    <MenuGroup title='1. Wallet Options'>
-                        <Center>
-                          <AddFunds />
-                        </Center>
-                    </MenuGroup>
-                    <MenuDivider />
-                    <MenuGroup title='2. Creator Access'>
-                      <Center>
-                        <PurchaseKey />
-                      </Center>
-                    </MenuGroup>
-                  </MenuList>
-                ) : (
-                  <MenuList>
-                    <MenuGroup title='Active Member'>
-                    <MenuItem
-                      icon={<MdOutlineAccountCircle />}
-                      onClick={() => {
-                        mobileNav.onClose()
-                        router.push(`/profile/${address}`)
-                      }}>
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      icon={<RiVideoUploadFill />}
-                      onClick={() => {
-                        mobileNav.onClose()
-                        router.push(`/profile/${address}/upload`)
-                      }}>
-                      Upload
-                    </MenuItem>
-                    </MenuGroup>
-                    <MenuDivider />
-                    <MenuGroup title='Wallet Options'>
-                      <Center>
-                        <AddFunds />
-                      </Center>
-                    </MenuGroup>
-                  </MenuList>
-                )}
-              </Menu>
-              </ButtonGroup>
-            )}
-          </chakra.p>
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
+                  </AccordionButton>
+                  <AccordionPanel>
+                    <LinkBox as="article" maxW="sm" p="4" borderWidth="1px" rounded="md">
+                      <Box as="time" dateTime="2023-11-09 15:30:00 +0000 UTC">
+                        Exclusive
+                      </Box>
+                      <Heading size="md" my="2">
+                        <LinkOverlay as={NextLink} href="https://kidz.creativeplatform.xyz" target="_blank">
+                          New Year, New Beginnings: Creative Kidz
+                        </LinkOverlay>
+                      </Heading>
+                      <Text>
+                        Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and
+                        T-Mobile.
+                      </Text>
+                    </LinkBox>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </p>
+            <chakra.p paddingLeft={15.9}>
+              <Button
+                color="black.700"
+                display="inline-flex"
+                alignItems="center"
+                fontSize="14px"
+                px="0"
+                my={4}
+                fontWeight={700}
+                _hover={{ color: cl }}
+                _focus={{ boxShadow: 'none' }}
+                onClick={() => {
+                  mobileNav.onClose()
+                  router.push('/discover')
+                }}>
+                Discover
+              </Button>
+            </chakra.p>
+            <chakra.p paddingLeft={15.9}>
+              <Button
+                color="black.700"
+                display="inline-flex"
+                alignItems="center"
+                fontSize="14px"
+                px="0"
+                my={4}
+                fontWeight={700}
+                _hover={{ color: cl }}
+                _focus={{ boxShadow: 'none' }}
+                onClick={() => {
+                  mobileNav.onClose()
+                  router.push('/events')
+                }}>
+                Events
+              </Button>
+            </chakra.p>
+            <p>
+              <Accordion allowToggle my={4}>
+                <AccordionItem>
+                  <AccordionButton>
+                    <Button
+                      display="inline-flex"
+                      alignItems="center"
+                      fontSize="14px"
+                      px="0"
+                      fontWeight={700}
+                      _hover={{ color: cl }}
+                      _focus={{ boxShadow: 'none' }}>
+                      Community
+                      <AccordionIcon display={{ base: 'none', sm: 'none', md: 'block' }} />
+                    </Button>
+                  </AccordionButton>
+                  <AccordionPanel>
+                    <Features />
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </p>
+            <chakra.p my={4}>
+              {!address && !isLoggedIn ? (
+                <ConnectWallet
+                  welcomeScreen={{
+                    title: 'CREATIVE TV',
+                    subtitle: 'The Way Content Should Be',
+                    img: {
+                      src: 'https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif',
+                      width: 250,
+                      height: 250,
+                    },
+                  }}
+                  termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
+                  privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
+                  switchToActiveChain={true}
+                  modalSize={'wide'}
+                  theme={connector}
+                  btnTitle={'Sign In/Up'}
+                  modalTitle={'Login'} />
+              ) : (
+                <ButtonGroup>
+                  <ConnectWallet theme={connector} />
+                  <Menu>
+                    <MenuButton mx={4} mb={2} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                      User Menu
+                    </MenuButton>
+                    {!subscribed ? (
+                      <MenuList>
+                        <MenuGroup title="1. Wallet Options">
+                          <Center>
+                            <AddFunds />
+                          </Center>
+                        </MenuGroup>
+                        <MenuDivider />
+                        <MenuGroup title="2. Creator Access">
+                          <Center>
+                            <PurchaseKey />
+                          </Center>
+                        </MenuGroup>
+                      </MenuList>
+                    ) : (
+                      <MenuList>
+                        <MenuGroup title="Active Member">
+                          <MenuItem
+                            icon={<MdOutlineAccountCircle />}
+                            onClick={() => {
+                              mobileNav.onClose()
+                              router.push(`/profile/${address}`)
+                            }}>
+                            Profile
+                          </MenuItem>
+                          <MenuItem
+                            icon={<RiVideoUploadFill />}
+                            onClick={() => {
+                              mobileNav.onClose()
+                              router.push(`/profile/${address}/upload`)
+                            }}>
+                            Upload
+                          </MenuItem>
+                        </MenuGroup>
+                        <MenuDivider />
+                        <MenuGroup title="Wallet Options">
+                          <Center>
+                            <AddFunds />
+                          </Center>
+                        </MenuGroup>
+                      </MenuList>
+                    )}
+                  </Menu>
+                </ButtonGroup>
+              )}
+            </chakra.p>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     )
   }
-    
+
   return (
     <chakra.header
       className={styleName}
@@ -514,17 +510,18 @@ export function Header({ className, handleLoading }: Props) {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent w="18vw" maxW="md" _focus={{ boxShadow: 'md' }} className="content-items">
-                <LinkBox as='article' maxW='sm' p='4' borderWidth='1px' rounded='md'>
-                    <Box as='time' dateTime='2023-11-09 15:30:00 +0000 UTC'>
+                  <LinkBox as="article" maxW="sm" p="4" borderWidth="1px" rounded="md">
+                    <Box as="time" dateTime="2023-11-09 15:30:00 +0000 UTC">
                       Exclusive
                     </Box>
-                    <Heading size='md' my='2'>
-                      <LinkOverlay as={NextLink} href='https://kidz.creativeplatform.xyz' target='_blank'>
+                    <Heading size="md" my="2">
+                      <LinkOverlay as={NextLink} href="https://kidz.creativeplatform.xyz" target="_blank">
                         New Year, New Beginnings: Creative Kidz
                       </LinkOverlay>
                     </Heading>
                     <Text>
-                      Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
+                      Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and
+                      T-Mobile.
                     </Text>
                   </LinkBox>
                 </PopoverContent>
@@ -585,45 +582,39 @@ export function Header({ className, handleLoading }: Props) {
           <chakra.div display={{ base: 'none', md: 'none', lg: 'block' }}>
             {!address && !isLoggedIn ? (
               <ConnectWallet
-              welcomeScreen={{
-                title: "CREATIVE TV",
-                subtitle: "The Way Content Should Be",
-                img: {
-                  src: "https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif",
-                  width: 250,
-                  height: 250,
-                },
-              }}
-              termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
-              privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
-              theme={connector} 
-              btnTitle={'Sign In/Up'}
-              modalTitle={'Login'}
-              switchToActiveChain={true}
-              modalSize={"wide"}
-              dropdownPosition={{
-                side: "bottom", // "top" | "bottom" | "left" | "right";
-                align: "end", // "start" | "center" | "end";
-              }} 
+                welcomeScreen={{
+                  title: 'CREATIVE TV',
+                  subtitle: 'The Way Content Should Be',
+                  img: {
+                    src: 'https://bafybeifvsvranpnmujrpcry6lqssxtyfdvqz64gty4vpkhvcncuqd5uimi.ipfs.w3s.link/logo-tv.gif',
+                    width: 250,
+                    height: 250,
+                  },
+                }}
+                termsOfServiceUrl="https://creativeplatform.xyz/docs/legal/terms-conditions"
+                privacyPolicyUrl="https://creativeplatform.xyz/docs/legal/privacy-policy"
+                theme={connector}
+                btnTitle={'Sign In/Up'}
+                modalTitle={'Login'}
+                switchToActiveChain={true}
+                modalSize={'wide'}
               />
             ) : (
               <ButtonGroup>
-              <ConnectWallet
-                theme={connector} 
-              />
-              <Menu>
-                <MenuButton mx={4} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
-                  User Menu
-                </MenuButton>                
+                <ConnectWallet theme={connector} />
+                <Menu>
+                  <MenuButton mx={4} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
+                    User Menu
+                  </MenuButton>
                   {!subscribed ? (
                     <MenuList>
-                      <MenuGroup title='1. Wallet Options'>
+                      <MenuGroup title="1. Wallet Options">
                         <Center>
                           <AddFunds />
                         </Center>
                       </MenuGroup>
                       <MenuDivider />
-                      <MenuGroup title='2. Creator Access'>
+                      <MenuGroup title="2. Creator Access">
                         <Center>
                           <PurchaseKey />
                         </Center>
@@ -631,31 +622,31 @@ export function Header({ className, handleLoading }: Props) {
                     </MenuList>
                   ) : (
                     <MenuList>
-                      <MenuGroup title='Active Member'>
-                          <MenuItem
-                            icon={<MdOutlineAccountCircle />}
-                            onClick={() => {
-                              router.push(`/profile/${address}`)
-                            }}>
-                            Profile
-                          </MenuItem>
-                          <MenuItem
-                            icon={<RiVideoUploadFill />}
-                            onClick={() => {
-                              router.push(`/profile/${address}/upload`)
-                            }}>
-                            Upload
-                          </MenuItem>
+                      <MenuGroup title="Active Member">
+                        <MenuItem
+                          icon={<MdOutlineAccountCircle />}
+                          onClick={() => {
+                            router.push(`/profile/${address}`)
+                          }}>
+                          Profile
+                        </MenuItem>
+                        <MenuItem
+                          icon={<RiVideoUploadFill />}
+                          onClick={() => {
+                            router.push(`/profile/${address}/upload`)
+                          }}>
+                          Upload
+                        </MenuItem>
                       </MenuGroup>
                       <MenuDivider />
-                      <MenuGroup title='Wallet Options'>
+                      <MenuGroup title="Wallet Options">
                         <Center>
                           <AddFunds />
                         </Center>
                       </MenuGroup>
                     </MenuList>
                   )}
-              </Menu>
+                </Menu>
               </ButtonGroup>
             )}
           </chakra.div>
