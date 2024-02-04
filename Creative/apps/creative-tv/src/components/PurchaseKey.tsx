@@ -51,7 +51,7 @@ function PurchaseKey() {
           <ModalCloseButton />
           <ModalBody>
             <Center>
-              <Image src={`${nft?.metadata?.image}`} alt='Creative Membership' width={250} height={250} />
+              <Image src={`${nft?.metadata?.image}`} alt="Creative Membership" width={250} height={250} />
             </Center>
             <Text fontSize="sm" textAlign={'center'} mt={4}>{`${nft?.metadata?.description}`}</Text>
           </ModalBody>
@@ -68,14 +68,14 @@ function PurchaseKey() {
                 title: "Congratulations, Trailblazer!",
                 description: "🚀 You've just unlocked a universe of creativity." + result,
                 status: "success",
-                duration: 9000,
+                duration: 5000,
                 isClosable: true,
               })}
               onError={(error) => toast({
                 title: "Error",
                 description: error.message,
                 status: "error",
-                duration: 9000,
+                duration: 5000,
                 isClosable: true,
               })} 
               theme={connector}

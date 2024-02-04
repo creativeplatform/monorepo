@@ -3,6 +3,6 @@ interface ProfileHeaderProps {
     balance: number;
     refetch: () => void;
 }
-export declare const ProfileHeader: ({ profile, balance, refetch, }: ProfileHeaderProps) => JSX.Element;
+export declare const ProfileHeader: ({ profile, balance, refetch, }: ProfileHeaderProps) => import("react/jsx-runtime").JSX.Element;
 export {};
 //# sourceMappingURL=ProfileHeader.d.ts.map

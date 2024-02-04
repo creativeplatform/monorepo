@@ -3,7 +3,7 @@ import { NextSeo } from 'next-seo'
 import type { NextPage } from 'next'
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
-import { HOST, SITE_LOGO } from 'utils/config'
+import { HOST, SITE_LOGO} from 'utils/config'
 
 const Unauthorized: NextPage = () => {
   const url = new URL('https://app.unlock-protocol.com/checkout')
@@ -21,7 +21,7 @@ const Unauthorized: NextPage = () => {
     referrer: '0x1Fde40a4046Eda0cA0539Dd6c77ABF8933B94260',
     messageToSign: '',
     hideSoldOut: false,
-    redirectUri: `${ HOST }/discover`,
+    redirectUri: `${HOST}/discover`,
   }
   url.searchParams.append('paywallConfig', JSON.stringify(paywallConfig))
   url.searchParams.append('redirectTo', HOST || '' )

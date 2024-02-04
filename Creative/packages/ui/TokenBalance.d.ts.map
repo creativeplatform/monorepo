@@ -1,1 +1,1 @@
-{"version":3,"file":"TokenBalance.d.ts","sourceRoot":"","sources":["TokenBalance.tsx"],"names":[],"mappings":"AAGA,KAAK,KAAK,GAAG;IACT,YAAY,EAAE,MAAM,CAAC;CACxB,CAAC;AAEF,MAAM,CAAC,OAAO,UAAU,YAAY,CAAC,EAAE,YAAY,EAAE,EAAE,KAAK,eAe3D"}
+{"version":3,"file":"TokenBalance.d.ts","sourceRoot":"","sources":["TokenBalance.tsx"],"names":[],"mappings":"AAGA,KAAK,KAAK,GAAG;IACT,YAAY,EAAE,MAAM,CAAC;CACxB,CAAC;AAEF,MAAM,CAAC,OAAO,UAAU,YAAY,CAAC,EAAE,YAAY,EAAE,EAAE,KAAK,2CAe3D"}

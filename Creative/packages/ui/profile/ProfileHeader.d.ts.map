@@ -1,1 +1,1 @@
-{"version":3,"file":"ProfileHeader.d.ts","sourceRoot":"","sources":["ProfileHeader.tsx"],"names":[],"mappings":"AAWA,UAAU,kBAAkB;IAC1B,OAAO,EAAE,GAAG,CAAC;IACb,OAAO,EAAE,MAAM,CAAC;IAChB,OAAO,EAAE,MAAM,IAAI,CAAC;CACrB;AAED,eAAO,MAAM,aAAa,mCAIvB,kBAAkB,gBAqLpB,CAAC"}
+{"version":3,"file":"ProfileHeader.d.ts","sourceRoot":"","sources":["ProfileHeader.tsx"],"names":[],"mappings":"AAWA,UAAU,kBAAkB;IAC1B,OAAO,EAAE,GAAG,CAAC;IACb,OAAO,EAAE,MAAM,CAAC;IAChB,OAAO,EAAE,MAAM,IAAI,CAAC;CACrB;AAED,eAAO,MAAM,aAAa,mCAIvB,kBAAkB,4CAqLpB,CAAC"}
