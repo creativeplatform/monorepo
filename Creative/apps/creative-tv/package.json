@@ -31,6 +31,7 @@
     "@unlock-protocol/paywall": "^0.6.8",
     "@unlock-protocol/unlock-js": "^0.39.1",
     "@vercel/analytics": "^1.1.1",
+    "@vercel/speed-insights": "^1.0.9",
     "@wagmi/chains": "^0.1.7",
     "@wert-io/module-react-component": "^1.0.0",
     "@wert-io/widget-initializer": "^4.0.1",
