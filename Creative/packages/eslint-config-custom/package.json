@@ -1,28 +1,19 @@
 {
   "name": "eslint-config-custom",
   "version": "0.0.0",
-  "private": true,
-  "files": [
-    "library.js",
-    "next.js",
-    "react-internal.js"
-  ],
-  "main": "index.ts",
+  "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "eslint-config-turbo": "latest"
+    "eslint": "^7.23.0",
+    "eslint-config-next": "13.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-turbo": "latest",
+    "eslint-plugin-react": "7.31.8",
+    "eslint-plugin-react-hooks": "^4.6.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.16",
-    "@typescript-eslint/eslint-plugin": "^6.20.0",
-    "@typescript-eslint/parser": "^6.20.0",
-    "@vercel/style-guide": "^5.2.0",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "^14.1.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-only-warn": "^1.1.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "typescript": "^5.3.3"
+    "typescript": "^4.7.4",
+    "@types/node": "^18.13.0"
   },
   "publishConfig": {
     "access": "public"
