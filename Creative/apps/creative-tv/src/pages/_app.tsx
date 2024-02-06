@@ -2,6 +2,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThirdwebProvider } from '@thirdweb-dev/react'
+import { Analytics } from '@vercel/analytics/react'
 import { Layout } from 'components/layout'
 import { Seo } from 'components/layout/Seo'
 import { useIsMounted } from 'hooks/useIsMounted'
@@ -47,6 +48,7 @@ export default function App({ Component, pageProps }: AppProps<{ dehydratedState
             clientId={THIRDWEB_API_KEY}>
             <Layout>
               <Component {...pageProps} />
+              {process.env.NODE_ENV != 'development' && <Analytics />}
             </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
           </ThirdwebProvider>
