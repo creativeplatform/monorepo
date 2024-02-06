@@ -74,7 +74,7 @@ export function EditClaimConditions(props: EditClaimConditionsProps) {
         title: 'Set Claim Conditions',
         description: `Failed to set claim conditions`,
         status: 'error',
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       })
     }
@@ -116,7 +116,7 @@ export function EditClaimConditions(props: EditClaimConditionsProps) {
         title: 'Set Claim Conditions',
         description: `Setting claim conditions failed!`,
         status: 'error',
-        duration: 5000,
+        duration: 4000,
         isClosable: true,
       })
     }

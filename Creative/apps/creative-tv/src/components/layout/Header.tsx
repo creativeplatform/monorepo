@@ -400,7 +400,12 @@ export function Header({ className, handleLoading }: Props) {
                   modalSize={'wide'}
                   theme={connector}
                   btnTitle={'Sign In/Up'}
-                  modalTitle={'Login'} />
+                  modalTitle={'Login'}                
+                  // dropdownPosition={{ // commented out for error of non-existence
+                  //   side: 'bottom', // "top" | "bottom" | "left" | "right";
+                  //   align: 'end', // "start" | "center" | "end";
+                  // }}
+                />
               ) : (
                 <ButtonGroup>
                   <ConnectWallet theme={connector} />
@@ -598,6 +603,10 @@ export function Header({ className, handleLoading }: Props) {
                 modalTitle={'Login'}
                 switchToActiveChain={true}
                 modalSize={'wide'}
+                // dropdownPosition={{ // commented out for error of non-existence
+                //   side: 'bottom', // "top" | "bottom" | "left" | "right";
+                //   align: 'end', // "start" | "center" | "end";
+                // }}
               />
             ) : (
               <ButtonGroup>
