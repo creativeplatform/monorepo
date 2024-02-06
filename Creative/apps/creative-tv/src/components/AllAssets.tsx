@@ -25,7 +25,7 @@ export default function AllAssets() {
     )
   }
 
-  if (videosQuery?.isError || videosQuery?.data.errors) {
+  if (videosQuery?.isError || videosQuery?.data?.errors) {
     console.error('videosQueryError', videosQuery?.error)
     return <Box children="Error loading resource." mb={24} />
   }
@@ -38,7 +38,7 @@ export default function AllAssets() {
     videosQuery?.data?.data?.filter((video): video is AssetData['video'] => {
       return (
         video?.status?.phase === 'ready' &&
-        Number(video.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT) > 0
+        Number(video?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT) > 0
       )
     }) ?? []
 
@@ -46,7 +46,7 @@ export default function AllAssets() {
     <LivepeerConfig client={useLivepeerClient}>
       <SimpleGrid spacing={4} minChildWidth={350} mb={12}>
         {readyVideos && readyVideos?.length > 0 ? (
-          readyVideos?.map((video) => {
+          readyVideos.map((video) => {
             return <VideoCard key={video?.id} video={video} />
           })
         ) : (

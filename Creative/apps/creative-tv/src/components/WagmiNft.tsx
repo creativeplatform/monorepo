@@ -13,14 +13,11 @@ import { useRouter } from 'next/router'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { MediaRenderer, useAddress, useContract, useMetadata } from '@thirdweb-dev/react'
 import { LinkComponent } from './layout/LinkComponent'
-import { Emoji }  from './Emoji'
-import { useContractAddress } from 'hooks/useContractAddress'
+import { Emoji }  from 'ui/emoji'
 import useDeployEditionDrop from 'hooks/useDeployDrop'
-import { deployEditionDropContract, formatString } from 'utils/helpers'
+import { formatString } from 'utils/helpers'
 import { AssetData } from './CreateAndViewAsset'
 import { LazyMintNft } from './LazyMintNft'
-import { ErrorBoundary } from './hoc/ErrorBoundary'
-import { set } from 'react-hook-form'
 import SignIn from './SignIn'
 
 
@@ -254,7 +251,7 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
             </Stack>
           )}
   
-          { !deployedContractAddress ? (
+          { !deployedContractAddress && asset?.storage?.ipfs?.cid ? (
             <Button
             my={8}
             w={160}
@@ -286,13 +283,6 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
               </Stack>
           )}
   
-          {isDeploying && (
-            <Flex justifyContent="center" my={8}>
-              <Spinner size="xl" label="Deploying contract..." />
-              <Text ml={4}>Deploying contract...</Text>
-            </Flex>
-          )}
-  
           {deployedContractAddress && (
             <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
               <Text as="h4" my={2} style={{ fontWeight: '500', fontSize: 22 }}>
@@ -306,6 +296,9 @@ const WagmiNft = ({ assetId, assetData }: WagmiNftProps): JSX.Element => {
                 {isMinting ? 'Minting...' : 'Mint NFT'}
               </Button>
             </Stack>
+          )}
+          {asset?.storage?.ipfs?.nftMetadata?.cid && deployedContractAddress && (
+            <LazyMintNft asset={asset} assetData={assetData} nftContract={fetchedContract} />
           )}
         </>
       )}
