@@ -30,7 +30,7 @@ const ClaimVideoNFTPage: NextPage = () => {
         </BreadcrumbItem>
       </Breadcrumb>
 
-      <ClaimVideoNFT assetData={assetData} />
+      <ClaimVideoNFT />
     </LivepeerConfig>
   )
 }
