@@ -1,4 +1,4 @@
-export const videoNftAbi = [
+export const VideoNftAbi = [
   {
     "type": "constructor",
     "name": "",

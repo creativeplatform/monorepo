@@ -1,17 +1,16 @@
 import { 
-  Box,
-  IconButton, 
+  Box, 
   Button, 
   Stack, 
   Text, 
   useToast, 
   Flex,
+  Skeleton,
 } from '@chakra-ui/react'
 import { useAsset, useUpdateAsset } from '@livepeer/react'
 import { ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRenderer } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-// import { CREATIVE_ADDRESS, NEXT_PUBLIC_THIRDWEB_API_KEY } from 'utils/config'
 import { removeUnderScore } from 'utils/formatString'
 import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
@@ -116,6 +115,10 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     }
   }
 
+  const FallbackComponent = (error: unknown): JSX.Element => {
+    return <div>Error: {String(error)}</div>;
+  };
+
   // Function to deploy the edition drop contract
   const deployNftCollection = async ({ image_url }: NFTCollection) => {
     // Is there an sdk found and is there a connect wallet address?
@@ -144,7 +147,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
         fee_recipient: address,
         seller_fee_basis_points: 300,
         image: asset?.storage?.ipfs?.nftMetadata?.url,
-        description: props.assetData.description,
+        description: props.assetData?.description,
         trusted_forwarders: [CREATIVE_ADDRESS],
       })
 
@@ -183,7 +186,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
     try {
       setIsMinting(true)
 
-      const txn = await contract?.call('lazyMint', [props.assetData.nFTAmountToMint, asset?.storage?.ipfs?.cid, []])
+      const txn = await contract?.call('lazyMint', [props?.assetData?.nFTAmountToMint, asset?.storage?.ipfs?.cid, []])
 
       if (!txn.receipt) {
         setIsMinting(false)
@@ -240,6 +243,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                   w={'160px'}
                   className="upload-button"
                   bgColor="#EC407A"
+                  isLoading={updateStatus === 'loading'}
+                  disabled={updateStatus === 'loading'}
                   _hover={{
                     transform: asset?.storage?.status?.phase === 'processing' ? '' : 'scale(1.02)',
                     cursor: asset?.storage?.status?.phase === 'processing' ? 'progress' : 'pointer',
@@ -257,15 +262,19 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           {!contract?.getAddress() && asset?.storage?.ipfs?.cid ? (
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
-                <MediaRenderer
+                {!asset ? (
+                  <Skeleton height={1080} />
+                ):(
+                  <MediaRenderer
                   src={`${asset?.storage?.ipfs?.url}`}
                   alt={asset?.name}
                   width={'1920'}
                   height={'1080'}
                 />
+                )} 
 
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Congrats, your asset was uploaded to IPFS!
+                  Congrats, Your Asset Was Uploaded To IPFS!
                 </Text>
 
                 <Button
@@ -295,7 +304,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Box>
               </Stack>
 
-              <ErrorBoundary fallback={<p>Failed to load...</p>}>
+              <ErrorBoundary fallback={FallbackComponent(error)}>
                 <Box my={16} style={{ padding: 24 }} maxWidth="700px">
                   <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded asset</Text>
                   <Button
@@ -308,6 +317,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                       e.preventDefault()
                       deployNftCollection?.({ image_url: String(asset?.storage?.ipfs?.cid) }) // Function to deploy edition drop contract
                     }}
+                    isLoading={isDeploying}
                     disabled={isDeploying}>
                     {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                   </Button>
@@ -320,13 +330,13 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 </Box>
               </ErrorBoundary>
             </>
-          ) : null}
+          ) : null }
 
           {asset?.storage?.ipfs?.cid && contract?.getAddress() && (
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Contract deployed succesfully!
+                  Contract Deployed Succesfully!
                 </Text>
                 <Button
                   width={160}
