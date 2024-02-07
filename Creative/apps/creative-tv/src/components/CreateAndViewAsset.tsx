@@ -21,7 +21,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { VideoPreview } from './VideoPreview'
+import VideoPreview from './VideoPreview'
 
 export interface AssetData {
   title: string

@@ -3,7 +3,7 @@ import { Flex, Text } from '@chakra-ui/react'
 interface VideoPreviewProps {
   video: Blob | any
 }
-export const VideoPreview = (props: VideoPreviewProps) => {
+const VideoPreview = (props: VideoPreviewProps) => {
   return (
     <Flex justifyContent={'center'} alignContent={'center'} direction={'column'}>
       <Text fontSize="lg" fontWeight="bold" mb={4}>
@@ -13,3 +13,4 @@ export const VideoPreview = (props: VideoPreviewProps) => {
     </Flex>
   )
 }
+export default VideoPreview
