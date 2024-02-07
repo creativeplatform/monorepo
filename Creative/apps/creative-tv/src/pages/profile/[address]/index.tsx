@@ -7,7 +7,6 @@ import {
   Container,
   Flex,
   Heading,
-  SimpleGrid,
   Text,
   Input,
   useToast,
@@ -33,9 +32,8 @@ import { LOCK_ADDRESS_MUMBAI_TESTNET } from 'utils/config'
 import truncateEthAddress from 'truncate-eth-address'
 import { HiOutlineClipboardCopy } from 'react-icons/hi'
 import { MdOutbound } from 'react-icons/md'
-//import MeTokenCreationForm from 'components/MeTokenCreationForm'
 import MemberCard from 'components/MemberCard'
-import Wert from './wert'
+import MyAssets from 'components/MyAssets'
 import Unlock from '../../../utils/fetchers/Unlock.json'
 
 
@@ -329,7 +327,7 @@ const share = async () => {
                       <Text fontWeight={'bold'} srOnly>
                         Video Uploads:
                       </Text>
-                      <Text>The emptiness ... upload some videos!</Text>
+                      <MyAssets />
                     </Box>
                   </TabPanel>
                   <TabPanel>

@@ -4,6 +4,7 @@ import {
   AlertIcon,
   Box,
   Button,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -21,7 +22,6 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { VideoPreview } from './videoPreview'
 
 export interface AssetData {
   title: string
@@ -58,19 +58,7 @@ const CreateAndViewAsset = () => {
 
   const [description, setDescription] = useState<string>('') // Note: The `description` state variable stores the description of the asset entered by the user.
 
-  const [isWriteInProgress, setIsWriteInProgress] = useState<boolean>() // Note: The `isWriteInProgress` state variable indicates whether an asset write operation is in progress.
-
-  const [isUpdateAsset, setIsUpdateAsset] = useState<boolean>() // Note: The `isUpdateAsset` state variable indicates whether an asset update operation is in progress.
-
   const [isFileSelected, setIsFileSelected] = useState<boolean>(false) // Note: The `isFileSelected` state variable indicates whether a video file has been selected.
-
-  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false) // Note: The `isUploadingToIPFS` state variable indicates whether the video file is currently being uploaded to IPFS.
-
-  const [isProcessing, setIsProcessing] = useState<boolean>(false) // Note: The `isProcessing` state variable indicates whether the video file is currently being processed.
-
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false) // Note: The `showErrorMessage` state variable indicates whether an error message should be displayed.
-
-  const [buttonClicked, setButtonClicked] = useState<boolean>(false) // Note: The `buttonClicked` state variable indicates whether a button has been clicked.
 
   const address = useAddress() // Note: The `address` variable stores the address of the user.
 
@@ -165,9 +153,6 @@ const CreateAndViewAsset = () => {
     }
   }, [progress])
 
-  /** The renderVideoPreview is use to memoize a component   */
-  const renderVideoPreview = useMemo(() => <VideoPreview video={video} />, [video])
-
   const {
     handleSubmit,
     control,
@@ -223,9 +208,21 @@ const CreateAndViewAsset = () => {
       {createAssetError?.message && <Text> {createAssetError.message} </Text>}
 
       {isFileSelected && (
-        <>
+        <Box mt={4}>
+          <Text fontSize="lg" fontWeight="bold">
+            Video Preview:
+          </Text>
+          <Flex minWidth='max-content' alignItems='center'>
+            {video && (
+              <video src={URL.createObjectURL(video)} controls style={{ maxWidth: '1000px', maxHeight:'400px', marginTop: '8px' }} />
+            )}
+          </Flex>
+        </Box>
+      )}
           {/* The preview of uploaded video */}
-          {!createdAsset?.[0]?.id && renderVideoPreview}
+          {createdAsset && createdAsset.length > 0 && 
+            <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
+          }     
           {/* Form for asset name and description */}
           <Box my={12} maxWidth={400} mx={'auto'}>
             {!createdAsset?.[0]?.id && (
@@ -309,9 +306,6 @@ const CreateAndViewAsset = () => {
               </form>
             )}
           </Box>
-        </>
-      )}
-
       {createdAsset?.[0]?.playbackId && (
         <>
           <div style={{ marginBottom: '32px' }}>

@@ -3,8 +3,6 @@ import { ethers, BigNumber, BigNumberish, Transaction } from 'ethers'
 import { Orbis } from '@orbisclub/orbis-sdk'
 import {
     METOKENS_ADDRESS_GOERLI,
-    DAI,
-    MAINNET_RPC,
     FOUNDRY_FACET_ABI,
     HUB_FACET_ABI,
     METOKEN_FACTORY_ABI,
@@ -24,7 +22,7 @@ export const foundryFacet = `${METOKENS_ADDRESS_GOERLI.foundryFacet}`
 export const meTokenDiamond = `${METOKENS_ADDRESS_GOERLI.meTokenDiamond}`
 export const meTokenRegistryFacet = `${METOKENS_ADDRESS_GOERLI.meTokensRegistryFacet}`
 export const nullToken = `0x${'0'.repeat(40)}`
-export const daiAddress = `${DAI.goerli}`
+export const daiAddress = '0xc0823427fE72cFD105c71BEAd0476412283B07c5'
 
 // Define an interface for BasicHubInfo
 interface BasicHubInfo {

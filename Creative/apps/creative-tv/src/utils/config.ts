@@ -43,8 +43,8 @@ export const THEME_CONFIG = {
 }
 
 export const EXPLORER_API_URL = {
-  GOERLI: 'https://api-goerli.etherscan.io/',
-  POLYGON: 'https://api.polygonscan.com/',
+  mumbai: 'https://api.mumbai.polygonscan.com/',
+  polygon: 'https://api.polygonscan.com/',
 }
 
 // FEATURED CAROUSEL PLAYLISTS
@@ -98,6 +98,9 @@ export const ACCOUNT_FACTORY_TESTNET = '0x714a1a66de408a355dA20bA7FeEbC6BEFCC3E2
 
 // FACTORY CONTRACT (POLYGON)
 export const ACCOUNT_FACTORY_POLYGON = ''
+
+export const NAME_OF_SAVED_CONTRACT_ADDRESS = 'New Release' // The name used to save the deployed contract address to localStorage or remote Server.
+
 
 // Setup the Smart Wallet configuration
 export const SMART_WALLET_CONFIG = {
@@ -3065,10 +3068,44 @@ export const METOKENS_DIAMOND_ABI = [
   },
 ]
 
-// DAI ADDRESS
-export const DAI = {
-  goerli: '0xE65Ce7f6a02F50d4717b5966e3Bd65B3FDCB480a',
-  mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+// ERC20 TOKENS
+export const ERC20_TOKEN = {
+  TESTR: {
+    chain: {
+      polygon: {
+        mumbai: '0xc0823427fE72cFD105c71BEAd0476412283B07c5',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  USDC: {
+    chain: {
+      polygon: {
+        mumbai: '0x9999f7fea5938fd3b1e26a12c3f2fb024e194f97',
+        mainnet: '',
+      },
+      ethereum: {
+        mainnet: '',
+        sepolia: '',
+      },
+    },
+  },
+  DAI: {
+    chain: {
+      polygon: {
+        mumbai: '0xcB1e72786A6eb3b44C2a2429e317c8a2462CFeb1',
+        mainnet: '',
+      },
+      ethereum: {
+        sepolia: '',
+        mainnet: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      },
+    },
+  },
 }
 
 // ERC20 ABI

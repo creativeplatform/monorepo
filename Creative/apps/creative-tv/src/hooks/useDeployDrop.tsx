@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { AddressZero } from '@ethersproject/constants';
 import { useToast } from '@chakra-ui/react';
 import { useSigner, useAddress } from '@thirdweb-dev/react';
 import { ThirdwebSDK } from '@thirdweb-dev/sdk';
 import { CREATIVE_ADDRESS } from 'utils/config';
-import { videoNftAbi } from '../components/videoNftAbi'
 import { AssetData } from '../components/CreateAndViewAsset';
 
 interface WagmiNftProps {
@@ -38,6 +36,7 @@ const useDeployEditionDrop = ({ assetId, assetData }: WagmiNftProps): void => {
             fee_recipient: address,
             seller_fee_basis_points: 300,
             metadata: {
+              id: assetId, // ID of the video
               name: assetData.title, // Title of the video
               description: assetData.description, // Description of the video
               image: assetData.image_url, // Thumbnail of the video

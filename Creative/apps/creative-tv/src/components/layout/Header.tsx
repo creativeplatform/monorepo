@@ -75,6 +75,7 @@ export function Header({ className, handleLoading }: Props) {
   const sdk = useSDK();
   const [subscribed, setSubscribed] = useState(false)
   const connector = useColorModeValue('light', 'dark')
+  const isConnected = address || isLoggedIn;
 
   
 // GET EMAIL ADDRESS AFTER LOGIN
@@ -181,30 +182,27 @@ export function Header({ className, handleLoading }: Props) {
             </Section>
           </LinkBox>
           <LinkBox color={tcl}>
-            <Section title="CREATIVE Platform">
-              <LinkOverlay href="https://creativeplatform.xyz">
+            <Section title="CREATIVE Terminal">
+              <LinkOverlay href="https://app.creativeplatform.xyz">
                 <Text>
-                  Creatives want the ability to create great content and profits when they want without having to shell out 💰 to do it. So we built
-                  our own solution.
+                  A retro terminal GUI with future ChatGPT integration, offering a unique, type-driven interface to explore and engage with the Creative Ecosystem seamlessly.
                 </Text>
               </LinkOverlay>
             </Section>
           </LinkBox>
           <LinkBox color={tcl}>
-            <Section title="CREATIVE Stageverse">
-              <LinkOverlay href="https://alpha.stageverse.com/#/space/63291415ea801e00094ebbd0/1014-26" target={'_blank'}>
-                <Text>Our metaverse playground for interacting with all of our digital collectibles.</Text>
+            <Section title="CREATIVE Dashboard">
+              <LinkOverlay href="https://app.charmverse.io/creative-like-brown-fowl/" target={'_blank'}>
+                <Text>This dashboard serves as a members-only central hub for innovation, collaboration, and growth. </Text>
               </LinkOverlay>
             </Section>
           </LinkBox>
 
           <LinkBox color={tcl}>
-            <Section title="DAO Proposals">
-              <LinkOverlay href="https://dao.creativeplatform.xyz" target={'_blank'}>
+            <Section title="Dear Creative">
+              <LinkOverlay href="https://news.creativeplatform.xyz" target={'_blank'}>
                 <Text>
-                  Looking for a way to help liven up our community? Introducing DAO Proposals! Our community is managed via a DAO and all that action
-                  happens here. From exciting new features to heated debates on the best way to run things, it&rsquo;s all happening on DAO Proposals.
-                  So come join us and see what all the fuss is about!
+                  A vibrant newsletter delivering the latest in blockchain and entertainment innovation, tailored for creatives seeking to inspire and be inspired.
                 </Text>
               </LinkOverlay>
             </Section>
@@ -314,7 +312,7 @@ export function Header({ className, handleLoading }: Props) {
                       </LinkOverlay>
                     </Heading>
                     <Text>
-                      Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
+                      Catch up on what&apos;s been cookin&apos; at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
                     </Text>
                   </LinkBox>
                 </AccordionPanel>
@@ -398,16 +396,13 @@ export function Header({ className, handleLoading }: Props) {
                 theme={connector} 
                 btnTitle={'Sign In/Up'}
                 modalTitle={'Login'}
-                dropdownPosition={{
-                  side: "bottom", // "top" | "bottom" | "left" | "right";
-                  align: "end", // "start" | "center" | "end";
-                }} 
               />
             ) : (
               <ButtonGroup>
               <ConnectWallet
                 theme={connector}  
               />
+              { isConnected && (
               <Menu>
                 <MenuButton mx={4} mb={2} as={Button} rightIcon={<ChevronDownIcon />} color={'#EC407A'}>
                   User Menu
@@ -455,6 +450,7 @@ export function Header({ className, handleLoading }: Props) {
                   </MenuList>
                 )}
               </Menu>
+              )}
               </ButtonGroup>
             )}
           </chakra.p>
@@ -524,7 +520,7 @@ export function Header({ className, handleLoading }: Props) {
                       </LinkOverlay>
                     </Heading>
                     <Text>
-                      Catch up on what’s been cookin’ at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
+                      Catch up on what&apos;s been cookin&apos; at CREATIVE Kidz, equiping underserved kids with digital art tools via Nouns NFT auctions and T-Mobile.
                     </Text>
                   </LinkBox>
                 </PopoverContent>

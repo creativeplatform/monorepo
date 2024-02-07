@@ -14,7 +14,7 @@ export const FOOTER_LINKS = {
   blog: 'https://blog.creativeplatform.xyz',
   about_us: 'https://creativeplatform.xyz/docs/intro',
   releases: 'https://creative-org-dao.canny.io/changelog',
-  pricing: 'https://app.unlock-protocol.com/checkout?paywallConfig=%7B%22locks%22%3A%7B%220xe174caa294999ec622988242641a27c11e6c22d8%22%3A%7B%22network%22%3A137%2C%22skipRecipient%22%3Atrue%7D%7D%2C%22pessimistic%22%3Atrue%2C%22skipRecipient%22%3Atrue%7D',
+  pricing: 'https://app.unlock-protocol.com/checkout?id=cac7160c-260b-467b-9012-0864039df0e3',
   tutorial: 'https://crew3.xyz/c/thecreativedao/questboard',
   cookie_policy: 'https://creativeplatform.xyz/docs/cookie-policy',
   privacy_policy: 'https://creativeplatform.xyz/docs/privacy-policy',
