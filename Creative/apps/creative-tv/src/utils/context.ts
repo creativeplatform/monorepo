@@ -1,3 +1,4 @@
+import { link } from 'fs'
 import { SITE_NAME } from './config'
 
 // CREATIVE TV
@@ -6,27 +7,26 @@ import { SITE_NAME } from './config'
 // It is used to populate the homepage and other pages with
 // the correct text and images.
 
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 
 export const FOOTER_LINKS = {
   whitepaper: 'https://creativeplatform.xyz/docs/resources/whitepaper',
   blog: 'https://blog.creativeplatform.xyz',
   about_us: 'https://creativeplatform.xyz/docs/intro',
   releases: 'https://creative-org-dao.canny.io/changelog',
-  pricing:
-    'https://app.unlock-protocol.com/checkout?paywallConfig=%7B%22locks%22%3A%7B%220xe174caa294999ec622988242641a27c11e6c22d8%22%3A%7B%22network%22%3A137%2C%22skipRecipient%22%3Atrue%7D%7D%2C%22pessimistic%22%3Atrue%2C%22skipRecipient%22%3Atrue%7D',
+  pricing: 'https://app.unlock-protocol.com/checkout?id=cac7160c-260b-467b-9012-0864039df0e3',
   tutorial: 'https://crew3.xyz/c/thecreativedao/questboard',
   cookie_policy: 'https://creativeplatform.xyz/docs/cookie-policy',
   privacy_policy: 'https://creativeplatform.xyz/docs/privacy-policy',
   terms_and_conditions: 'https://creativeplatform.xyz/docs/terms-and-conditions',
   status: 'https://thecreative.grafana.net/public-dashboards/0d59c3754efd4cf5be8298ff3b24b685?orgId=1',
-  terminal: 'https://app.creativeplatform.xyz',
+  terminal: 'https://app.creativeplatform.xyz'
 }
 
 export const SITE_COPYRIGHT = `© ${currentYear} Creative Organization DAO, LLC. All rights reserved.`
 
 // LINKS
-export const SOCIAL_LINKS = {
+export const SOCIAL_LINKS ={
   twitter: 'https://twitter.com/creativecrtv',
   github: 'https://github.com/creativeplatform',
   discord: 'https://discord.com/servers/creative-779364937503604777',
@@ -65,8 +65,7 @@ export const CREATIVE_LOGO_BLK = '/Blog-Logo_blk.png'
 export const CREATIVE_LOGO_WHT = '/Blog-Logo_wht.png'
 export const CREATIVE_ICON = '/creative_logo_only.png'
 export const HEADING_1 = "You're Bigger, Than You Think"
-export const GOVERN_DESC =
-  'Our community is built to push creatives to the front of the line. The following videos have been voted on by the community to choose which videos should get more visibility.'
+export const GOVERN_DESC = "Our community is built to push creatives to the front of the line. The following videos have been voted on by the community to choose which videos should get more visibility."
 
 // Profile.tsx
 export const PFP = '/0.png'
@@ -80,6 +79,7 @@ export const PROFILE_CAMPAIGNS = {
   tooltip: 'list of your campaigns',
   tooltip_position: 'bottom',
 }
+
 
 // CREATIVE PLATFORM
 // =================
