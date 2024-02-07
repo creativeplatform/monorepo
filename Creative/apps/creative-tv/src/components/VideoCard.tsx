@@ -22,7 +22,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
                 <Flex flex={1} gap={4} align="center" flexWrap={'wrap'}>
                 <Avatar name="creative" src={SITE_LOGO} />
                 <Box>
-                    <Heading size="sm">thecreative.eth</Heading>
+                    <Heading as={'h4'} size="sm">thecreative.eth</Heading>
                     <Text>Creator</Text>
                 </Box>
                 </Flex>
@@ -66,9 +66,9 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
             </Flex>
             <Stack mt="6" spacing="3">
                 <HStack>
-                <Heading>{video?.name}</Heading>
+                <Heading as={"h1"} size={"lg"}>{video?.name}</Heading>
                 <Spacer />
-                <Text fontSize="1.5em" fontWeight='bold'>
+                <Text color={'brand.300'} fontSize={'xl'}>
                     {video?.storage?.ipfs?.spec?.nftMetadata?.properties?.pricePerNFT}<span style={{fontSize:'sm'}}> REP</span>
                 </Text>
                 </HStack>
@@ -111,7 +111,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
                     backgroundColor={'#EC407A'}
                     onClick={() =>
                         router.push({
-                        pathname: `discover/claim-nft`,
+                        pathname: `discover/mint-nft`,
                         query: {
                             assetData: JSON.stringify(video),
                         },
