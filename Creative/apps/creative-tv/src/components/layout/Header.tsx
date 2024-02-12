@@ -193,7 +193,7 @@ export function Header({ className, handleLoading }: Props) {
           <LinkBox color={tcl}>
             <Section title="CREATIVE Dashboard">
               <LinkOverlay href="https://app.charmverse.io/creative-like-brown-fowl/" target={'_blank'}>
-                <Text>This dashboard serves as a members-only central hub for innovation, collaboration, and growth. </Text>
+                <Text>This dashboard serves as a members-only central hub for innovation, collaboration, and growth.</Text>
               </LinkOverlay>
             </Section>
           </LinkBox>
@@ -597,10 +597,6 @@ export function Header({ className, handleLoading }: Props) {
               modalTitle={'Login'}
               switchToActiveChain={true}
               modalSize={"wide"}
-              dropdownPosition={{
-                side: "bottom", // "top" | "bottom" | "left" | "right";
-                align: "end", // "start" | "center" | "end";
-              }} 
               />
             ) : (
               <ButtonGroup>
