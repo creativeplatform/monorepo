@@ -53,13 +53,18 @@ export const ListLazyMintedNfts = (props: ListOfLazyMintedNftsProps) => {
   const tabList = ['Details', 'Claim Conditions', 'Claim']
 
   useEffect(() => {
-    console.log('ListLazyMintedNfts::mounted')
-    props.refetchNFTs()
-  }, [])
+    const fetchNFTs = async () => {
+      setIsFetchingFetchingLazyMintedTokens(true)
+      const lzMintedTokens = await props.nftContract?.erc1155.getAll()
 
-  const handleTabsChange = (idx: number) => {
-    setTabIndex(idx)
-  }
+      if (lzMintedTokens && lzMintedTokens?.length > 0) {
+        setLazyMintedTokens([...lzMintedTokens])
+        setIsFetchingFetchingLazyMintedTokens(false)
+      }
+    }
+    fetchNFTs()
+  }, [lazyMintedTokens])
+
 
   const handleViewMore = async (_nft: NFT) => {
     onOpen() // open modal
