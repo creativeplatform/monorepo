@@ -29,8 +29,10 @@ To start your Turbo Repo project, follow these steps:
    ```
 
 3. Configure the environment variables:
-   - Copy the `.env.example` file and rename it to `.env`.
+   - Copy the `.env.sample` file and rename it to `.env`.
    - Fill in the required environment variables based on your project's configuration.
+
+Smart Contracts (Optional)
 
 4. Compile smart contracts:
    ```bash
@@ -43,7 +45,8 @@ To start your Turbo Repo project, follow these steps:
    ```
    This will deploy your smart contracts to the desired network specified in the `.env` file.
 
-6. Start the development server:
+Frontend Applications (Optional)
+6. Start the Frontend application:
    ```bash
    yarn turbo run dev --filter creative-tv
    ```
@@ -68,6 +71,7 @@ In the project directory, you can run the following scripts:
 - `yarn compile`: Compiles the smart contracts using Hardhat.
 - `yarn deploy`: Deploys the smart contracts to the specified network.
 - `yarn test`: Runs the test suite for your smart contracts.
+- `yarn lint`: Runs the lint suite for the frontend application.
 
 ## Learn More
 

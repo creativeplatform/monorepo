@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export type AssetData = {
-  id: string
+  id: any
   user: string
   title: string
   description: string
@@ -66,7 +66,6 @@ export const fetchAssetId = async (id: any) => {
   const [, { assetId }] = id.queryKey
   console.log('Fetching asset')
   const response = await videoApi.get<AssetData['video']>(`/${assetId}?details=true`)
-
   const asset = response.data
 
   console.log('Asset: ', asset)
