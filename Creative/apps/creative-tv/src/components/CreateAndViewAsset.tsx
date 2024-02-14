@@ -4,7 +4,7 @@ import {
   AlertIcon,
   Box,
   Button,
-  Flex,
+  Center,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -22,6 +22,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { VideoPreview } from './VideoPreview'
 
 export interface AssetData {
   title: string
@@ -48,9 +49,9 @@ const CreateAndViewAsset = () => {
   // Note: This component relies on several external libraries and custom hooks for asset management, file uploading, UI components, and routing.
   // Note: The component uses the `useState` hook to manage various state variables.
 
-  const [video, setVideo] = useState<File | null>(null) // Note: The `video` state variable stores the selected video file.
+  const [selectedVideoFile, setSelectedVideoFile] = useState<File | null>(null) // Note: The `video` state variable stores the selected video file.
 
-  const [assetName, setAssetName] = useState<string>('') // Note: The `assetName` state variable stores the name of the asset entered by the user.
+  const [assetTitle, setAssetTitle] = useState<string>('') // Note: The `assetTitle` state variable stores the name of the asset entered by the user.
 
   const [nFTAmountToMint, setnFTAmountToMint] = useState(0) // Note: The `nFTAmountToMint` state variable stores the amount of nft to mint.
 
@@ -58,7 +59,19 @@ const CreateAndViewAsset = () => {
 
   const [description, setDescription] = useState<string>('') // Note: The `description` state variable stores the description of the asset entered by the user.
 
+  const [isWriteInProgress, setIsWriteInProgress] = useState<boolean>() // Note: The `isWriteInProgress` state variable indicates whether an asset write operation is in progress.
+
+  const [isUpdateAsset, setIsUpdateAsset] = useState<boolean>() // Note: The `isUpdateAsset` state variable indicates whether an asset update operation is in progress.
+
   const [isFileSelected, setIsFileSelected] = useState<boolean>(false) // Note: The `isFileSelected` state variable indicates whether a video file has been selected.
+
+  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false) // Note: The `isUploadingToIPFS` state variable indicates whether the video file is currently being uploaded to IPFS.
+
+  const [isProcessing, setIsProcessing] = useState<boolean>(false) // Note: The `isProcessing` state variable indicates whether the video file is currently being processed.
+
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false) // Note: The `showErrorMessage` state variable indicates whether an error message should be displayed.
+
+  const [buttonClicked, setButtonClicked] = useState<boolean>(false) // Note: The `buttonClicked` state variable indicates whether a button has been clicked.
 
   const address = useAddress() // Note: The `address` variable stores the address of the user.
 
@@ -87,13 +100,13 @@ const CreateAndViewAsset = () => {
   } = useCreateAsset(
     // Note: The `useCreateAsset` hook is used to handle asset creation. It provides functions, data, status, progress, and error information related to the asset creation process.
 
-    video
+    selectedVideoFile
       ? {
           sources: [
             {
-              name: assetName,
+              name: assetTitle,
               description: description,
-              file: video,
+              file: selectedVideoFile,
               data: assetData,
               creatorId: address,
             },
@@ -104,9 +117,8 @@ const CreateAndViewAsset = () => {
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     // Note: The `onDrop` function is called when a file is dropped or selected. It sets the selected video file in the `video` state and updates the `assetData` state with relevant properties.
-
     if (acceptedFiles && acceptedFiles.length > 0 && acceptedFiles?.[0]) {
-      setVideo(acceptedFiles[0])
+      setSelectedVideoFile(acceptedFiles[0])
       setIsFileSelected(true)
 
       // Update the assetData state with relevant properties
@@ -121,7 +133,7 @@ const CreateAndViewAsset = () => {
         },
       }))
     } else {
-      setVideo(null)
+      setSelectedVideoFile(null)
       setIsFileSelected(false)
     }
   }, [])
@@ -153,13 +165,16 @@ const CreateAndViewAsset = () => {
     }
   }, [progress])
 
+  /** The renderVideoPreview is use to memoize a component   */
+  const renderVideoPreview = useMemo(() => <VideoPreview video={selectedVideoFile} />, [selectedVideoFile])
+
   const {
     handleSubmit,
     control,
     formState: { errors: formErrors },
   } = useForm<AssetData>()
 
-  const isError = assetName === '' || description === '' // Note: The `isError` variable checks if the asset name and description are empty and determines if an error should be displayed.
+  const isError = assetTitle === '' || description === '' // Note: The `isError` variable checks if the asset name and description are empty and determines if an error should be displayed.
 
   const handleAssetUpload: SubmitHandler<AssetData> = (data) => {
     if (isError) {
@@ -208,21 +223,9 @@ const CreateAndViewAsset = () => {
       {createAssetError?.message && <Text> {createAssetError.message} </Text>}
 
       {isFileSelected && (
-        <Box mt={4}>
-          <Text fontSize="lg" fontWeight="bold">
-            Video Preview:
-          </Text>
-          <Flex minWidth='max-content' alignItems='center'>
-            {video && (
-              <video src={URL.createObjectURL(video)} controls style={{ maxWidth: '1000px', maxHeight:'400px', marginTop: '8px' }} />
-            )}
-          </Flex>
-        </Box>
-      )}
+        <>
           {/* The preview of uploaded video */}
-          {createdAsset && createdAsset.length > 0 && 
-            <Player title={createdAsset[0].name} playbackId={createdAsset[0].playbackId} />
-          }     
+          {!createdAsset?.[0]?.id && renderVideoPreview}
           {/* Form for asset name and description */}
           <Box my={12} maxWidth={400} mx={'auto'}>
             {!createdAsset?.[0]?.id && (
@@ -238,7 +241,7 @@ const CreateAndViewAsset = () => {
                       <Input
                         size={'lg'}
                         onChange={(e) => {
-                          setAssetName(e.target.value as any)
+                          setAssetTitle(e.target.value as any)
                           field.onChange(e)
                         }}
                         value={field.value}
@@ -252,8 +255,7 @@ const CreateAndViewAsset = () => {
                   {formErrors.title && formErrors.title.type === 'required' && (
                     <FormHelperText mb="32px">Enter the episode title you'd like to use for this video.</FormHelperText>
                   )}
-
-                  <FormLabel mt={4}>Description</FormLabel>
+                  <FormLabel mt={4}>Episode Description</FormLabel>
                   <Controller
                     name="description"
                     control={control}
@@ -267,12 +269,12 @@ const CreateAndViewAsset = () => {
                         value={field.value}
                         disabled={createAssetStatus === 'loading'}
                         mb={formErrors.description ? 0 : 4}
-                        placeholder="Enter a description for the episode video"
+                        placeholder="Enter a description for the video"
                       />
                     )}
                   />
                   {formErrors.description && formErrors.description.type == 'required' && (
-                    <FormHelperText mb={4}>Enter the episode description you'd like to use for this video.</FormHelperText>
+                    <FormHelperText mb={4}>Enter the description you'd like to use for this episode.</FormHelperText>
                   )}
                 </FormControl>
 
@@ -290,22 +292,27 @@ const CreateAndViewAsset = () => {
                     </Box>
                   )
                 )}
-                <Button
-                  type="submit"
-                  className="upload-button"
-                  style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
-                  _hover={{
-                    color: 'gray.800',
-                    transform: isError && 'scale(1.015)',
-                    cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
-                  }}
-                  disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
-                  mb={20}>
-                  Upload Video
-                </Button>
+                <Center>
+                  <Button
+                    type="submit"
+                    className="upload-button"
+                    style={{ backgroundColor: progress?.[0]?.phase === 'uploading' || progress?.[0]?.phase === 'processing' ? '#8e2649' : '#EC407A' }}
+                    _hover={{
+                      color: 'gray.800',
+                      transform: isError && 'scale(1.015)',
+                      cursor: progress?.[0]?.phase === 'processing' ? 'progress' : 'pointer',
+                    }}
+                    disabled={createAssetStatus === 'loading' || !createAsset || progress?.[0]?.phase === 'processing'}
+                    mb={20}>
+                      Upload Video
+                  </Button>
+                </Center>
               </form>
             )}
           </Box>
+        </>
+      )}
+
       {createdAsset?.[0]?.playbackId && (
         <>
           <div style={{ marginBottom: '32px' }}>
@@ -412,27 +419,27 @@ const CreateAndViewAsset = () => {
                     <FormHelperText mb={4}>The price can't be a negative value.</FormHelperText>
                   )}
                 </FormControl>
-
-                <Button
-                  type="submit"
-                  className="mint-button"
-                  bgColor="#EC407A"
-                  disabled={mintFormState.isLoading}
-                  _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
-                  // as={motion.div}
-                  onClick={() => {
-                    setAssetData((prev) => ({
-                      ...prev,
-                      nFTAmountToMint: nFTAmountToMint,
-                      pricePerNFT: pricePerNFT,
-                      properties: {
-                        playbackId: String(createdAsset?.[0]?.playbackId),
-                        videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
-                      },
-                    }))
-                  }}>
-                  Proceed to Mint NFT
-                </Button>
+                <Center>
+                  <Button
+                    type="submit"
+                    className="mint-button"
+                    bgColor="#EC407A"
+                    disabled={mintFormState.isLoading}
+                    _hover={{ transform: 'scale(1.02)', cursor: 'pointer' }}
+                    onClick={() => {
+                      setAssetData((prev) => ({
+                        ...prev,
+                        nFTAmountToMint: nFTAmountToMint,
+                        pricePerNFT: pricePerNFT,
+                        properties: {
+                          playbackId: String(createdAsset?.[0]?.playbackId),
+                          videoIpfs: String(createdAsset?.[0]?.storage?.ipfs?.cid),
+                        },
+                      }))
+                    }}>
+                    Proceed to Mint NFT
+                  </Button>
+                </Center>
               </form>
             </Box>
           </Box>

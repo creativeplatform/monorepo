@@ -12,6 +12,7 @@ import { ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRend
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { removeUnderScore } from 'utils/formatString'
+import { Emoji } from 'ui/emoji'
 import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
@@ -236,7 +237,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <Text my={4} style={{ fontWeight: '600', fontSize: 24 }}>
-                  Your asset is ready to be uploaded to IPFS.
+                  <Emoji symbol='☁️' label='cloud'/> Your asset is ready to be uploaded to IPFS.
                 </Text>
                 <Button
                   my={8}
@@ -274,7 +275,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 )} 
 
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Congrats, Your Asset Was Uploaded To IPFS!
+                  <Emoji symbol='👍🏾' label='thumbs up'/>Congrats, Your Asset Was Uploaded To IPFS!
                 </Text>
 
                 <Button
@@ -306,7 +307,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
               <ErrorBoundary fallback={FallbackComponent(error)}>
                 <Box my={16} style={{ padding: 24 }} maxWidth="700px">
-                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}>Now deploy the contract for your uploaded asset</Text>
+                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}><Emoji symbol='🧩' label='puzzle piece'/> Now deploy the contract for your uploaded asset</Text>
                   <Button
                     className="deploy-button"
                     my={4}
@@ -322,7 +323,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                     {isDeploying ? 'Deploying Contract...' : 'Deploy Contract'}
                   </Button>
                   <Box>
-                    { !isDeploying && (
+                    {!isDeploying && (
                         <span style={{ color: '#c1c1c1', fontWeight: 700 }}>{deployError}</span>
                       )
                     }
@@ -336,7 +337,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  Contract Deployed Succesfully!
+                  <Emoji symbol='🎉' label='tada' /> Contract Deployed Succesfully!
                 </Text>
                 <Button
                   width={160}
@@ -366,7 +367,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           )}
           <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
             <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-              Time to mint your NFTs!
+              <Emoji symbol='⌚️' label='watch'/> Time to mint your NFTs!
             </Text>
 
             <Button
