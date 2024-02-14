@@ -42,6 +42,12 @@ export const THEME_CONFIG = {
   initialColorMode: THEME_INITIAL_COLOR,
 }
 
+// Global Colors
+export const globalTheme = {
+  colors: {
+    primary: '#EC407A',
+  },
+}
 export const EXPLORER_API_URL = {
   mumbai: 'https://api.mumbai.polygonscan.com/',
   polygon: 'https://api.polygonscan.com/',

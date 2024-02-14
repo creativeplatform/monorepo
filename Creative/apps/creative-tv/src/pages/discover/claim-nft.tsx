@@ -1,13 +1,14 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react'
 import { LivepeerConfig } from '@livepeer/react'
 import { useActiveClaimConditionForWallet } from '@thirdweb-dev/react'
-import { ClaimVideoNFT } from 'components/ClaimVideoNFT'
+import { ClaimVideoNFT } from '../../components/ClaimVideoNFT'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
-import { Video } from 'utils/fetchers/assets'
+import { Video } from '../../utils/fetchers/assets'
 import { useLivepeerClient } from '../../hooks/useLivepeerClient'
 import { IAssetData, IReturnedAssetData } from '../../utils/types'
+import React from 'react'
 
 interface AssetData extends IAssetData, IReturnedAssetData {}
 
