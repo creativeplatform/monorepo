@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { 
     Card, 
     CardHeader, 
@@ -20,6 +20,8 @@ import {
 import { Player } from '@livepeer/react';
 import { useRouter } from 'next/router'
 import { PosterImage } from './PosterImage';
+import { ethers } from 'ethers'
+import { useActiveClaimConditionForWallet, useAddress, useContract } from '@thirdweb-dev/react'
 import { AssetData } from 'utils/fetchers/assets';
 import { SITE_LOGO } from 'utils/config'
 import { CREATIVE_LOGO_WHT } from 'utils/context'
@@ -30,8 +32,31 @@ interface VideoCardProps {
     video: AssetData['video'];
 }
 
+const contractAddress = '0x914B872Ce6Da4cc7523B768a3cef8b472F2d2511' // TODO: get contractAddress from metadata
+const tokenId = 0 // TODO: get tokenId from metadata
+
 const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
-    const router = useRouter()
+    const { data: nftContract } = useContract(contractAddress)
+  const address = useAddress()
+  const router = useRouter()
+
+  const activeClaimCondition = useActiveClaimConditionForWallet(nftContract, address, tokenId)
+
+  // This returns the same price for all the Videos.
+//   const pricePerNFT = useMemo(() => {
+//     const bnPrice = ethers.BigNumber.from(activeClaimCondition.data?.currencyMetadata.value || 0)
+//     return (
+//       <>
+//         {ethers.utils.formatUnits(bnPrice, activeClaimCondition.data?.currencyMetadata.decimals || 18)}
+//         <span style={{ fontSize: 'sm' }}> {activeClaimCondition.data?.currencyMetadata.symbol}</span>
+//       </>
+//     )
+//   }, [
+//     activeClaimCondition.data?.currencyMetadata.decimals,
+//     activeClaimCondition.data?.currencyMetadata.symbol,
+//     activeClaimCondition.data?.currencyMetadata.value,
+//   ])
+
     return(
         <Card key={video.id} maxW="md" variant={'elevated'} mb={12}>
             <CardHeader>

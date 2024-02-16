@@ -15,7 +15,6 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react'
-
 import { Player, useCreateAsset } from '@livepeer/react'
 import { useAddress } from '@thirdweb-dev/react'
 import { useRouter } from 'next/router'
