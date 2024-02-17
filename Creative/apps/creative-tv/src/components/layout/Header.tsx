@@ -597,10 +597,6 @@ export function Header({ className, handleLoading }: Props) {
               modalTitle={'Login'}
               switchToActiveChain={true}
               modalSize={"wide"}
-              dropdownPosition={{
-                side: "bottom", // "top" | "bottom" | "left" | "right";
-                align: "end", // "start" | "center" | "end";
-              }} 
               />
             ) : (
               <ButtonGroup>
