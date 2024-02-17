@@ -237,7 +237,8 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <Text my={4} style={{ fontWeight: '600', fontSize: 24 }}>
-                  <Emoji symbol='☁️' label='cloud'/> Your asset is ready to be uploaded to IPFS.
+                <span role="img" aria-label="cloud">☁️</span>
+                    &nbsp; Your asset is ready to be uploaded to IPFS.
                 </Text>
                 <Button
                   my={8}
@@ -275,7 +276,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
                 )} 
 
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  <Emoji symbol='👍🏾' label='thumbs up'/>Congrats, Your Asset Was Uploaded To IPFS!
+                  <span role='img' aria-label='thumbs-up'>👍</span>&nbsp;Congrats, Your Asset Was Uploaded To IPFS!
                 </Text>
 
                 <Button
@@ -307,7 +308,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
 
               <ErrorBoundary fallback={FallbackComponent(error)}>
                 <Box my={16} style={{ padding: 24 }} maxWidth="700px">
-                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}><Emoji symbol='🧩' label='puzzle piece'/> Now deploy the contract for your uploaded asset</Text>
+                  <Text style={{ fontWeight: '500', fontSize: 20, marginBottom: 4 }}><span role='img' aria-label='puzzle piece'>🧩</span>&nbsp;Now deploy the contract for your uploaded asset</Text>
                   <Button
                     className="deploy-button"
                     my={4}
@@ -337,7 +338,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
             <>
               <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="1200px">
                 <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-                  <Emoji symbol='🎉' label='tada' /> Contract Deployed Succesfully!
+                  <span role='img' aria-label='tada'>🎉</span>&nbsp;Contract Deployed Succesfully!
                 </Text>
                 <Button
                   width={160}
@@ -367,7 +368,7 @@ const WagmiNft = (props: WagmiNftProps): JSX.Element => {
           )}
           <Stack spacing="20px" my={12} style={{ border: '1px solid', padding: 24 }} maxWidth="700px">
             <Text as={'h4'} my={2} style={{ fontWeight: '500', fontSize: 22 }}>
-              <Emoji symbol='⌚️' label='watch'/> Time to mint your NFTs!
+              <span role='img' aria-label='watch'>⌚️</span>&nbsp;Time to mint your NFTs!
             </Text>
 
             <Button
