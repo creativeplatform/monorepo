@@ -12,7 +12,6 @@ import { ThirdwebSDK, useAddress, useContract, useMetadata, useSigner, MediaRend
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { removeUnderScore } from 'utils/formatString'
-import { Emoji } from 'ui/emoji'
 import { CREATIVE_ADDRESS, THIRDWEB_API_KEY } from '../utils/config'
 import { AssetData } from './CreateAndViewAsset'
 import { ErrorBoundary } from './hoc/ErrorBoundary'
