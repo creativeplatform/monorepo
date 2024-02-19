@@ -50,27 +50,11 @@ const CreateAndViewAsset = () => {
 
   const [selectedVideoFile, setSelectedVideoFile] = useState<File | null>(null) // Note: The `video` state variable stores the selected video file.
 
-  const [assetTitle, setAssetTitle] = useState<string>('') // Note: The `assetTitle` state variable stores the name of the asset entered by the user.
-
   const [nFTAmountToMint, setnFTAmountToMint] = useState(0) // Note: The `nFTAmountToMint` state variable stores the amount of nft to mint.
 
   const [pricePerNFT, setPricePerNFT] = useState(0) // Note: The `pricePerNFT` state variable stores the price of an nft being minted.
 
-  const [description, setDescription] = useState<string>('') // Note: The `description` state variable stores the description of the asset entered by the user.
-
-  const [isWriteInProgress, setIsWriteInProgress] = useState<boolean>() // Note: The `isWriteInProgress` state variable indicates whether an asset write operation is in progress.
-
-  const [isUpdateAsset, setIsUpdateAsset] = useState<boolean>() // Note: The `isUpdateAsset` state variable indicates whether an asset update operation is in progress.
-
   const [isFileSelected, setIsFileSelected] = useState<boolean>(false) // Note: The `isFileSelected` state variable indicates whether a video file has been selected.
-
-  const [isUploadingToIPFS, setIsUploadingToIPFS] = useState<boolean>(false) // Note: The `isUploadingToIPFS` state variable indicates whether the video file is currently being uploaded to IPFS.
-
-  const [isProcessing, setIsProcessing] = useState<boolean>(false) // Note: The `isProcessing` state variable indicates whether the video file is currently being processed.
-
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false) // Note: The `showErrorMessage` state variable indicates whether an error message should be displayed.
-
-  const [buttonClicked, setButtonClicked] = useState<boolean>(false) // Note: The `buttonClicked` state variable indicates whether a button has been clicked.
 
   const address = useAddress() // Note: The `address` variable stores the address of the user.
 
@@ -89,6 +73,9 @@ const CreateAndViewAsset = () => {
       videoIpfs: '',
     },
   })
+
+  const assetTitle: string = assetData.title // Note: The `assetTitle` variable stores the title of the asset.
+  const description: string = assetData.description // Note: The `description` variable stores the description of the asset.
 
   const {
     mutate: createAsset,
@@ -240,7 +227,7 @@ const CreateAndViewAsset = () => {
                       <Input
                         size={'lg'}
                         onChange={(e) => {
-                          setAssetTitle(e.target.value as any)
+                          setAssetData(prev => ({...prev, title: e.target.value}))
                           field.onChange(e)
                         }}
                         value={field.value}
@@ -262,7 +249,7 @@ const CreateAndViewAsset = () => {
                     render={({ field }) => (
                       <Textarea
                         onChange={(e) => {
-                          setDescription(e.target.value as any)
+                          setAssetData(prev => ({...prev, description: e.target.value}))
                           field.onChange(e)
                         }}
                         value={field.value}
